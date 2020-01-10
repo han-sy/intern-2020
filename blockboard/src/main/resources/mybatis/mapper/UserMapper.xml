@@ -3,7 +3,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.board.project.blockboard.mapper.UserMapper">
-    <select id="allUser" resultType="com.board.project.blockboard.model.User">
+    <select id="allUser" resultType="com.board.project.blockboard.dto.UserDTO">
         SELECT * FROM Users;
     </select>
 </mapper>
