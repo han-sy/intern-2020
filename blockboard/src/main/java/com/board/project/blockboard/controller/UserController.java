@@ -22,29 +22,15 @@ public class UserController {
         this.userService = userService;
     }
 
-    @RequestMapping("/test")
-    public String second(HttpServletRequest requset, Model model) {
-        List<UserDTO> list = userService.allUser();
-        String id = requset.getParameter("id");
-        String pwd = requset.getParameter("pwd");
-
-        model.addAttribute("user_id",list.get(0).getUser_id());
-        model.addAttribute("com_id",list.get(0).getCom_id());
-        model.addAttribute("user_type",list.get(0).getUser_type());
-        model.addAttribute("id", id);
-        model.addAttribute("pwd", pwd);
-
-        return "test";
-    }
-
     @RequestMapping("/loginCheck")
-    public String loginCheck(UserDTO user, HttpSession session) {
-        boolean result = userService.loginCheck(user, session);
+    public String loginCheck(HttpServletRequest request, HttpSession session) {
+        boolean result = userService.loginCheck(request, session);
         if(result == true){ // 로그인 성공
             // board.jsp로 이동
             return "board";
         } else {            // 로그인 실패
             // 로그인 화면으로 이동
+
             return "login";
         }
     }

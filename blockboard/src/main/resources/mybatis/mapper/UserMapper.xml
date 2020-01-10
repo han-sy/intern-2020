@@ -6,4 +6,10 @@
     <select id="allUser" resultType="com.board.project.blockboard.dto.UserDTO">
         SELECT * FROM Users;
     </select>
+
+    <select id="selectUser" parameterType="string" resultType="com.board.project.blockboard.dto.UserDTO">
+        SELECT *
+        FROM Users
+        WHERE user_id=#{user_id};
+    </select>
 </mapper>

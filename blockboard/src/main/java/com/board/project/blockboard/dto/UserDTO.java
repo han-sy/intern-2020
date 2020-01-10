@@ -5,6 +5,9 @@ public class UserDTO {
     private int com_id;
     private String user_type;
 
+    public UserDTO(String user_id) {
+        this.user_id = user_id;
+    }
     public String getUser_id() {
         return user_id;
     }

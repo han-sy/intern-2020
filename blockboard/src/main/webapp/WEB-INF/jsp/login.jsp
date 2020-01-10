@@ -11,10 +11,9 @@
        </head>
 
        <body>
-           <form action="board" method="POST" style="width: 470px;">
+           <form action="loginCheck" method="POST" style="width: 470px;">
 				<h2>로그인</h2>
-				<input type="text" name="id" id="id" class="w3-input" placeholder="아이디"><br>
-				<input type="password" name="pwd" id="pwd" class="w3-input" placeholder="비밀번호"><br>
+				<input type="text" name="user_id" id="user_id" class="w3-input" placeholder="아이디"><br>
 				<input type="submit" value="로그인"><br>
 			</form>
        </body>
