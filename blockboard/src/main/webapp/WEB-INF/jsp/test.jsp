@@ -11,11 +11,17 @@
 	<table border="1">
 		<tr>
 			<th>회원번호</th>
-			<th>이름</th>
+			<th>회사번호</th>
+			<th>회원타입</th>
+			<th>jsp에서 보낸 id</th>
+			<th>jsp에서 보낸 pwd</th>
 		</tr>
 		<tr>
-			<td>${id}</td>
-			<td>${name}</td>
+			<td>${user_id}</td>
+			<td>${com_id}</td>
+			<td>${user_type}</td>
+			<td>${id}</td>>
+			<td>${pwd}</td>>
 		</tr>
 	</table>
 </body>
