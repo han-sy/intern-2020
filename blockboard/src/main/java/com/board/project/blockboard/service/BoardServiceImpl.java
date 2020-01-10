@@ -1,9 +1,7 @@
 package com.board.project.blockboard.service;
 
 import com.board.project.blockboard.mapper.BoardMapper;
-import com.board.project.blockboard.mapper.UserMapper;
-import com.board.project.blockboard.model.Board;
-import com.board.project.blockboard.model.User;
+import com.board.project.blockboard.dto.BoardDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +17,7 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
-    public List<Board> allBoard() {
+    public List<BoardDTO> allBoard() {
         return boardMapper.allBoard();
     }
 }
