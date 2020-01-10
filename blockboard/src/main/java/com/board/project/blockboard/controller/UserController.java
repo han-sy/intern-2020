@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.List;
 
@@ -26,15 +27,12 @@ public class UserController {
     public String loginCheck(HttpServletRequest request, HttpSession session) {
         // 로그인 성공 Check
         boolean result = userService.loginCheck(request, session);
-
-        if(result == true) return "board";  // 로그인 성공
-        else return "login";                // 로그인 실패
-
-
+        System.out.println(result);
+        return "login";
     }
     @RequestMapping("/logout")
     public String logout(HttpSession session) {
-        session.invalidate();
+        session.invalidate(); // 세션 종료
         return "login";
     }
 

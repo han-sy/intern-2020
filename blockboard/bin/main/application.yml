@@ -12,7 +12,9 @@ mybatis:
   type-aliases-package: com.board.project.blockboard.mapper
   mapper-locations: mybatis/mapper/**/*.xml
 server:
+  servlet:
+    session:
+      persistent: true
   error:
     whitelabel:
       enabled: false
-
