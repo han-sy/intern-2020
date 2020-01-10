@@ -18,7 +18,7 @@ public class BoardController {
         this.boardService = boardService;
     }
 
-    @RequestMapping("/b")
+    @RequestMapping("/board")
     public String printBoardInfo(Model model) {
 
         List<BoardDTO> list = boardService.allBoard();
