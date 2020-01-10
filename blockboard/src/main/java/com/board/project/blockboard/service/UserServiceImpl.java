@@ -26,11 +26,13 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public boolean loginCheck(HttpServletRequest request, HttpSession session) {
-        // 로그인 체크 기능 구현예정
-        UserDTO login_user;
+        // 로그인 요청 사용자의 정보를 가져온다.
+        UserDTO login_user = userMapper.selectUser(request.getParameter("user_id"));
 
-        // id가 있으면 로그인(임시, 원래 password까지 검증)
-        if(userMapper.selectUser(request.getParameter("user_id")) != null) {
+        // id가 있으면 로그인(추후에 password까지 검증)
+        if(login_user != null) {
+            //request.getSession(true);
+            session.setAttribute("USER", login_user.getUser_id());
             return true;
         } else return false;
     }

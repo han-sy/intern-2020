@@ -24,16 +24,20 @@ public class UserController {
 
     @RequestMapping("/loginCheck")
     public String loginCheck(HttpServletRequest request, HttpSession session) {
+        // 로그인 성공 Check
         boolean result = userService.loginCheck(request, session);
-        if(result == true){ // 로그인 성공
-            // board.jsp로 이동
-            return "board";
-        } else {            // 로그인 실패
-            // 로그인 화면으로 이동
 
-            return "login";
-        }
+        if(result == true) return "board";  // 로그인 성공
+        else return "login";                // 로그인 실패
+
+
     }
+    @RequestMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "login";
+    }
+
     @RequestMapping("/")
     public String login() {
         return "login";

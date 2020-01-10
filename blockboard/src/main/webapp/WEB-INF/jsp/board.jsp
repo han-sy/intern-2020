@@ -11,6 +11,9 @@
 </head>
 
 <body>
+    <h3>Login Success!!!</h3>
+    <h3>Login ID : <%=(String)session.getAttribute("USER") %></h3>
+    <a href="logout">로그아웃</a>
 	<table border="1">
 		<tr>
 			<th>게시판</th>
