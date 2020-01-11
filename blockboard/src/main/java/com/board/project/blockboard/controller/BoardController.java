@@ -11,6 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
+/**
+ *
+ */
 @Controller
 public class BoardController {
     private BoardService boardService;
