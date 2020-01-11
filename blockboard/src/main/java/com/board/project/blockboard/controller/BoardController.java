@@ -7,6 +7,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Controller
@@ -19,13 +21,17 @@ public class BoardController {
     }
 
     @RequestMapping("/board")
-    public String printBoardInfo(Model model) {
+    public String printBoardbyComp(HttpServletRequest request, HttpSession session,Model model) {
 
-        List<BoardDTO> list = boardService.allBoard();
+        List<BoardDTO> list = boardService.printBoardbyComp(request,session);
+        System.out.println("request: "+request);
+        System.out.println("session: "+session.getAttribute("USER")+","+session.getAttribute("COMPANY"));
+        System.out.println("list: "+list.size());
 
-        model.addAttribute("board_id",list.get(0).getBoard_id());
-        model.addAttribute("com_id",list.get(0).getCom_id());
-        model.addAttribute("board_name",list.get(0).getBoard_name());
+        model.addAttribute("list",list);
+        //model.addAttribute("board_id",list.get(0).getBoard_id());
+       // model.addAttribute("com_id",list.get(0).getCom_id());
+        //model.addAttribute("board_name",list.get(0).getBoard_name());
         System.out.println(model);
         return "board";
     }

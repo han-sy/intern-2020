@@ -2,6 +2,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <html>
 
@@ -15,17 +16,16 @@
     <h3>Login ID : <%=(String)session.getAttribute("USER") %></h3>
     <a href="logout">로그아웃</a>
 
+    <h2>게시판 목록</h2>
 	<table border="1">
 		<tr>
-			<th>게시판</th>
-			<th>고객사</th>
-			<th>게시판이름</th>
+			<th>게시판 목록</th>
 		</tr>
-		<tr>
-			<td>${board_id}</td>
-			<td>${com_id}</td>
-			<td>${board_name}</td>
-		</tr>
+        <c:forEach items="${list}" var = "list">
+                    			<tr>
+                    				<td><c:out value="${list.board_name}" /></td>
+                    			</tr>
+                    		</c:forEach>
 	</table>
 
 	<table width="100%" cellpadding="0" cellspacing="0" border="0">
@@ -36,7 +36,6 @@
        <td width="379">제목</td>
        <td width="73">작성자</td>
        <td width="164">작성일</td>
-       <td width="58">조회수</td>
        <td width="7"><img src="img/table_right.gif" width="5" height="30" /></td>
       </tr>
     <tr height="25" align="center">

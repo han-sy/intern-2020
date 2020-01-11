@@ -33,6 +33,8 @@ public class UserServiceImpl implements UserService{
         if(login_user != null) {
             //request.getSession(true);
             session.setAttribute("USER", login_user.getUser_id());
+            session.setAttribute("COMPANY",login_user.getCom_id());
+            //session.setAttribute("USER", login_user); //수정
             return true;
         } else return false;
     }

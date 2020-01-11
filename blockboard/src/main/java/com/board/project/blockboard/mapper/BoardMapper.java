@@ -10,4 +10,5 @@ import java.util.List;
 @Mapper
 public interface BoardMapper {
     List<BoardDTO> allBoard();
+    List<BoardDTO> selectBoardByComId(String com_id);
 }

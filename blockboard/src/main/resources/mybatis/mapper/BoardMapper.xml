@@ -6,4 +6,10 @@
     <select id="allBoard" resultType="com.board.project.blockboard.dto.BoardDTO">
         SELECT * FROM Board;
     </select>
+
+    <select id="selectBoardByComId" parameterType="string" resultType="com.board.project.blockboard.dto.BoardDTO">
+        SELECT *
+        FROM Board
+        WHERE com_id=#{com_id};
+    </select>
 </mapper>
