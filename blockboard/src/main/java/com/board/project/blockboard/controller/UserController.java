@@ -5,6 +5,7 @@ import com.board.project.blockboard.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -33,6 +34,7 @@ public class UserController {
     @RequestMapping("/logout")
     public String logout(HttpSession session) {
         session.invalidate(); // 세션 종료
+
         return "login";
     }
 

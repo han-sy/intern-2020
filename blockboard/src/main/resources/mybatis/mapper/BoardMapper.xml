@@ -12,4 +12,12 @@
         FROM Board
         WHERE com_id=#{com_id};
     </select>
+
+    <!--추후에 디비 수정후 쿼리 변경해야됨-->
+    <select id="selectPostByBoardId" parameterType="string" resultType="com.board.project.blockboard.dto.PostDTO">
+        SELECT post_id, post_content, user_id,post_reg_time
+        FROM Post
+        WHERE board_id=#{board_id}
+        ORDER BY post_id DESC;
+    </select>
 </mapper>
