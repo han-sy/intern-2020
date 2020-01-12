@@ -86,7 +86,7 @@
 
             $.each(data, function (key, value) {
               $('#postlist').append(
-                "<tr><td width='5'><img src='img/table_left.gif' width='5' height='30' /></td>" +
+                "<tr class = 'postclick' data-post = '" + value.post_id + "'><td width='5'><img src='img/table_left.gif' width='5' height='30' /></td>" +
                 "<td width='73'>" + value.post_id + "</td>" +
                 "<td width='379'>" + value.post_content + "</td>" +
                 "<td width='73'>" + value.user_id + "</td>" +
@@ -94,14 +94,19 @@
                 "<td width='7'><img src='img/table_right.gif' width='5' height='30' /></td>"
               );
 
-              //alert('key:' + key + ', post_id:' + value.post_id + ',age:' + value.post_content);
+              //alert($this);
             });
 
           }
         });
       });
-
+      $('.postclick').click(function () {
+        var post_id = $(this).attr('data-post');
+        console.log("행클릭 : " + post_id);
+        alter(post_id);
+      });
     });
+
   </script>
   <h1> 게시판</h1>
   <h3>Login ID : <%=(String)session.getAttribute("USER") %></h3>
@@ -109,8 +114,8 @@
   <div id="container">
     <ul class="tab">
       <c:forEach items="${list}" var="list" varStatus="status">
-        <li data-tab="${list.board_id}" class='tabmenu' id="default"><a href="#">
-            <c:out value="${list.board_name}" />
+        <li data-tab="${list.board_id}" class='tabmenu' id="default">
+          <c:out value="${list.board_name}" />
           </a>
         </li>
       </c:forEach>
@@ -140,7 +145,7 @@
         <!--게시글 목록 -->
 
       </table>
-      <table id = "postlist" width="90%" cellpadding="0" cellspacing="0" border="0">
+      <table id="postlist" width="90%" cellpadding="0" cellspacing="0" border="0">
 
       </table>
     </div>
