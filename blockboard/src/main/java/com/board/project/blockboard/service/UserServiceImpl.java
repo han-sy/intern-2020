@@ -31,12 +31,13 @@ public class UserServiceImpl implements UserService{
 
         // id가 있으면 로그인(추후에 password까지 검증)
         if(login_user != null) {
-            //request.getSession(true);
-            session.setAttribute("USER", login_user.getUser_id());
-            session.setAttribute("COMPANY",login_user.getCom_id());
-            //session.setAttribute("USER", login_user); //수정
-            return true;
-        } else return false;
+            if(login_user.getUser_pwd() != request.getParameter("user_pwd")) {
+                session.setAttribute("USER", login_user.getUser_id());
+                session.setAttribute("COMPANY", login_user.getCom_id());
+                return true;
+            }
+        }
+        return false;
     }
 
 }
