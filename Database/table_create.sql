@@ -1,5 +1,5 @@
-use block_board;
 
+use block_board;
 drop table Comments;
 drop table Post;
 drop table Users;
@@ -17,6 +17,8 @@ create table Company(
 create table Users(
 	user_id varchar(20) not null,
     com_id int(9) not null,
+    user_name varchar(30) not null,
+    user_pwd varchar(100) not null,
     user_type varchar(20) not null,
     foreign key(com_id) references Company(com_id),
     primary key(user_id,com_id)
@@ -50,6 +52,7 @@ create table Post(
     user_id varchar(20) not null,
     board_id int(9) not null,
     com_id int(9) not null,
+    post_title varchar(150) not null,
     post_content varchar(4000) not null,
     post_reg_time datetime not null,
 	foreign key(user_id) references Users(user_id),
@@ -74,10 +77,15 @@ create table Comments(
 
 insert into Company values(1,'wm'); 
 insert into Board values(1,1,"공지사항");
-insert into Users values(1,1,'관리자');
+insert into Users values(1,1,'김동욱','123','관리자');
 insert into BoardFunction values(1,'기독기능');
 insert into FunctionCheck values(1,1,true);
-insert into Post values(1,1,1,1,'첫게시글',now());
-select * from Post;
+insert into Post values(1,1,1,1,'첫게시글','첫내용',now());
 insert into Comments values(1,1,1,1,'첫 댓글',now(),null);
 insert into Comments values(2,1,1,1,'첫 답글',now(),1);
+
+insert into Post values (2,1,1,1,'두번째 게시글','두번째 게시글내용',now());
+
+select * 
+from Post
+order by post_reg_time DESC;
