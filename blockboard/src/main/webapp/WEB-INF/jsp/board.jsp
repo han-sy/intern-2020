@@ -90,9 +90,9 @@
                 success: function (data) {    //통신 성공시 탭 내용담는 div를 읽어들인 값으로 채운다.
                   console.log("success" + data);
                   $('#postcontent').html("");
-                  $('#postcontent').append("<h3>"+data.post_title+"</h3>");
-                  $('#postcontent').append("<h5>작성자 :+"+data.user_name+"</h4>");
-                  $('#postcontent').append("<h5>작성시간 :+"+data.post_reg_time+"</h4>");
+                  $('#postcontent').append("<h2>"+data.post_title+"</h2>");
+                  $('#postcontent').append("<h5>작성자 : "+data.user_name+"</h4>");
+                  $('#postcontent').append("<h5>작성시간 : "+data.post_reg_time+"</h4>");
                   $('#postcontent').append("<a>"+data.post_content+"</a>");
                 }
               });
@@ -124,13 +124,12 @@
 
             $.each(data, function (key, value) {
               $('#postlist').append(
-                "<tr class = 'postclick' data-post = '" + value.post_id +
-                "' onclick='javascript:clickTrEvent(this)' onmouseover = 'javascript:changeTrColor(this)' ><td width='5'><img src='img/table_left.gif' width='5' height='30' /></td>" +
+                "<tr height='30' class = 'postclick' data-post = '" + value.post_id +
+                "' onclick='javascript:clickTrEvent(this)' onmouseover = 'javascript:changeTrColor(this)' >" +
                 "<td width='73'>" + value.post_id + "</td>" +
                 "<td width='379'>" + value.post_title + "</td>" +
                 "<td width='73'>" + value.user_name + "</td>" +
-                "<td width='164'>" + value.post_reg_time + "</td></tr>" +
-                "<td width='7'><img src='img/table_right.gif' width='5' height='30' /></td>"
+                "<td width='164'>" + value.post_reg_time + "</td></tr>"
               );
 
               //alert($this);
@@ -175,12 +174,10 @@
           <td width="5"></td>
         </tr>
         <tr>
-          <td width='5'><img src='img/table_left.gif' width='5' height='30' /></td>
           <td width='73'>번호</td>
           <td width='379'>제목</td>
           <td width='73'>작성자</td>
           <td width='164'>작성일</td>
-          <td width='7'><img src='img/table_right.gif' width='5' height='30' /></td>
         </tr>
         <tr height="25" align="center">
         </tr>
