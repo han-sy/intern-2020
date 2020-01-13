@@ -70,9 +70,8 @@ public class UserController {
             Cookie setCookie = new Cookie("s_id", encrypt); // 클라이언트에게 전달할 쿠키 생성
             setCookie.setMaxAge(60);
             response.addCookie(setCookie);
-            return "board";
         }
-        else return "login";
+        return "redirect:/";
     }
 
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
@@ -81,7 +80,7 @@ public class UserController {
         Cookie kc = new Cookie("s_id", null);
         kc.setMaxAge(0);
         response.addCookie(kc);
-        return "login";
+        return "redirect:/";
     }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
@@ -118,7 +117,7 @@ public class UserController {
                     }
                     //서버가 만들어준 쿠키면
                     if(decode.substring(decode.length()-6,decode.length()).equals("server")) {
-                        return "board";
+                        return "redirect:/board";
                     }
                 }
             }
