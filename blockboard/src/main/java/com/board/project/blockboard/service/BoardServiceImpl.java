@@ -35,4 +35,10 @@ public class BoardServiceImpl implements BoardService {
         List<PostDTO> postlist = boardMapper.selectPostByBoardId(board_id);
         return postlist;
     }
+
+    @Override
+    public PostDTO printPostContnet(String post_id) {
+        PostDTO post = boardMapper.selectPostByPostID(post_id);
+        return post;
+    }
 }

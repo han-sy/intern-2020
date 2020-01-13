@@ -48,7 +48,7 @@ public class BoardController {
     }
     @RequestMapping(value = "/board/tab",method = RequestMethod.GET)
     @ResponseBody
-    public List<Map<String,Object>> test(HttpServletRequest request, Model model){
+    public List<Map<String,Object>> printPostList(HttpServletRequest request, Model model){
 
         String board_id = request.getParameter("activeTab");
         List<PostDTO> list = boardService.printPostbyBoard(board_id);
@@ -63,8 +63,8 @@ public class BoardController {
             for(int i=0;i<list.size();i++){
                 Map<String,Object> map = new HashMap<String, Object>();
                 map.put("post_id",list.get(i).getPost_id());
-                map.put("post_content",list.get(i).getPost_content());
-                map.put("user_id",list.get(i).getUser_id());
+                map.put("post_title",list.get(i).getPost_title());
+                map.put("user_name",list.get(i).getUser_name());
                 map.put("post_reg_time",list.get(i).getPost_reg_time());
                 System.out.println(map);
                 listSender.add(map);
@@ -76,4 +76,30 @@ public class BoardController {
 
         return listSender;
     }
+    @RequestMapping(value = "/board/post",method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String,Object> printPost(HttpServletRequest request){
+
+        String post_id = request.getParameter("post_id");
+        PostDTO post = boardService.printPostContnet(post_id);
+        System.out.println("ajax로 넘어온 data :  "+request);
+
+        //model.addAttribute("post_list",list);
+        System.out.println(post);
+        Map<String,Object> map = new HashMap<String, Object>();
+        try{
+
+            map.put("post_title",post.getPost_title());
+            map.put("post_content",post.getPost_content());
+            map.put("user_name",post.getUser_name());
+            map.put("post_reg_time",post.getPost_reg_time());
+            System.out.println(map);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return map;
+    }
+
 }
