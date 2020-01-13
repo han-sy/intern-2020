@@ -76,8 +76,15 @@ create table Comments(
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
 insert into Company values(1,'wm'); 
+insert into Company values(2,'naver');
 insert into Board values(1,1,"공지사항");
+insert into Board values(2,1,"건의사항");
+insert into Board values(3,2,"공지사항");
+insert into Board values(4,2,"건의사항");
+insert into Board values(5,1,"자유게시판");
+
 insert into Users values(1,1,'김동욱','123','관리자');
+insert into Users values(2,2,'전우혁','123','관리자');
 insert into BoardFunction values(1,'기독기능');
 insert into FunctionCheck values(1,1,true);
 insert into Post values(1,1,1,1,'첫게시글','첫내용',now());
@@ -86,6 +93,4 @@ insert into Comments values(2,1,1,1,'첫 답글',now(),1);
 
 insert into Post values (2,1,1,1,'두번째 게시글','두번째 게시글내용',now());
 
-select * 
-from Post
-order by post_reg_time DESC;
+
