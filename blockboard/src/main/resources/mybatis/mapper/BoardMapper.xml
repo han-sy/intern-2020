@@ -20,4 +20,9 @@
         WHERE p.user_id = u.user_id and p.board_id=#{board_id}
         ORDER BY p.post_id DESC;
     </select>
+    <select id="selectPostByPostID" parameterType="string" resultType="com.board.project.blockboard.dto.PostDTO">
+        SELECT p.post_id,p.user_id, u.user_name,p.board_id,p.com_id,p.post_title,p.post_content,p.post_reg_time
+        FROM Post p , Users u
+        WHERE p.user_id = u.user_id and p.post_id=#{post_id}
+    </select>
 </mapper>

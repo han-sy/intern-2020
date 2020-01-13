@@ -11,4 +11,5 @@ public interface BoardService {
     List<BoardDTO> allBoard();
     List<BoardDTO> printBoardbyComp(HttpServletRequest request, HttpSession session);
     List<PostDTO> printPostbyBoard(String board_id);
+    PostDTO printPostContnet(String post_id);
 }
