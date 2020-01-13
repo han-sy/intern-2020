@@ -102,7 +102,7 @@
                 "' onclick='javascript:clickTrEvent(this)' onmouseover = 'javascript:changeTrColor(this)' ><td width='5'><img src='img/table_left.gif' width='5' height='30' /></td>" +
                 "<td width='73'>" + value.post_id + "</td>" +
                 "<td width='379'>" + value.post_content + "</td>" +
-                "<td width='73'>" + value.user_id + "</td>" +
+                "<td width='73'>" + value.user_name + "</td>" +
                 "<td width='164'>" + value.post_reg_time + "</td></tr>" +
                 "<td width='7'><img src='img/table_right.gif' width='5' height='30' /></td>"
               );

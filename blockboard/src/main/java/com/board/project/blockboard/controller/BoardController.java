@@ -64,7 +64,7 @@ public class BoardController {
                 Map<String,Object> map = new HashMap<String, Object>();
                 map.put("post_id",list.get(i).getPost_id());
                 map.put("post_content",list.get(i).getPost_content());
-                map.put("user_id",list.get(i).getUser_id());
+                map.put("user_name",list.get(i).getUser_name());
                 map.put("post_reg_time",list.get(i).getPost_reg_time());
                 System.out.println(map);
                 listSender.add(map);

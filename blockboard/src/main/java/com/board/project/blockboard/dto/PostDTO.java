@@ -3,6 +3,20 @@ package com.board.project.blockboard.dto;
 public class PostDTO {
     private int post_id;
     private String user_id;
+    private String user_name;
+    private String board_id;
+    private int com_id;
+    private String post_title;
+    private String post_content;
+    private String post_reg_time;
+
+    public String getPost_title() {
+        return post_title;
+    }
+
+    public void setPost_title(String post_title) {
+        this.post_title = post_title;
+    }
 
     public String getUser_name() {
         return user_name;
@@ -11,13 +25,6 @@ public class PostDTO {
     public void setUser_name(String user_name) {
         this.user_name = user_name;
     }
-
-    private String user_name;
-    private String board_id;
-    private int com_id;
-    private String post_content;
-    private String post_reg_time;
-
     public int getPost_id() {
         return post_id;
     }
