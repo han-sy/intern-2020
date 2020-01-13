@@ -14,4 +14,5 @@ public interface BoardMapper {
     List<BoardDTO> selectBoardByComId(String com_id);
     List<PostDTO> selectPostByBoardId(String board_id);
     PostDTO selectPostByPostID(String post_id);
+    String selectComIdByUserId(String user_id);
 }

@@ -3,6 +3,8 @@ package com.board.project.blockboard.service;
 import com.board.project.blockboard.dto.PostDTO;
 import com.board.project.blockboard.mapper.BoardMapper;
 import com.board.project.blockboard.dto.BoardDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +15,7 @@ import java.util.List;
 @Service
 public class BoardServiceImpl implements BoardService {
     private BoardMapper boardMapper;
-
+    Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
     BoardServiceImpl(BoardMapper boardMapper) {
         this.boardMapper = boardMapper;
@@ -25,9 +27,11 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public List<BoardDTO> printBoardbyComp(HttpServletRequest request, HttpSession session) {
-        System.out.println("com_id (session): " + session.getAttribute("COMPANY"));
-        List<BoardDTO> boardlist = boardMapper.selectBoardByComId(session.getAttribute("COMPANY") + "");
+    public List<BoardDTO> printBoardbyComp(String user_id) {
+        //System.out.println("com_id (session): " + session.getAttribute("COMPANY"));
+        String com_id = boardMapper.selectComIdByUserId(user_id);
+        System.out.println("com_id : "+com_id);
+        List<BoardDTO> boardlist = boardMapper.selectBoardByComId(com_id);
         return boardlist;
     }
     @Override

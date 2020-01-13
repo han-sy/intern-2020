@@ -156,19 +156,6 @@
   <h3>Login ID : <%=(String)session.getAttribute("USER") %></h3>
   <a href="logout">로그아웃</a>
   <div id="container">
-<<<<<<< HEAD
-    <ul class="tab">
-      <c:forEach items="${list}" var="list" varStatus="status">
-        <li data-tab="${list.board_id}" class='tabmenu' id="default">
-          <c:out value="${list.board_name}" />
-          <c:out value="${sessionName}"/>
-          </a>
-        </li>
-      </c:forEach>
-    </ul>
-    <div id="tabcontent">
-      <table width="90%" cellpadding="0" cellspacing="0" border="0">
-=======
 
   </div>
   <ul class="tab">
@@ -183,7 +170,6 @@
   <div id="tabcontent">
     <table width="90%" cellpadding="0" cellspacing="0" border="0">
       <thead>
->>>>>>> e3a84fec621decd4d4393af3e1250971f265f93e
         <tr height="5">
           <td width="5"></td>
         </tr>
