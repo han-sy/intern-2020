@@ -60,7 +60,19 @@
       font-size: 17px;
     }
   </style>
+<script type="text/javascript">
+  function changeTrColor(trObj) {
+    trObj.style.backgroundColor = "green";
+    trObj.onmouseout = function(){
+      trObj.style.backgroundColor = "lightgreen";
+    }
+  }
 
+  function clickTrEvent(trObj) {
+    alert(trObj.getAttribute("data-post"));
+    console.log(trObj.getAttribute("data-post"));
+  }
+</script>
 </head>
 
 <body>
@@ -86,7 +98,8 @@
 
             $.each(data, function (key, value) {
               $('#postlist').append(
-                "<tr class = 'postclick' data-post = '" + value.post_id + "'><td width='5'><img src='img/table_left.gif' width='5' height='30' /></td>" +
+                "<tr class = 'postclick' data-post = '" + value.post_id +
+                "' onclick='javascript:clickTrEvent(this)' onmouseover = 'javascript:changeTrColor(this)' ><td width='5'><img src='img/table_left.gif' width='5' height='30' /></td>" +
                 "<td width='73'>" + value.post_id + "</td>" +
                 "<td width='379'>" + value.post_content + "</td>" +
                 "<td width='73'>" + value.user_id + "</td>" +
@@ -100,13 +113,16 @@
           }
         });
       });
+
+    });
+    $(function () {
+      var table = $('#postlist').DataTable();
       $('.postclick').click(function () {
-        var post_id = $(this).attr('data-post');
-        console.log("행클릭 : " + post_id);
-        alter(post_id);
+        var activeRow = table.rows(this).data();
+        console.log("row : ", activeRow);
+        alert("row : ", activeRow);
       });
     });
-
   </script>
   <h1> 게시판</h1>
   <h3>Login ID : <%=(String)session.getAttribute("USER") %></h3>
@@ -122,30 +138,32 @@
     </ul>
     <div id="tabcontent">
       <table width="90%" cellpadding="0" cellspacing="0" border="0">
-        <tr height="5">
-          <td width="5"></td>
-        </tr>
-        <tr>
-          <td width='5'><img src='img/table_left.gif' width='5' height='30' /></td>
-          <td width='73'>번호</td>
-          <td width='379'>제목</td>
-          <td width='73'>작성자</td>
-          <td width='164'>작성일</td>
-          <td width='7'><img src='img/table_right.gif' width='5' height='30' /></td>
-        </tr>
-        <tr height="25" align="center">
-        </tr>
-        <tr height="1" bgcolor="#D2D2D2">
-          <td colspan="6"></td>
-        </tr>
+        <thead>
+          <tr height="5">
+            <td width="5"></td>
+          </tr>
+          <tr>
+            <td width='5'><img src='img/table_left.gif' width='5' height='30' /></td>
+            <td width='73'>번호</td>
+            <td width='379'>제목</td>
+            <td width='73'>작성자</td>
+            <td width='164'>작성일</td>
+            <td width='7'><img src='img/table_right.gif' width='5' height='30' /></td>
+          </tr>
+          <tr height="25" align="center">
+          </tr>
+          <tr height="1" bgcolor="#D2D2D2">
+            <td colspan="6"></td>
+          </tr>
 
-        <tr height="1" bgcolor="#82B5DF">
-          <td colspan="6" width="752"></td>
-        </tr>
+          <tr height="1" bgcolor="#82B5DF">
+            <td colspan="6" width="752"></td>
+          </tr>
+        </thead>
+        <tbody id="postlist">
+
+        </tbody>
         <!--게시글 목록 -->
-
-      </table>
-      <table id="postlist" width="90%" cellpadding="0" cellspacing="0" border="0">
 
       </table>
     </div>
