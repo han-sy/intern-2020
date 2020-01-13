@@ -116,6 +116,7 @@
       <c:forEach items="${list}" var="list" varStatus="status">
         <li data-tab="${list.board_id}" class='tabmenu' id="default">
           <c:out value="${list.board_name}" />
+          <c:out value="${sessionName}"/>
           </a>
         </li>
       </c:forEach>
