@@ -36,6 +36,7 @@ import java.util.Map;
  *
  */
 @Controller
+@RequestMapping("/board")
 public class BoardController {
     private BoardService boardService;
     private String key = "slgi3ibu5phi8euf";
@@ -46,7 +47,7 @@ public class BoardController {
         this.boardService = boardService;
     }
 
-    @RequestMapping("/board")
+    @RequestMapping("/")
     public String printBoardbyComp(HttpServletRequest request, HttpSession session,Model model) throws UnsupportedEncodingException {
 
 
@@ -101,7 +102,7 @@ public class BoardController {
         System.out.println(model);
         return "board";
     }
-    @RequestMapping(value = "/board/tab",method = RequestMethod.GET)
+    @RequestMapping(value = "/tab",method = RequestMethod.GET)
     @ResponseBody
     public List<Map<String,Object>> printPostList(HttpServletRequest request, Model model){
 
@@ -132,7 +133,7 @@ public class BoardController {
 
         return listSender;
     }
-    @RequestMapping(value = "/board/post",method = RequestMethod.GET)
+    @RequestMapping(value = "/post",method = RequestMethod.GET)
     @ResponseBody
     public Map<String,Object> printPost(HttpServletRequest request){
 
