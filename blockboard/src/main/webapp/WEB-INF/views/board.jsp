@@ -11,14 +11,14 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <title>mysql 연동</title>
   <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
-  <script src="../SE2/js/service/HuskyEZCreator.js" charset="utf-8"></script>
+  <script src="resources/SE2/js/service/HuskyEZCreator.js" charset="utf-8"></script>
   <script type="text/javascript">
     var oEditors = [];
     nhn.husky.EZCreator.createInIFrame({
       oAppRef : oEditors,
       elPlaceHolder : "smarteditor",
       //SmartEditor2Skin.html 파일이 존재하는 경로
-      sSkinURI : "../SE2/SmartEditor2Skin.html",
+      sSkinURI : "resources/SE2/SmartEditor2Skin.html",
       htParams : {
         // 툴바 사용 여부 (true:사용/ false:사용하지 않음)
         bUseToolbar : true,
@@ -36,8 +36,6 @@
       fCreator : "createSEditor2"
       });
     });
-    String a = document.getElementById("#smarteditor").value();
-    $("#writecontent").html("yea");
   </script>
 
   <style>
