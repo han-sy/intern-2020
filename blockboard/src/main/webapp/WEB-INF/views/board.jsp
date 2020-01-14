@@ -11,14 +11,14 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <title>mysql 연동</title>
   <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
-  <script src="resources/SE2/js/service/HuskyEZCreator.js" charset="utf-8"></script>
+  <script src="/static/SE2/js/service/HuskyEZCreator.js" charset="utf-8"></script>
   <script type="text/javascript">
     var oEditors = [];
     nhn.husky.EZCreator.createInIFrame({
       oAppRef : oEditors,
       elPlaceHolder : "smarteditor",
       //SmartEditor2Skin.html 파일이 존재하는 경로
-      sSkinURI : "resources/SE2/SmartEditor2Skin.html",
+      sSkinURI : "/static/SE2/SmartEditor2Skin.html",
       htParams : {
         // 툴바 사용 여부 (true:사용/ false:사용하지 않음)
         bUseToolbar : true,
@@ -85,38 +85,8 @@
       font-size: 17px;
     }
   </style>
+  <script src="/static/js/event.js"></script>
   <script type="text/javascript">
-    function changeTrColor(trObj) {
-      trObj.style.backgroundColor = "green";
-      trObj.onmouseout = function () {
-        trObj.style.backgroundColor = "lightgreen";
-      }
-    }
-    function clickTrEvent(trObj) {
-      //alert(trObj.getAttribute("data-post"));
-      var post_id = trObj.getAttribute("data-post");
-      //console.log(post_id);
-      //$('#postcontent').html("activerRow : " + trObj.getAttribute("data-post"));
-      $.ajax({
-                type: 'GET',                 //get방식으로 통신
-                url: "/board/post",    //탭의 data-tab속성의 값으로 된 html파일로 통신
-                data: { post_id: post_id },
-                error: function () {  //통신 실패시
-                  alert('통신실패!');
-                },
-                success: function (data) {    //통신 성공시 탭 내용담는 div를 읽어들인 값으로 채운다.
-                  console.log("success" + data);
-                  $('#writecontent').hide();
-                  $('#btn_write').show();
-                  $('#postcontent').html("");
-                  $('#postcontent').append("<h2>"+data.post_title+"</h2>");
-                  $('#postcontent').append("<h5>작성자 : "+data.user_name+"</h4>");
-                  $('#postcontent').append("<h5>작성시간 : "+data.post_reg_time+"</h4>");
-                  $('#postcontent').append("<a>"+data.post_content+"</a>");
-                }
-              });
-    }
-
     // 게시판에서 '글쓰기' 버튼 클릭하면 화면에 에디터 표시
     $(function () {
       $('#btn_write').click(function () {
