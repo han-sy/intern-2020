@@ -27,6 +27,11 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
+    public String printCompanyName(String user_id) {
+        return boardMapper.selectComNameByUserId(user_id);
+    }
+
+    @Override
     public List<BoardDTO> printBoardbyComp(String user_id) {
         //System.out.println("com_id (session): " + session.getAttribute("COMPANY"));
         String com_id = boardMapper.selectComIdByUserId(user_id);

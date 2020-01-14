@@ -12,4 +12,5 @@ public interface BoardService {
     List<BoardDTO> printBoardbyComp(String user_id);
     List<PostDTO> printPostbyBoard(String board_id);
     PostDTO printPostContnet(String post_id);
+    String printCompanyName(String user_id);
 }

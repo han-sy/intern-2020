@@ -16,30 +16,25 @@
       width: 100%;
       margin: 0 auto;
       text-align: center;
-
     }
-
     .tab {
       list-style: none;
       margin: 0;
       padding: 0;
       overflow: hidden;
     }
-
     #tabcontent {
       display: block;
       background-color: lightgreen;
       padding: 6px 12px;
       color: black;
     }
-
     #postcontent {
       display: block;
       background-color: lightgreen;
       padding: 6px 12px;
       color: black;
     }
-
     a {
       display: inline-block;
       color: #000;
@@ -49,14 +44,10 @@
       font-size: 17px;
       transition: 0.3s;
     }
-
     a:visited {
       color: black;
       text-decoration: none;
-
     }
-
-
     li {
       float: left;
       display: inline-block;
@@ -74,7 +65,6 @@
         trObj.style.backgroundColor = "lightgreen";
       }
     }
-
     function clickTrEvent(trObj) {
       //alert(trObj.getAttribute("data-post"));
       var post_id = trObj.getAttribute("data-post");
@@ -107,7 +97,7 @@
       $('.tabmenu').click(function () {
         //var activeTab = $(this).attr('data-tab');
         var activeTab = $(this).attr('data-tab');
-        //console.log(activeTab);
+        console.log(activeTab);
         $('li').css('background-color', 'white');
         $(this).css('background-color', 'lightgreen');
         $('#postcontent').html("");
@@ -121,7 +111,6 @@
           success: function (data) {    //통신 성공시 탭 내용담는 div를 읽어들인 값으로 채운다.
             console.log("success" + data);
             $('#postlist').html("");
-
             $.each(data, function (key, value) {
               $('#postlist').append(
                 "<tr height='30' class = 'postclick' data-post = '" + value.post_id +
@@ -131,14 +120,11 @@
                 "<td width='73'>" + value.user_name + "</td>" +
                 "<td width='164'>" + value.post_reg_time + "</td></tr>"
               );
-
               //alert($this);
             });
-
           }
         });
       });
-
     });
     $(function () {
       var table = $('#postlist').DataTable();
@@ -152,8 +138,7 @@
       });
     });
   </script>
-  <h1> 게시판</h1>
-  <h3>Login ID : <%=(String)session.getAttribute("USER") %></h3>
+  <h1>${com_name} 게시판</h1>
   <a href="logout">로그아웃</a>
   <div id="container">
 
