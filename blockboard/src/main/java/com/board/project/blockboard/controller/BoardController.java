@@ -47,7 +47,7 @@ public class BoardController {
         this.boardService = boardService;
     }
 
-    @RequestMapping("/")
+    @RequestMapping("")
     public String printBoardbyComp(HttpServletRequest request, HttpSession session,Model model) throws UnsupportedEncodingException {
 
 

@@ -68,7 +68,7 @@ public class UserController {
             }
 
             Cookie setCookie = new Cookie("s_id", encrypt); // 클라이언트에게 전달할 쿠키 생성
-            setCookie.setMaxAge(60);
+            setCookie.setMaxAge(60*60);
             response.addCookie(setCookie);
         }
         return "redirect:/";
