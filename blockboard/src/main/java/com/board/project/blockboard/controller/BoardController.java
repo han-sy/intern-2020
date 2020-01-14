@@ -96,7 +96,7 @@ public class BoardController {
         model.addAttribute("list",list);
         model.addAttribute("com_name",boardService.printCompanyName(decode));
         //model.addAttribute("board_id",list.get(0).getBoard_id());
-       // model.addAttribute("com_id",list.get(0).getCom_id());
+        // model.addAttribute("com_id",list.get(0).getCom_id());
         //model.addAttribute("board_name",list.get(0).getBoard_name());
         System.out.println(model);
         return "board";
