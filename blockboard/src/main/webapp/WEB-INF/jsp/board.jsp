@@ -162,11 +162,11 @@
     });
   </script>
   <h1>${com_name} 게시판</h1>
-
   <c:if test="${isadmin}">
         <a id ='addFuncBtn'  style="cursor:pointer">기능 변경</a>
         <a id ='addBoardBtn' onclick = "javascript:clickaddBoardBtn(this)"  style="cursor:pointer">게시판 추가</a>
   </c:if>
+
   <a href="logout">로그아웃</a>
   <div id = "board_add_container">
       <!--게시판 추가버튼 누를때 -->

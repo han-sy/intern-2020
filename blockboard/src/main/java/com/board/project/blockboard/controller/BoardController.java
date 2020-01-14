@@ -89,6 +89,7 @@ public class BoardController {
         logger.info("first");
         List<BoardDTO> list = boardService.printBoardbyComp(decode);
         logger.info("secpmd");
+      
         int com_id = boardService.printCompanyId(decode);
         CurrentUserInfo currentUserInf = CurrentUserInfo.getInstance();
         currentUserInf.setUser_id(decode);
@@ -98,6 +99,11 @@ public class BoardController {
         model.addAttribute("list",list); //게시판 목록
         model.addAttribute("com_name",boardService.printCompanyName(currentUserInf.getUser_id()));//회사이름
         model.addAttribute("isadmin",boardService.checkAdmin(currentUserInf.getUser_id()));
+      
+        System.out.println("list: "+list.size());
+        model.addAttribute("list",list);
+        model.addAttribute("com_name",boardService.printCompanyName(decode));
+
         System.out.println(model);
         return "board";
     }
