@@ -16,4 +16,11 @@ public interface BoardMapper {
     PostDTO selectPostByPostID(String post_id);
     String selectComIdByUserId(String user_id);
     String selectComNameByUserId(String user_id);
+    String selectUserTypeByUserId(String user_id);
+
+    int maxBoardID();
+
+    void insertBoard(BoardDTO newBoard);
+
+    BoardDTO selectBoardByBoardName(String newBoardName);
 }
