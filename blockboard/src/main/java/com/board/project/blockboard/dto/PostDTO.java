@@ -1,5 +1,8 @@
 package com.board.project.blockboard.dto;
 
+import lombok.Data;
+
+@Data
 public class PostDTO {
     private int post_id;
     private String user_id;
