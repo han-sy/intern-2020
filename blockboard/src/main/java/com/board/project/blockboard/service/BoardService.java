@@ -2,10 +2,7 @@ package com.board.project.blockboard.service;
 
 import com.board.project.blockboard.dto.BoardDTO;
 import com.board.project.blockboard.dto.PostDTO;
-import sun.awt.geom.Crossings;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.List;
 
 public interface BoardService {

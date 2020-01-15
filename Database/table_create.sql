@@ -98,7 +98,7 @@ insert into Post values (3,2,1,1,'건의사항 게시판 첫글','공지사항�
 insert into Post values (4,2,1,1,'공지사항 게시판 ','ㅎㅎㅎㅎ테스트',now());
 insert into Post values (5,1,5,1,'자유1','1111',now());
 insert into Post values (6,1,5,1,'자유2','22222',now());
-
+ 
 
 SELECT p.post_id,p.user_id, u.user_name,p.board_id,p.com_id,p.post_title,p.post_content,p.post_reg_time
         FROM Post p , Users u
