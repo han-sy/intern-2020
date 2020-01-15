@@ -11,6 +11,9 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <title>mysql 연동</title>
   <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+
+
+
   <script src="/static/SE2/js/service/HuskyEZCreator.js" charset="utf-8"></script>
   <script type="text/javascript">
     var oEditors = [];
@@ -35,56 +38,9 @@
       },
       fCreator : "createSEditor2"
       });
-    });
   </script>
 
-  <style>
-    #container {
-      width: 100%;
-      margin: 0 auto;
-      text-align: center;
-    }
-    .tab {
-      list-style: none;
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-    }
-    #tabcontent {
-      display: block;
-      background-color: lightgreen;
-      padding: 6px 12px;
-      color: black;
-    }
-    #postcontent {
-      display: block;
-      background-color: lightgreen;
-      padding: 6px 12px;
-      color: black;
-    }
-    a {
-      display: inline-block;
-      color: #000;
-      text-align: center;
-      text-decoration: none;
-      padding: 14px 16px;
-      font-size: 17px;
-      transition: 0.3s;
-    }
-    a:visited {
-      color: black;
-      text-decoration: none;
-    }
-    li {
-      float: left;
-      display: inline-block;
-      color: #000;
-      text-align: center;
-      text-decoration: none;
-      padding: 14px 16px;
-      font-size: 17px;
-    }
-  </style>
+  <link rel="stylesheet" type="text/css" href="/static/css/boardstyle.css">
   <script src="/static/js/event.js"></script>
   <script type="text/javascript">
     // 게시판에서 '글쓰기' 버튼 클릭하면 화면에 에디터 표시
@@ -107,6 +63,7 @@
 </head>
 
 <body>
+
   <script>
     $(function () {
       $('#writecontent').hide();
@@ -161,16 +118,38 @@
     });
 
 
+$(document).on('click', '.toggleBG', function () {
+    var toggleBG = $(this);
+    var toggleFG = $(this).find('.toggleFG');
+    console.log($("#check_val").text());
+    if($("#check_val").text()=="ON") {
+        var right = toggleFG.css('left').replace(/[^\d]/g, '');
+        var left= right-20;
+        toggleBG.css('background', '#CCCCCC');
+        moveToggle(toggleFG, 'TO_LEFT',left,right);
+        $("#check_val").html("OFF");
+        console.log($("#check_val").text());
+    }else if($("#check_val").text()=="OFF") {
+        var left = toggleFG.css('left').replace(/[^\d]/g, '');
+        var right = left+20;
+        toggleBG.css('background', '#53FF4C');
+        moveToggle(toggleFG, 'TO_RIGHT',left,right);
+        $("#check_val").html("ON");
+        console.log($("#check_val").text());
+    }
+});
+
 
   </script>
   <h1>${com_name} 게시판</h1>
+  <!--게시판 하위에 관리자일 경우 추가되는 버튼 (기능변경, 게시판추가)-->
   <c:if test="${isadmin}">
-        <a id ='addFuncBtn'  style="cursor:pointer">기능 변경</a>
+        <a id ='addFuncBtn'  onclick = "javascript:changeFunction(this)" style ="cursor:pointer">기능 변경</a>
         <a id ='addBoardBtn' onclick = "javascript:clickaddBoardBtn(this)"  style="cursor:pointer">게시판 추가</a>
   </c:if>
 
   <a href="logout">로그아웃</a>
-  <div id = "board_add_container">
+  <div id = "config_container">
       <!--게시판 추가버튼 누를때 -->
     </div>
   <div id="container">
