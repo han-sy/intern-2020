@@ -7,19 +7,19 @@
         SELECT * FROM Board;
     </select>
     <select id="selectComNameByUserId" parameterType="string" resultType="string">
-        Select c.com_name
+        Select c.company_name
         from Company c, Users u
-        where c.com_id=u.com_id and u.user_id = #{user_id};
+        where c.company_id=u.company_id and u.user_id = #{user_id};
     </select>
     <select id="selectComIdByUserId" parameterType="string" resultType="string">
-        Select c.com_id
+        Select c.company_id
         from Company c, Users u
-        where c.com_id=u.com_id and u.user_id = #{user_id};
+        where c.company_id=u.company_id and u.user_id = #{user_id};
     </select>
     <select id="selectBoardByComId" parameterType="string" resultType="com.board.project.blockboard.dto.BoardDTO">
         SELECT *
         FROM Board
-        WHERE com_id=#{com_id};
+        WHERE company_id=#{com_id};
     </select>
     <select id="selectBoardByBoardName" parameterType="string" resultType="com.board.project.blockboard.dto.BoardDTO">
         SELECT *
@@ -29,7 +29,7 @@
 
     <!--추후에 디비 수정후 쿼리 변경해야됨-->
     <select id="selectPostByBoardId" parameterType="string" resultType="com.board.project.blockboard.dto.PostDTO">
-        SELECT p.post_id,p.user_id, u.user_name,p.board_id,p.com_id,p.post_title,p.post_content,p.post_reg_time
+        SELECT p.post_id,p.user_id, u.user_name,p.board_id,p.company_id,p.post_title,p.post_content,p.post_register_time
         FROM Post p , Users u
         WHERE p.user_id = u.user_id and p.board_id=#{board_id}
         ORDER BY p.post_id DESC;
@@ -37,7 +37,7 @@
 
     <!--게시글 id로 게시글반환-->
     <select id="selectPostByPostID" parameterType="string" resultType="com.board.project.blockboard.dto.PostDTO">
-        SELECT p.post_id,p.user_id, u.user_name,p.board_id,p.com_id,p.post_title,p.post_content,p.post_reg_time
+        SELECT p.post_id,p.user_id, u.user_name,p.board_id,p.company_id,p.post_title,p.post_content,p.post_register_time
         FROM Post p , Users u
         WHERE p.user_id = u.user_id and p.post_id=#{post_id}
     </select>

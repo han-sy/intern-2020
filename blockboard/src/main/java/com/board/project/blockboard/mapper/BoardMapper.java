@@ -11,7 +11,7 @@ import java.util.List;
 @Mapper
 public interface BoardMapper {
     List<BoardDTO> allBoard();
-    List<BoardDTO> selectBoardByComId(String com_id);
+    List<BoardDTO> selectBoardByComId(String company_id);
     List<PostDTO> selectPostByBoardId(String board_id);
     PostDTO selectPostByPostID(String post_id);
     String selectComIdByUserId(String user_id);

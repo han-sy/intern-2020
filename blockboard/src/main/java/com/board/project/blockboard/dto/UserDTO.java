@@ -3,17 +3,16 @@ package com.board.project.blockboard.dto;
 public class UserDTO {
     private String user_id;
     private int com_id;
-    private String user_pwd;
-
-    public String getUser_pwd() {
-        return user_pwd;
-    }
-
-    public void setUser_pwd(String user_pwd) {
-        this.user_pwd = user_pwd;
-    }
-
+    private String user_password;
     private String user_type;
+
+    public String getUser_password() {
+        return user_password;
+    }
+
+    public void setUser_password(String user_password) {
+        this.user_password = user_password;
+    }
 
     public UserDTO(String user_id) {
         this.user_id = user_id;

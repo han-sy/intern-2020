@@ -133,7 +133,7 @@ public class BoardController {
                 map.put("post_id",list.get(i).getPost_id());
                 map.put("post_title",list.get(i).getPost_title());
                 map.put("user_name",list.get(i).getUser_name());
-                map.put("post_reg_time",list.get(i).getPost_reg_time());
+                map.put("post_reg_time",list.get(i).getPost_register_time());
                 System.out.println(map);
                 listSender.add(map);
             }
@@ -165,7 +165,7 @@ public class BoardController {
             map.put("post_title",post.getPost_title());
             map.put("post_content",post.getPost_content());
             map.put("user_name",post.getUser_name());
-            map.put("post_reg_time",post.getPost_reg_time());
+            map.put("post_reg_time",post.getPost_register_time());
             System.out.println(map);
         }
         catch (Exception e){

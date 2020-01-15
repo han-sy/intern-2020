@@ -2,14 +2,15 @@ package com.board.project.blockboard.dto;
 
 public class BoardDTO {
     private int board_id;
-    private int com_id;
+    private int company_id;
     private String board_name;
 
     public BoardDTO(){
     }
-    public BoardDTO(int board_id, int com_id, String board_name) {
+
+    public BoardDTO(int board_id, int company_id, String board_name) {
         this.board_id = board_id;
-        this.com_id = com_id;
+        this.company_id = company_id;
         this.board_name = board_name;
     }
 
@@ -21,12 +22,12 @@ public class BoardDTO {
         this.board_id = board_id;
     }
 
-    public int getCom_id() {
-        return com_id;
+    public int getCompany_id() {
+        return company_id;
     }
 
-    public void setCom_id(int com_id) {
-        this.com_id = com_id;
+    public void setCompany_id(int company_id) {
+        this.company_id = company_id;
     }
 
     public String getBoard_name() {
