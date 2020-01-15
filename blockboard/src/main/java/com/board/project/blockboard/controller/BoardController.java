@@ -1,5 +1,6 @@
 package com.board.project.blockboard.controller;
 
+import com.board.project.blockboard.Data.CurrentUserInfo;
 import com.board.project.blockboard.dto.BoardDTO;
 import com.board.project.blockboard.dto.PostDTO;
 import com.board.project.blockboard.service.BoardService;
@@ -32,9 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- *
- */
+
 @Controller
 @RequestMapping("/board")
 public class BoardController {
@@ -91,20 +90,37 @@ public class BoardController {
         logger.info("first");
         List<BoardDTO> list = boardService.printBoardbyComp(decode);
         logger.info("secpmd");
-        //System.out.println("request: "+request);
-        //System.out.println("session: "+session.getAttribute("USER")+","+session.getAttribute("COMPANY"));
+      
+        int com_id = boardService.printCompanyId(decode);
+        CurrentUserInfo currentUserInf = CurrentUserInfo.getInstance();
+        currentUserInf.setUser_id(decode);
+        currentUserInf.setCom_id(com_id);
+
+        System.out.println("list: "+list.size());
+        model.addAttribute("list",list); //게시판 목록
+        model.addAttribute("com_name",boardService.printCompanyName(currentUserInf.getUser_id()));//회사이름
+        model.addAttribute("isadmin",boardService.checkAdmin(currentUserInf.getUser_id()));
+      
         System.out.println("list: "+list.size());
         model.addAttribute("list",list);
         model.addAttribute("com_name",boardService.printCompanyName(decode));
-        //model.addAttribute("board_id",list.get(0).getBoard_id());
-        // model.addAttribute("com_id",list.get(0).getCom_id());
-        //model.addAttribute("board_name",list.get(0).getBoard_name());
+
         System.out.println(model);
         return "board";
     }
+<<<<<<< HEAD
     @RequestMapping(value = "/tab",method = RequestMethod.GET)
+=======
+
+    /**
+     *
+     * @param request 클릭한 탭의 id
+     * @return
+     */
+    @RequestMapping(value = "/board/tab",method = RequestMethod.GET)
+>>>>>>> f2caa76baad6a3747f2321d19e8d3f99a23b9e3e
     @ResponseBody
-    public List<Map<String,Object>> printPostList(HttpServletRequest request, Model model){
+    public List<Map<String,Object>> printPostList(HttpServletRequest request){
 
 
         String board_id = request.getParameter("activeTab");
@@ -133,7 +149,17 @@ public class BoardController {
 
         return listSender;
     }
+<<<<<<< HEAD
     @RequestMapping(value = "/post",method = RequestMethod.GET)
+=======
+
+    /**
+     *
+     * @param request 게시글 목록중 클릭한 게시글의 id
+     * @return
+     */
+    @RequestMapping(value = "/board/post",method = RequestMethod.GET)
+>>>>>>> f2caa76baad6a3747f2321d19e8d3f99a23b9e3e
     @ResponseBody
     public Map<String,Object> printPost(HttpServletRequest request){
 
@@ -158,5 +184,19 @@ public class BoardController {
 
         return map;
     }
+    @RequestMapping(value = "/board/addboard",method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String,Object> insertNewBoard(HttpServletRequest request){
+
+        String newBoardName = request.getParameter("board_name");
+        boardService.insertNewBoard(newBoardName);
+        System.out.println("ajax로 넘어온 data :  "+request);
+        Map<String,Object> map = new HashMap<String, Object>();
+        BoardDTO newBoard = boardService.printboardbyBoardName(newBoardName);
+        map.put("board_id",newBoard.getBoard_id());
+        map.put("board_name",newBoard.getBoard_name());
+        return map;
+    }
+
 
 }
