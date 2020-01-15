@@ -35,7 +35,10 @@ dependencies {
 
 	implementation "org.apache.tomcat.embed:tomcat-embed-jasper"
 	implementation "javax.servlet:jstl"
+<<<<<<< HEAD
 	//compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1'
+=======
+>>>>>>> 3b3e51fb97ab85c937552f8c52d1503097d4169c
 	implementation 'org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4:1.16'
 	implementation 'commons-codec:commons-codec'
 	implementation 'org.projectlombok:lombok'

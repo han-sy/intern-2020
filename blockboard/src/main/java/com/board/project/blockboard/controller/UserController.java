@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
@@ -31,50 +30,38 @@ public class UserController {
     private UserService userService;
 
     private String key = "slgi3ibu5phi8euf";
-    AES256Util aes256;
-    URLCodec codec;
+    private String token = "server";
     Logger logger = LoggerFactory.getLogger(getClass());
 
     @RequestMapping("/loginCheck")
-    public String loginCheck(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws UnsupportedEncodingException {
+    public String loginCheck(HttpServletRequest request, HttpServletResponse response, HttpSession session) throws UnsupportedEncodingException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, EncoderException {
         // 로그인 Validation
         boolean result = userService.loginCheck(request, session);
 
         // 로그인 성공시 클라이언트에게 생성한 쿠키 전달
         if(result) {
             // 암호화 과정
-            aes256 = new AES256Util(key);
-            codec = new URLCodec();
-            String user_id = request.getParameter("user_id") + "server";
+            AES256Util aes256 = new AES256Util(key);
+            URLCodec codec = new URLCodec();
+
+            String user_id = request.getParameter("user_id") + token;
             String encrypt = "";
 
-            try {
-                encrypt = codec.encode(aes256.aesEncode(user_id));
-                logger.info(encrypt.toString());
-            } catch (EncoderException e) {
-                e.printStackTrace();
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-            } catch (NoSuchPaddingException e) {
-                e.printStackTrace();
-            } catch (InvalidKeyException e) {
-                e.printStackTrace();
-            } catch (InvalidAlgorithmParameterException e) {
-                e.printStackTrace();
-            } catch (IllegalBlockSizeException e) {
-                e.printStackTrace();
-            } catch (BadPaddingException e) {
-                e.printStackTrace();
-            }
+            encrypt = codec.encode(aes256.aesEncode(user_id));
 
+<<<<<<< HEAD
             Cookie setCookie = new Cookie("s_id", encrypt); // 클라이언트에게 전달할 쿠키 생성
             setCookie.setMaxAge(60*60);
+=======
+            Cookie setCookie = new Cookie("session_id", encrypt); // 클라이언트에게 전달할 쿠키 생성
+            setCookie.setMaxAge(60*60*24); // 쿠키 유지 시간을 하루로 설정
+>>>>>>> 3b3e51fb97ab85c937552f8c52d1503097d4169c
             response.addCookie(setCookie);
         }
         return "redirect:/";
     }
 
-    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    @RequestMapping("/logout")
     public String logout(HttpServletResponse response) {
         // s_id 쿠키 새로 생성해서 시간 0으로 설정
         Cookie kc = new Cookie("s_id", null);
@@ -83,11 +70,11 @@ public class UserController {
         return "redirect:/";
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String login(HttpServletRequest request, HttpSession session) throws UnsupportedEncodingException {
+    @RequestMapping( "/")
+    public String login(HttpServletRequest request, HttpSession session) throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
         Cookie[] getCookie = request.getCookies();
-        aes256 = new AES256Util(key);
-        codec = new URLCodec();
+        AES256Util aes256 = new AES256Util(key);
+        URLCodec codec = new URLCodec();
         // 클라이언트가 보낸 쿠키가 서버가 생성해준건지 검사 (복호화 과정)
         if(getCookie != null){
             for(int i=0; i<getCookie.length; i++){
@@ -96,33 +83,17 @@ public class UserController {
                 String value = c.getValue();
 
                 if(name.equals("s_id")) {
-                    String decode = null;
-                    try {
-                        decode = aes256.aesDecode(codec.decode(value));
-                        logger.info(decode);
-                    } catch (NoSuchAlgorithmException e) {
-                        e.printStackTrace();
-                    } catch (NoSuchPaddingException e) {
-                        e.printStackTrace();
-                    } catch (InvalidKeyException e) {
-                        e.printStackTrace();
-                    } catch (InvalidAlgorithmParameterException e) {
-                        e.printStackTrace();
-                    } catch (IllegalBlockSizeException e) {
-                        e.printStackTrace();
-                    } catch (BadPaddingException e) {
-                        e.printStackTrace();
-                    } catch (DecoderException e) {
-                        e.printStackTrace();
-                    }
-                    //서버가 만들어준 쿠키면
-                    if(decode.substring(decode.length()-6,decode.length()).equals("server")) {
+                    String decode_str = aes256.aesDecode(codec.decode(value));
+                    String server_token = decode_str.substring(decode_str.length()-6,decode_str.length());
+                    logger.info(server_token);
+
+                    //서버가 만들어준 쿠키면 게시판 화면으로 바로 이동
+                    if(server_token.equals(token)) {
                         return "redirect:/board";
                     }
                 }
             }
         }
-
         return "login";
     }
 }
