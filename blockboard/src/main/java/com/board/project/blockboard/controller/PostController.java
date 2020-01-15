@@ -18,16 +18,21 @@ public class PostController {
     private PostService postService;
 
     Logger logger = LoggerFactory.getLogger(getClass());
+
     @RequestMapping("/writeform")
     public String writeform() {
         logger.info("writeform");
         return "writeform";
     }
-    @RequestMapping(value = "/write", method = RequestMethod.POST)
+
+    @RequestMapping(value = "/write", method = {RequestMethod.GET, RequestMethod.POST})
     public void writePost(HttpServletRequest request) {
         PostDTO post = new PostDTO();
+        post.setUser_id("1");
         post.setBoard_id("444");
+        post.setCom_id(1);
+        post.setPost_title(request.getParameter("post_content"));
         post.setPost_content("우혁 테스트~~");
-        postService.writePost(post);
+        logger.info(post.getPost_title());
     }
 }

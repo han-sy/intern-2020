@@ -12,6 +12,7 @@
   <title>mysql 연동</title>
   <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
   <script src="/static/ckeditor/ckeditor.js"></script>
+  <script src="/static/ckeditor/adapters/jquery.js"></script>
 
   <style>
     #container {
@@ -61,32 +62,71 @@
     }
   </style>
   <script src="/static/js/event.js"></script>
-  <script type="text/javascript">
-    // 게시판에서 '글쓰기' 버튼 클릭하면 화면에 에디터 표시
-    $(function () {
-      $('#btn_write').click(function () {
-        $('#writecontent').show();
-        $('#postcontent').html("");
-        $(this).hide();
-      });
-    });
 
-// 에디터에서 '글쓰기' 버튼 클릭하면 게시글 저장
-    $(function () {
-      $('#btn_postwrite').click(function () {
-        $('#writecontent').hide();
-        $('#btn_write').show();
-      });
-    });
-  </script>
 </head>
 
 <body>
   <script>
-    $(function () {
-      $('#writecontent').hide();
-      $('#btn_write').show();
+    $(function createEditor() {
+      $('#btn_write').click(function() {
+        $('#writecontent').css("display", "");
+        $('#btn_write').css("display", "none");
+        $('#editorcontent').html("게시글제목 </br> <input type=text id=post_title />");
+        $('#editorcontent').append("<textarea id=editor></textarea>");
+        $('#editorcontent').append("<input type=button id=btn_post value=글쓰기 />")
+        $('#editor').ckeditor();
+
+        // 글쓰기 버튼 클릭
+        $('#btn_post').click(function () {
+          var post_title = $('#post_title').val();
+          var post_content = CKEDITOR.instances.editor.getData();
+          console.log(post_content);
+          
+          $('#editorcontent').html("");
+          $('#writecontent').css("display", "none");
+          $('#btn_write').css("display", "");
+          /*
+          $.ajax({
+          type: 'POST',
+          url: "/board/post/write",
+          data: {post_content},
+          error: function() {
+
+          },
+          success: function(data) {
+            console.log("success");
+          }
+          });
+          */
+        });
+      });
     });
+
+    $(function removeEditor() {
+      $('#btn_postwrite').click(function() {
+        var post_title = $("#post_title").val();
+        var post_content = $("#editor").val();
+
+        $('#btn_write').css("display", "");
+        $('#btn_postwrite').css("display", "none");
+        $('#writecontent').css("display", "none");
+        $('#editorcontent').html("");
+        $.ajax({
+          type: 'POST',
+          url: "/board/post/write",
+          data: {post_content},
+          error: function() {
+
+          },
+          success: function(data) {
+            console.log("success");
+          }
+        });
+      });
+    });
+  </script>
+
+  <script>
     $(function () {
       // tab operation
       $('.tabmenu').click(function () {
@@ -152,15 +192,13 @@
     </c:forEach>
   </ul>
 
-  <div id="writecontent">
+  <div id="writecontent" style="display:none">
     <h2> 글쓰기 영역 - 우혁 부분 </h2>
-    <input type="text" id="post_title" placeholder="게시글 제목"/>
-    <textarea name="smarteditor" id="smarteditor" rows="10" cols="100" placeholder="내용을 입력하세요">afwefwe</textarea></br>
-    <script>
-        CKEDITOR.replace("smarteditor",{
-        });
-    </script>
-    <input id="btn_postwrite" type="submit" value="글쓰기"/>
+    <div id="editorcontent">
+      게시글 제목<input id="post_title" type="text"/> 
+      <textarea class="ckeditor" id ="editor" name="editor" rows="6" cols="80" placeholder = "내용을 입력하세요"></textarea>
+      <input id="btn_postwrite" type="submit" type="button" value="글쓰기"/>
+    </div>
   </div>
 
   <div id="postcontent"></div>
@@ -194,7 +232,7 @@
     </table>
   </div>
   </div>
-      <button id="btn_write" type="button">글쓰기</button>
+      <input type="button" id="btn_write" type="button" value="글쓰기"></button>
   </div>
 
 </body>
