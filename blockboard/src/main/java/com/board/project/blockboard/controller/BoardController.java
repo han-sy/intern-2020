@@ -108,17 +108,8 @@ public class BoardController {
         System.out.println(model);
         return "board";
     }
-<<<<<<< HEAD
-    @RequestMapping(value = "/tab",method = RequestMethod.GET)
-=======
 
-    /**
-     *
-     * @param request 클릭한 탭의 id
-     * @return
-     */
-    @RequestMapping(value = "/board/tab",method = RequestMethod.GET)
->>>>>>> f2caa76baad6a3747f2321d19e8d3f99a23b9e3e
+    @RequestMapping(value = "/tab",method = RequestMethod.GET)
     @ResponseBody
     public List<Map<String,Object>> printPostList(HttpServletRequest request){
 
@@ -149,17 +140,8 @@ public class BoardController {
 
         return listSender;
     }
-<<<<<<< HEAD
-    @RequestMapping(value = "/post",method = RequestMethod.GET)
-=======
 
-    /**
-     *
-     * @param request 게시글 목록중 클릭한 게시글의 id
-     * @return
-     */
-    @RequestMapping(value = "/board/post",method = RequestMethod.GET)
->>>>>>> f2caa76baad6a3747f2321d19e8d3f99a23b9e3e
+    @RequestMapping(value = "/post",method = RequestMethod.GET)
     @ResponseBody
     public Map<String,Object> printPost(HttpServletRequest request){
 
@@ -184,7 +166,8 @@ public class BoardController {
 
         return map;
     }
-    @RequestMapping(value = "/board/addboard",method = RequestMethod.GET)
+
+    @RequestMapping(value = "/addboard",method = RequestMethod.GET)
     @ResponseBody
     public Map<String,Object> insertNewBoard(HttpServletRequest request){
 

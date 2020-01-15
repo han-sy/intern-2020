@@ -33,11 +33,12 @@ dependencies {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
 
-	compile("org.apache.tomcat.embed:tomcat-embed-jasper")
-	compile("javax.servlet:jstl")
-	compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1'
-	compile('org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4:1.16')
-	compile('commons-codec:commons-codec')
+	implementation "org.apache.tomcat.embed:tomcat-embed-jasper"
+	implementation "javax.servlet:jstl"
+	//compile group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1'
+	implementation 'org.bgee.log4jdbc-log4j2:log4jdbc-log4j2-jdbc4:1.16'
+	implementation 'commons-codec:commons-codec'
+	implementation 'org.projectlombok:lombok'
 }
 
 test {
