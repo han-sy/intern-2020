@@ -30,41 +30,41 @@ function clickTrEvent(trObj) {
 }
 
 // 글쓰기 버튼 클릭 이벤트
-function createEditor() {
-      $('#btn_write').click(function() {
-        $('#writecontent').css("display", "");
-        $('#btn_write').css("display", "none");
-        $('#editorcontent').html("게시판선택");
-        $('#editorcontent').html("게시글제목 </br> <input type=text id=post_title />");
-        $('#editorcontent').append("<textarea id=editor></textarea>");
-        $('#editorcontent').append("<input type=button id=btn_post value=올리기 />")
-        $('#editor').ckeditor();
+function post_btn_clickEvent() {
+  $('#btn_write').click(function() {
+    $('#writecontent').css("display", "");
+    $('#btn_write').css("display", "none");
+    $('#editorcontent').html("게시판선택");
+    $('#editorcontent').html("게시글제목 </br> <input type=text id=post_title />");
+    $('#editorcontent').append("<textarea id=editor></textarea>");
+    $('#editorcontent').append("<input type=button id=btn_post value=올리기 />")
+    $('#editor').ckeditor();
 
-        // 올리기 버튼 클릭
-        $('#btn_post').click(function () {
-          var post_title = $('#post_title').val();
-          var post_content = CKEDITOR.instances.editor.getData();
-          var board_name = $('#post_board_id option:selected').val();
-          console.log("제목:" + post_title);
-          console.log("내용:" + post_content);
-          console.log("선택한 게시판:" + board_id);
-          $('#editorcontent').html("");
-          $('#writecontent').css("display", "none");
-          $('#btn_write').css("display", "");
-          $.ajax({
-          type: 'POST',
-          url: "/board/post/write",
-          data: {post_title: post_title,
-                post_content: post_content,
-                board_name: board_name},
-          error: function() {
-            alert('삽입실패');
-          },
-          success: function() {
-            console.log("success");
-          }
-          });
-
-        });
+    // 올리기 버튼 클릭
+    $('#btn_post').click(function () {
+      var post_title = $('#post_title').val();
+      var post_content = CKEDITOR.instances.editor.getData();
+      var board_name = $('#post_board_id option:selected').val();
+      console.log("제목:" + post_title);
+      console.log("내용:" + post_content);
+      console.log("선택한 게시판:" + board_id);
+      $('#editorcontent').html("");
+      $('#writecontent').css("display", "none");
+      $('#btn_write').css("display", "");
+      $.ajax({
+      type: 'POST',
+      url: "/board/post/write",
+      data: {post_title: post_title,
+            post_content: post_content,
+            board_name: board_name},
+      error: function() {
+        alert('게시글 작성 실패');
+      },
+      success: function() {
+        console.log("게시글 저장 완료");
+      }
       });
+
     });
+  });
+});

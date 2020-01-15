@@ -11,5 +11,5 @@ import java.util.Map;
 @Mapper
 public interface PostMapper {
     void insertPost(PostDTO post);
-    BoardDTO getBoard_id(Map<String, Object> map);
+    BoardDTO getBoardId(Map<String, Object> map);
 }

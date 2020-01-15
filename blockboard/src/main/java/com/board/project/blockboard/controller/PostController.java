@@ -28,19 +28,18 @@ public class PostController {
     public Map<String, Object> writePost(HttpServletRequest request) {
         PostDTO post = new PostDTO();
         Map<String,Object> map = new HashMap<String, Object>();
-        String board_name;
-        int board_id;
+        String board_name = request.getParameter("post_board_name"); // ajax에서 전송한 게시판이름 저장
 
         post.setUser_id(currentUserInfo.getUser_id()); // 게시글의 user_id 설정
         post.setCom_id(currentUserInfo.getCom_id()); // 게시글의 com_id 설정
-
-        board_name = request.getParameter("post_board_name"); // ajax에서 전송한 게시판이름 저장
         map.put("board_name", board_name);
         map.put("company_id", post.getCom_id());
-        board_id = postService.getBoard_id(map); // board_name으로 board_id 가져오기
+        int board_id = postService.getBoardId(map); // board_name으로 board_id 가져오기
+
         post.setBoard_id(board_id); // 게시글의 board_id 설정
         post.setPost_title(request.getParameter("post_title"));
         post.setPost_content(request.getParameter("post_content"));
+
         postService.insertPost(post);
         return map;
     }
