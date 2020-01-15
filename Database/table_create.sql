@@ -32,7 +32,7 @@ create table BoardFunction(
 create table FunctionCheck(
 	com_id int(9) not null,
     func_id int(9) not null,
-    func_able boolean not null,
+    func_data varchar(300),
     foreign key(com_id) references Company(com_id),
     foreign key(func_id) references BoardFunction(func_id),
     primary key(com_id,func_id)
@@ -85,8 +85,8 @@ insert into Board values(5,1,"자유게시판");
 insert into Users values(1,1,'김동욱','123','관리자');
 insert into Users values(2,1,'전우혁','123','사원');
 insert into Users values(3,2,'곽대훈','123','관리자');
-insert into BoardFunction values(1,'기독기능');
-insert into FunctionCheck values(1,1,true);
+insert into BoardFunction values(1,'댓글작성');
+insert into FunctionCheck values(1,1,null);
 insert into Post values(1,1,1,1,'첫게시글','첫내용',now());
 insert into Comments values(1,1,1,1,'첫 댓글',now(),null);
 insert into Comments values(2,1,1,1,'첫 답글',now(),1);
@@ -104,4 +104,3 @@ SELECT p.post_id,p.user_id, u.user_name,p.board_id,p.com_id,p.post_title,p.post_
         FROM Post p , Users u
         WHERE p.user_id = u.user_id and p.board_id=1
         ORDER BY p.post_id DESC;
-
