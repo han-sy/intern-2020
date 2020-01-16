@@ -90,6 +90,65 @@ function moveToggle(toggleBtn, LR,l,r) {
     }, 201);
 }
 
+
+
+// 기능 토글 버튼 클릭 이벤트
+$(document).on('click', '.toggleBG', function clickToggleButton() {
+    var toggleBG = $(this);
+    var toggleFG = $(this).find('.toggleFG');
+    console.log($("#check_val").text());
+    if($("#check_val").text()=="ON") {
+        var right = toggleFG.css('left').replace(/[^\d]/g, '');
+        var left= right-20;
+        toggleBG.css('background', '#CCCCCC');
+        moveToggle(toggleFG, 'TO_LEFT',left,right);
+        $("#check_val").html("OFF");
+        console.log($("#check_val").text());
+    }else if($("#check_val").text()=="OFF") {
+        var left = toggleFG.css('left').replace(/[^\d]/g, '');
+        var right = left+20;
+        toggleBG.css('background', '#53FF4C');
+        moveToggle(toggleFG, 'TO_RIGHT',left,right);
+        $("#check_val").html("ON");
+        console.log($("#check_val").text());
+    }
+});
+
+// 탭 메뉴 클릭 이벤트 - 해당 게시판의 게시글 불러옴
+$(document).on("click",".tabmenu",function clickTabEvent() {
+    //var activeTab = $(this).attr('data-tab');
+    var activeTab = $(this).attr('data-tab');
+    console.log(activeTab);
+    $('li').css('background-color', 'white');
+    $(this).css('background-color', 'lightgreen');
+    $('#postcontent').html("");
+    $('#writecontent').hide();
+    $('#btn_write').show();
+    $.ajax({
+      type: 'GET',                 //get방식으로 통신
+      url: "/board/tab",    //탭의 data-tab속성의 값으로 된 html파일로 통신
+      data: { activeTab: activeTab },
+      error: function () {  //통신 실패시
+        alert('통신실패!');
+      },
+      success: function (data) {    //통신 성공시 탭 내용담는 div를 읽어들인 값으로 채운다.
+        console.log("success" + data);
+        $('#postlist').html("");
+        $.each(data, function (key, value) {
+          $('#postlist').append(
+            "<tr height='30' class = 'postclick' data-post = '" + value.postID +
+            "' onclick='javascript:clickTrEvent(this)' onmouseover = 'javascript:changeTrColor(this)' >" +
+            "<td width='73'>" + value.postID + "</td>" +
+            "<td width='379'>" + value.postTitle + "</td>" +
+            "<td width='73'>" + value.userName + "</td>" +
+            "<td width='164'>" + value.postRegisterTime + "</td></tr>"
+          );
+          //alert($this);
+        });
+      }
+    });
+});
+
 // 게시글 작성 버튼 이벤트
 function click_write() {
     $('postlist').append("test");
@@ -101,7 +160,8 @@ function click_write() {
     $('#editorcontent').append("<button id=btn_post onclick=javascript:click_post(this)>올리기</button>")
     $('#editor').ckeditor();
 }
-// 올리기 버튼 클릭
+
+// 게시글 작성 후 올리기 버튼 클릭
 function click_post() {
     var postTitle = $('#post_title').val();
     var postContent = CKEDITOR.instances.editor.getData();
@@ -126,3 +186,4 @@ function click_post() {
       }
     });
 }
+
