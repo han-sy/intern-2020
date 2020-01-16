@@ -81,19 +81,19 @@ public class BoardController {
             }
         }
 
-        List<BoardDTO> list = boardService.getBoardListByUserID(userID);
+        List<BoardDTO> boardList = boardService.getBoardListByUserID(userID);
 
         logger.info("userID : "+userID);
         companyID = boardService.getCompanyIDByUserID(userID);
 
 
-        System.out.println("list: "+list.size());
-        model.addAttribute("list",list); //게시판 목록
+        System.out.println("list: "+boardList.size());
+        model.addAttribute("list",boardList); //게시판 목록
         model.addAttribute("companyName",boardService.getCompanyNameByUserID(userID));//회사이름
         model.addAttribute("isadmin",boardService.checkAdmin(userID));
       
-        System.out.println("list: "+list.size());
-        model.addAttribute("list",list);
+        System.out.println("list: "+boardList.size());
+        model.addAttribute("list",boardList);
         model.addAttribute("companyName",boardService.getCompanyNameByUserID(userID));
 
         System.out.println(model);
@@ -112,9 +112,7 @@ public class BoardController {
 
         String boardID = request.getParameter("activeTab");
         List<PostDTO> list = boardService.getPostListByBoardID(boardID);
-        //System.out.println("ajax로 넘어온 data :  "+request);
 
-        //model.addAttribute("post_list",list);
         System.out.println(list);
 
         List listSender = new ArrayList<Object>();
