@@ -3,35 +3,58 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.board.project.blockboard.mapper.BoardMapper">
-    <select id="allBoard" resultType="com.board.project.blockboard.dto.BoardDTO">
+    <select id="selectAllBoard" resultType="com.board.project.blockboard.dto.BoardDTO">
         SELECT * FROM Board;
     </select>
-    <select id="selectComNameByUserId" parameterType="string" resultType="string">
-        Select c.com_name
-        from Company c, Users u
-        where c.com_id=u.com_id and u.user_id = #{user_id};
+    <select id="selectCompanyNameByUserID" parameterType="string" resultType="string">
+        Select company.companyName
+        from Company company, Users user
+        where company.companyID=user.companyID and user.userID = #{userID};
     </select>
-    <select id="selectComIdByUserId" parameterType="string" resultType="string">
-        Select c.com_id
-        from Company c, Users u
-        where c.com_id=u.com_id and u.user_id = #{user_id};
+    <select id="selectCompanyIDByUserID" parameterType="string" resultType="string">
+        Select company.companyID
+        from Company company, Users user
+        where company.companyID=user.companyID and user.userID = #{userID};
     </select>
-    <select id="selectBoardByComId" parameterType="string" resultType="com.board.project.blockboard.dto.BoardDTO">
+    <select id="selectBoardByCompanyID" parameterType="string" resultType="com.board.project.blockboard.dto.BoardDTO">
         SELECT *
         FROM Board
-        WHERE com_id=#{com_id};
+        WHERE companyID=#{companyID};
+    </select>
+    <select id="selectBoardByBoardName" parameterType="string" resultType="com.board.project.blockboard.dto.BoardDTO">
+        SELECT *
+        FROM Board
+        WHERE boardName=#{boardName};
     </select>
 
     <!--추후에 디비 수정후 쿼리 변경해야됨-->
-    <select id="selectPostByBoardId" parameterType="string" resultType="com.board.project.blockboard.dto.PostDTO">
-        SELECT p.post_id,p.user_id, u.user_name,p.board_id,p.com_id,p.post_title,p.post_content,p.post_reg_time
-        FROM Post p , Users u
-        WHERE p.user_id = u.user_id and p.board_id=#{board_id}
-        ORDER BY p.post_id DESC;
+    <select id="selectPostByBoardID" parameterType="string" resultType="com.board.project.blockboard.dto.PostDTO">
+        SELECT post.postID,post.userID, user.userName,post.boardID,post.companyID,post.postTitle,post.postContent,post.postRegisterTime
+        FROM Post post, Users user
+        WHERE post.userID = user.userID and post.boardID=#{boardID}
+        ORDER BY post.postID DESC;
     </select>
+
+    <!--게시글 id로 게시글반환-->
     <select id="selectPostByPostID" parameterType="string" resultType="com.board.project.blockboard.dto.PostDTO">
-        SELECT p.post_id,p.user_id, u.user_name,p.board_id,p.com_id,p.post_title,p.post_content,p.post_reg_time
-        FROM Post p , Users u
-        WHERE p.user_id = u.user_id and p.post_id=#{post_id}
+        SELECT post.postID,post.userID, user.userName,post.boardID,post.companyID,post.postTitle,post.postContent,post.postRegisterTime
+        FROM Post post, Users user
+        WHERE post.userID = user.userID and post.postID=#{postID}
     </select>
+
+    <!--userid로 회원 타입 반환-->
+    <select id="selectUserTypeByUserID" parameterType="string" resultType="string">
+        SELECT userType
+        FROM Users
+        WHERE userID = #{userID};
+    </select>
+
+    <select id="maxBoardID" resultType="int">
+        SELECT max(boardID)
+        FROM Board;
+    </select>
+
+    <insert id="insertBoard" parameterType="com.board.project.blockboard.dto.BoardDTO">
+        insert into Board values(#{boardID},#{companyID},#{boardName});
+    </insert>
 </mapper>
