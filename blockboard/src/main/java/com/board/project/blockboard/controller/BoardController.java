@@ -3,8 +3,8 @@ package com.board.project.blockboard.controller;
 import com.board.project.blockboard.dto.BoardDTO;
 import com.board.project.blockboard.dto.PostDTO;
 import com.board.project.blockboard.service.BoardService;
+import com.board.project.blockboard.service.UserService;
 import com.board.project.blockboard.util.AES256Util;
-import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.net.URLCodec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,16 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -36,6 +30,8 @@ import java.util.Map;
 @RequestMapping("/board")
 public class BoardController {
     private BoardService boardService;
+    @Autowired
+    private UserService userService;
     private String key = "slgi3ibu5phi8euf";
     private String userID;
     private int companyID;
@@ -45,11 +41,11 @@ public class BoardController {
     BoardController(BoardService boardService) {
         this.boardService = boardService;
     }
-
+    Logger logger = LoggerFactory.getLogger(getClass());
     @RequestMapping("")
     public String getMainContent(HttpServletRequest request, HttpSession session,Model model) throws UnsupportedEncodingException {
         // 클라이언트의 쿠키를 가져옴
-        Logger logger = LoggerFactory.getLogger(getClass());
+
         Cookie[] getCookie = request.getCookies();
         aes256 = new AES256Util(key);
         codec = new URLCodec();
@@ -140,12 +136,23 @@ public class BoardController {
 
         String postID = request.getParameter("postID");
         PostDTO post = boardService.getPostByPostID(postID);
+        String userID = "";
+        Cookie[] cookies = request.getCookies();
+        for(Cookie getCookie : cookies) {
+            if(getCookie.getName().equals("userID")) {
+                userID = getCookie.getValue();
+            }
+        }
         //System.out.println("ajax로 넘어온 data :  "+request);
 
         //model.addAttribute("post_list",list);
         System.out.println(post);
         Map<String,Object> map = new HashMap<String, Object>();
+        logger.info("userID = " + userID);
+        logger.info("postUserID = " + post.getUserID());
         try{
+            // 현재 로그인한 유저와 게시글 작성자가 같을 경우에 'canDelete' 를 true로 전달
+            map.put("canDelete", userID.equals(post.getUserID()) ? true : false);
             map.put("postID", postID);
             map.put("postTitle",post.getPostTitle());
             map.put("postContent",post.getPostContent());
@@ -156,7 +163,6 @@ public class BoardController {
         catch (Exception e){
             e.printStackTrace();
         }
-
         return map;
     }
 
@@ -178,6 +184,4 @@ public class BoardController {
         map.put("boardName",newBoard.getBoardName());
         return map;
     }
-
-
 }

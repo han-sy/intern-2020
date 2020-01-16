@@ -31,8 +31,12 @@ function clickTrEvent(trObj) {
       $('#postcontent').append("<h5>작성자 : " + data.userName + "</h4>");
       $('#postcontent').append("<h5>작성시간 : " + data.postRegisterTime + "</h4>");
       $('#postcontent').append("<a>" + data.postContent + "</a>");
-      $('#postcontent').append("</br><button onclick=javascript:clickDeletePost(this)>삭제</button>");
       $('#postcontent').append("<a id=postID style=visibility:hidden>" + data.postID + "</a>");
+      // 작성글의 userID와 현재 로그인한 userID가 같으면 삭제버튼 표시
+      console.log("canDelete = " + data.canDelete);
+      if(data.canDelete == true) {
+        $('#postcontent').append("</br><button onclick=javascript:clickDeletePost(this)>삭제</button>");
+      }
     }
   });
 }

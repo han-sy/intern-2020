@@ -10,4 +10,5 @@ import java.util.List;
 @Mapper
 public interface UserMapper {
     public UserDTO getUserByID(String userID);
+    public int getUserIDByPostID(int postID);
 }
