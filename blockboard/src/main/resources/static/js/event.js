@@ -35,6 +35,7 @@ function clickTrEvent(trObj) {
       // 작성글의 userID와 현재 로그인한 userID가 같으면 삭제버튼 표시
       console.log("canDelete = " + data.canDelete);
       if(data.canDelete == true) {
+        $('#postcontent').append("</br><button onclick=javascript:clickUpdatePost(this)>수정</button>");
         $('#postcontent').append("</br><button onclick=javascript:clickDeletePost(this)>삭제</button>");
       }
     }
