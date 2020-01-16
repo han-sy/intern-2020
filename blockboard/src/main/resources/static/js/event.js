@@ -60,6 +60,7 @@ function clickSaveaddedBoard(){
            });
 
     $('#config_container').html("");
+    location.reload();
  }
 
 //기능추가 버튼 클릭시
