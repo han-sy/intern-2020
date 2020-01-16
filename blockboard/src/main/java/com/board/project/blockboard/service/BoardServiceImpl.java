@@ -23,25 +23,25 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public List<BoardDTO> allBoard() {
-        return boardMapper.allBoard();
+        return boardMapper.selectAllBoard();
     }
 
     @Override
     public String printCompanyName(String userID) {
-        return boardMapper.selectComNameByUserId(userID);
+        return boardMapper.selectCompanyNameByUserID(userID);
     }
 
     @Override
     public List<BoardDTO> printBoardbyComp(String userID) {
         //System.out.println("companyID (session): " + session.getAttribute("COMPANY"));
-        String companyID = boardMapper.selectComIdByUserId(userID);
+        String companyID = boardMapper.selectCompanyIDByUserID(userID);
         System.out.println("companyID : "+companyID);
-        List<BoardDTO> boardlist = boardMapper.selectBoardByComId(companyID);
+        List<BoardDTO> boardlist = boardMapper.selectBoardByCompanyID(companyID);
         return boardlist;
     }
     @Override
     public List<PostDTO> printPostbyBoard(String boardID) {
-        List<PostDTO> postlist = boardMapper.selectPostByBoardId(boardID);
+        List<PostDTO> postlist = boardMapper.selectPostByBoardID(boardID);
         return postlist;
     }
 
@@ -53,7 +53,7 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public boolean checkAdmin(String userID) {
-        String admin = boardMapper.selectUserTypeByUserId(userID);
+        String admin = boardMapper.selectUserTypeByUserID(userID);
         return admin.equals("관리자");
     }
 
@@ -68,7 +68,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public int printCompanyId(String userID) {
         logger.info("boardMapper userid: "+ userID);
-        return Integer.parseInt(boardMapper.selectComIdByUserId(userID));
+        return Integer.parseInt(boardMapper.selectCompanyIDByUserID(userID));
     }
 
     @Override

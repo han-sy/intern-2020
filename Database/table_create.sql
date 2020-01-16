@@ -8,70 +8,70 @@ drop table Board;
 drop table Company;
 
 create table Company(
-	company_id int(9) not null,
-    company_name varchar(20) not null,
-    primary key(company_id)
+	companyID int(9) not null,
+    companyName varchar(20) not null,
+    primary key(companyID)
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
 create table Users(
-	user_id varchar(20) not null,
-    company_id int(9) not null,
-    user_name varchar(30) not null,
-    user_password varchar(100) not null,
-    user_type varchar(20) not null,
-    foreign key(company_id) references Company(company_id),
-    primary key(user_id,company_id)
+	userID varchar(20) not null,
+    companyID int(9) not null,
+    userName varchar(30) not null,
+    userPassword varchar(100) not null,
+    userType varchar(20) not null,
+    foreign key(companyID) references Company(companyID),
+    primary key(userID,companyID)
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
 create table BoardFunction(
-	function_id int(9) not null,
+	functionID int(9) not null,
     function_name varchar(150) not null,
-    primary key(function_id)
+    primary key(functionID)
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
 create table FunctionCheck(
-	company_id int(9) not null,
-    function_id int(9) not null,
-    function_data varchar(300),
-    foreign key(company_id) references Company(company_id),
-    foreign key(function_id) references BoardFunction(function_id),
-    primary key(company_id,function_id)
+	companyID int(9) not null,
+    functionID int(9) not null,
+    functionData varchar(300),
+    foreign key(companyID) references Company(companyID),
+    foreign key(functionID) references BoardFunction(functionID),
+    primary key(companyID,functionID)
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
 create table Board(
-	board_id int(9) not null,
-    company_id int(9) not null,
-    board_name varchar(150) not null,
-	foreign key(company_id) references Company(company_id),
-    primary key(board_id)
+	boardID int(9) not null,
+    companyID int(9) not null,
+    boardName varchar(150) not null,
+	foreign key(companyID) references Company(companyID),
+    primary key(boardID)
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
 create table Post(
-	post_id int(9) not null,
-    user_id varchar(20) not null,
-    board_id int(9) not null,
-    company_id int(9) not null,
-    post_title varchar(150) not null,
-    post_content varchar(4000) not null,
-    post_register_time datetime not null,
-	foreign key(user_id) references Users(user_id),
-	foreign key(board_id) references Board(board_id),
-	foreign key(company_id) references Company(company_id),
-	primary key(post_id) 
+	postID int(9) not null,
+    userID varchar(20) not null,
+    boardID int(9) not null,
+    companyID int(9) not null,
+    postTitle varchar(150) not null,
+    postContent varchar(4000) not null,
+    postRegisterTime datetime not null,
+	foreign key(userID) references Users(userID),
+	foreign key(boardID) references Board(boardID),
+	foreign key(companyID) references Company(companyID),
+	primary key(postID) 
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
 create table Comments(
-	comment_id int(9) not null,
-	post_id int(9) not null,
-	user_id varchar(20) not null,
-	company_id int(9) not null,
-	foreign key(post_id) references Post(post_id),
-	foreign key(user_id) references Users(user_id),
-	foreign key(company_id) references Company(company_id),
-    comment_content varchar(4000) not null,
-    comment_register_time datetime not null,
-    comment_referenced_id int(9),
-    primary key(comment_id)
+	commentID int(9) not null,
+	postID int(9) not null,
+	userID varchar(20) not null,
+	companyID int(9) not null,
+	foreign key(postID) references Post(postID),
+	foreign key(userID) references Users(userID),
+	foreign key(companyID) references Company(companyID),
+    commentContent varchar(4000) not null,
+    commentRegisterTime datetime not null,
+    commentReferencedID int(9),
+    primary key(commentID)
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
 insert into Company values(1,'wm'); 
@@ -100,7 +100,7 @@ insert into Post values (5,1,5,1,'자유1','1111',now());
 insert into Post values (6,1,5,1,'자유2','22222',now());
  
 
-SELECT p.post_id,p.user_id, u.user_name,p.board_id,p.company_id,p.post_title,p.post_content,p.post_register_time
+SELECT p.postID,p.userID, u.userName,p.boardID,p.companyID,p.postTitle,p.postContent,p.postRegisterTime
         FROM Post p , Users u
-        WHERE p.user_id = u.user_id and p.board_id=1
-        ORDER BY p.post_id DESC;
+        WHERE p.userID = u.userID and p.boardID=1
+        ORDER BY p.postID DESC;

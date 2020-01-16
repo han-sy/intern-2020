@@ -3,20 +3,20 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.board.project.blockboard.mapper.BoardMapper">
-    <select id="allBoard" resultType="com.board.project.blockboard.dto.BoardDTO">
+    <select id="selectAllBoard" resultType="com.board.project.blockboard.dto.BoardDTO">
         SELECT * FROM Board;
     </select>
-    <select id="selectComNameByUserId" parameterType="string" resultType="string">
+    <select id="selectCompanyNameByUserID" parameterType="string" resultType="string">
         Select company.companyName
         from Company company, Users user
         where company.companyID=user.companyID and user.userID = #{userID};
     </select>
-    <select id="selectComIdByUserId" parameterType="string" resultType="string">
+    <select id="selectCompanyIDByUserID" parameterType="string" resultType="string">
         Select company.companyID
         from Company company, Users user
         where company.companyID=user.companyID and user.userID = #{userID};
     </select>
-    <select id="selectBoardByComId" parameterType="string" resultType="com.board.project.blockboard.dto.BoardDTO">
+    <select id="selectBoardByCompanyID" parameterType="string" resultType="com.board.project.blockboard.dto.BoardDTO">
         SELECT *
         FROM Board
         WHERE companyID=#{companyID};
@@ -28,7 +28,7 @@
     </select>
 
     <!--추후에 디비 수정후 쿼리 변경해야됨-->
-    <select id="selectPostByBoardId" parameterType="string" resultType="com.board.project.blockboard.dto.PostDTO">
+    <select id="selectPostByBoardID" parameterType="string" resultType="com.board.project.blockboard.dto.PostDTO">
         SELECT post.postID,post.userID, user.userName,post.boardID,post.companyID,post.postTitle,post.postContent,post.postRegisterTime
         FROM Post post, Users user
         WHERE post.userID = user.userID and post.boardID=#{boardID}
@@ -43,7 +43,7 @@
     </select>
 
     <!--userid로 회원 타입 반환-->
-    <select id="selectUserTypeByUserId" parameterType="string" resultType="string">
+    <select id="selectUserTypeByUserID" parameterType="string" resultType="string">
         SELECT userType
         FROM Users
         WHERE userID = #{userID};

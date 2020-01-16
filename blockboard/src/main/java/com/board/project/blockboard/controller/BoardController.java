@@ -47,7 +47,7 @@ public class BoardController {
     }
 
     @RequestMapping("")
-    public String printBoardbyComp(HttpServletRequest request, HttpSession session,Model model) throws UnsupportedEncodingException {
+    public String getMainContent(HttpServletRequest request, HttpSession session,Model model) throws UnsupportedEncodingException {
 
 
         // 클라이언트의 쿠키를 가져옴
@@ -102,7 +102,7 @@ public class BoardController {
      */
     @RequestMapping(value = "/tab",method = RequestMethod.GET)
     @ResponseBody
-    public List<Map<String,Object>> printPostList(HttpServletRequest request){
+    public List<Map<String,Object>> getPostListByBoardID(HttpServletRequest request){
 
 
         String boardID = request.getParameter("activeTab");
@@ -138,7 +138,7 @@ public class BoardController {
      */
     @RequestMapping(value = "/post",method = RequestMethod.GET)
     @ResponseBody
-    public Map<String,Object> printPost(HttpServletRequest request){
+    public Map<String,Object> getPostByPostID(HttpServletRequest request){
 
         String postID = request.getParameter("postID");
         PostDTO post = boardService.printPostContnet(postID);
