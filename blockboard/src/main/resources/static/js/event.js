@@ -74,8 +74,18 @@ $.ajax({
         console.log("success" + data);
         $('#config_container').html("");
         $.each(data, function (key, value) {
-          $('#config_container').append(value
-          );
+            console.log(value.functionInfoData);
+
+          if(value.companyID==0){
+          $('#config_container').append("<div><span>"+value.functionName+"</span> <button id=function"+
+                    value.functionID+" class='functionButton' type='button' onclick=javascript:clickOnOffButton(this)>OFF</button></div>");
+          }
+          else {
+          $('#config_container').append("<div><span>"+value.functionName+"</span> <button id=function"+
+                              value.functionID+" class='functionButton' type='button' onclick=javascript:clickOnOffButton(this)>ON</button></div>");
+          }
+
+
           //alert($this);
         });
       }
@@ -90,9 +100,16 @@ $.ajax({
   //" <button class = 'functionClose' type='button' onclick=javascript:clickConfigClose(this)>닫기</button></div>");
 }
 
+//on/off버튼 클릭
+$(document).on('click','.functionButton',clickOnOffButton());
+function clickOnOffButton(){
+    console.log("on/off");
+}
+
 //닫기 버튼 클릭
 $(document).on('click','.functionClose',clickConfigClose());
 function clickConfigClose(){
+
     console.log("닫기버튼");
     $('#config_container').html("");
 }

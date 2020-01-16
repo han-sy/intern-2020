@@ -183,14 +183,24 @@ public class BoardController {
      */
     @RequestMapping(value = "/function-info")
     @ResponseBody
-    public Map<String,Object> getFunctionInfo(){
-        logger.info("!!!!");
-        Map<String,Object> functionInfoData = new HashMap<String, Object>();
-        List<FunctionDTO> functionInfo = functionService.getFunctionInfoByCompanyID(companyID);
-        logger.info("@@@@");
-        functionInfoData.put("functionInfo",functionInfo);
-        logger.info("functionInfoData",functionInfoData);
-        return functionInfoData;
+    public List<Map<String,Object>> getFunctionInfo(){
+
+        List<FunctionDTO> functionInfoList = functionService.getFunctionInfoByCompanyID(companyID);
+        List functionInfoDataList = new ArrayList<Object>();
+        try{
+            for(int i=0;i<functionInfoList.size();i++){
+                Map<String,Object> functionInfoData = new HashMap<String, Object>();
+                functionInfoData.put("functionID",functionInfoList.get(i).getFunctionID());
+                functionInfoData.put("companyID",functionInfoList.get(i).getCompanyID());
+                functionInfoData.put("functionName",functionInfoList.get(i).getFunctionName());
+                functionInfoData.put("functionData",functionInfoList.get(i).getFunctionData());
+                functionInfoDataList.add(functionInfoData);
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return functionInfoDataList;
     }
 
 
