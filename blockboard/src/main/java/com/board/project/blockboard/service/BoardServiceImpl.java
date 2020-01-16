@@ -60,7 +60,10 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public void insertNewBoard(String newBoardName,int companyID){
         int idx = boardMapper.maxBoardID();
-        BoardDTO newBoard = new BoardDTO(idx+1,companyID,newBoardName);
+        BoardDTO newBoard = new BoardDTO();
+        newBoard.setBoardID(idx+1);
+        newBoard.setCompanyID(companyID);
+        newBoard.setBoardName(newBoardName);
         logger.info("newBoard : "+newBoard);
         boardMapper.insertBoard(newBoard);
     }

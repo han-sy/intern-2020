@@ -1,9 +1,13 @@
 package com.board.project.blockboard.controller;
 
+
 import com.board.project.blockboard.dto.BoardDTO;
 import com.board.project.blockboard.dto.PostDTO;
 import com.board.project.blockboard.service.BoardService;
 import com.board.project.blockboard.util.AES256Util;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.net.URLCodec;
 import org.slf4j.Logger;
@@ -32,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 
 
+@Data
 @Controller
 @RequestMapping("/board")
 public class BoardController {
@@ -173,10 +178,10 @@ public class BoardController {
 
         String newBoardName = request.getParameter("boardName");
         boardService.insertNewBoard(newBoardName,companyID);
-        //System.out.println("ajax로 넘어온 data :  "+request);
+        
         Map<String,Object> map = new HashMap<String, Object>();
         BoardDTO newBoard = boardService.getBoardByBoardName(newBoardName);
-        map.put("boardID",newBoard.getBoardID());
+            map.put("boardID",newBoard.getBoardID());
         map.put("boardName",newBoard.getBoardName());
         return map;
     }

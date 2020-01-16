@@ -26,7 +26,7 @@ public class PostController {
     @RequestMapping(value = "/write", method = RequestMethod.POST)
     public void writePost(HttpServletRequest request) {
         PostDTO post = new PostDTO();
-        post.setBoardID("444");
+        post.setBoardID(444);
         post.setPostContent("우혁 테스트~~");
         postService.writePost(post);
     }
