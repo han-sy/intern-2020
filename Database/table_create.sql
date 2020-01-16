@@ -24,8 +24,8 @@ create table Users(
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
 create table BoardFunction(
-	functionID int(9) not null,
-    function_name varchar(150) not null,
+	functionID int(9) not null AUTO_INCREMENT,
+    functionName varchar(150) not null,
     primary key(functionID)
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
@@ -39,7 +39,7 @@ create table FunctionCheck(
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
 create table Board(
-	boardID int(9) not null,
+	boardID int(9) not null AUTO_INCREMENT,
     companyID int(9) not null,
     boardName varchar(150) not null,
 	foreign key(companyID) references Company(companyID),
@@ -47,13 +47,13 @@ create table Board(
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
 create table Post(
-	postID int(9) not null,
+	postID int(9) not null AUTO_INCREMENT,
     userID varchar(20) not null,
     boardID int(9) not null,
     companyID int(9) not null,
     postTitle varchar(150) not null,
     postContent varchar(4000) not null,
-    postRegisterTime datetime not null,
+    postRegisterTime timestamp not null,
 	foreign key(userID) references Users(userID),
 	foreign key(boardID) references Board(boardID),
 	foreign key(companyID) references Company(companyID),
@@ -61,7 +61,7 @@ create table Post(
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
 create table Comments(
-	commentID int(9) not null,
+	commentID int(9) not null AUTO_INCREMENT,
 	postID int(9) not null,
 	userID varchar(20) not null,
 	companyID int(9) not null,
@@ -69,7 +69,7 @@ create table Comments(
 	foreign key(userID) references Users(userID),
 	foreign key(companyID) references Company(companyID),
     commentContent varchar(4000) not null,
-    commentRegisterTime datetime not null,
+    commentRegisterTime timestamp not null,
     commentReferencedID int(9),
     primary key(commentID)
 )ENGINE =InnoDB DEFAULT charset= utf8;
