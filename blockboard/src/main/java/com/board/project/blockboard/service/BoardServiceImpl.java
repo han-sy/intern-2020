@@ -27,12 +27,12 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public String printCompanyName(String userID) {
+    public String getCompanyNameByUserID(String userID) {
         return boardMapper.selectCompanyNameByUserID(userID);
     }
 
     @Override
-    public List<BoardDTO> printBoardbyComp(String userID) {
+    public List<BoardDTO> getBoardListByUserID(String userID) {
         //System.out.println("companyID (session): " + session.getAttribute("COMPANY"));
         String companyID = boardMapper.selectCompanyIDByUserID(userID);
         System.out.println("companyID : "+companyID);
@@ -40,13 +40,13 @@ public class BoardServiceImpl implements BoardService {
         return boardlist;
     }
     @Override
-    public List<PostDTO> printPostbyBoard(String boardID) {
+    public List<PostDTO> getPostListByBoardID(String boardID) {
         List<PostDTO> postlist = boardMapper.selectPostByBoardID(boardID);
         return postlist;
     }
 
     @Override
-    public PostDTO printPostContnet(String postID) {
+    public PostDTO getPostByPostID(String postID) {
         PostDTO post = boardMapper.selectPostByPostID(postID);
         return post;
     }
@@ -66,13 +66,13 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public int printCompanyId(String userID) {
+    public int getCompanyIDByUserID(String userID) {
         logger.info("boardMapper userid: "+ userID);
         return Integer.parseInt(boardMapper.selectCompanyIDByUserID(userID));
     }
 
     @Override
-    public BoardDTO printboardbyBoardName(String newBoardName) {
-        return boardMapper.selectBoardByBoardName(newBoardName);
+    public BoardDTO getBoardByBoardName(String boardName) {
+        return boardMapper.selectBoardByBoardName(boardName);
     }
 }

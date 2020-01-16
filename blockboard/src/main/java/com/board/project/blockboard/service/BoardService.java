@@ -7,13 +7,13 @@ import java.util.List;
 
 public interface BoardService {
     List<BoardDTO> allBoard();
-    List<BoardDTO> printBoardbyComp(String userID);
-    List<PostDTO> printPostbyBoard(String boardID);
-    PostDTO printPostContnet(String postID);
-    String printCompanyName(String userID);
+    List<BoardDTO> getBoardListByUserID(String userID);
+    List<PostDTO> getPostListByBoardID(String boardID);
+    PostDTO getPostByPostID(String postID);
+    String getCompanyNameByUserID(String userID);
     boolean checkAdmin(String userID);
     void insertNewBoard(String newBoardName,int companyID);
-    int printCompanyId(String userID);
-    BoardDTO printboardbyBoardName(String newBoardName);
+    int getCompanyIDByUserID(String userID);
+    BoardDTO getBoardByBoardName(String boardName);
 }
 

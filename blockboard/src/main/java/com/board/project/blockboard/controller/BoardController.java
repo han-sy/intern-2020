@@ -76,20 +76,20 @@ public class BoardController {
             }
         }
 
-        List<BoardDTO> list = boardService.printBoardbyComp(userID);
+        List<BoardDTO> list = boardService.getBoardListByUserID(userID);
 
         logger.info("userID : "+userID);
-        companyID = boardService.printCompanyId(userID);
+        companyID = boardService.getCompanyIDByUserID(userID);
 
 
         System.out.println("list: "+list.size());
         model.addAttribute("list",list); //게시판 목록
-        model.addAttribute("companyName",boardService.printCompanyName(userID));//회사이름
+        model.addAttribute("companyName",boardService.getCompanyNameByUserID(userID));//회사이름
         model.addAttribute("isadmin",boardService.checkAdmin(userID));
       
         System.out.println("list: "+list.size());
         model.addAttribute("list",list);
-        model.addAttribute("companyName",boardService.printCompanyName(userID));
+        model.addAttribute("companyName",boardService.getCompanyNameByUserID(userID));
 
         System.out.println(model);
         return "board";
@@ -106,7 +106,7 @@ public class BoardController {
 
 
         String boardID = request.getParameter("activeTab");
-        List<PostDTO> list = boardService.printPostbyBoard(boardID);
+        List<PostDTO> list = boardService.getPostListByBoardID(boardID);
         //System.out.println("ajax로 넘어온 data :  "+request);
 
         //model.addAttribute("post_list",list);
@@ -141,7 +141,7 @@ public class BoardController {
     public Map<String,Object> getPostByPostID(HttpServletRequest request){
 
         String postID = request.getParameter("postID");
-        PostDTO post = boardService.printPostContnet(postID);
+        PostDTO post = boardService.getPostByPostID(postID);
         //System.out.println("ajax로 넘어온 data :  "+request);
 
         //model.addAttribute("post_list",list);
@@ -175,7 +175,7 @@ public class BoardController {
         boardService.insertNewBoard(newBoardName,companyID);
         //System.out.println("ajax로 넘어온 data :  "+request);
         Map<String,Object> map = new HashMap<String, Object>();
-        BoardDTO newBoard = boardService.printboardbyBoardName(newBoardName);
+        BoardDTO newBoard = boardService.getBoardByBoardName(newBoardName);
         map.put("boardID",newBoard.getBoardID());
         map.put("boardName",newBoard.getBoardName());
         return map;
