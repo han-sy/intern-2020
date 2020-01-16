@@ -103,21 +103,21 @@ function click_write() {
 }
 // 올리기 버튼 클릭
 function click_post() {
-    var post_title = $('#post_title').val();
-    var post_content = CKEDITOR.instances.editor.getData();
-    var board_name = $('#post_board_id option:selected').val();
-    console.log("제목:" + post_title);
-    console.log("내용:" + post_content);
-    console.log("선택한 게시판:" + board_id);
+    var postTitle = $('#post_title').val();
+    var postContent = CKEDITOR.instances.editor.getData();
+    var boardName = $('#post_board_id option:selected').val();
+    console.log("제목:" + postTitle);
+    console.log("내용:" + postContent);
+    console.log("선택한 게시판:" + boardName);
     $('#editorcontent').html("");
     $('#writecontent').css("display", "none");
     $('#btn_write').css("display", "");
     $.ajax({
       type: 'POST',
-      url: "/board/post/inset",
-      data: {post_title: post_title,
-            post_content: post_content,
-            board_name: board_name},
+      url: "/board/post/insert",
+      data: {postTitle: postTitle,
+            postContent: postContent,
+            boardName: boardName},
       error: function() {
         alert('게시글 작성 실패');
       },

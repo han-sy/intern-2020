@@ -4,12 +4,12 @@
 
 <mapper namespace="com.board.project.blockboard.mapper.PostMapper">
     <insert id="insertPost" parameterType="com.board.project.blockboard.dto.PostDTO">
-        INSERT INTO Post
-        values();
+        INSERT INTO Post(userID, boardID, companyID, postTitle, postContent)
+        VALUES (#{userID}, #{boardID}, #{companyID}, #{postTitle}, #{postContent});
     </insert>
 
     <select id="getBoardID" parameterType="hashMap" resultType="com.board.project.blockboard.dto.BoardDTO">
-        SELECT boardID
+        SELECT *
         FROM Board
         WHERE companyID=#{companyID} AND boardName=#{boardName};
     </select>

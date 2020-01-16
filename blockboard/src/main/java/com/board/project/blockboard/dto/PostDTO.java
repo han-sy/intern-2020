@@ -4,7 +4,7 @@ public class PostDTO {
     private int postID;
     private String userID;
     private String userName;
-    private String boardID;
+    private int boardID;
     private int companyID;
     private String postTitle;
     private String postContent;
@@ -34,11 +34,11 @@ public class PostDTO {
         this.userName = userName;
     }
 
-    public String getBoardID() {
+    public int getBoardID() {
         return boardID;
     }
 
-    public void setBoardID(String boardID) {
+    public void setBoardID(int boardID) {
         this.boardID = boardID;
     }
 
