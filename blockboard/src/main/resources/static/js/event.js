@@ -17,8 +17,7 @@ function clickTrEvent(trObj) {
   //$('#postcontent').html("activerRow : " + trObj.getAttribute("data-post"));
   $.ajax({
     type: 'GET',                 //get방식으로 통신
-    url: "/board/post",    //탭의 data-tab속성의 값으로 된 html파일로 통신
-    data: { postID: postID },
+    url: "/board/postlist/"+postID,    //탭의 data-tab속성의 값으로 된 html파일로 통신
     error: function () {  //통신 실패시
       alert('통신실패!');
     },
@@ -47,15 +46,15 @@ function clickaddBoardBtn(){
 function clickSaveaddedBoard(){
    console.log($('#input_board_name').val());
    $.ajax({
-             type: 'GET',                 //get방식으로 통신
-             url: "/board/addboard",    //탭의 data-tab속성의 값으로 된 html파일로 통신
+             type: 'POST',                 //get방식으로 통신
+             url: "/board/newboard",    //탭의 data-tab속성의 값으로 된 html파일로 통신
              data: { boardName: $('#input_board_name').val() },
              error: function () {  //통신 실패시
                alert('통신실패!');
              },
              success: function (data) {    //통신 성공시 탭 내용담는 div를 읽어들인 값으로 채운다.
-               //console.log(data.board_id+"삽입성공");
-               $("#tab_id").append("<li data-tab="+data.board_id +" class='tabmenu' id=default> "+data.boardName+" </li>");
+               console.log(data.boardID+"삽입성공");
+               $("#tab_id").append("<li data-tab="+data.boardID +" class='tabmenu' id=default> "+data.boardName+" </li>");
              }
            });
 
@@ -117,8 +116,9 @@ $(document).on('click', '.toggleBG', function clickToggleButton() {
 // 탭 메뉴 클릭 이벤트 - 해당 게시판의 게시글 불러옴
 $(document).on("click",".tabmenu",function clickTabEvent() {
     //var activeTab = $(this).attr('data-tab');
-    var activeTab = $(this).attr('data-tab');
-    console.log(activeTab);
+    console.log("!!!!");
+    var boardID = $(this).attr('data-tab');
+    console.log(boardID);
     $('li').css('background-color', 'white');
     $(this).css('background-color', 'lightgreen');
     $('#postcontent').html("");
@@ -126,8 +126,7 @@ $(document).on("click",".tabmenu",function clickTabEvent() {
     $('#btn_write').show();
     $.ajax({
       type: 'GET',                 //get방식으로 통신
-      url: "/board/tab",    //탭의 data-tab속성의 값으로 된 html파일로 통신
-      data: { activeTab: activeTab },
+      url: '/board/'+boardID+"/postlist",    //탭의 data-tab속성의 값으로 된 html파일로 통신
       error: function () {  //통신 실패시
         alert('통신실패!');
       },

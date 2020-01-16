@@ -16,9 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -67,9 +65,7 @@ public class BoardController {
                 Cookie c = getCookie[i];
                 String name = c.getName();
                 String value = c.getValue();
-
                 if(name.equals("sessionID")) {
-
                     try {
                         decode = aes256.aesDecode(codec.decode(value));
                         userID = decode.substring(0, decode.length()-6); // id 자르기
@@ -86,102 +82,96 @@ public class BoardController {
         logger.info("userID : "+userID);
         companyID = boardService.getCompanyIDByUserID(userID);
 
-
         System.out.println("list: "+boardList.size());
         model.addAttribute("list",boardList); //게시판 목록
         model.addAttribute("companyName",boardService.getCompanyNameByUserID(userID));//회사이름
         model.addAttribute("isadmin",boardService.checkAdmin(userID));
-      
-        System.out.println("list: "+boardList.size());
-        model.addAttribute("list",boardList);
-        model.addAttribute("companyName",boardService.getCompanyNameByUserID(userID));
 
         System.out.println(model);
         return "board";
     }
 
+
     /**
-     *
-     * @param request 클릭한 탭의 id
+     * boardid 받아와서 해당하는 게시판의 게시글목록들 리턴
+     * @param boardID
      * @return
      */
-    @RequestMapping(value = "/tab",method = RequestMethod.GET)
+    @RequestMapping(value = "/{boardid}/postlist",method = RequestMethod.GET)
     @ResponseBody
-    public List<Map<String,Object>> getPostListByBoardID(HttpServletRequest request){
+    public List<Map<String,Object>> getPostListByBoardID(@PathVariable("boardid") int boardID){
 
 
-        String boardID = request.getParameter("activeTab");
-        List<PostDTO> list = boardService.getPostListByBoardID(Integer.parseInt(boardID));
+        //String boardID = request.getParameter("activeTab");
+        List<PostDTO> postList = boardService.getPostListByBoardID(boardID);
 
-        System.out.println(list);
+        System.out.println(postList);
 
-        List listSender = new ArrayList<Object>();
+        List postDataList = new ArrayList<Object>();
 
         try{
-            for(int i=0;i<list.size();i++){
-                Map<String,Object> map = new HashMap<String, Object>();
-                map.put("postID",list.get(i).getPostID());
-                map.put("postTitle",list.get(i).getPostTitle());
-                map.put("userName",list.get(i).getUserName());
-                map.put("postRegisterTime",list.get(i).getPostRegisterTime());
-                System.out.println(map);
-                listSender.add(map);
+            for(int i=0;i<postList.size();i++){
+                Map<String,Object> postData = new HashMap<String, Object>();
+                postData.put("postID",postList.get(i).getPostID());
+                postData.put("postTitle",postList.get(i).getPostTitle());
+                postData.put("userName",postList.get(i).getUserName());
+                postData.put("postRegisterTime",postList.get(i).getPostRegisterTime());
+                System.out.println(postData);
+                postDataList.add(postData);
             }
         }
         catch (Exception e){
             e.printStackTrace();
         }
 
-        return listSender;
+        return postDataList;
     }
-    /**
-     *
-     * @param request 게시글 목록중 클릭한 게시글의 id
-     * @return {key,value} 로 넘기기위해 map
-     */
-    @RequestMapping(value = "/post",method = RequestMethod.GET)
-    @ResponseBody
-    public Map<String,Object> getPostByPostID(HttpServletRequest request){
 
-        String postID = request.getParameter("postID");
-        PostDTO post = boardService.getPostByPostID(Integer.parseInt(postID));
+    /**
+     * 게시물 클릭시 게시물id 받아와서 게시물 데이터 전달
+     * @param postID
+     * @return
+     */
+    @RequestMapping(value = "/postlist/{postid}",method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String,Object> getPostByPostID(@PathVariable("postid") int postID){
+
+        PostDTO post = boardService.getPostByPostID(postID);
         //System.out.println("ajax로 넘어온 data :  "+request);
 
         //model.addAttribute("post_list",list);
         System.out.println(post);
-        Map<String,Object> map = new HashMap<String, Object>();
+        Map<String,Object> postData = new HashMap<String, Object>();
         try{
 
-            map.put("postTitle",post.getPostTitle());
-            map.put("postContent",post.getPostContent());
-            map.put("userName",post.getUserName());
-            map.put("postRegisterTime",post.getPostRegisterTime());
-            System.out.println(map);
+            postData.put("postTitle",post.getPostTitle());
+            postData.put("postContent",post.getPostContent());
+            postData.put("userName",post.getUserName());
+            postData.put("postRegisterTime",post.getPostRegisterTime());
+            System.out.println(postData);
         }
         catch (Exception e){
             e.printStackTrace();
         }
 
-        return map;
+        return postData;
     }
 
     /**
-     *
-     * @param request 여기서 board name 넘겨줄거임
-     * @return {key,value} 로 넘기기위해 map
+     * 추가할 boardname 받아오고 삽입후 추가한 boardid와 boardname 리턴
+     * @param newBoardName
+     * @return
      */
-    @RequestMapping(value = "/addboard",method = RequestMethod.GET)
+    @RequestMapping(value = "/newboard",method = RequestMethod.POST)
     @ResponseBody
-    public Map<String,Object> insertNewBoard(HttpServletRequest request){
-
-        String newBoardName = request.getParameter("boardName");
+    public Map<String,Object> insertNewBoard(@RequestParam("boardName") String newBoardName){
         boardService.insertNewBoard(newBoardName,companyID);
         
-        Map<String,Object> map = new HashMap<String, Object>();
+        Map<String,Object> boardData = new HashMap<String, Object>();
         BoardDTO newBoard = boardService.getBoardByBoardName(newBoardName);
-            map.put("boardID",newBoard.getBoardID());
-        map.put("boardName",newBoard.getBoardName());
-        return map;
+        boardData.put("boardID",newBoard.getBoardID());
+        boardData.put("boardName",newBoard.getBoardName());
+        return boardData;
     }
 
 
