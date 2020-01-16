@@ -3,10 +3,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.board.project.blockboard.mapper.PostMapper">
-    <insert id="allUser" parameterType="com.board.project.blockboard.dto.PostDTO">
-        INSERT INTO post
+    <insert id="insertPost" parameterType="com.board.project.blockboard.dto.PostDTO">
+        INSERT INTO Post
         values();
     </insert>
 
+    <select id="getBoardID" parameterType="hashMap" resultType="com.board.project.blockboard.dto.BoardDTO">
+        SELECT boardID
+        FROM Board
+        WHERE companyID=#{companyID} AND boardName=#{boardName};
+    </select>
 
 </mapper>

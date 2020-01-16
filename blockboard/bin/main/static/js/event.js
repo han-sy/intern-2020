@@ -114,7 +114,7 @@ function click_post() {
     $('#btn_write').css("display", "");
     $.ajax({
       type: 'POST',
-      url: "/board/post/write",
+      url: "/board/post/inset",
       data: {post_title: post_title,
             post_content: post_content,
             board_name: board_name},

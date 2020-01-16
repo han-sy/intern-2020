@@ -18,12 +18,8 @@ public class PostController {
     private PostService postService;
 
     Logger logger = LoggerFactory.getLogger(getClass());
-    @RequestMapping("/writeform")
-    public String writeform() {
-        logger.info("writeform");
-        return "writeform";
-    }
-    @RequestMapping(value = "/write", method = RequestMethod.POST)
+
+    @RequestMapping(value = "/insert", method = RequestMethod.POST)
     public void writePost(HttpServletRequest request) {
         PostDTO post = new PostDTO();
         post.setBoardID("444");
