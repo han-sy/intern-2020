@@ -38,11 +38,12 @@ function clickTrEvent(trObj) {
 function clickaddBoardBtn(){
       $('#config_container').html("<input type='text' name='게시판 이름' id = 'input_board_name' class='addBoard' placeholder='게시판 이름'>");
       $('#config_container').append("<br>");
-      $('#config_container').append(" <a id ='addFuncBtn' onclick = javascript:clickSaveaddedBoard(this) style=cursor:pointer>저장하기</a>");
+      $('#config_container').append(" <a id ='addFuncBtn' onclick = javascript:clickSaveaddedBoard(this) style=cursor:pointer>저장하기</a>"+
+      "<button class = 'functionClose' type='button' onclick=javascript:clickConfigClose(this)>닫기</button>");
       console.log("111");
 }
 
- //저장하기 버튼
+ //게시판 저장하기 버튼
 function clickSaveaddedBoard(){
    console.log($('#input_board_name').val());
    $.ajax({
@@ -63,55 +64,38 @@ function clickSaveaddedBoard(){
 
 //기능추가 버튼 클릭시
 function changeFunction(){
-
-  $('#config_container').html("<span>댓글기능</span>");
-  $('#config_container').append("<div class='toggleBG'> "+
-  "<button class='toggleFG'></button>"+
-  "</div>");
-  $('#config_container').append("<p id = 'check_val'>OFF</p>");
+$.ajax({
+      type: 'POST',                 //POST 통신
+      url: '/board/function-info',    //탭의 data-tab속성의 값으로 된 html파일로 통신
+      error: function () {  //통신 실패시
+        alert('통신실패!');
+      },
+      success: function (data) {    //통신 성공시 탭 내용담는 div를 읽어들인 값으로 채운다.
+        console.log("success" + data);
+        $('#config_container').html("");
+        $.each(data, function (key, value) {
+          $('#config_container').append(value
+          );
+          //alert($this);
+        });
+      }
+    });
+  //$('#config_container').html("<div><span>댓글</span> <button class='functionButton' id = 'function-reply' type='button'>OFF</button></div>");
+  //$('#config_container').append("<div><span>대댓글</span> <button class = 'functionButton' id = 'function-reReply' type='button'>OFF</button></div>");
+  //$('#config_container').append("<div><span>파일첨부</span> <button class = 'functionButton' id = 'function-attachedFile' type='button'>OFF</button></div>");
+  //$('#config_container').append("<div><span>inline 이미지</span> <button class = 'functionButton' id = 'function-inlineImage' type='button'>OFF</button></div>");
+  //$('#config_container').append("<div><span>임시저장</span> <button class = 'functionButton' id = 'function-temporarySave' type='button'>OFF</button></div>");
+  //$('#config_container').append("<div><span>스티커</span> <button class = 'functionButton' id = 'function-sticker' type='button'>OFF</button></div>");
+  //$('#config_container').append("<br><div><button class = 'functionSave' type='button'>저장하기</button>"+
+  //" <button class = 'functionClose' type='button' onclick=javascript:clickConfigClose(this)>닫기</button></div>");
 }
 
-function moveToggle(toggleBtn, LR,l,r) {
-    // 0.01초 단위로 실행
-    console.log(l+","+r)
-    var intervalID = setInterval(
-        function() {
-            // 버튼 이동
-            var toggle = parseInt(toggleBtn.css('left'));
-            toggle += (LR == 'TO_RIGHT') ? 5 : -5;
-            if(toggle >= l && toggle <= r) {
-                toggle += 'px';
-                toggleBtn.css('left', toggle);
-            }
-        }, 10);
-    setTimeout(function(){
-        clearInterval(intervalID);
-    }, 201);
+//닫기 버튼 클릭
+$(document).on('click','.functionClose',clickConfigClose());
+function clickConfigClose(){
+    console.log("닫기버튼");
+    $('#config_container').html("");
 }
-
-
-
-// 기능 토글 버튼 클릭 이벤트
-$(document).on('click', '.toggleBG', function clickToggleButton() {
-    var toggleBG = $(this);
-    var toggleFG = $(this).find('.toggleFG');
-    console.log($("#check_val").text());
-    if($("#check_val").text()=="ON") {
-        var right = toggleFG.css('left').replace(/[^\d]/g, '');
-        var left= right-20;
-        toggleBG.css('background', '#CCCCCC');
-        moveToggle(toggleFG, 'TO_LEFT',left,right);
-        $("#check_val").html("OFF");
-        console.log($("#check_val").text());
-    }else if($("#check_val").text()=="OFF") {
-        var left = toggleFG.css('left').replace(/[^\d]/g, '');
-        var right = left+20;
-        toggleBG.css('background', '#53FF4C');
-        moveToggle(toggleFG, 'TO_RIGHT',left,right);
-        $("#check_val").html("ON");
-        console.log($("#check_val").text());
-    }
-});
 
 // 탭 메뉴 클릭 이벤트 - 해당 게시판의 게시글 불러옴
 $(document).on("click",".tabmenu",function clickTabEvent() {

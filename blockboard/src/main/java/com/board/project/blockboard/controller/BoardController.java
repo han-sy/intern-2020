@@ -2,8 +2,10 @@ package com.board.project.blockboard.controller;
 
 
 import com.board.project.blockboard.dto.BoardDTO;
+import com.board.project.blockboard.dto.FunctionDTO;
 import com.board.project.blockboard.dto.PostDTO;
 import com.board.project.blockboard.service.BoardService;
+import com.board.project.blockboard.service.FunctionService;
 import com.board.project.blockboard.util.AES256Util;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -38,23 +40,25 @@ import java.util.Map;
 @Controller
 @RequestMapping("/board")
 public class BoardController {
+
+    @Autowired
     private BoardService boardService;
+    @Autowired
+    private FunctionService functionService;
+
     private String key = "slgi3ibu5phi8euf";
     private String userID;
     private int companyID;
     AES256Util aes256;
     URLCodec codec;
-    @Autowired
-    BoardController(BoardService boardService) {
-        this.boardService = boardService;
-    }
+    Logger logger = LoggerFactory.getLogger(getClass());
 
     @RequestMapping("")
     public String getMainContent(HttpServletRequest request, HttpSession session,Model model) throws UnsupportedEncodingException {
 
 
         // 클라이언트의 쿠키를 가져옴
-        Logger logger = LoggerFactory.getLogger(getClass());
+
         Cookie[] getCookie = request.getCookies();
         aes256 = new AES256Util(key);
         codec = new URLCodec();
@@ -137,9 +141,7 @@ public class BoardController {
     public Map<String,Object> getPostByPostID(@PathVariable("postid") int postID){
 
         PostDTO post = boardService.getPostByPostID(postID);
-        //System.out.println("ajax로 넘어온 data :  "+request);
 
-        //model.addAttribute("post_list",list);
         System.out.println(post);
         Map<String,Object> postData = new HashMap<String, Object>();
         try{
@@ -172,6 +174,23 @@ public class BoardController {
         boardData.put("boardID",newBoard.getBoardID());
         boardData.put("boardName",newBoard.getBoardName());
         return boardData;
+    }
+
+
+    /**
+     *
+     * @return 고객사별 기능사용정보
+     */
+    @RequestMapping(value = "/function-info")
+    @ResponseBody
+    public Map<String,Object> getFunctionInfo(){
+        logger.info("!!!!");
+        Map<String,Object> functionInfoData = new HashMap<String, Object>();
+        List<FunctionDTO> functionInfo = functionService.getFunctionInfoByCompanyID(companyID);
+        logger.info("@@@@");
+        functionInfoData.put("functionInfo",functionInfo);
+        logger.info("functionInfoData",functionInfoData);
+        return functionInfoData;
     }
 
 

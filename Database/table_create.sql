@@ -85,23 +85,35 @@ insert into Board values(5,1,"자유게시판");
 insert into Users values(1,1,'김동욱','123','관리자');
 insert into Users values(2,1,'전우혁','123','사원');
 insert into Users values(3,2,'곽대훈','123','관리자');
-insert into BoardFunction values(1,'댓글작성');
+insert into BoardFunction values(1,'댓글');
+insert into BoardFunction values(2,'대댓글');
+insert into BoardFunction values(3,'파일첨부');
+insert into BoardFunction values(4,'inline 이미지');
+insert into BoardFunction values(5,'임시저장');
+insert into BoardFunction values(6,'스티커');
 insert into FunctionCheck values(1,1,null);
+insert into FunctionCheck values(2,4,null);
 insert into Post values(1,1,1,1,'첫게시글','첫내용',now());
 insert into Comments values(1,1,1,1,'첫 댓글',now(),null);
 insert into Comments values(2,1,1,1,'첫 답글',now(),1);
 
 Select * from Post;
 select * from Users;
+select * from FunctionCheck;
 insert into Post values (2,1,1,1,'두번째 게시글','두번째 게시글내용',now());
 insert into Post values (3,2,1,1,'건의사항 게시판 첫글','공지사항이네',now());
 insert into Post values (4,2,1,1,'공지사항 게시판 ','ㅎㅎㅎㅎ테스트',now());
 insert into Post values (5,1,5,1,'자유1','1111',now());
 insert into Post values (6,1,5,1,'자유2','22222',now());
 
+Select boardfunction.functionID,functioncheck.companyID, boardfunction.functionName, functioncheck.functionData
+FROM BoardFunction boardfunction LEFT OUTER JOIN FunctionCheck functioncheck
+ON boardfunction.functionID = functioncheck.functionID and functioncheck.companyID = 2;
+
+
 
 SELECT p.postID,p.userID, u.userName,p.boardID,p.companyID,p.postTitle,p.postContent,p.postRegisterTime
         FROM Post p , Users u
         WHERE p.userID = u.userID and p.boardID=1
         ORDER BY p.postID DESC;
-
+        
