@@ -1,6 +1,5 @@
 package com.board.project.blockboard.controller;
 
-import com.board.project.blockboard.Data.CurrentUserInfo;
 import com.board.project.blockboard.dto.BoardDTO;
 import com.board.project.blockboard.dto.PostDTO;
 import com.board.project.blockboard.service.BoardService;
@@ -13,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -39,6 +37,8 @@ import java.util.Map;
 public class BoardController {
     private BoardService boardService;
     private String key = "slgi3ibu5phi8euf";
+    private String userID;
+    private int companyID;
     AES256Util aes256;
     URLCodec codec;
     @Autowired
@@ -67,48 +67,41 @@ public class BoardController {
 
                     try {
                         decode = aes256.aesDecode(codec.decode(value));
-                        decode = decode.substring(0, decode.length()-6); // id 자르기
+                        userID = decode.substring(0, decode.length()-6); // id 자르기
                         logger.info(decode);
-                    } catch (NoSuchAlgorithmException e) {
-                        e.printStackTrace();
-                    } catch (NoSuchPaddingException e) {
-                        e.printStackTrace();
-                    } catch (InvalidKeyException e) {
-                        e.printStackTrace();
-                    } catch (InvalidAlgorithmParameterException e) {
-                        e.printStackTrace();
-                    } catch (IllegalBlockSizeException e) {
-                        e.printStackTrace();
-                    } catch (BadPaddingException e) {
-                        e.printStackTrace();
-                    } catch (DecoderException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
             }
         }
-        logger.info("first");
-        List<BoardDTO> list = boardService.printBoardbyComp(decode);
-        logger.info("secpmd");
-      
-        int com_id = boardService.printCompanyId(decode);
-        CurrentUserInfo currentUserInf = CurrentUserInfo.getInstance();
-        currentUserInf.setUser_id(decode);
-        currentUserInf.setCom_id(com_id);
+
+        List<BoardDTO> list = boardService.printBoardbyComp(userID);
+
+        companyID = boardService.printCompanyId(userID);
+
 
         System.out.println("list: "+list.size());
         model.addAttribute("list",list); //게시판 목록
-        model.addAttribute("com_name",boardService.printCompanyName(currentUserInf.getUser_id()));//회사이름
-        model.addAttribute("isadmin",boardService.checkAdmin(currentUserInf.getUser_id()));
+        model.addAttribute("com_name",boardService.printCompanyName(userID));//회사이름
+        model.addAttribute("isadmin",boardService.checkAdmin(userID));
       
         System.out.println("list: "+list.size());
         model.addAttribute("list",list);
-        model.addAttribute("com_name",boardService.printCompanyName(decode));
+        model.addAttribute("com_name",boardService.printCompanyName(userID));
 
         System.out.println(model);
         return "board";
     }
 
+<<<<<<< HEAD
+=======
+    /**
+     *
+     * @param request 클릭한 탭의 id
+     * @return
+     */
+>>>>>>> 37f19286f213b4380c7fa85fc442ced0093fcc11
     @RequestMapping(value = "/tab",method = RequestMethod.GET)
     @ResponseBody
     public List<Map<String,Object>> printPostList(HttpServletRequest request){
@@ -116,7 +109,7 @@ public class BoardController {
 
         String board_id = request.getParameter("activeTab");
         List<PostDTO> list = boardService.printPostbyBoard(board_id);
-        System.out.println("ajax로 넘어온 data :  "+request);
+        //System.out.println("ajax로 넘어온 data :  "+request);
 
         //model.addAttribute("post_list",list);
         System.out.println(list);
@@ -129,7 +122,7 @@ public class BoardController {
                 map.put("post_id",list.get(i).getPost_id());
                 map.put("post_title",list.get(i).getPost_title());
                 map.put("user_name",list.get(i).getUser_name());
-                map.put("post_reg_time",list.get(i).getPost_reg_time());
+                map.put("post_reg_time",list.get(i).getPost_register_time());
                 System.out.println(map);
                 listSender.add(map);
             }
@@ -140,14 +133,22 @@ public class BoardController {
 
         return listSender;
     }
+<<<<<<< HEAD
 
+=======
+    /**
+     *
+     * @param request 게시글 목록중 클릭한 게시글의 id
+     * @return {key,value} 로 넘기기위해 map
+     */
+>>>>>>> 37f19286f213b4380c7fa85fc442ced0093fcc11
     @RequestMapping(value = "/post",method = RequestMethod.GET)
     @ResponseBody
     public Map<String,Object> printPost(HttpServletRequest request){
 
         String post_id = request.getParameter("post_id");
         PostDTO post = boardService.printPostContnet(post_id);
-        System.out.println("ajax로 넘어온 data :  "+request);
+        //System.out.println("ajax로 넘어온 data :  "+request);
 
         //model.addAttribute("post_list",list);
         System.out.println(post);
@@ -157,7 +158,7 @@ public class BoardController {
             map.put("post_title",post.getPost_title());
             map.put("post_content",post.getPost_content());
             map.put("user_name",post.getUser_name());
-            map.put("post_reg_time",post.getPost_reg_time());
+            map.put("post_reg_time",post.getPost_register_time());
             System.out.println(map);
         }
         catch (Exception e){
@@ -167,13 +168,21 @@ public class BoardController {
         return map;
     }
 
+<<<<<<< HEAD
+=======
+    /**
+     *
+     * @param request 여기서 board name 넘겨줄거임
+     * @return {key,value} 로 넘기기위해 map
+     */
+>>>>>>> 37f19286f213b4380c7fa85fc442ced0093fcc11
     @RequestMapping(value = "/addboard",method = RequestMethod.GET)
     @ResponseBody
     public Map<String,Object> insertNewBoard(HttpServletRequest request){
 
         String newBoardName = request.getParameter("board_name");
-        boardService.insertNewBoard(newBoardName);
-        System.out.println("ajax로 넘어온 data :  "+request);
+        boardService.insertNewBoard(newBoardName,companyID);
+        //System.out.println("ajax로 넘어온 data :  "+request);
         Map<String,Object> map = new HashMap<String, Object>();
         BoardDTO newBoard = boardService.printboardbyBoardName(newBoardName);
         map.put("board_id",newBoard.getBoard_id());

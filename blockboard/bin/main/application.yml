@@ -8,6 +8,7 @@ spring:
     view:
       prefix: /WEB-INF/views/
       suffix: .jsp
+<<<<<<< HEAD
     static-path-pattern: /static/**
   devtools:
     livereload:
@@ -16,6 +17,12 @@ spring:
     static-locations : classpath:/static/
     add-mappings : true
 
+=======
+    static-path-pattern: /SE2/**
+  devtools:
+    livereload:
+      enabled: true
+>>>>>>> 37f19286f213b4380c7fa85fc442ced0093fcc11
 mybatis:
   type-aliases-package: com.board.project.blockboard.mapper
   mapper-locations: mybatis/mapper/**/*.xml

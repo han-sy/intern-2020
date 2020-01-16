@@ -49,8 +49,13 @@ public class UserController {
 
             encrypt = codec.encode(aes256.aesEncode(user_id));
 
+<<<<<<< HEAD
             Cookie setCookie = new Cookie("session_id", encrypt); // 클라이언트에게 전달할 쿠키 생성
             setCookie.setMaxAge(60*60*24); // 쿠키 유지 시간을 하루로 설정
+=======
+            Cookie setCookie = new Cookie("s_id", encrypt); // 클라이언트에게 전달할 쿠키 생성
+            setCookie.setMaxAge(60*60);
+>>>>>>> 37f19286f213b4380c7fa85fc442ced0093fcc11
             response.addCookie(setCookie);
         }
         return "redirect:/";

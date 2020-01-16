@@ -21,11 +21,14 @@
         FROM Board
         WHERE com_id=#{com_id};
     </select>
+<<<<<<< HEAD
     <select id="selectBoardByBoardName" parameterType="string" resultType="com.board.project.blockboard.dto.BoardDTO">
         SELECT *
         FROM Board
         WHERE board_name=#{board_name};
     </select>
+=======
+>>>>>>> 37f19286f213b4380c7fa85fc442ced0093fcc11
 
     <!--추후에 디비 수정후 쿼리 변경해야됨-->
     <select id="selectPostByBoardId" parameterType="string" resultType="com.board.project.blockboard.dto.PostDTO">
@@ -34,13 +37,17 @@
         WHERE p.user_id = u.user_id and p.board_id=#{board_id}
         ORDER BY p.post_id DESC;
     </select>
+<<<<<<< HEAD
 
     <!--게시글 id로 게시글반환-->
+=======
+>>>>>>> 37f19286f213b4380c7fa85fc442ced0093fcc11
     <select id="selectPostByPostID" parameterType="string" resultType="com.board.project.blockboard.dto.PostDTO">
         SELECT p.post_id,p.user_id, u.user_name,p.board_id,p.com_id,p.post_title,p.post_content,p.post_reg_time
         FROM Post p , Users u
         WHERE p.user_id = u.user_id and p.post_id=#{post_id}
     </select>
+<<<<<<< HEAD
 
     <!--userid로 회원 타입 반환-->
     <select id="selectUserTypeByUserId" parameterType="string" resultType="string">
@@ -57,4 +64,6 @@
     <insert id="insertBoard" parameterType="com.board.project.blockboard.dto.BoardDTO">
         insert into Board values(#{board_id},#{com_id},#{board_name});
     </insert>
+=======
+>>>>>>> 37f19286f213b4380c7fa85fc442ced0093fcc11
 </mapper>
