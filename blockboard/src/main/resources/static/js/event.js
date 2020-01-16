@@ -31,6 +31,8 @@ function clickTrEvent(trObj) {
       $('#postcontent').append("<h5>작성자 : " + data.userName + "</h4>");
       $('#postcontent').append("<h5>작성시간 : " + data.postRegisterTime + "</h4>");
       $('#postcontent').append("<a>" + data.postContent + "</a>");
+      $('#postcontent').append("</br><button onclick=javascript:clickDeletePost(this)>삭제</button>");
+      $('#postcontent').append("<a id=postID style=visibility:hidden>" + data.postID + "</a>");
     }
   });
 }
@@ -139,10 +141,10 @@ $(document).on("click",".tabmenu",function clickTabEvent() {
           $('#postlist').append(
             "<tr height='30' class = 'postclick' data-post = '" + value.postID +
             "' onclick='javascript:clickTrEvent(this)' onmouseover = 'javascript:changeTrColor(this)' >" +
-            "<td width='73'>" + value.postID + "</td>" +
             "<td width='379'>" + value.postTitle + "</td>" +
             "<td width='73'>" + value.userName + "</td>" +
-            "<td width='164'>" + value.postRegisterTime + "</td></tr>"
+            "<td width='164'>" + value.postRegisterTime + "</td></tr>" +
+            "<td style='visibility:hidden'>" + value.postID + "</td>"
           );
           //alert($this);
         });

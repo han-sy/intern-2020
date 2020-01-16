@@ -146,7 +146,7 @@ public class BoardController {
         System.out.println(post);
         Map<String,Object> map = new HashMap<String, Object>();
         try{
-
+            map.put("postID", postID);
             map.put("postTitle",post.getPostTitle());
             map.put("postContent",post.getPostContent());
             map.put("userName",post.getUserName());
