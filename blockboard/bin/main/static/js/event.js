@@ -1,3 +1,6 @@
+document.write("<script src='/static/ckeditor/ckeditor.js'></script>");
+document.write("<script src='/static/ckeditor/adapters/jquery.js'></script>");
+
 //색변경 탭에 mouseover시 실행
 function changeTrColor(trObj) {
   trObj.style.backgroundColor = "green";
@@ -87,3 +90,39 @@ function moveToggle(toggleBtn, LR,l,r) {
     }, 201);
 }
 
+// 게시글 작성 버튼 이벤트
+function click_write() {
+    $('postlist').append("test");
+    $('#writecontent').css("display", "");
+    $('#btn_write').css("display", "none");
+    $('#editorcontent').html("게시판선택");
+    $('#editorcontent').html("게시글제목<input type=text id=post_title />");
+    $('#editorcontent').append("<textarea id=editor></textarea>");
+    $('#editorcontent').append("<button id=btn_post onclick=javascript:click_post(this)>올리기</button>")
+    $('#editor').ckeditor();
+}
+// 올리기 버튼 클릭
+function click_post() {
+    var post_title = $('#post_title').val();
+    var post_content = CKEDITOR.instances.editor.getData();
+    var board_name = $('#post_board_id option:selected').val();
+    console.log("제목:" + post_title);
+    console.log("내용:" + post_content);
+    console.log("선택한 게시판:" + board_id);
+    $('#editorcontent').html("");
+    $('#writecontent').css("display", "none");
+    $('#btn_write').css("display", "");
+    $.ajax({
+      type: 'POST',
+      url: "/board/post/write",
+      data: {post_title: post_title,
+            post_content: post_content,
+            board_name: board_name},
+      error: function() {
+        alert('게시글 작성 실패');
+      },
+      success: function() {
+        console.log("게시글 저장 완료");
+      }
+    });
+}
