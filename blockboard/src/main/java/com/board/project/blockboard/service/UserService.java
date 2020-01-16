@@ -18,16 +18,13 @@ public class UserService {
     @Autowired
     private UserMapper userMapper;
 
-    public boolean loginCheck(HttpServletRequest request, HttpSession session) {
+    public boolean loginCheck(UserDTO requestUser) {
         // 로그인 요청 사용자의 정보를 가져온다.
+        UserDTO login_user = userMapper.getUserByID(requestUser.getUserID());
 
-        UserDTO login_user = userMapper.selectUser(request.getParameter("userID"));
-        Logger logger = LoggerFactory.getLogger(getClass());
-
-        // id가 있으면 로그인(추후에 password까지 검증)
+        // id에 해당하는 유저가 있으면 패스워드 검사
         if(login_user != null) {
-            logger.info(request.getParameter("userPassword"));
-            if(login_user.getUserPassword().equals(request.getParameter("userPassword"))) {
+            if(login_user.getUserPassword().equals(requestUser.getUserPassword())) {
                 return true;
             }
         }

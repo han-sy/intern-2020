@@ -3,6 +3,7 @@ package com.board.project.blockboard.dto;
 public class UserDTO {
     private String userID;
     private int companyID;
+    private String userName;
     private String userPassword;
     private String userType;
 
@@ -20,6 +21,14 @@ public class UserDTO {
 
     public void setCompanyID(int companyID) {
         this.companyID = companyID;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
     public String getUserPassword() {

@@ -48,8 +48,6 @@ public class BoardController {
 
     @RequestMapping("")
     public String getMainContent(HttpServletRequest request, HttpSession session,Model model) throws UnsupportedEncodingException {
-
-
         // 클라이언트의 쿠키를 가져옴
         Logger logger = LoggerFactory.getLogger(getClass());
         Cookie[] getCookie = request.getCookies();
@@ -63,7 +61,7 @@ public class BoardController {
                 String name = c.getName();
                 String value = c.getValue();
 
-                if(name.equals("s_id")) {
+                if(name.equals("sessionID")) {
 
                     try {
                         decode = aes256.aesDecode(codec.decode(value));
