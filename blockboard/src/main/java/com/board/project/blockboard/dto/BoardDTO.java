@@ -37,4 +37,13 @@ public class BoardDTO {
     public void setBoard_name(String board_name) {
         this.board_name = board_name;
     }
+
+    @Override
+    public String toString() {
+        return "BoardDTO{" +
+                "board_id=" + board_id +
+                ", company_id=" + company_id +
+                ", board_name='" + board_name + '\'' +
+                '}';
+    }
 }

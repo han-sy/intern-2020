@@ -55,6 +55,6 @@
     </select>
 
     <insert id="insertBoard" parameterType="com.board.project.blockboard.dto.BoardDTO">
-        insert into Board values(#{board_id},#{com_id},#{board_name});
+        insert into Board values(#{board_id},#{company_id},#{board_name});
     </insert>
 </mapper>

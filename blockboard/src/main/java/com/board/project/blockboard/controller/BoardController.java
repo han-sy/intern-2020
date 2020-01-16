@@ -1,6 +1,5 @@
 package com.board.project.blockboard.controller;
 
-import com.board.project.blockboard.Data.CurrentUserInfo;
 import com.board.project.blockboard.dto.BoardDTO;
 import com.board.project.blockboard.dto.PostDTO;
 import com.board.project.blockboard.service.BoardService;
@@ -38,6 +37,8 @@ import java.util.Map;
 public class BoardController {
     private BoardService boardService;
     private String key = "slgi3ibu5phi8euf";
+    private String userID;
+    private int companyID;
     AES256Util aes256;
     URLCodec codec;
     @Autowired
@@ -66,43 +67,28 @@ public class BoardController {
 
                     try {
                         decode = aes256.aesDecode(codec.decode(value));
-                        decode = decode.substring(0, decode.length()-6); // id 자르기
+                        userID = decode.substring(0, decode.length()-6); // id 자르기
                         logger.info(decode);
-                    } catch (NoSuchAlgorithmException e) {
-                        e.printStackTrace();
-                    } catch (NoSuchPaddingException e) {
-                        e.printStackTrace();
-                    } catch (InvalidKeyException e) {
-                        e.printStackTrace();
-                    } catch (InvalidAlgorithmParameterException e) {
-                        e.printStackTrace();
-                    } catch (IllegalBlockSizeException e) {
-                        e.printStackTrace();
-                    } catch (BadPaddingException e) {
-                        e.printStackTrace();
-                    } catch (DecoderException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
             }
         }
-        logger.info("first");
-        List<BoardDTO> list = boardService.printBoardbyComp(decode);
-        logger.info("secpmd");
-      
-        int com_id = boardService.printCompanyId(decode);
-        CurrentUserInfo currentUserInf = CurrentUserInfo.getInstance();
-        currentUserInf.setUser_id(decode);
-        currentUserInf.setCom_id(com_id);
+
+        List<BoardDTO> list = boardService.printBoardbyComp(userID);
+
+        companyID = boardService.printCompanyId(userID);
+
 
         System.out.println("list: "+list.size());
         model.addAttribute("list",list); //게시판 목록
-        model.addAttribute("com_name",boardService.printCompanyName(currentUserInf.getUser_id()));//회사이름
-        model.addAttribute("isadmin",boardService.checkAdmin(currentUserInf.getUser_id()));
+        model.addAttribute("com_name",boardService.printCompanyName(userID));//회사이름
+        model.addAttribute("isadmin",boardService.checkAdmin(userID));
       
         System.out.println("list: "+list.size());
         model.addAttribute("list",list);
-        model.addAttribute("com_name",boardService.printCompanyName(decode));
+        model.addAttribute("com_name",boardService.printCompanyName(userID));
 
         System.out.println(model);
         return "board";
@@ -185,7 +171,7 @@ public class BoardController {
     public Map<String,Object> insertNewBoard(HttpServletRequest request){
 
         String newBoardName = request.getParameter("board_name");
-        boardService.insertNewBoard(newBoardName);
+        boardService.insertNewBoard(newBoardName,companyID);
         //System.out.println("ajax로 넘어온 data :  "+request);
         Map<String,Object> map = new HashMap<String, Object>();
         BoardDTO newBoard = boardService.printboardbyBoardName(newBoardName);

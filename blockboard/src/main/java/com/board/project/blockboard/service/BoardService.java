@@ -12,7 +12,7 @@ public interface BoardService {
     PostDTO printPostContnet(String post_id);
     String printCompanyName(String user_id);
     boolean checkAdmin(String user_id);
-    void insertNewBoard(String newBoardName);
+    void insertNewBoard(String newBoardName,int companyID);
     int printCompanyId(String decode);
     BoardDTO printboardbyBoardName(String newBoardName);
 }

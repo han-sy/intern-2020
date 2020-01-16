@@ -1,6 +1,5 @@
 package com.board.project.blockboard.service;
 
-import com.board.project.blockboard.Data.CurrentUserInfo;
 import com.board.project.blockboard.dto.PostDTO;
 import com.board.project.blockboard.mapper.BoardMapper;
 import com.board.project.blockboard.dto.BoardDTO;
@@ -16,7 +15,6 @@ import java.util.List;
 @Service
 public class BoardServiceImpl implements BoardService {
     private BoardMapper boardMapper;
-    CurrentUserInfo currentUserInfo = CurrentUserInfo.getInstance();
     Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
     BoardServiceImpl(BoardMapper boardMapper) {
@@ -60,15 +58,19 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public void insertNewBoard(String newBoardName){
+    public void insertNewBoard(String newBoardName,int companyID){
         int idx = boardMapper.maxBoardID();
-        BoardDTO newBoard = new BoardDTO(idx+1,currentUserInfo.getCom_id(),newBoardName);
+        BoardDTO newBoard = new BoardDTO(idx+1,companyID,newBoardName);
+        logger.info("newBoard : "+newBoard);
         boardMapper.insertBoard(newBoard);
     }
 
     @Override
     public int printCompanyId(String user_id) {
-        return Integer.parseInt(boardMapper.selectComIdByUserId(user_id));
+        logger.info("boardMapper userid: "+ user_id);
+        String select_result = boardMapper.selectComIdByUserId(user_id);
+        logger.info("boardMapper select: "+ select_result);
+        return Integer.parseInt(select_result);
     }
 
     @Override
