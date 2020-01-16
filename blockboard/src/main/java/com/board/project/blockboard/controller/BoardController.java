@@ -68,7 +68,7 @@ public class BoardController {
                 String name = c.getName();
                 String value = c.getValue();
 
-                if(name.equals("s_id")) {
+                if(name.equals("sessionID")) {
 
                     try {
                         decode = aes256.aesDecode(codec.decode(value));
@@ -111,7 +111,7 @@ public class BoardController {
 
 
         String boardID = request.getParameter("activeTab");
-        List<PostDTO> list = boardService.getPostListByBoardID(boardID);
+        List<PostDTO> list = boardService.getPostListByBoardID(Integer.parseInt(boardID));
 
         System.out.println(list);
 
@@ -144,7 +144,7 @@ public class BoardController {
     public Map<String,Object> getPostByPostID(HttpServletRequest request){
 
         String postID = request.getParameter("postID");
-        PostDTO post = boardService.getPostByPostID(postID);
+        PostDTO post = boardService.getPostByPostID(Integer.parseInt(postID));
         //System.out.println("ajax로 넘어온 data :  "+request);
 
         //model.addAttribute("post_list",list);

@@ -55,7 +55,7 @@ public class UserController {
                 e.printStackTrace();
             }
 
-            Cookie setCookie = new Cookie("s_id", encrypt); // 클라이언트에게 전달할 쿠키 생성
+            Cookie setCookie = new Cookie("sessionID", encrypt); // 클라이언트에게 전달할 쿠키 생성
             setCookie.setMaxAge(60*60);
             response.addCookie(setCookie);
         }
@@ -65,7 +65,7 @@ public class UserController {
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
     public String logout(HttpServletResponse response) {
         // s_id 쿠키 새로 생성해서 시간 0으로 설정
-        Cookie kc = new Cookie("s_id", null);
+        Cookie kc = new Cookie("sessionID", null);
         kc.setMaxAge(0);
         response.addCookie(kc);
         return "redirect:/";
@@ -83,7 +83,7 @@ public class UserController {
                 String name = c.getName();
                 String value = c.getValue();
 
-                if(name.equals("s_id")) {
+                if(name.equals("sessionID")) {
                     String decode = null;
                     try {
                         decode = aes256.aesDecode(codec.decode(value));
