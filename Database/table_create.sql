@@ -57,7 +57,7 @@ create table Post(
 	foreign key(userID) references Users(userID),
 	foreign key(boardID) references Board(boardID),
 	foreign key(companyID) references Company(companyID),
-	primary key(postID) 
+	primary key(postID)
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
 create table Comments(
@@ -74,7 +74,7 @@ create table Comments(
     primary key(commentID)
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
-insert into Company values(1,'wm'); 
+insert into Company values(1,'wm');
 insert into Company values(2,'naver');
 insert into Board values(1,1,"공지사항");
 insert into Board values(2,1,"건의사항");
@@ -98,9 +98,10 @@ insert into Post values (3,2,1,1,'건의사항 게시판 첫글','공지사항�
 insert into Post values (4,2,1,1,'공지사항 게시판 ','ㅎㅎㅎㅎ테스트',now());
 insert into Post values (5,1,5,1,'자유1','1111',now());
 insert into Post values (6,1,5,1,'자유2','22222',now());
- 
+
 
 SELECT p.postID,p.userID, u.userName,p.boardID,p.companyID,p.postTitle,p.postContent,p.postRegisterTime
         FROM Post p , Users u
         WHERE p.userID = u.userID and p.boardID=1
         ORDER BY p.postID DESC;
+
