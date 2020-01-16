@@ -1,49 +1,50 @@
 package com.board.project.blockboard.dto;
 
 public class UserDTO {
-    private String user_id;
-    private int com_id;
-    private String user_password;
-    private String user_type;
+    private String userID;
+    private int companyID;
+    private String userPassword;
+    private String userType;
 
-    public String getUser_password() {
-        return user_password;
+    public String getUserID() {
+        return userID;
     }
 
-    public void setUser_password(String user_password) {
-        this.user_password = user_password;
+    public void setUserID(String userID) {
+        this.userID = userID;
     }
 
-    public UserDTO(String user_id) {
-        this.user_id = user_id;
-    }
-    public String getUser_id() {
-        return user_id;
+    public int getCompanyID() {
+        return companyID;
     }
 
-    public void setUser_id(String user_id) {
-        this.user_id = user_id;
+    public void setCompanyID(int companyID) {
+        this.companyID = companyID;
     }
 
-    public int getCom_id() {
-        return com_id;
+    public String getUserPassword() {
+        return userPassword;
     }
 
-    public void setCom_id(int com_id) {
-        this.com_id = com_id;
+    public void setUserPassword(String userPassword) {
+        this.userPassword = userPassword;
     }
 
-    public String getUser_type() {
-        return user_type;
+    public String getUserType() {
+        return userType;
     }
 
-    public void setUser_type(String user_type) {
-        this.user_type = user_type;
+    public void setUserType(String userType) {
+        this.userType = userType;
     }
-
 
     @Override
     public String toString() {
-        return "UserDTO [User_ID=" + user_id + ", Company_ID=" + com_id + ", User_Type=" + user_type;
+        return "UserDTO{" +
+                "userID='" + userID + '\'' +
+                ", companyID=" + companyID +
+                ", userPassword='" + userPassword + '\'' +
+                ", userType='" + userType + '\'' +
+                '}';
     }
 }

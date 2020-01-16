@@ -31,13 +31,13 @@ public class UserServiceImpl implements UserService{
     public boolean loginCheck(HttpServletRequest request, HttpSession session) {
         // 로그인 요청 사용자의 정보를 가져온다.
 
-        UserDTO login_user = userMapper.selectUser(request.getParameter("user_id"));
+        UserDTO login_user = userMapper.selectUser(request.getParameter("userID"));
         Logger logger = LoggerFactory.getLogger(getClass());
 
         // id가 있으면 로그인(추후에 password까지 검증)
         if(login_user != null) {
-            logger.info(request.getParameter("user_pwd"));
-            if(login_user.getUser_password().equals(request.getParameter("user_pwd"))) {
+            logger.info(request.getParameter("userPassword"));
+            if(login_user.getUserPassword().equals(request.getParameter("userPassword"))) {
                 return true;
             }
         }

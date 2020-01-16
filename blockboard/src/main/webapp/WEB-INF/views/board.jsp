@@ -92,12 +92,12 @@
             $('#postlist').html("");
             $.each(data, function (key, value) {
               $('#postlist').append(
-                "<tr height='30' class = 'postclick' data-post = '" + value.post_id +
+                "<tr height='30' class = 'postclick' data-post = '" + value.postID +
                 "' onclick='javascript:clickTrEvent(this)' onmouseover = 'javascript:changeTrColor(this)' >" +
-                "<td width='73'>" + value.post_id + "</td>" +
-                "<td width='379'>" + value.post_title + "</td>" +
-                "<td width='73'>" + value.user_name + "</td>" +
-                "<td width='164'>" + value.post_reg_time + "</td></tr>"
+                "<td width='73'>" + value.postID + "</td>" +
+                "<td width='379'>" + value.postTitle + "</td>" +
+                "<td width='73'>" + value.userName + "</td>" +
+                "<td width='164'>" + value.postRegisterTime + "</td></tr>"
               );
               //alert($this);
             });
@@ -141,7 +141,7 @@ $(document).on('click', '.toggleBG', function () {
 
 
   </script>
-  <h1>${com_name} 게시판</h1>
+  <h1>${companyName} 게시판</h1>
   <!--게시판 하위에 관리자일 경우 추가되는 버튼 (기능변경, 게시판추가)-->
   <c:if test="${isadmin}">
         <a id ='addFuncBtn'  onclick = "javascript:changeFunction(this)" style ="cursor:pointer">기능 변경</a>
@@ -157,15 +157,15 @@ $(document).on('click', '.toggleBG', function () {
   </div>
   <ul class="tab" id = "tab_id">
     <c:forEach items="${list}" var="list" varStatus="status">
-      <li data-tab="${list.board_id}" class='tabmenu' id="default">
-        <c:out value="${list.board_name}" />
+      <li data-tab="${list.boardID}" class='tabmenu' id="default">
+        <c:out value="${list.boardName}" />
       </li>
     </c:forEach>
   </ul>
 
   <div id="writecontent">
     <h2> 글쓰기 영역 - 우혁 부분 </h2>
-    <input type="text" id="post_title" placeholder="게시글 제목"/>
+    <input type="text" id="postTitle" placeholder="게시글 제목"/>
     <textarea name="smarteditor" id="smarteditor" rows="10" cols="100" placeholder="내용을 입력하세요">afwefwe</textarea></br>
     <input id="btn_postwrite" type="submit" value="글쓰기"/>
   </div>

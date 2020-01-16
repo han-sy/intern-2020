@@ -27,33 +27,33 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public String printCompanyName(String user_id) {
-        return boardMapper.selectComNameByUserId(user_id);
+    public String printCompanyName(String userID) {
+        return boardMapper.selectComNameByUserId(userID);
     }
 
     @Override
-    public List<BoardDTO> printBoardbyComp(String user_id) {
-        //System.out.println("com_id (session): " + session.getAttribute("COMPANY"));
-        String com_id = boardMapper.selectComIdByUserId(user_id);
-        System.out.println("com_id : "+com_id);
-        List<BoardDTO> boardlist = boardMapper.selectBoardByComId(com_id);
+    public List<BoardDTO> printBoardbyComp(String userID) {
+        //System.out.println("companyID (session): " + session.getAttribute("COMPANY"));
+        String companyID = boardMapper.selectComIdByUserId(userID);
+        System.out.println("companyID : "+companyID);
+        List<BoardDTO> boardlist = boardMapper.selectBoardByComId(companyID);
         return boardlist;
     }
     @Override
-    public List<PostDTO> printPostbyBoard(String board_id) {
-        List<PostDTO> postlist = boardMapper.selectPostByBoardId(board_id);
+    public List<PostDTO> printPostbyBoard(String boardID) {
+        List<PostDTO> postlist = boardMapper.selectPostByBoardId(boardID);
         return postlist;
     }
 
     @Override
-    public PostDTO printPostContnet(String post_id) {
-        PostDTO post = boardMapper.selectPostByPostID(post_id);
+    public PostDTO printPostContnet(String postID) {
+        PostDTO post = boardMapper.selectPostByPostID(postID);
         return post;
     }
 
     @Override
-    public boolean checkAdmin(String user_id) {
-        String admin = boardMapper.selectUserTypeByUserId(user_id);
+    public boolean checkAdmin(String userID) {
+        String admin = boardMapper.selectUserTypeByUserId(userID);
         return admin.equals("관리자");
     }
 
@@ -66,11 +66,9 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public int printCompanyId(String user_id) {
-        logger.info("boardMapper userid: "+ user_id);
-        String select_result = boardMapper.selectComIdByUserId(user_id);
-        logger.info("boardMapper select: "+ select_result);
-        return Integer.parseInt(select_result);
+    public int printCompanyId(String userID) {
+        logger.info("boardMapper userid: "+ userID);
+        return Integer.parseInt(boardMapper.selectComIdByUserId(userID));
     }
 
     @Override

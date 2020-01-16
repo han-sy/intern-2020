@@ -1,49 +1,49 @@
 package com.board.project.blockboard.dto;
 
 public class BoardDTO {
-    private int board_id;
-    private int company_id;
-    private String board_name;
+    private int BoardID;
+    private int companyID;
+    private String boardName;
 
     public BoardDTO(){
     }
 
-    public BoardDTO(int board_id, int company_id, String board_name) {
-        this.board_id = board_id;
-        this.company_id = company_id;
-        this.board_name = board_name;
+    public BoardDTO(int boardID, int companyID, String boardName) {
+        BoardID = boardID;
+        this.companyID = companyID;
+        this.boardName = boardName;
     }
 
-    public int getBoard_id() {
-        return board_id;
+    public int getBoardID() {
+        return BoardID;
     }
 
-    public void setBoard_id(int board_id) {
-        this.board_id = board_id;
+    public void setBoardID(int boardID) {
+        BoardID = boardID;
     }
 
-    public int getCompany_id() {
-        return company_id;
+    public int getCompanyID() {
+        return companyID;
     }
 
-    public void setCompany_id(int company_id) {
-        this.company_id = company_id;
+    public void setCompanyID(int companyID) {
+        this.companyID = companyID;
     }
 
-    public String getBoard_name() {
-        return board_name;
+    public String getBoardName() {
+        return boardName;
     }
 
-    public void setBoard_name(String board_name) {
-        this.board_name = board_name;
+    public void setBoardName(String boardName) {
+        this.boardName = boardName;
     }
 
     @Override
     public String toString() {
         return "BoardDTO{" +
-                "board_id=" + board_id +
-                ", company_id=" + company_id +
-                ", board_name='" + board_name + '\'' +
+                "BoardID=" + BoardID +
+                ", companyID=" + companyID +
+                ", boardName='" + boardName + '\'' +
                 '}';
     }
 }

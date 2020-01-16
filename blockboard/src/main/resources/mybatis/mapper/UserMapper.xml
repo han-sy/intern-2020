@@ -10,7 +10,7 @@
     <select id="selectUser" parameterType="string" resultType="com.board.project.blockboard.dto.UserDTO">
         SELECT *
         FROM Users
-        WHERE user_id=#{user_id};
+        WHERE userID=#{userID};
     </select>
 
 </mapper>

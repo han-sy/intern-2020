@@ -11,12 +11,12 @@ import java.util.List;
 @Mapper
 public interface BoardMapper {
     List<BoardDTO> allBoard();
-    List<BoardDTO> selectBoardByComId(String company_id);
-    List<PostDTO> selectPostByBoardId(String board_id);
-    PostDTO selectPostByPostID(String post_id);
-    String selectComIdByUserId(String user_id);
-    String selectComNameByUserId(String user_id);
-    String selectUserTypeByUserId(String user_id);
+    List<BoardDTO> selectBoardByComId(String companyID);
+    List<PostDTO> selectPostByBoardId(String boardID);
+    PostDTO selectPostByPostID(String postID);
+    String selectComIdByUserId(String userID);
+    String selectComNameByUserId(String userID);
+    String selectUserTypeByUserId(String userID);
     int maxBoardID();
     void insertBoard(BoardDTO newBoard);
     BoardDTO selectBoardByBoardName(String newBoardName);

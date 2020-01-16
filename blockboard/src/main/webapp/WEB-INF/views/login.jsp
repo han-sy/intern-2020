@@ -17,8 +17,8 @@
    <div id="wrap-login">
    <form action="loginCheck" method="POST" style="width: 470px;">
         <h2>로그인</h2>
-        <input type="text" name="user_id" id="user_id" class="w3-input" placeholder="아이디"><br>
-        <input type="password" name="user_pwd" id="user_pwd" class="w3-input" placeholder="비밀번호"><br>
+        <input type="text" name="userID" id="userID" class="w3-input" placeholder="아이디"><br>
+        <input type="password" name="userPassword" id="userPassword" class="w3-input" placeholder="비밀번호"><br>
         <input type="submit" value="로그인"><br>
     </form>
     </div>

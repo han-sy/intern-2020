@@ -45,25 +45,13 @@ public class UserController {
             // 암호화 과정
             aes256 = new AES256Util(key);
             codec = new URLCodec();
-            String user_id = request.getParameter("user_id") + "server";
+            String userID = request.getParameter("userID") + "server";
             String encrypt = "";
 
             try {
-                encrypt = codec.encode(aes256.aesEncode(user_id));
+                encrypt = codec.encode(aes256.aesEncode(userID));
                 logger.info(encrypt.toString());
-            } catch (EncoderException e) {
-                e.printStackTrace();
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-            } catch (NoSuchPaddingException e) {
-                e.printStackTrace();
-            } catch (InvalidKeyException e) {
-                e.printStackTrace();
-            } catch (InvalidAlgorithmParameterException e) {
-                e.printStackTrace();
-            } catch (IllegalBlockSizeException e) {
-                e.printStackTrace();
-            } catch (BadPaddingException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
@@ -100,19 +88,7 @@ public class UserController {
                     try {
                         decode = aes256.aesDecode(codec.decode(value));
                         logger.info(decode);
-                    } catch (NoSuchAlgorithmException e) {
-                        e.printStackTrace();
-                    } catch (NoSuchPaddingException e) {
-                        e.printStackTrace();
-                    } catch (InvalidKeyException e) {
-                        e.printStackTrace();
-                    } catch (InvalidAlgorithmParameterException e) {
-                        e.printStackTrace();
-                    } catch (IllegalBlockSizeException e) {
-                        e.printStackTrace();
-                    } catch (BadPaddingException e) {
-                        e.printStackTrace();
-                    } catch (DecoderException e) {
+                    } catch (Exception e){
                         e.printStackTrace();
                     }
                     //서버가 만들어준 쿠키면

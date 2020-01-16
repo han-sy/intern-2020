@@ -78,17 +78,18 @@ public class BoardController {
 
         List<BoardDTO> list = boardService.printBoardbyComp(userID);
 
+        logger.info("userID : "+userID);
         companyID = boardService.printCompanyId(userID);
 
 
         System.out.println("list: "+list.size());
         model.addAttribute("list",list); //게시판 목록
-        model.addAttribute("com_name",boardService.printCompanyName(userID));//회사이름
+        model.addAttribute("companyName",boardService.printCompanyName(userID));//회사이름
         model.addAttribute("isadmin",boardService.checkAdmin(userID));
       
         System.out.println("list: "+list.size());
         model.addAttribute("list",list);
-        model.addAttribute("com_name",boardService.printCompanyName(userID));
+        model.addAttribute("companyName",boardService.printCompanyName(userID));
 
         System.out.println(model);
         return "board";
@@ -104,8 +105,8 @@ public class BoardController {
     public List<Map<String,Object>> printPostList(HttpServletRequest request){
 
 
-        String board_id = request.getParameter("activeTab");
-        List<PostDTO> list = boardService.printPostbyBoard(board_id);
+        String boardID = request.getParameter("activeTab");
+        List<PostDTO> list = boardService.printPostbyBoard(boardID);
         //System.out.println("ajax로 넘어온 data :  "+request);
 
         //model.addAttribute("post_list",list);
@@ -116,10 +117,10 @@ public class BoardController {
         try{
             for(int i=0;i<list.size();i++){
                 Map<String,Object> map = new HashMap<String, Object>();
-                map.put("post_id",list.get(i).getPost_id());
-                map.put("post_title",list.get(i).getPost_title());
-                map.put("user_name",list.get(i).getUser_name());
-                map.put("post_reg_time",list.get(i).getPost_register_time());
+                map.put("postID",list.get(i).getPostID());
+                map.put("postTitle",list.get(i).getPostTitle());
+                map.put("userName",list.get(i).getUserName());
+                map.put("postRegisterTime",list.get(i).getPostRegisterTime());
                 System.out.println(map);
                 listSender.add(map);
             }
@@ -139,8 +140,8 @@ public class BoardController {
     @ResponseBody
     public Map<String,Object> printPost(HttpServletRequest request){
 
-        String post_id = request.getParameter("post_id");
-        PostDTO post = boardService.printPostContnet(post_id);
+        String postID = request.getParameter("postID");
+        PostDTO post = boardService.printPostContnet(postID);
         //System.out.println("ajax로 넘어온 data :  "+request);
 
         //model.addAttribute("post_list",list);
@@ -148,10 +149,10 @@ public class BoardController {
         Map<String,Object> map = new HashMap<String, Object>();
         try{
 
-            map.put("post_title",post.getPost_title());
-            map.put("post_content",post.getPost_content());
-            map.put("user_name",post.getUser_name());
-            map.put("post_reg_time",post.getPost_register_time());
+            map.put("postTitle",post.getPostTitle());
+            map.put("postContent",post.getPostContent());
+            map.put("userName",post.getUserName());
+            map.put("postRegisterTime",post.getPostRegisterTime());
             System.out.println(map);
         }
         catch (Exception e){
@@ -170,13 +171,13 @@ public class BoardController {
     @ResponseBody
     public Map<String,Object> insertNewBoard(HttpServletRequest request){
 
-        String newBoardName = request.getParameter("board_name");
+        String newBoardName = request.getParameter("boardName");
         boardService.insertNewBoard(newBoardName,companyID);
         //System.out.println("ajax로 넘어온 data :  "+request);
         Map<String,Object> map = new HashMap<String, Object>();
         BoardDTO newBoard = boardService.printboardbyBoardName(newBoardName);
-        map.put("board_id",newBoard.getBoard_id());
-        map.put("board_name",newBoard.getBoard_name());
+        map.put("boardID",newBoard.getBoardID());
+        map.put("boardName",newBoard.getBoardName());
         return map;
     }
 
