@@ -190,6 +190,7 @@ function click_post() {
         alert('게시글 작성 실패');
       },
       success: function() {
+        refreshPostList();
         console.log("게시글 저장 완료");
       }
     });
@@ -209,46 +210,44 @@ $(document).on("click", "#btn_deletePost", function () {
           alert('게시글 삭제 실패');
         },
         success: function (data) {
-          console.log('게시글 삭제 완료 후 데이터 로딩 기다리는중');
-          // 페이지 리로드 안하고 게시글 목록만 새로 받아올 순 없는지 방법 생각해보기
-          //location.reload();
-          var tabs = $('#tab_id').children();
-          var activeTab = 0;
-          console.log("tabs길이 = " + tabs.length);
-          tabs.each(function() {
-            var color = $(this).css('background-color');
-            if(color == "rgb(144, 238, 144)") {
-                activeTab = $(this).attr('data-tab');
-                console.log("id = " + $(this).attr('data-tab') + "yes!!!");
-            }
-          });
-          if(activeTab != 0) {
-              $.ajax({
-                type: 'GET',                 //get방식으로 통신
-                url: "/board/tab",    //탭의 data-tab속성의 값으로 된 html파일로 통신
-                data: { activeTab: activeTab },
-                async: false,
-                error: function () {  //통신 실패시
-                  alert('통신실패!');
-                },
-                success: function (data) {    //통신 성공시 탭 내용담는 div를 읽어들인 값으로 채운다.
-                  console.log("success" + data);
-                  $('#postlist').html("");
-                  $.each(data, function (key, value) {
-                    $('#postlist').append(
-                      "<tr height='30' class = 'postclick' data-post = '" + value.postID +
-                      "' onclick='javascript:clickTrEvent(this)' onmouseover = 'javascript:changeTrColor(this)' >" +
-                      "<td width='379'>" + value.postTitle + "</td>" +
-                      "<td width='73'>" + value.userName + "</td>" +
-                      "<td width='164'>" + value.postRegisterTime + "</td></tr>" +
-                      "<td style='visibility:hidden'>" + value.postID + "</td>"
-                    );
-                  });
-                }
-              });
-          }
+          refreshPostList();
         }
     });
 });
 
-
+// 게시글 작성, 수정, 삭제 시 해당 게시판 refresh 하는 함수
+function refreshPostList() {
+  var tabs = $('#tab_id').children();
+  var activeTab = 0;
+  $.each(tabs, function() {
+    var color = $(this).css('background-color');
+    if(color == "rgb(144, 238, 144)") {
+      activeTab = $(this).attr('data-tab');
+    }
+  });
+  if(activeTab != 0) {
+    $.ajax({
+      type: 'GET',
+      url: "/board/tab",
+      data: { activeTab: activeTab },
+      async: false,
+      error: function () {
+        alert('통신실패!');
+      },
+      success: function (data) {
+        console.log("success" + data);
+        $('#postlist').html("");
+        $.each(data, function (key, value) {
+          $('#postlist').append(
+            "<tr height='30' class = 'postclick' data-post = '" + value.postID +
+            "' onclick='javascript:clickTrEvent(this)' onmouseover = 'javascript:changeTrColor(this)' >" +
+            "<td width='379'>" + value.postTitle + "</td>" +
+            "<td width='73'>" + value.userName + "</td>" +
+            "<td width='164'>" + value.postRegisterTime + "</td></tr>" +
+            "<td style='visibility:hidden'>" + value.postID + "</td>"
+          );
+        });
+      }
+    });
+  }
+}
