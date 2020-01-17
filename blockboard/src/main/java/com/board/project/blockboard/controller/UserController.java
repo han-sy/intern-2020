@@ -73,15 +73,11 @@ public class UserController {
         URLCodec codec = new URLCodec();
         // 클라이언트가 보낸 쿠키가 서버가 생성해준건지 검사 (복호화 과정)
         if(getCookie != null){
-            for(int i=0; i<getCookie.length; i++){
-                Cookie c = getCookie[i];
-                String name = c.getName();
-                String value = c.getValue();
-
-                if(name.equals("sessionID")) {
+            for(Cookie c : getCookie){
+                if(c.getName().equals("sessionID")) {
                     String decode = null;
                     try {
-                        decode = aes256.aesDecode(codec.decode(value));
+                        decode = aes256.aesDecode(codec.decode(c.getValue()));
                         logger.info(decode);
                     } catch (Exception e){
                         e.printStackTrace();

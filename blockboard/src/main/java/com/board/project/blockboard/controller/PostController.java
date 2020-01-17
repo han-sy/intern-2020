@@ -10,10 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -38,8 +35,8 @@ public class PostController {
 
     @PostMapping(value = "/insert")
     @ResponseBody
-    public void insertPost(HttpServletRequest request) throws UnsupportedEncodingException {
-        PostDTO post = new PostDTO();
+    public void insertPost(@ModelAttribute PostDTO receivePost, @RequestParam String boardName, HttpServletRequest request) throws UnsupportedEncodingException {
+        PostDTO sendPost = new PostDTO();
         Map<String, Object> map_Board = new HashMap<String, Object>();
 
         Cookie[] cookies = request.getCookies();
@@ -47,13 +44,10 @@ public class PostController {
         URLCodec codec = new URLCodec();
         String decode = null;
 
-        for(int i=0; i<cookies.length; i++) {
-            Cookie c = cookies[i];
-            String name = c.getName();
-            String value = c.getValue();
-            if (name.equals("sessionID")) {
+        for(Cookie c : cookies) {
+            if (c.getName().equals("sessionID")) {
                 try {
-                    decode = aes256.aesDecode(codec.decode(value));
+                    decode = aes256.aesDecode(codec.decode(c.getValue()));
                     userID = decode.substring(0, decode.length() - 6); // id 자르기
                     logger.info(decode);
                 } catch (Exception e) {
@@ -61,14 +55,21 @@ public class PostController {
                 }
             }
         }
-        post.setUserID(userID);
+        sendPost.setUserID(userID);
         companyID = boardService.getCompanyIDByUserID(userID);
         map_Board.put("companyID", companyID);
-        map_Board.put("boardName", request.getParameter("boardName"));
-        post.setCompanyID(companyID);
-        post.setPostTitle(request.getParameter("postTitle"));
-        post.setPostContent(request.getParameter("postContent"));
-        post.setBoardID(postService.getBoardID(map_Board));
-        postService.insertPost(post);
+        map_Board.put("boardName", boardName);
+        sendPost.setCompanyID(companyID);
+        sendPost.setPostTitle(receivePost.getPostTitle());
+        sendPost.setPostContent(receivePost.getPostContent());
+        sendPost.setBoardID(postService.getBoardID(map_Board));
+        postService.insertPost(sendPost);
+    }
+
+    @DeleteMapping("/delete")
+    @ResponseBody
+    public void deletePost(@RequestParam String postID) {
+        logger.info("postID는 이거야 = " + postID);
+        postService.deletePost(Integer.parseInt(postID));
     }
 }

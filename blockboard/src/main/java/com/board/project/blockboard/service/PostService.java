@@ -15,10 +15,11 @@ public class PostService{
     @Autowired
     private BoardMapper boardMapper;
 
-    public void insertPost(PostDTO post) {
-        postMapper.insertPost(post);
-    }
     public int getBoardID(Map<String, Object> map) {
         return boardMapper.getBoardIDByComIDAndBoardName(map).getBoardID();
     }
+    public void insertPost(PostDTO post) {
+        postMapper.insertPost(post);
+    }
+    public void deletePost(int postID) { postMapper.deletePostByPostID(postID);}
 }

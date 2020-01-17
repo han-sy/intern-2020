@@ -7,4 +7,9 @@
         INSERT INTO Post(userID, boardID, companyID, postTitle, postContent)
         VALUES (#{userID}, #{boardID}, #{companyID}, #{postTitle}, #{postContent});
     </insert>
+
+    <delete id="deletePostByPostID" parameterType="int">
+        DELETE FROM Post
+        WHERE postID=#{postID};
+    </delete>
 </mapper>
