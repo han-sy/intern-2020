@@ -1,5 +1,6 @@
 package com.board.project.blockboard.service;
 
+import com.board.project.blockboard.Data.CurrentUserInfo;
 import com.board.project.blockboard.dto.PostDTO;
 import com.board.project.blockboard.mapper.BoardMapper;
 import com.board.project.blockboard.dto.BoardDTO;
@@ -15,6 +16,7 @@ import java.util.List;
 @Service
 public class BoardServiceImpl implements BoardService {
     private BoardMapper boardMapper;
+    CurrentUserInfo currentUserInfo = CurrentUserInfo.getInstance();
     Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
     BoardServiceImpl(BoardMapper boardMapper) {
@@ -24,6 +26,11 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public List<BoardDTO> allBoard() {
         return boardMapper.allBoard();
+    }
+
+    @Override
+    public String printCompanyName(String user_id) {
+        return boardMapper.selectComNameByUserId(user_id);
     }
 
     @Override
@@ -44,5 +51,28 @@ public class BoardServiceImpl implements BoardService {
     public PostDTO printPostContnet(String post_id) {
         PostDTO post = boardMapper.selectPostByPostID(post_id);
         return post;
+    }
+
+    @Override
+    public boolean checkAdmin(String user_id) {
+        String admin = boardMapper.selectUserTypeByUserId(user_id);
+        return admin.equals("관리자");
+    }
+
+    @Override
+    public void insertNewBoard(String newBoardName){
+        int idx = boardMapper.maxBoardID();
+        BoardDTO newBoard = new BoardDTO(idx+1,currentUserInfo.getCom_id(),newBoardName);
+        boardMapper.insertBoard(newBoard);
+    }
+
+    @Override
+    public int printCompanyId(String user_id) {
+        return Integer.parseInt(boardMapper.selectComIdByUserId(user_id));
+    }
+
+    @Override
+    public BoardDTO printboardbyBoardName(String newBoardName) {
+        return boardMapper.selectBoardByBoardName(newBoardName);
     }
 }

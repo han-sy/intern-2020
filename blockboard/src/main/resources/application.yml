@@ -6,8 +6,16 @@ spring:
     password: root
   mvc:
     view:
-      prefix: /WEB-INF/jsp/
+      prefix: /WEB-INF/views/
       suffix: .jsp
+    static-path-pattern: /static/**
+  devtools:
+    livereload:
+      enabled: true
+  resource:
+    static-locations : classpath:/static/
+    add-mappings : true
+
 mybatis:
   type-aliases-package: com.board.project.blockboard.mapper
   mapper-locations: mybatis/mapper/**/*.xml

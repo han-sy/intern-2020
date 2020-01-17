@@ -1,5 +1,6 @@
 package com.board.project.blockboard.controller;
 
+import com.board.project.blockboard.Data.CurrentUserInfo;
 import com.board.project.blockboard.dto.BoardDTO;
 import com.board.project.blockboard.dto.PostDTO;
 import com.board.project.blockboard.service.BoardService;
@@ -12,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -32,10 +32,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- *
- */
+
 @Controller
+@RequestMapping("/board")
 public class BoardController {
     private BoardService boardService;
     private String key = "slgi3ibu5phi8euf";
@@ -46,7 +45,7 @@ public class BoardController {
         this.boardService = boardService;
     }
 
-    @RequestMapping("/board")
+    @RequestMapping("")
     public String printBoardbyComp(HttpServletRequest request, HttpSession session,Model model) throws UnsupportedEncodingException {
 
 
@@ -88,27 +87,40 @@ public class BoardController {
             }
         }
         logger.info("first");
-        List<BoardDTO> list = boardService.printBoardbyComp(decode.toString());
+        List<BoardDTO> list = boardService.printBoardbyComp(decode);
         logger.info("secpmd");
-        //System.out.println("request: "+request);
-        //System.out.println("session: "+session.getAttribute("USER")+","+session.getAttribute("COMPANY"));
-        System.out.println("list: "+list.size());
+      
+        int com_id = boardService.printCompanyId(decode);
+        CurrentUserInfo currentUserInf = CurrentUserInfo.getInstance();
+        currentUserInf.setUser_id(decode);
+        currentUserInf.setCom_id(com_id);
 
+        System.out.println("list: "+list.size());
+        model.addAttribute("list",list); //게시판 목록
+        model.addAttribute("com_name",boardService.printCompanyName(currentUserInf.getUser_id()));//회사이름
+        model.addAttribute("isadmin",boardService.checkAdmin(currentUserInf.getUser_id()));
+      
+        System.out.println("list: "+list.size());
         model.addAttribute("list",list);
-        //model.addAttribute("board_id",list.get(0).getBoard_id());
-       // model.addAttribute("com_id",list.get(0).getCom_id());
-        //model.addAttribute("board_name",list.get(0).getBoard_name());
+        model.addAttribute("com_name",boardService.printCompanyName(decode));
+
         System.out.println(model);
         return "board";
     }
-    @RequestMapping(value = "/board/tab",method = RequestMethod.GET)
+
+    /**
+     *
+     * @param request 클릭한 탭의 id
+     * @return
+     */
+    @RequestMapping(value = "/tab",method = RequestMethod.GET)
     @ResponseBody
-    public List<Map<String,Object>> printPostList(HttpServletRequest request, Model model){
+    public List<Map<String,Object>> printPostList(HttpServletRequest request){
 
 
         String board_id = request.getParameter("activeTab");
         List<PostDTO> list = boardService.printPostbyBoard(board_id);
-        System.out.println("ajax로 넘어온 data :  "+request);
+        //System.out.println("ajax로 넘어온 data :  "+request);
 
         //model.addAttribute("post_list",list);
         System.out.println(list);
@@ -132,13 +144,18 @@ public class BoardController {
 
         return listSender;
     }
-    @RequestMapping(value = "/board/post",method = RequestMethod.GET)
+    /**
+     *
+     * @param request 게시글 목록중 클릭한 게시글의 id
+     * @return {key,value} 로 넘기기위해 map
+     */
+    @RequestMapping(value = "/post",method = RequestMethod.GET)
     @ResponseBody
     public Map<String,Object> printPost(HttpServletRequest request){
 
         String post_id = request.getParameter("post_id");
         PostDTO post = boardService.printPostContnet(post_id);
-        System.out.println("ajax로 넘어온 data :  "+request);
+        //System.out.println("ajax로 넘어온 data :  "+request);
 
         //model.addAttribute("post_list",list);
         System.out.println(post);
@@ -157,5 +174,25 @@ public class BoardController {
 
         return map;
     }
+
+    /**
+     *
+     * @param request 여기서 board name 넘겨줄거임
+     * @return {key,value} 로 넘기기위해 map
+     */
+    @RequestMapping(value = "/addboard",method = RequestMethod.GET)
+    @ResponseBody
+    public Map<String,Object> insertNewBoard(HttpServletRequest request){
+
+        String newBoardName = request.getParameter("board_name");
+        boardService.insertNewBoard(newBoardName);
+        //System.out.println("ajax로 넘어온 data :  "+request);
+        Map<String,Object> map = new HashMap<String, Object>();
+        BoardDTO newBoard = boardService.printboardbyBoardName(newBoardName);
+        map.put("board_id",newBoard.getBoard_id());
+        map.put("board_name",newBoard.getBoard_name());
+        return map;
+    }
+
 
 }

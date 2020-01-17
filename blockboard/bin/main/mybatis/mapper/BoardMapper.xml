@@ -6,7 +6,15 @@
     <select id="allBoard" resultType="com.board.project.blockboard.dto.BoardDTO">
         SELECT * FROM Board;
     </select>
+<<<<<<< HEAD
 
+=======
+    <select id="selectComNameByUserId" parameterType="string" resultType="string">
+        Select c.com_name
+        from Company c, Users u
+        where c.com_id=u.com_id and u.user_id = #{user_id};
+    </select>
+>>>>>>> origin/new_post_write
     <select id="selectComIdByUserId" parameterType="string" resultType="string">
         Select c.com_id
         from Company c, Users u
