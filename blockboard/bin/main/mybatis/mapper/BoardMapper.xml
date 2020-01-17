@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.board.project.blockboard.mapper.BoardMapper">
+    <select id="allBoard" resultType="com.board.project.blockboard.dto.BoardDTO">
+        SELECT * FROM Board;
+    </select>
+    <select id="selectComNameByUserId" parameterType="string" resultType="string">
+        Select c.com_name
+        from Company c, Users u
+        where c.com_id=u.com_id and u.user_id = #{user_id};
+    </select>
+    <select id="selectComIdByUserId" parameterType="string" resultType="string">
+        Select c.com_id
+        from Company c, Users u
+        where c.com_id=u.com_id and u.user_id = #{user_id};
+    </select>
+    <select id="selectBoardByComId" parameterType="string" resultType="com.board.project.blockboard.dto.BoardDTO">
+        SELECT *
+        FROM Board
+        WHERE com_id=#{com_id};
+    </select>
+
+    <!--추후에 디비 수정후 쿼리 변경해야됨-->
+    <select id="selectPostByBoardId" parameterType="string" resultType="com.board.project.blockboard.dto.PostDTO">
+        SELECT p.post_id,p.user_id, u.user_name,p.board_id,p.com_id,p.post_title,p.post_content,p.post_reg_time
+        FROM Post p , Users u
+        WHERE p.user_id = u.user_id and p.board_id=#{board_id}
+        ORDER BY p.post_id DESC;
+    </select>
+    <select id="selectPostByPostID" parameterType="string" resultType="com.board.project.blockboard.dto.PostDTO">
+        SELECT p.post_id,p.user_id, u.user_name,p.board_id,p.com_id,p.post_title,p.post_content,p.post_reg_time
+        FROM Post p , Users u
+        WHERE p.user_id = u.user_id and p.post_id=#{post_id}
+    </select>
+</mapper>
