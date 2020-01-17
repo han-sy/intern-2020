@@ -3,10 +3,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.board.project.blockboard.mapper.PostMapper">
-    <insert id="allUser" parameterType="com.board.project.blockboard.dto.PostDTO">
-        INSERT INTO post
-        values();
+    <insert id="insertPost" parameterType="com.board.project.blockboard.dto.PostDTO">
+        INSERT INTO Post(userID, boardID, companyID, postTitle, postContent)
+        VALUES (#{userID}, #{boardID}, #{companyID}, #{postTitle}, #{postContent});
     </insert>
-
-
 </mapper>

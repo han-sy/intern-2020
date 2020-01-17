@@ -9,6 +9,6 @@ import java.util.List;
 @Repository
 @Mapper
 public interface UserMapper {
-    public List<UserDTO> allUser();
-    public UserDTO selectUser(String user_id);
+    public UserDTO getUserByID(String userID);
+    public int getUserIDByPostID(int postID);
 }

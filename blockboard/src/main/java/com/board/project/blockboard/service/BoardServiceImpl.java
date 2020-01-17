@@ -1,6 +1,5 @@
 package com.board.project.blockboard.service;
 
-import com.board.project.blockboard.Data.CurrentUserInfo;
 import com.board.project.blockboard.dto.PostDTO;
 import com.board.project.blockboard.mapper.BoardMapper;
 import com.board.project.blockboard.dto.BoardDTO;
@@ -16,7 +15,6 @@ import java.util.List;
 @Service
 public class BoardServiceImpl implements BoardService {
     private BoardMapper boardMapper;
-    CurrentUserInfo currentUserInfo = CurrentUserInfo.getInstance();
     Logger logger = LoggerFactory.getLogger(getClass());
     @Autowired
     BoardServiceImpl(BoardMapper boardMapper) {
@@ -25,54 +23,56 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public List<BoardDTO> allBoard() {
-        return boardMapper.allBoard();
+        return boardMapper.selectAllBoard();
     }
 
     @Override
-    public String printCompanyName(String user_id) {
-        return boardMapper.selectComNameByUserId(user_id);
+    public String getCompanyNameByUserID(String userID) {
+        return boardMapper.selectCompanyNameByUserID(userID);
     }
 
     @Override
-    public List<BoardDTO> printBoardbyComp(String user_id) {
-        //System.out.println("com_id (session): " + session.getAttribute("COMPANY"));
-        String com_id = boardMapper.selectComIdByUserId(user_id);
-        System.out.println("com_id : "+com_id);
-        List<BoardDTO> boardlist = boardMapper.selectBoardByComId(com_id);
+    public List<BoardDTO> getBoardListByUserID(String userID) {
+        //System.out.println("companyID (session): " + session.getAttribute("COMPANY"));
+        String companyID = boardMapper.selectCompanyIDByUserID(userID);
+        System.out.println("companyID : "+companyID);
+        List<BoardDTO> boardlist = boardMapper.selectBoardByCompanyID(companyID);
         return boardlist;
     }
     @Override
-    public List<PostDTO> printPostbyBoard(String board_id) {
-        List<PostDTO> postlist = boardMapper.selectPostByBoardId(board_id);
+    public List<PostDTO> getPostListByBoardID(String boardID) {
+        List<PostDTO> postlist = boardMapper.selectPostByBoardID(boardID);
         return postlist;
     }
 
     @Override
-    public PostDTO printPostContnet(String post_id) {
-        PostDTO post = boardMapper.selectPostByPostID(post_id);
+    public PostDTO getPostByPostID(String postID) {
+        PostDTO post = boardMapper.selectPostByPostID(postID);
         return post;
     }
 
     @Override
-    public boolean checkAdmin(String user_id) {
-        String admin = boardMapper.selectUserTypeByUserId(user_id);
+    public boolean checkAdmin(String userID) {
+        String admin = boardMapper.selectUserTypeByUserID(userID);
         return admin.equals("관리자");
     }
 
     @Override
-    public void insertNewBoard(String newBoardName){
+    public void insertNewBoard(String newBoardName,int companyID){
         int idx = boardMapper.maxBoardID();
-        BoardDTO newBoard = new BoardDTO(idx+1,currentUserInfo.getCom_id(),newBoardName);
+        BoardDTO newBoard = new BoardDTO(idx+1,companyID,newBoardName);
+        logger.info("newBoard : "+newBoard);
         boardMapper.insertBoard(newBoard);
     }
 
     @Override
-    public int printCompanyId(String user_id) {
-        return Integer.parseInt(boardMapper.selectComIdByUserId(user_id));
+    public int getCompanyIDByUserID(String userID) {
+        logger.info("boardMapper userid: "+ userID);
+        return Integer.parseInt(boardMapper.selectCompanyIDByUserID(userID));
     }
 
     @Override
-    public BoardDTO printboardbyBoardName(String newBoardName) {
-        return boardMapper.selectBoardByBoardName(newBoardName);
+    public BoardDTO getBoardByBoardName(String boardName) {
+        return boardMapper.selectBoardByBoardName(boardName);
     }
 }

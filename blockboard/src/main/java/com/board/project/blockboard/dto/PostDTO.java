@@ -1,75 +1,76 @@
 package com.board.project.blockboard.dto;
 
 public class PostDTO {
-    private int post_id;
-    private String user_id;
-    private String user_name;
-    private String board_id;
-    private int com_id;
-    private String post_title;
-    private String post_content;
-    private String post_reg_time;
+    private int postID;
+    private String userID;
+    private String userName;
+    private int boardID;
+    private int companyID;
+    private String postTitle;
+    private String postContent;
+    private String postRegisterTime;
 
-    public String getPost_title() {
-        return post_title;
+    public int getPostID() {
+        return postID;
     }
 
-    public void setPost_title(String post_title) {
-        this.post_title = post_title;
+    public void setPostID(int postID) {
+        this.postID = postID;
     }
 
-    public String getUser_name() {
-        return user_name;
+    public String getUserID() {
+        return userID;
     }
 
-    public void setUser_name(String user_name) {
-        this.user_name = user_name;
-    }
-    public int getPost_id() {
-        return post_id;
+    public void setUserID(String userID) {
+        this.userID = userID;
     }
 
-    public void setPost_id(int post_id) {
-        this.post_id = post_id;
+    public String getUserName() {
+        return userName;
     }
 
-    public String getUser_id() {
-        return user_id;
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
-    public void setUser_id(String user_id) {
-        this.user_id = user_id;
+    public int getBoardID() {
+        return boardID;
     }
 
-    public String getBoard_id() {
-        return board_id;
+    public void setBoardID(int boardID) {
+        this.boardID = boardID;
     }
 
-    public void setBoard_id(String board_id) {
-        this.board_id = board_id;
+    public int getCompanyID() {
+        return companyID;
     }
 
-    public int getCom_id() {
-        return com_id;
+    public void setCompanyID(int companyID) {
+        this.companyID = companyID;
     }
 
-    public void setCom_id(int com_id) {
-        this.com_id = com_id;
+    public String getPostTitle() {
+        return postTitle;
     }
 
-    public String getPost_content() {
-        return post_content;
+    public void setPostTitle(String postTitle) {
+        this.postTitle = postTitle;
     }
 
-    public void setPost_content(String post_content) {
-        this.post_content = post_content;
+    public String getPostContent() {
+        return postContent;
     }
 
-    public String getPost_reg_time() {
-        return post_reg_time;
+    public void setPostContent(String postContent) {
+        this.postContent = postContent;
     }
 
-    public void setPost_reg_time(String post_reg_time) {
-        this.post_reg_time = post_reg_time;
+    public String getPostRegisterTime() {
+        return postRegisterTime;
+    }
+
+    public void setPostRegisterTime(String postRegisterTime) {
+        this.postRegisterTime = postRegisterTime;
     }
 }
