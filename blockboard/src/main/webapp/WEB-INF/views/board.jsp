@@ -62,7 +62,6 @@
           <td width="5"></td>
         </tr>
         <tr>
-          <td width='73'>번호</td>
           <td width='379'>제목</td>
           <td width='73'>작성자</td>
           <td width='164'>작성일</td>

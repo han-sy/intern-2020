@@ -5,12 +5,17 @@ import com.board.project.blockboard.dto.BoardDTO;
 import com.board.project.blockboard.dto.FunctionDTO;
 import com.board.project.blockboard.dto.PostDTO;
 import com.board.project.blockboard.service.BoardService;
+<<<<<<< HEAD
 import com.board.project.blockboard.service.FunctionService;
 import com.board.project.blockboard.util.AES256Util;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import org.apache.commons.codec.DecoderException;
+=======
+import com.board.project.blockboard.service.UserService;
+import com.board.project.blockboard.util.AES256Util;
+>>>>>>> develop
 import org.apache.commons.codec.net.URLCodec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,16 +25,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,19 +43,29 @@ public class BoardController {
     @Autowired
     private BoardService boardService;
     @Autowired
+<<<<<<< HEAD
     private FunctionService functionService;
 
+=======
+    private UserService userService;
+>>>>>>> develop
     private String key = "slgi3ibu5phi8euf";
     private String userID;
     private int companyID;
     AES256Util aes256;
     URLCodec codec;
+<<<<<<< HEAD
     Logger logger = LoggerFactory.getLogger(getClass());
 
+=======
+    @Autowired
+    BoardController(BoardService boardService) {
+        this.boardService = boardService;
+    }
+    Logger logger = LoggerFactory.getLogger(getClass());
+>>>>>>> develop
     @RequestMapping("")
     public String getMainContent(HttpServletRequest request, HttpSession session,Model model) throws UnsupportedEncodingException {
-
-
         // 클라이언트의 쿠키를 가져옴
 
         Cookie[] getCookie = request.getCookies();
@@ -69,7 +78,13 @@ public class BoardController {
                 Cookie c = getCookie[i];
                 String name = c.getName();
                 String value = c.getValue();
+<<<<<<< HEAD
                 if(name.equals("sessionID")) {
+=======
+
+                if(name.equals("sessionID")) {
+
+>>>>>>> develop
                     try {
                         decode = aes256.aesDecode(codec.decode(value));
                         userID = decode.substring(0, decode.length()-6); // id 자르기
@@ -141,8 +156,20 @@ public class BoardController {
     public Map<String,Object> getPostByPostID(@PathVariable("postid") int postID){
 
         PostDTO post = boardService.getPostByPostID(postID);
+<<<<<<< HEAD
+=======
+        String userID = "";
+        Cookie[] cookies = request.getCookies();
+        for(Cookie getCookie : cookies) {
+            if(getCookie.getName().equals("userID")) {
+                userID = getCookie.getValue();
+            }
+        }
+        //System.out.println("ajax로 넘어온 data :  "+request);
+>>>>>>> develop
 
         System.out.println(post);
+<<<<<<< HEAD
         Map<String,Object> postData = new HashMap<String, Object>();
         try{
 
@@ -151,12 +178,30 @@ public class BoardController {
             postData.put("userName",post.getUserName());
             postData.put("postRegisterTime",post.getPostRegisterTime());
             System.out.println(postData);
+=======
+        Map<String,Object> map = new HashMap<String, Object>();
+        logger.info("userID = " + userID);
+        logger.info("postUserID = " + post.getUserID());
+        try{
+            // 현재 로그인한 유저와 게시글 작성자가 같을 경우에 'canDelete' 를 true로 전달
+            map.put("canDelete", userID.equals(post.getUserID()) ? true : false);
+            map.put("postID", postID);
+            map.put("postTitle",post.getPostTitle());
+            map.put("postContent",post.getPostContent());
+            map.put("userName",post.getUserName());
+            map.put("postRegisterTime",post.getPostRegisterTime());
+            System.out.println(map);
+>>>>>>> develop
         }
         catch (Exception e){
             e.printStackTrace();
         }
+<<<<<<< HEAD
 
         return postData;
+=======
+        return map;
+>>>>>>> develop
     }
 
     /**
@@ -202,6 +247,4 @@ public class BoardController {
         }
         return functionInfoDataList;
     }
-
-
 }

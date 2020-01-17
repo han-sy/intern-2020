@@ -30,6 +30,13 @@ function clickTrEvent(trObj) {
       $('#postcontent').append("<h5>작성자 : " + data.userName + "</h4>");
       $('#postcontent').append("<h5>작성시간 : " + data.postRegisterTime + "</h4>");
       $('#postcontent').append("<a>" + data.postContent + "</a>");
+      $('#postcontent').append("<a id=postID style=visibility:hidden>" + data.postID + "</a>");
+      // 작성글의 userID와 현재 로그인한 userID가 같으면 삭제버튼 표시
+      console.log("canDelete = " + data.canDelete);
+      if(data.canDelete == true) {
+        $('#postcontent').append("</br><button onclick=javascript:clickUpdatePost(this)>수정</button>");
+        $('#postcontent').append("</br><button onclick=javascript:clickDeletePost(this)>삭제</button>");
+      }
     }
   });
 }
@@ -60,6 +67,7 @@ function clickSaveaddedBoard(){
            });
 
     $('#config_container').html("");
+    location.reload();
  }
 
 //기능추가 버튼 클릭시
@@ -138,10 +146,10 @@ $(document).on("click",".tabmenu",function clickTabEvent() {
           $('#postlist').append(
             "<tr height='30' class = 'postclick' data-post = '" + value.postID +
             "' onclick='javascript:clickTrEvent(this)' onmouseover = 'javascript:changeTrColor(this)' >" +
-            "<td width='73'>" + value.postID + "</td>" +
             "<td width='379'>" + value.postTitle + "</td>" +
             "<td width='73'>" + value.userName + "</td>" +
-            "<td width='164'>" + value.postRegisterTime + "</td></tr>"
+            "<td width='164'>" + value.postRegisterTime + "</td></tr>" +
+            "<td style='visibility:hidden'>" + value.postID + "</td>"
           );
           //alert($this);
         });
