@@ -4,6 +4,7 @@ import com.board.project.blockboard.dto.BoardDTO;
 import com.board.project.blockboard.dto.PostDTO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface BoardService {
     List<BoardDTO> allBoard();
@@ -15,5 +16,6 @@ public interface BoardService {
     void insertNewBoard(String newBoardName,int companyID);
     int getCompanyIDByUserID(String userID);
     BoardDTO getBoardByBoardName(String boardName);
+    int selectBoardIDByComIDAndBoardName(Map<String, Object> map);
 }
 

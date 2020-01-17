@@ -12,4 +12,16 @@
         DELETE FROM Post
         WHERE postID=#{postID};
     </delete>
+
+    <select id="getPostByPostID" parameterType="int" resultType="com.board.project.blockboard.dto.PostDTO">
+        SELECT *
+        FROM Post
+        WHERE postID=#{postID};
+    </select>
+
+    <update id="updatePost" parameterType="com.board.project.blockboard.dto.PostDTO">
+        UPDATE Post
+        SET postTitle=#{postTitle}, postContent=#{postContent}, boardID=#{boardID}
+        WHERE postID=#{postID};
+    </update>
 </mapper>

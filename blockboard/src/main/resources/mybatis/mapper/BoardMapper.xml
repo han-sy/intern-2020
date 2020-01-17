@@ -59,8 +59,8 @@
     </insert>
 
     <!--게시글 작성 시 선택한 게시판 ID 반환-->
-    <select id="getBoardIDByComIDAndBoardName" parameterType="hashMap" resultType="com.board.project.blockboard.dto.BoardDTO">
-        SELECT *
+    <select id="selectBoardIDByComIDAndBoardName" parameterType="hashMap" resultType="int">
+        SELECT boardID
         FROM Board
         WHERE companyID=#{companyID} AND boardName=#{boardName};
     </select>

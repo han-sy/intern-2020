@@ -21,6 +21,6 @@ public interface BoardMapper {
     int maxBoardID();
     void insertBoard(BoardDTO newBoard);
     BoardDTO selectBoardByBoardName(String newBoardName);
-    BoardDTO getBoardIDByComIDAndBoardName(Map<String, Object> map);
+    int selectBoardIDByComIDAndBoardName(Map<String, Object> map);
 }
 

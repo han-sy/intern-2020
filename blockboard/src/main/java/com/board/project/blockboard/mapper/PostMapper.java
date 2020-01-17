@@ -12,4 +12,6 @@ import java.util.Map;
 public interface PostMapper {
     void insertPost(PostDTO post);
     void deletePostByPostID(int postID);
+    PostDTO getPostByPostID(int postID);
+    void updatePost(PostDTO post);
 }

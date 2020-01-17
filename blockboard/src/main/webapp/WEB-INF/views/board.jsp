@@ -41,8 +41,8 @@
   </ul>
 
   <div id="writecontent" style="display:none">
-    <h2> 글쓰기 영역 - 우혁 부분 </h2>
     <div id="boardlistcontent">
+      <h2> 게시판 선택 </h2>
       <select id="post_board_id">
         <c:forEach items="${list}" var="list" varStatus="status">
           <option data-tab="${list.boardID}" class='tabmenu' id="default">

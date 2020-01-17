@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class BoardServiceImpl implements BoardService {
@@ -74,5 +75,10 @@ public class BoardServiceImpl implements BoardService {
     @Override
     public BoardDTO getBoardByBoardName(String boardName) {
         return boardMapper.selectBoardByBoardName(boardName);
+    }
+
+    @Override
+    public int selectBoardIDByComIDAndBoardName(Map<String, Object> map) {
+        return boardMapper.selectBoardIDByComIDAndBoardName(map);
     }
 }

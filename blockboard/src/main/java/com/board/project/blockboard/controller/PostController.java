@@ -3,7 +3,6 @@ package com.board.project.blockboard.controller;
 import com.board.project.blockboard.dto.PostDTO;
 import com.board.project.blockboard.service.BoardService;
 import com.board.project.blockboard.service.PostService;
-import com.board.project.blockboard.service.UserService;
 import com.board.project.blockboard.util.AES256Util;
 import org.apache.commons.codec.net.URLCodec;
 import org.slf4j.Logger;
@@ -17,8 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.Map;
-
-import static org.springframework.web.util.WebUtils.getCookie;
 
 @Controller
 @RequestMapping("/board/post")
@@ -62,7 +59,7 @@ public class PostController {
         sendPost.setCompanyID(companyID);
         sendPost.setPostTitle(receivePost.getPostTitle());
         sendPost.setPostContent(receivePost.getPostContent());
-        sendPost.setBoardID(postService.getBoardID(map_Board));
+        sendPost.setBoardID(postService.getBoardIDByComIDAndBoardName(map_Board));
         postService.insertPost(sendPost);
     }
 
@@ -71,5 +68,27 @@ public class PostController {
     public void deletePost(@RequestParam String postID) {
         logger.info("postID는 이거야 = " + postID);
         postService.deletePost(Integer.parseInt(postID));
+    }
+
+    @GetMapping("/{postID}")
+    @ResponseBody
+    public Map<String, Object> getPostByPostID(@PathVariable("postID") int postID) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        logger.info("postID는 이거야 = " + postID);
+        PostDTO getPost = new PostDTO(postService.getPostByPostID(postID));
+        map.put("postTitle", getPost.getPostTitle());
+        map.put("postContent", getPost.getPostContent());
+        return map;
+    }
+
+    @PutMapping("/update")
+    @ResponseBody
+    public void updatePost(@ModelAttribute PostDTO requestPost, @RequestParam String boardName) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("companyID", postService.getPostByPostID(requestPost.getPostID()).getCompanyID()); // PostID로 Post 조회 후 CompanyID 설정
+        map.put("boardName", boardName); // 게시글 수정 후 boardName
+        int boardID = boardService.selectBoardIDByComIDAndBoardName(map); // companyID와 게시글 수정 후 boardName 으로 Unique 한 boardID 받아옴
+        requestPost.setBoardID(boardID);
+        postService.updatePost(requestPost);
     }
 }
