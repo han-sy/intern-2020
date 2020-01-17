@@ -10,4 +10,7 @@ import java.util.List;
 @Mapper
 public interface FunctionMapper {
     List<FunctionDTO> selectFunctionCheckByCompanyID(int companyID);
+    void insertFunctionCheckData(FunctionDTO addFunction);
+    void deleteFunctionCheckData(FunctionDTO addFunction);
+
 }

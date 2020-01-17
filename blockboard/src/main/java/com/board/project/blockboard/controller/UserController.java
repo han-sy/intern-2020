@@ -52,13 +52,6 @@ public class UserController {
                 e.printStackTrace();
                 return "redirect:/";
             }
-
-<<<<<<< HEAD
-            Cookie setCookie = new Cookie("sessionID", encrypt); // 클라이언트에게 전달할 쿠키 생성
-            setCookie.setMaxAge(60*60);
-            response.addCookie(setCookie);
-=======
->>>>>>> develop
         }
         return "redirect:/";
     }

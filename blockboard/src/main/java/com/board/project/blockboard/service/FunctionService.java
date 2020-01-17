@@ -17,4 +17,17 @@ public class FunctionService {
         System.out.println("companyID:"+companyID);
         return functionMapper.selectFunctionCheckByCompanyID(companyID);
     }
+
+    public void changeFunctionOnToOff(int functionID,int companyID) {
+        FunctionDTO addfunction = new FunctionDTO();
+        addfunction.setFunctionID(functionID);
+        addfunction.setCompanyID(companyID);
+        functionMapper.insertFunctionCheckData(addfunction);
+    }
+    public void changeFunctionOffToOn(int functionID,int companyID){
+        FunctionDTO addfunction = new FunctionDTO();
+        addfunction.setFunctionID(functionID);
+        addfunction.setCompanyID(companyID);
+        functionMapper.deleteFunctionCheckData(addfunction);
+    }
 }
