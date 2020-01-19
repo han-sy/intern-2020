@@ -175,10 +175,7 @@ function click_write() {
 function click_post() {
     var postTitle = $('#post_title').val();
     var postContent = CKEDITOR.instances.editor.getData();
-    var boardName = $('#post_board_id option:selected').val();
-    console.log("제목:" + postTitle);
-    console.log("내용:" + postContent);
-    console.log("선택한 게시판:" + boardName);
+    var boardID = $('#post_board_id option:selected').attr('data-tab');
     $('#editorcontent').html("");
     $('#writecontent').css("display", "none");
     $('#btn_write').css("display", "");
@@ -187,7 +184,7 @@ function click_post() {
       url: "/board/post/insert",
       data: {postTitle: postTitle,
             postContent: postContent,
-            boardName: boardName},
+            boardID: boardID},
       error: function() {
         alert('게시글 작성 실패');
       },
@@ -196,6 +193,7 @@ function click_post() {
         console.log("게시글 저장 완료");
       }
     });
+    
 }
 
 // 게시글 조회 후 수정 버튼 클릭
@@ -208,7 +206,6 @@ $(document).on("click", "#btn_updatePost", function () {
     $('#btn_post').attr('id', 'btn_update'); // 저장 버튼 ID 변경
     $('#btn_update').attr('onclick', 'javascript:updatePost(this)'); // 수정게시글 저장 이벤트 등록
     $('#editorcontent').append("<a id=currentPostID style=visibility:hidden>" + postID + "</a>"); // 현재 게시글 ID hidden 으로 저장
-    console.log("수정하러 왔니?" + postID);
     // 게시글 조회
     $.ajax({
         type: 'GET',
@@ -231,7 +228,7 @@ function updatePost() {
   var postID = $("#currentPostID").html();
   var postTitle = $('#post_title').val();
   var postContent = CKEDITOR.instances.editor.getData();
-  var boardName = $('#post_board_id option:selected').val();
+  var boardID = $('#post_board_id option:selected').attr('data-tab');
   $('#editorcontent').html("");
   $('#writecontent').css("display", "none");
   $('#btn_write').css("display", "");
@@ -242,7 +239,7 @@ function updatePost() {
     data: {postID: postID,
       postTitle: postTitle,
       postContent: postContent,
-      boardName: boardName},
+      boardID: boardID},
     error: function() {
       alert('게시글 수정 실패');
     },
