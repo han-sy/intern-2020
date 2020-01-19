@@ -11,7 +11,7 @@ import java.util.Map;
 @Mapper
 public interface FunctionMapper {
     List<FunctionDTO> selectFunctionCheckByCompanyID(int companyID);
-    void insertFunctionCheckData(Map<String, Object> map);
-    void deleteFunctionCheckData(Map<String, Object> map);
+    void insertFunctionCheckData(Map<String, Object> functionPrimaryKey);
+    void deleteFunctionCheckData(Map<String, Object> functionPrimaryKey);
 
 }

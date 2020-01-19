@@ -225,29 +225,22 @@ public class BoardController {
     public Boolean insertNewFunctionData(@RequestParam("functionInfoData") String functionDataJson){
         List<FunctionDTO> functionInfoList = functionService.getFunctionInfoByCompanyID(companyID); //기존데이터
 
-        //json string을 list map 타입으로 변경
-        Gson gson = new Gson();
+        //ajax를 통해 넘어온 json 형식의 string을 map 타입으로 변경
+        Gson gsonFunctionData = new Gson();
         Type type = new TypeToken<ArrayList<Map<String, Integer>>>() {}.getType();
-        ArrayList<Map<String,Integer>> functionListMap = gson.fromJson(functionDataJson,type); //새로운 데이터
+        ArrayList<Map<String,Integer>> functionListMap = gsonFunctionData.fromJson(functionDataJson,type); //새로운 데이터
 
-        logger.info("functionInfoList : "+ functionInfoList);
-        logger.info(new GsonBuilder().setPrettyPrinting().create().toJson(functionListMap));
+        //logger.info("functionInfoList : "+ functionInfoList);
+       //logger.info(new GsonBuilder().setPrettyPrinting().create().toJson(functionListMap));
 
         try{
             for(int i=0;i<functionInfoList.size();i++){
                 if(functionInfoList.get(i).getCompanyID()>0&&functionListMap.get(i).get("functionCheck")==0){//on->off
                     //insert문
-                    logger.info("on->off : "+i);
-                    logger.info(functionInfoList.get(i).getCompanyID()+","+functionListMap.get(i).get("functionCheck"));
-                    logger.info("functionID : "+functionInfoList.get(i).getFunctionID());
-                    logger.info("companyID : "+companyID);
                     functionService.changeFunctionOnToOff(functionInfoList.get(i).getFunctionID(),companyID);
                 }
                 else if(functionInfoList.get(i).getCompanyID()==0&&functionListMap.get(i).get("functionCheck")==1){//off->on
                     //delete문
-                    logger.info("off->on : "+i);
-                    logger.info("functionID : "+functionInfoList.get(i).getFunctionID());
-                    logger.info("companyID : "+companyID);
                     functionService.changeFunctionOffToOn(functionInfoList.get(i).getFunctionID(),companyID);
                 }
             }

@@ -27,10 +27,10 @@ public class FunctionService {
         functionMapper.deleteFunctionCheckData(map_functionData);
     }
     public void changeFunctionOffToOn(int functionID,int companyID){
-        Map<String, Object> map_functionData = new HashMap<String, Object>();
-        map_functionData.put("functionID",functionID);
-        map_functionData.put("companyID",companyID);
-        functionMapper.insertFunctionCheckData(map_functionData);
+        Map<String, Object> functionPrimaryKey = new HashMap<String, Object>();
+        functionPrimaryKey.put("functionID",functionID);
+        functionPrimaryKey.put("companyID",companyID);
+        functionMapper.insertFunctionCheckData(functionPrimaryKey);
 
     }
 }
