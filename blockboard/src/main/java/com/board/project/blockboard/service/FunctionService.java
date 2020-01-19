@@ -6,7 +6,9 @@ import com.board.project.blockboard.mapper.PostMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class FunctionService {
@@ -19,15 +21,16 @@ public class FunctionService {
     }
 
     public void changeFunctionOnToOff(int functionID,int companyID) {
-        FunctionDTO addfunction = new FunctionDTO();
-        addfunction.setFunctionID(functionID);
-        addfunction.setCompanyID(companyID);
-        functionMapper.insertFunctionCheckData(addfunction);
+        Map<String, Object> map_functionData = new HashMap<String, Object>();
+        map_functionData.put("functionID",functionID);
+        map_functionData.put("companyID",companyID);
+        functionMapper.deleteFunctionCheckData(map_functionData);
     }
     public void changeFunctionOffToOn(int functionID,int companyID){
-        FunctionDTO addfunction = new FunctionDTO();
-        addfunction.setFunctionID(functionID);
-        addfunction.setCompanyID(companyID);
-        functionMapper.deleteFunctionCheckData(addfunction);
+        Map<String, Object> map_functionData = new HashMap<String, Object>();
+        map_functionData.put("functionID",functionID);
+        map_functionData.put("companyID",companyID);
+        functionMapper.insertFunctionCheckData(map_functionData);
+
     }
 }

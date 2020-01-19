@@ -10,11 +10,11 @@
         ON boardfunction.functionID = functioncheck.functionID and functioncheck.companyID = #{companyID};
     </select>
 
-    <insert id="insertFunctionCheckData" parameterType="com.board.project.blockboard.dto.FunctionDTO">
+    <insert id="insertFunctionCheckData" parameterType="hashmap">
         insert into FunctionCheck values(#{companyID},#{functionID},null);
     </insert>
 
-    <delete id="deleteFunctionCheckData" parameterType="com.board.project.blockboard.dto.FunctionDTO">
+    <delete id="deleteFunctionCheckData" parameterType="hashmap">
         delete from FunctionCheck where companyID = #{companyID} and functionID = #{functionID};
     </delete>
 </mapper>

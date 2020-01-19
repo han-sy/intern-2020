@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import sun.rmi.runtime.Log;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -227,15 +228,27 @@ public class BoardController {
         logger.info("functionInfoList : "+ functionInfoList);
         logger.info(new GsonBuilder().setPrettyPrinting().create().toJson(functionListMap));
 
-        for(int i=0;i<functionInfoList.size();i++){
-            if(functionInfoList.get(i).getCompanyID()>0&&functionListMap.get(i).get("functionCheck")==0){//on->off
-                //insert문
-                functionService.changeFunctionOnToOff(functionInfoList.get(i).getFunctionID(),companyID);
+        try{
+            for(int i=0;i<functionInfoList.size();i++){
+                if(functionInfoList.get(i).getCompanyID()>0&&functionListMap.get(i).get("functionCheck")==0){//on->off
+                    //insert문
+                    logger.info("on->off : "+i);
+                    logger.info(functionInfoList.get(i).getCompanyID()+","+functionListMap.get(i).get("functionCheck"));
+                    logger.info("functionID : "+functionInfoList.get(i).getFunctionID());
+                    logger.info("companyID : "+companyID);
+                    functionService.changeFunctionOnToOff(functionInfoList.get(i).getFunctionID(),companyID);
+                }
+                else if(functionInfoList.get(i).getCompanyID()==0&&functionListMap.get(i).get("functionCheck")==1){//off->on
+                    //delete문
+                    logger.info("off->on : "+i);
+                    logger.info("functionID : "+functionInfoList.get(i).getFunctionID());
+                    logger.info("companyID : "+companyID);
+                    functionService.changeFunctionOffToOn(functionInfoList.get(i).getFunctionID(),companyID);
+                }
             }
-            else if(functionInfoList.get(i).getCompanyID()==0&&functionListMap.get(i).get("functionCheck")==1){//off->on
-                //delete문
-                functionService.changeFunctionOffToOn(functionInfoList.get(i).getFunctionID(),companyID);
-            }
+        }
+        catch (Exception e){
+            return false;
         }
         return true;
     }
