@@ -215,6 +215,11 @@ public class BoardController {
         return functionInfoDataList;
     }
 
+    /**
+     *
+     * @param functionDataJson
+     * @return sql문 진행에 이상없으면 //TODO 현재는 에러가 안뜰시 true를 반환하는데 안전을 위해 값비교후 반환해도 될것같다.
+     */
     @RequestMapping(value = "/function-change",method = RequestMethod.POST)
     @ResponseBody
     public Boolean insertNewFunctionData(@RequestParam("functionInfoData") String functionDataJson){
