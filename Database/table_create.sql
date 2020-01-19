@@ -62,6 +62,7 @@ create table Post(
 
 create table Comments(
 	commentID int(9) not null AUTO_INCREMENT,
+    boardID int(9) not null,
 	postID int(9) not null,
 	userID varchar(20) not null,
 	companyID int(9) not null,
@@ -71,7 +72,7 @@ create table Comments(
     commentContent varchar(4000) not null,
     commentRegisterTime timestamp not null,
     commentReferencedID int(9),
-    primary key(commentID,board	)
+    primary key(commentID,boardID)
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
 insert into Company values(1,'wm');
@@ -94,8 +95,8 @@ insert into BoardFunction values(6,'스티커');
 insert into FunctionCheck values(1,1,null);
 insert into FunctionCheck values(2,4,null);
 insert into Post values(1,1,1,1,'첫게시글','첫내용',now());
-insert into Comments values(1,1,1,1,'첫 댓글',now(),null);
-insert into Comments values(2,1,1,1,'첫 답글',now(),1);
+insert into Comments values(1,1,1,1,1,'첫 댓글',now(),null);
+insert into Comments values(2,1,1,1,1,'첫 답글',now(),1);
 
 Select * from Post;
 select * from Users;
