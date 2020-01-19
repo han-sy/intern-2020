@@ -64,5 +64,8 @@
         FROM Board
         WHERE companyID=#{companyID} AND boardName=#{boardName};
     </select>
+    <update id = "updateBoardName" parameterType="hashmap">
+        update Board set boardName =#{boardName} where boardID=#{boardID};
+    </update>
 
 </mapper>

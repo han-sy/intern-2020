@@ -22,5 +22,7 @@ public interface BoardMapper {
     void insertBoard(BoardDTO newBoard);
     BoardDTO selectBoardByBoardName(String newBoardName);
     BoardDTO getBoardIDByComIDAndBoardName(Map<String, Object> map);
+
+    void updateBoardName(Map<String, Object> boardAttributes);
 }
 

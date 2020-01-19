@@ -20,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import sun.rmi.runtime.Log;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -170,6 +169,26 @@ public class BoardController {
 
         return map;
     }
+    @RequestMapping(value = "/boardlist")
+    @ResponseBody
+    public List<Map<String,Object>> getBoardList(){
+
+        List<BoardDTO> boardListByUserID = boardService.getBoardListByUserID(userID); // select로 받아오기
+        List boardList = new ArrayList<Object>(); // 보내기위한 리스트맵
+        try{
+            for(int i=0;i<boardListByUserID.size();i++){
+                Map<String,Object> boardData = new HashMap<String, Object>();
+                boardData.put("boardID",boardListByUserID.get(i).getBoardID());
+                boardData.put("companyID",boardListByUserID.get(i).getCompanyID());
+                boardData.put("boardName",boardListByUserID.get(i).getBoardName());
+                boardList.add(boardData);
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return boardList;
+    }
 
     /**
      * 추가할 boardname 받아오고 삽입후 추가한 boardid와 boardname 리턴
@@ -215,6 +234,7 @@ public class BoardController {
         return functionInfoDataList;
     }
 
+
     /**
      *
      * @param functionDataJson
@@ -231,7 +251,7 @@ public class BoardController {
         ArrayList<Map<String,Integer>> functionListMap = gsonFunctionData.fromJson(functionDataJson,type); //새로운 데이터
 
         //logger.info("functionInfoList : "+ functionInfoList);
-       //logger.info(new GsonBuilder().setPrettyPrinting().create().toJson(functionListMap));
+        //logger.info(new GsonBuilder().setPrettyPrinting().create().toJson(functionListMap));
 
         try{
             for(int i=0;i<functionInfoList.size();i++){
@@ -250,5 +270,41 @@ public class BoardController {
         }
         return true;
     }
+    @RequestMapping(value = "/newboardname",method = RequestMethod.POST)
+    @ResponseBody
+    public List<Map<String,Object>>  changeNewBoardName(@RequestParam("boardData") String boardDataJson){
+        List<BoardDTO> oldboardList = boardService.getBoardListByUserID(userID); //기존데이터
 
+        //ajax를 통해 넘어온 json 형식의 string을 map 타입으로 변경
+        Gson gsonNewBoardList = new Gson();
+        Type type = new TypeToken<ArrayList<Map<String, String>>>() {}.getType();
+        ArrayList<Map<String,String>> newBoardListMap = gsonNewBoardList.fromJson(boardDataJson,type); //새로운 데이터
+
+        //logger.info("functionInfoList : "+ functionInfoList);
+        logger.info(new GsonBuilder().setPrettyPrinting().create().toJson(newBoardListMap));
+
+
+        for(int i=0;i<oldboardList.size();i++){
+            if(!oldboardList.get(i).getBoardName().equals(newBoardListMap.get(i).get("boardName"))) {//on->off
+                boardService.changeBoardName(Integer.parseInt(newBoardListMap.get(i).get("boardID")), newBoardListMap.get(i).get("boardName"));
+            }
+        }
+
+
+        List<BoardDTO> newBoardListByUserID = boardService.getBoardListByUserID(userID); // select로 받아오기
+        List newBoardList = new ArrayList<Object>(); // 보내기위한 리스트맵
+        try{
+            for(int i=0;i<newBoardListByUserID.size();i++){
+                Map<String,Object> boardData = new HashMap<String, Object>();
+                boardData.put("boardID",newBoardListByUserID.get(i).getBoardID());
+                boardData.put("companyID",newBoardListByUserID.get(i).getCompanyID());
+                boardData.put("boardName",newBoardListByUserID.get(i).getBoardName());
+                newBoardList.add(boardData);
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return newBoardList;
+    }
 }

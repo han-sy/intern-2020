@@ -8,7 +8,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class BoardService {
@@ -66,6 +68,13 @@ public class BoardService {
     
     public BoardDTO getBoardByBoardName(String boardName) {
         return boardMapper.selectBoardByBoardName(boardName);
+    }
+
+    public void changeBoardName(int boardID, String boardName) {
+        Map<String, Object> boardAttributes = new HashMap<String, Object>();
+        boardAttributes.put("boardID",boardID);
+        boardAttributes.put("boardName",boardName);
+        boardMapper.updateBoardName(boardAttributes);
     }
 }
 

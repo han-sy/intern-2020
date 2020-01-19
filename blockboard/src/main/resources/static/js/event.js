@@ -41,6 +41,66 @@ function clickTrEvent(trObj) {
   });
 }
 
+//게시판 수정삭제 버튼 클릭시
+function clickchangeBoardBtn() {
+  $.ajax({
+    type: 'POST',                 //POST 통신
+    url: '/board/boardlist',    //탭의 data-tab속성의 값으로 된 html파일로 통신
+    error: function () {  //통신 실패시
+      alert('통신실패!');
+    },
+    success: function (data) {    //통신 성공시 탭 내용담는 div를 읽어들인 값으로 채운다.
+      $('#config_container').html("");
+      $.each(data, function (key, value) {
+        console.log(value.functionInfoData);
+        $('#config_container').append("<div class=boardInfo id=board" + value.boardID + "><input type=text name =boardname data-boardid=" + value.boardID + " value=" + value.boardName +" >" +
+          " <span class =deleteBoard data-board =board"+value.boardID+" >"+value.boardName+"</span></div>");
+      });
+      $('#config_container').append(" <br><a id ='addFuncBtn' onclick = javascript:clickSaveChangeBoard(this) style=cursor:pointer>변경하기</a>" +
+                    "<button class = 'functionClose' type='button' onclick=javascript:clickConfigClose(this)>닫기</button>");
+    }
+  });
+}
+//게시판 삭제버튼 누를시
+/*$(document).on("click",".deleteBoard",function(){
+    alert($(this).attr("name"));
+  })*/
+function clickConfigBoardClose(deleteBoardObj){
+    console.log("!!!");
+     var boardID = deleteBoardObj.attr("data-board");
+    alert(boardID);
+}
+
+//게시판 이름변경 저장하기
+function clickSaveChangeBoard(){
+    var boardDataList = new Array();
+
+      $("input[name=boardname]").each(function () {
+        var boardData = new Object();
+        boardData.boardName = $(this).val();
+        boardData.boardID = $(this).attr("data-boardid");
+        boardDataList.push(boardData);
+      });
+
+      var jsonData = JSON.stringify(boardDataList);
+      var askSave = confirm("게시판 이름변경 내용을 저장하시겠습니까?");
+      if (askSave) {
+        $.ajax({
+          type: 'POST',                 //get방식으로 통신
+          url: "/board/newboardname",    //탭의 data-tab속성의 값으로 된 html파일로 통신
+          data: { boardData: jsonData },
+          error: function () {  //통신 실패시
+            alert('통신실패!');
+          },
+          success: function (data) {    //통신 성공시 탭 내용담는 div를 읽어들인 값으로 채운다.
+           $('#tab_id').html("");
+            $.each(data, function (key, value) {
+                 $("#tab_id").append("<li data-tab="+value.boardID+"  class=tabmenu id=default>"+value.boardName+"</li>");
+            });
+          }
+        });
+      }
+}
 // 게시판 추가버튼 클릭시
 function clickaddBoardBtn() {
   $('#config_container').html("<input type='text' name='게시판 이름' id = 'input_board_name' class='addBoard' placeholder='게시판 이름'>");
@@ -66,8 +126,7 @@ function clickSaveaddedBoard() {
     }
   });
 
-  $('#config_container').html("");
-  location.reload();
+  $('ul.tab').html("");
 }
 
 //기능변경 버튼 클릭시
@@ -117,8 +176,8 @@ function clickSaveFunctionChange() {
 
   var jsonData = JSON.stringify(functionDataList);
   var askSave = confirm("기능변경 내용을 저장하시겠습니까?");
-  if(askSave){
-  $.ajax({
+  if (askSave) {
+    $.ajax({
       type: 'POST',                 //get방식으로 통신
       url: "/board/function-change",    //탭의 data-tab속성의 값으로 된 html파일로 통신
       data: { functionInfoData: jsonData },
@@ -186,7 +245,7 @@ function click_write() {
   $('#editorcontent').html("게시판선택");
   $('#editorcontent').html("게시글제목<input type=text id=post_title />");
   $('#editorcontent').append("<textarea id=editor></textarea>");
-  $('#editorcontent').append("<button id=btn_post onclick=javascript:click_post(this)>올리기</button>")
+  $('#editorcontent').append("<button id=btn_post onclick=javascript:click_post(this)>올리기</button>");
   $('#editor').ckeditor();
 }
 

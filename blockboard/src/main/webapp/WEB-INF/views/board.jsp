@@ -23,6 +23,8 @@
   <c:if test="${isadmin}">
         <a id ='addFuncBtn'  onclick = "javascript:changeFunction(this)" style ="cursor:pointer">기능 변경</a>
         <a id ='addBoardBtn' onclick = "javascript:clickaddBoardBtn(this)"  style="cursor:pointer">게시판 추가</a>
+        <a id ='addBoardBtn' onclick = "javascript:clickchangeBoardBtn(this)"  style="cursor:pointer">게시판 이름변경</a>
+        <a id ='addBoardBtn' onclick = "javascript:clickchangeBoardBtn(this)"  style="cursor:pointer">게시판 삭제</a>
   </c:if>
 
   <a href="logout">로그아웃</a>
