@@ -22,7 +22,9 @@ public interface BoardMapper {
     void insertBoard(BoardDTO newBoard);
     BoardDTO selectBoardByBoardName(String newBoardName);
     BoardDTO getBoardIDByComIDAndBoardName(Map<String, Object> map);
-
     void updateBoardName(Map<String, Object> boardAttributes);
+    void deleteAllPostInBoard(int boardID);
+    void deleteBoard(int boardID);
+    void deleteAllCommentInBoard(int boardID);
 }
 

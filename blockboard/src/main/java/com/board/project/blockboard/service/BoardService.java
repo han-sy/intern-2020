@@ -76,5 +76,17 @@ public class BoardService {
         boardAttributes.put("boardName",boardName);
         boardMapper.updateBoardName(boardAttributes);
     }
+
+    public void deleteAllPostInBoard(int boardID) {
+        boardMapper.deleteAllPostInBoard(boardID);
+    }
+
+    public void deleteBoard(int boardID) {
+        boardMapper.deleteBoard(boardID);
+    }
+
+    public void deleteAllCommentInBoard(int boardID) {
+        boardMapper.deleteAllCommentInBoard(boardID);
+    }
 }
 

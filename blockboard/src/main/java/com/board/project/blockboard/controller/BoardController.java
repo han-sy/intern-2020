@@ -197,14 +197,24 @@ public class BoardController {
      */
     @RequestMapping(value = "/newboard",method = RequestMethod.POST)
     @ResponseBody
-    public Map<String,Object> insertNewBoard(@RequestParam("boardName") String newBoardName){
+    public List<Map<String,Object>> insertNewBoard(@RequestParam("boardName") String newBoardName){
         boardService.insertNewBoard(newBoardName,companyID);
-        
-        Map<String,Object> boardData = new HashMap<String, Object>();
-        BoardDTO newBoard = boardService.getBoardByBoardName(newBoardName);
-        boardData.put("boardID",newBoard.getBoardID());
-        boardData.put("boardName",newBoard.getBoardName());
-        return boardData;
+
+        List<BoardDTO> newBoardListByUserID = boardService.getBoardListByUserID(userID); // select로 받아오기
+        List newBoardList = new ArrayList<Object>(); // 보내기위한 리스트맵
+        try{
+            for(int i=0;i<newBoardListByUserID.size();i++){
+                Map<String,Object> boardData = new HashMap<String, Object>();
+                boardData.put("boardID",newBoardListByUserID.get(i).getBoardID());
+                boardData.put("companyID",newBoardListByUserID.get(i).getCompanyID());
+                boardData.put("boardName",newBoardListByUserID.get(i).getBoardName());
+                newBoardList.add(boardData);
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return newBoardList;
     }
 
 
@@ -270,7 +280,8 @@ public class BoardController {
         }
         return true;
     }
-    @RequestMapping(value = "/newboardname",method = RequestMethod.POST)
+
+    @RequestMapping(value = "/changed/boardname",method = RequestMethod.POST)
     @ResponseBody
     public List<Map<String,Object>>  changeNewBoardName(@RequestParam("boardData") String boardDataJson){
         List<BoardDTO> oldboardList = boardService.getBoardListByUserID(userID); //기존데이터
@@ -284,13 +295,50 @@ public class BoardController {
         logger.info(new GsonBuilder().setPrettyPrinting().create().toJson(newBoardListMap));
 
 
+
         for(int i=0;i<oldboardList.size();i++){
-            if(!oldboardList.get(i).getBoardName().equals(newBoardListMap.get(i).get("boardName"))) {//on->off
+            if(!oldboardList.get(i).getBoardName().equals(newBoardListMap.get(i).get("boardName"))) {//전후 이름이 다를때만 수정한다
                 boardService.changeBoardName(Integer.parseInt(newBoardListMap.get(i).get("boardID")), newBoardListMap.get(i).get("boardName"));
             }
         }
 
+        //새로운 게시판 목록들 보내기
+        List<BoardDTO> newBoardListByUserID = boardService.getBoardListByUserID(userID); // select로 받아오기
+        List newBoardList = new ArrayList<Object>(); // 보내기위한 리스트맵
+        try{
+            for(int i=0;i<newBoardListByUserID.size();i++){
+                Map<String,Object> boardData = new HashMap<String, Object>();
+                boardData.put("boardID",newBoardListByUserID.get(i).getBoardID());
+                boardData.put("companyID",newBoardListByUserID.get(i).getCompanyID());
+                boardData.put("boardName",newBoardListByUserID.get(i).getBoardName());
+                newBoardList.add(boardData);
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return newBoardList;
+    }
 
+    @RequestMapping(value = "/deletion/board",method = RequestMethod.POST)
+    @ResponseBody
+    public List<Map<String,Object>> deleteBoardbyBoardID(@RequestParam("deleteBoardList") String deleteBoardListJson){
+        List<BoardDTO> deleteboardList = boardService.getBoardListByUserID(userID); //기존데이터
+
+        //ajax를 통해 넘어온 json 형식의 string을 map 타입으로 변경
+        Gson gsonNewBoardList = new Gson();
+        Type type = new TypeToken<ArrayList<Map<String, String>>>() {}.getType();
+        ArrayList<Map<String,String>> deleteBoardListMap = gsonNewBoardList.fromJson(deleteBoardListJson,type); //새로운 데이터
+
+        for(int i=0;i<deleteboardList.size();i++){
+            //logger.info("boardIDInteger : "+deleteBoardListMap.get(i).get("boardID"));
+            int boardIDInteger = Integer.parseInt(deleteBoardListMap.get(i).get("boardID"));
+            boardService.deleteAllCommentInBoard(boardIDInteger);
+            boardService.deleteAllPostInBoard(boardIDInteger);
+            boardService.deleteBoard(boardIDInteger);
+        }
+
+        //삭제후 새로운 게시판 목록들 보내기
         List<BoardDTO> newBoardListByUserID = boardService.getBoardListByUserID(userID); // select로 받아오기
         List newBoardList = new ArrayList<Object>(); // 보내기위한 리스트맵
         try{

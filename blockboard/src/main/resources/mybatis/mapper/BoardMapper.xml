@@ -68,4 +68,15 @@
         update Board set boardName =#{boardName} where boardID=#{boardID};
     </update>
 
+    <delete id="deleteAllPostInBoard" parameterType="int">
+        delete from Post where boardID = #{boardID};
+    </delete>
+
+    <delete id="deleteBoard" parameterType="int">
+        delete from Board where boardID = #{boardID};
+    </delete>
+    <delete id="deleteAllCommentInBoard" parameterType="int">
+        delete from Comments where boardID = #{boardID};
+    </delete>
+
 </mapper>

@@ -71,7 +71,7 @@ create table Comments(
     commentContent varchar(4000) not null,
     commentRegisterTime timestamp not null,
     commentReferencedID int(9),
-    primary key(commentID)
+    primary key(commentID,board	)
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
 insert into Company values(1,'wm');
@@ -100,20 +100,23 @@ insert into Comments values(2,1,1,1,'첫 답글',now(),1);
 Select * from Post;
 select * from Users;
 select * from FunctionCheck;
+select * from Board;
+
 insert into Post values (2,1,1,1,'두번째 게시글','두번째 게시글내용',now());
 insert into Post values (3,2,1,1,'건의사항 게시판 첫글','공지사항이네',now());
 insert into Post values (4,2,1,1,'공지사항 게시판 ','ㅎㅎㅎㅎ테스트',now());
 insert into Post values (5,1,5,1,'자유1','1111',now());
 insert into Post values (6,1,5,1,'자유2','22222',now());
 
-Select boardfunction.functionID,functioncheck.companyID, boardfunction.functionName, functioncheck.functionData
+Select boardfunction.functionID,ifnull(functioncheck.companyID,0), boardfunction.functionName, functioncheck.functionData
 FROM BoardFunction boardfunction LEFT OUTER JOIN FunctionCheck functioncheck
 ON boardfunction.functionID = functioncheck.functionID and functioncheck.companyID = 2;
 
 
-
+update Board set boardName ="공지사항" where boardID=1;
 SELECT p.postID,p.userID, u.userName,p.boardID,p.companyID,p.postTitle,p.postContent,p.postRegisterTime
         FROM Post p , Users u
         WHERE p.userID = u.userID and p.boardID=1
         ORDER BY p.postID DESC;
+        
         
