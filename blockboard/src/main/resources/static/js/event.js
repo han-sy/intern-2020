@@ -97,9 +97,11 @@ function clickSaveChangeBoard(){
             $.each(data, function (key, value) {
                  $("#tab_id").append("<li data-tab="+value.boardID+"  class=tabmenu id=default>"+value.boardName+"</li>");
             });
+             $('#config_container').html("");
           }
         });
       }
+       $('#config_container').html("");
 }
 // 게시판 추가버튼 클릭시
 function clickaddBoardBtn() {
