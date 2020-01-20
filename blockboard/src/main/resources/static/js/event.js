@@ -9,15 +9,24 @@ function changeTrColor(trObj) {
   }
 }
 
-//탭 버튼 클릭시
+// 게시글 목록에서 게시글 클릭시
 function clickTrEvent(trObj) {
   //alert(trObj.getAttribute("data-post"));
   var postID = trObj.getAttribute("data-post");
+  var boardID;
+  var tabs = $('#tab_id').children();
+
+  $.each(tabs, function() {
+    var color = $(this).css('background-color');
+    if(color == "rgb(144, 238, 144)") {
+      boardID = $(this).attr('data-tab');
+    }
+  });
   //console.log(postID);
   //$('#postcontent').html("activerRow : " + trObj.getAttribute("data-post"));
   $.ajax({
     type: 'GET',                 //get방식으로 통신
-    url: "/board/postlist/" + postID,    //탭의 data-tab속성의 값으로 된 html파일로 통신
+    url: "/boards/" + boardID + "/posts/" + postID,    //탭의 data-tab속성의 값으로 된 html파일로 통신
     error: function () {  //통신 실패시
       alert('통신실패!');
     },
@@ -277,7 +286,7 @@ $(document).on("click", ".tabmenu", function clickTabEvent() {
   $('#btn_write').show();
   $.ajax({
     type: 'GET',                 //get방식으로 통신
-    url: '/board/' + boardID + "/postlist",    //탭의 data-tab속성의 값으로 된 html파일로 통신
+    url: '/boards/' + boardID + "/posts",    //탭의 data-tab속성의 값으로 된 html파일로 통신
     error: function () {  //통신 실패시
       alert('통신실패!');
     },
@@ -320,7 +329,7 @@ function click_post() {
     $('#btn_write').css("display", "");
     $.ajax({
       type: 'POST',
-      url: "/boards/" + boardID + "/post/",
+      url: "/boards/" + boardID + "/posts/",
       data: {postTitle: postTitle,
             postContent: postContent},
       error: function() {

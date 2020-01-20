@@ -7,14 +7,13 @@ import com.board.project.blockboard.dto.PostDTO;
 import com.board.project.blockboard.service.BoardService;
 import com.board.project.blockboard.service.FunctionService;
 import com.board.project.blockboard.service.UserService;
-import com.board.project.blockboard.util.AES256Util;
+import com.board.project.blockboard.util.SessionTokenizer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.DecoderException;
-import org.apache.commons.codec.net.URLCodec;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Controller;
@@ -24,9 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.security.InvalidAlgorithmParameterException;
@@ -48,48 +45,22 @@ public class BoardController {
     @Autowired
     private UserService userService;
 
-    private String key = "slgi3ibu5phi8euf";
-    private String userID;
-    private int companyID;
-    AES256Util aes256;
-    URLCodec codec;
 
     @GetMapping("")
-    public String getMainContent(HttpServletRequest request, HttpSession session,Model model) throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
-        // 클라이언트의 쿠키를 가져옴
+    public String getMainContent(HttpServletRequest request, Model model) throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
+        SessionTokenizer session = new SessionTokenizer(request);
 
-        Cookie[] getCookie = request.getCookies();
-        aes256 = new AES256Util(key);
-        codec = new URLCodec();
-        String decode = null;
-        // 클라이언트가 보낸 쿠키가 서버가 생성해준건지 검사 (복호화 과정)
-        if(getCookie != null){
-            for(Cookie c : getCookie) {
-                if (c.getName().equals("sessionID")) {
-                    decode = aes256.aesDecode(codec.decode(c.getValue()));
-                    log.info(decode);
-
-                    // token[0]=userID, token[1]=companyID, token[2]=serverToken
-                    StringTokenizer tokenizer = new StringTokenizer(decode, "#");
-                    userID = tokenizer.nextToken();
-                    companyID = Integer.parseInt(tokenizer.nextToken());
-                    String serverToken = tokenizer.nextToken();
-                }
-            }
-        }
+        String userID = session.getUserID();
+        int companyID = session.getCompanyID();
 
         List<BoardDTO> boardList = boardService.getBoardListByUserID(userID);
 
-        log.info("userID : "+userID);
         // companyID = boardService.getCompanyIDByUserID(userID);
 
-        System.out.println("list: "+boardList.size());
-        model.addAttribute("list",boardList); //게시판 목록
-
+        model.addAttribute("boardList",boardList); //게시판 목록
         model.addAttribute("companyName",boardService.getCompanyNameByUserID(userID));//회사이름
         model.addAttribute("isadmin",boardService.checkAdmin(userID));
 
-        System.out.println(model);
         return "boards";
     }
 
@@ -136,25 +107,13 @@ public class BoardController {
      */
     @RequestMapping(value = "/{boardid}/posts/{postid}",method = RequestMethod.GET)
     @ResponseBody
-    public Map<String,Object> getPostByPostID(@PathVariable("postid") int postID,HttpServletRequest request) {
-
+    public Map<String,Object> getPostByPostID(@PathVariable("postid") int postID, HttpServletRequest request) throws NoSuchPaddingException, BadPaddingException, InvalidKeyException, UnsupportedEncodingException, IllegalBlockSizeException, DecoderException, NoSuchAlgorithmException, InvalidAlgorithmParameterException {
         PostDTO post = boardService.getPostByPostID(postID);
-
-
-        String userID = "";
-        Cookie[] cookies = request.getCookies();
-        for (Cookie getCookie : cookies) {
-            if (getCookie.getName().equals("userID")) {
-                userID = getCookie.getValue();
-            }
-        }
-        //System.out.println("ajax로 넘어온 data :  "+request);
-
-        System.out.println(post);
+        SessionTokenizer session = new SessionTokenizer(request);
+        String userID = session.getUserID();
+        int companyID = session.getCompanyID();
 
         Map<String, Object> map = new HashMap<String, Object>();
-        log.info("userID = " + userID);
-        log.info("postUserID = " + post.getUserID());
         try {
             // 현재 로그인한 유저와 게시글 작성자가 같을 경우에 'canDelete' 를 true로 전달
             map.put("canDelete", userID.equals(post.getUserID()) ? true : false);
@@ -163,7 +122,6 @@ public class BoardController {
             map.put("postContent", post.getPostContent());
             map.put("userName", post.getUserName());
             map.put("postRegisterTime", post.getPostRegisterTime());
-            System.out.println(map);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -173,7 +131,11 @@ public class BoardController {
     }
     @GetMapping(value = "/{boardid}")
     @ResponseBody
-    public List<Map<String,Object>> getBoardList(){
+    public List<Map<String,Object>> getBoardList(HttpServletRequest request) throws NoSuchPaddingException, BadPaddingException, InvalidKeyException, UnsupportedEncodingException, IllegalBlockSizeException, DecoderException, NoSuchAlgorithmException, InvalidAlgorithmParameterException {
+        SessionTokenizer session = new SessionTokenizer(request);
+
+        String userID = session.getUserID();
+        int companyID = session.getCompanyID();
 
         List<BoardDTO> boardListByUserID = boardService.getBoardListByUserID(userID); // select로 받아오기
         List boardList = new ArrayList<Object>(); // 보내기위한 리스트맵
@@ -199,11 +161,17 @@ public class BoardController {
      */
     @RequestMapping(value = "/newboard",method = RequestMethod.POST)
     @ResponseBody
-    public List<Map<String,Object>> insertNewBoard(@RequestParam("boardName") String newBoardName){
+    public List<Map<String,Object>> insertNewBoard(@RequestParam("boardName") String newBoardName, HttpServletRequest request) throws NoSuchPaddingException, BadPaddingException, InvalidKeyException, UnsupportedEncodingException, IllegalBlockSizeException, DecoderException, NoSuchAlgorithmException, InvalidAlgorithmParameterException {
+        SessionTokenizer session = new SessionTokenizer(request);
+
+        String userID = session.getUserID();
+        int companyID = session.getCompanyID();
+
         boardService.insertNewBoard(newBoardName,companyID);
 
         //insert후 새로운 게시판목록
-        return getBoardList();
+        //return getBoardList();
+        return null;
     }
 
 
@@ -213,7 +181,11 @@ public class BoardController {
      */
     @RequestMapping(value = "/function-info")
     @ResponseBody
-    public List<Map<String,Object>> getFunctionInfo(){
+    public List<Map<String,Object>> getFunctionInfo(HttpServletRequest request) throws NoSuchPaddingException, BadPaddingException, InvalidKeyException, UnsupportedEncodingException, IllegalBlockSizeException, DecoderException, NoSuchAlgorithmException, InvalidAlgorithmParameterException {
+        SessionTokenizer session = new SessionTokenizer(request);
+
+        String userID = session.getUserID();
+        int companyID = session.getCompanyID();
 
         List<FunctionDTO> functionInfoList = functionService.getFunctionInfoByCompanyID(companyID);
         List functionInfoDataList = new ArrayList<Object>();
@@ -241,7 +213,12 @@ public class BoardController {
      */
     @RequestMapping(value = "/function-change",method = RequestMethod.POST)
     @ResponseBody
-    public Boolean insertNewFunctionData(@RequestParam("functionInfoData") String functionDataJson){
+    public Boolean insertNewFunctionData(@RequestParam("functionInfoData") String functionDataJson, HttpServletRequest request) throws NoSuchPaddingException, BadPaddingException, InvalidKeyException, UnsupportedEncodingException, IllegalBlockSizeException, DecoderException, NoSuchAlgorithmException, InvalidAlgorithmParameterException {
+        SessionTokenizer session = new SessionTokenizer(request);
+
+        String userID = session.getUserID();
+        int companyID = session.getCompanyID();
+
         List<FunctionDTO> functionInfoList = functionService.getFunctionInfoByCompanyID(companyID); //기존데이터
 
         //ajax를 통해 넘어온 json 형식의 string을 map 타입으로 변경
@@ -277,7 +254,12 @@ public class BoardController {
      */
     @RequestMapping(value = "/changed/boardname",method = RequestMethod.POST)
     @ResponseBody
-    public List<Map<String,Object>>  changeNewBoardName(@RequestParam("boardData") String boardDataJson){
+    public List<Map<String,Object>>  changeNewBoardName(@RequestParam("boardData") String boardDataJson, HttpServletRequest request) throws NoSuchPaddingException, BadPaddingException, InvalidKeyException, UnsupportedEncodingException, IllegalBlockSizeException, DecoderException, NoSuchAlgorithmException, InvalidAlgorithmParameterException {
+        SessionTokenizer session = new SessionTokenizer(request);
+
+        String userID = session.getUserID();
+        int companyID = session.getCompanyID();
+
         List<BoardDTO> oldboardList = boardService.getBoardListByUserID(userID); //기존데이터
 
         //ajax를 통해 넘어온 json 형식의 string을 map 타입으로 변경
@@ -297,12 +279,18 @@ public class BoardController {
         }
 
         //이름 수정후새로운 게시판 목록들 보내기
-        return getBoardList();
+        //return getBoardList();
+        return null;
     }
 
     @RequestMapping(value = "/deletion/board",method = RequestMethod.POST)
     @ResponseBody
-    public List<Map<String,Object>> deleteBoardbyBoardID(@RequestParam("deleteBoardList") String deleteBoardListJson){
+    public List<Map<String,Object>> deleteBoardbyBoardID(@RequestParam("deleteBoardList") String deleteBoardListJson, HttpServletRequest request) throws NoSuchPaddingException, BadPaddingException, InvalidKeyException, UnsupportedEncodingException, IllegalBlockSizeException, DecoderException, NoSuchAlgorithmException, InvalidAlgorithmParameterException {
+        SessionTokenizer session = new SessionTokenizer(request);
+
+        String userID = session.getUserID();
+        int companyID = session.getCompanyID();
+
         List<BoardDTO> deleteboardList = boardService.getBoardListByUserID(userID); //기존데이터
 
         //ajax를 통해 넘어온 json 형식의 string을 map 타입으로 변경
@@ -319,7 +307,8 @@ public class BoardController {
         }
 
         //삭제후 새로운 게시판 목록들 보내기
-        return getBoardList();
+        //return getBoardList();
+        return null;
     }
 
 }

@@ -36,9 +36,9 @@
 
   </div>
   <ul class="tab" id = "tab_id">
-    <c:forEach items="${list}" var="list" varStatus="status">
-      <li data-tab="${list.boardID}" class='tabmenu' id="default">
-        <c:out value="${list.boardName}" />
+    <c:forEach items="${boardList}" var="boardList" varStatus="status">
+      <li data-tab="${boardList.boardID}" class='tabmenu' id="default">
+        <c:out value="${boardList.boardName}" />
       </li>
     </c:forEach>
   </ul>
@@ -47,9 +47,9 @@
     <div id="boardlistcontent">
       <h2> 게시판 선택 </h2>
       <select id="post_board_id">
-        <c:forEach items="${list}" var="list" varStatus="status">
-          <option data-tab="${list.boardID}" class='tabmenu' id="default">
-            <c:out value="${list.boardName}" />
+        <c:forEach items="${boardList}" var="boardList" varStatus="status">
+          <option data-tab="${boardList.boardID}" class='tabmenu' id="default">
+            <c:out value="${boardList.boardName}" />
           </option>
         </c:forEach>
       </select>
