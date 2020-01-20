@@ -65,7 +65,7 @@ $(document).on("click", "#btn_updatePost", function () {
     // 수정 화면에 저장되어 있던 게시글 정보(postTitle, postContent)를 띄워 준다.
     $.ajax({
         type: 'GET',
-        url: "/boards/" + boardID + "/posts/" + postID,
+        url: "/boards/" + boardID + "/posts/" + postID + "/editor",
         async: false,
         error: function() {
           alert('게시글 수정 실패');

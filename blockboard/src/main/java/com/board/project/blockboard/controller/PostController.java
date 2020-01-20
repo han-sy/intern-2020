@@ -4,6 +4,7 @@ import com.board.project.blockboard.dto.PostDTO;
 import com.board.project.blockboard.service.BoardService;
 import com.board.project.blockboard.service.PostService;
 import com.board.project.blockboard.util.AES256Util;
+import com.board.project.blockboard.util.SessionTokenizer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.net.URLCodec;
@@ -26,7 +27,7 @@ import java.util.StringTokenizer;
 
 @Slf4j
 @Controller
-@RequestMapping("/boards/{boardID}/posts")
+@RequestMapping("/boards/{boardid}/posts")
 public class PostController {
     @Autowired
     private PostService postService;
@@ -37,44 +38,29 @@ public class PostController {
 
     @PostMapping("/")
     @ResponseBody
-    public void insertPost(@PathVariable("boardID") int boardID, @ModelAttribute PostDTO receivePost, HttpServletRequest request) throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
-        Cookie[] cookies = request.getCookies();
-        AES256Util aes256 = new AES256Util(key);
-        URLCodec codec = new URLCodec();
-        String decode = "";
-        String userID = "";
-        int companyID = -1;
+    public void insertPost(@PathVariable("boardid") int boardid, @ModelAttribute PostDTO receivePost, HttpServletRequest request) throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
+        SessionTokenizer session = new SessionTokenizer(request);
+        String userID = session.getUserID();
+        int companyID = session.getCompanyID();
 
-        if(cookies != null){
-            for(Cookie c : cookies){
-                if(c.getName().equals("sessionID")) {
-                    decode = aes256.aesDecode(codec.decode(c.getValue()));
-                    log.info(decode);
-
-                    // token[0]=userID, token[1]=companyID, token[2]=serverToken
-                    StringTokenizer tokenizer = new StringTokenizer(decode, "#");
-                    userID = tokenizer.nextToken();
-                    companyID = Integer.parseInt(tokenizer.nextToken());
-                }
-            }
-        }
         receivePost.setUserID(userID);
         receivePost.setCompanyID(companyID);
-        receivePost.setBoardID(boardID);
+        receivePost.setBoardID(boardid);
         postService.insertPost(receivePost);
     }
 
-    @DeleteMapping("/{postID}")
+    @DeleteMapping("/{postid}")
     @ResponseBody
-    public void deletePost(@PathVariable("postID") int postID) {
-        postService.deletePost(postID);
+    public void deletePost(@PathVariable("postid") int postid) {
+        postService.deletePost(postid);
     }
 
-    @GetMapping("/{postID}")
+    // 현재 게시글을 에디터로 불러온다.
+    @GetMapping("/{postid}/editor")
     @ResponseBody
-    public Map<String, Object> selectPostByPostID(@PathVariable("postID") int postID) {
+    public Map<String, Object> selectPostByPostID(@PathVariable("postid") int postid) {
         Map<String, Object> map = new HashMap<String, Object>();
-        PostDTO getPost = postService.selectPostByPostID(postID);
+        PostDTO getPost = postService.selectPostByPostID(postid);
 
         // 수정화면 들어갈 때 postID의 정보를 띄워준다.
         map.put("postTitle", getPost.getPostTitle());
@@ -82,11 +68,11 @@ public class PostController {
         return map;
     }
 
-    @PutMapping("/{postID}")
+    @PutMapping("/{postid}")
     @ResponseBody
-    public void updatePost(@PathVariable("boardID") int boardID, @PathVariable("postID") int postID, @ModelAttribute PostDTO requestPost) {
-        requestPost.setPostID(postID);
-        requestPost.setBoardID(boardID);
+    public void updatePost(@PathVariable("boardid") int boardid, @PathVariable("postid") int postid, @ModelAttribute PostDTO requestPost) {
+        requestPost.setPostID(postid);
+        requestPost.setBoardID(boardid);
         postService.updatePost(requestPost);
     }
 }

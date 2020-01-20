@@ -52,7 +52,7 @@ create table Post(
     board_id int(9) not null,
     company_id int(9) not null,
     post_title varchar(150) not null,
-    post_content varchar(10000) not null,
+    post_content varchar(10000) character set utf8mb4 collate utf8mb4_unicode_ci not null,
     post_register_time timestamp not null,
 	foreign key(user_id) references Users(user_id),
 	foreign key(board_id) references Board(board_id),
@@ -69,7 +69,7 @@ create table Comments(
 	foreign key(post_id) references Post(post_id),
 	foreign key(user_id) references Users(user_id),
 	foreign key(company_id) references Company(company_id),
-    comment_content varchar(4000) not null,
+    comment_content varchar(4000) character set utf8mb4 collate utf8mb4_unicode_ci not null,
     comment_register_time timestamp not null,
     comment_referenced_ID int(9),
     primary key(comment_id,board_id)
@@ -119,5 +119,4 @@ SELECT p.post_id,p.user_id, u.user_name,p.board_id,p.company_id,p.post_title,p.p
         FROM Post p , Users u
         WHERE p.user_id = u.user_id and p.board_id=1
         ORDER BY p.post_id DESC;
-        
-        
+
