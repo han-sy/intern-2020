@@ -52,7 +52,6 @@ public class UserController {
                 e.printStackTrace();
                 return "redirect:/";
             }
-
         }
         return "redirect:/";
     }

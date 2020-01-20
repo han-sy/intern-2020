@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.board.project.blockboard.mapper.FunctionMapper">
+
+    <select id="selectFunctionCheckByCompanyID" parameterType="int" resultType="com.board.project.blockboard.dto.FunctionDTO">
+        Select boardfunction.functionID,ifnull(functioncheck.companyID,0) as companyID, boardfunction.functionName, functioncheck.functionData
+        FROM BoardFunction boardfunction LEFT OUTER JOIN FunctionCheck functioncheck
+        ON boardfunction.functionID = functioncheck.functionID and functioncheck.companyID = #{companyID};
+    </select>
+
+    <insert id="insertFunctionCheckData" parameterType="hashmap">
+        insert into FunctionCheck values(#{companyID},#{functionID},null);
+    </insert>
+
+    <delete id="deleteFunctionCheckData" parameterType="hashmap">
+        delete from FunctionCheck where companyID = #{companyID} and functionID = #{functionID};
+    </delete>
+</mapper>

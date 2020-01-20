@@ -4,7 +4,5 @@
     <mappers>
         <mapper resource="UserMapper.xml"/>
         <mapper resource="BoardMapper.xml"/>
-        <mapper resource="PostMapper.xml"/>
-        <mapper resource="FunctionMapper.xml"/>
     </mappers>
 </configuration>
