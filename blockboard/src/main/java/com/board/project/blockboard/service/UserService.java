@@ -31,7 +31,7 @@ public class UserService {
         return false;
     }
 
-    public int getUserIDByPostID(int postID) {
-        return userMapper.getUserIDByPostID(postID);
+    public int selectCompanyIDByUserID(String userID) {
+        return userMapper.selectCompanyIDByUserID(userID);
     }
 }

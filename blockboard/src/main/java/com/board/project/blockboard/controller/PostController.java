@@ -4,21 +4,29 @@ import com.board.project.blockboard.dto.PostDTO;
 import com.board.project.blockboard.service.BoardService;
 import com.board.project.blockboard.service.PostService;
 import com.board.project.blockboard.util.AES256Util;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.net.URLCodec;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.StringTokenizer;
 
+@Slf4j
 @Controller
-@RequestMapping("/board/post")
+@RequestMapping("/boards/{boardID}/posts")
 public class PostController {
     @Autowired
     private PostService postService;
@@ -26,42 +34,33 @@ public class PostController {
     private BoardService boardService;
 
     private String key = "slgi3ibu5phi8euf";
-    Logger logger = LoggerFactory.getLogger(getClass());
 
     @PostMapping(value = "/insert")
     @ResponseBody
-    public void insertPost(@ModelAttribute PostDTO receivePost, HttpServletRequest request) throws UnsupportedEncodingException {
-        PostDTO sendPost = new PostDTO();
-        Map<String, Object> map_Board = new HashMap<String, Object>();
-
+    public void insertPost(@ModelAttribute PostDTO receivePost, HttpServletRequest request) throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
         Cookie[] cookies = request.getCookies();
         AES256Util aes256 = new AES256Util(key);
         URLCodec codec = new URLCodec();
-        String userID = "", decode = null;
-        int companyID;
+        String decode = "";
+        String userID = "";
+        int companyID = -1;
 
-        for(Cookie c : cookies) {
-            if (c.getName().equals("sessionID")) {
-                try {
+        if(cookies != null){
+            for(Cookie c : cookies){
+                if(c.getName().equals("sessionID")) {
                     decode = aes256.aesDecode(codec.decode(c.getValue()));
-                    userID = decode.substring(0, decode.length() - 6); // id 자르기
-                    logger.info(decode);
-                } catch (Exception e) {
+                    log.info(decode);
 
-                    e.printStackTrace();
+                    // token[0]=userID, token[1]=companyID, token[2]=serverToken
+                    StringTokenizer tokenizer = new StringTokenizer(decode, "#");
+                    userID = tokenizer.nextToken();
+                    companyID = Integer.parseInt(tokenizer.nextToken());
                 }
             }
         }
-        logger.info("BoardID = " + receivePost.getBoardID());
-
-        sendPost.setUserID(userID);
-        companyID = boardService.getCompanyIDByUserID(userID);
-        sendPost.setCompanyID(companyID);
-        sendPost.setPostTitle(receivePost.getPostTitle());
-        sendPost.setPostContent(receivePost.getPostContent());
-        sendPost.setBoardID(receivePost.getBoardID());
-        postService.insertPost(sendPost);
-
+        receivePost.setUserID(userID);
+        receivePost.setCompanyID(companyID);
+        postService.insertPost(receivePost);
     }
 
     @DeleteMapping("/delete")

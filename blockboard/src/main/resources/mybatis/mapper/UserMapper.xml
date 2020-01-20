@@ -9,9 +9,9 @@
         WHERE userID=#{userID};
     </select>
 
-    <select id="getUserIDByPostID" parameterType="int" resultType="int">
-        SELECT userID
-        FROM Post
-        WHERE post.postID=#{postID}
+    <select id="selectCompanyIDByUserID" parameterType="string" resultType="int">
+        SELECT companyID
+        FROM Users users
+        WHERE users.userID = #{userID};
     </select>
 </mapper>
