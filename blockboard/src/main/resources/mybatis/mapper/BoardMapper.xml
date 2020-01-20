@@ -67,14 +67,10 @@
         WHERE user_id = #{userID};
     </select>
 
-    <select id="maxBoardID" resultType="int">
-        SELECT max(board_id)
-        FROM Board;
-    </select>
 
     <insert id="insertBoard" parameterType="com.board.project.blockboard.dto.BoardDTO">
-        INSERT INTO Board
-        VALUES(#{boardID},#{companyID},#{boardName});
+        INSERT INTO Board(company_id, board_name)
+        VALUES(#{companyID},#{boardName});
     </insert>
 
     <!--게시글 작성 시 선택한 게시판 ID 반환-->

@@ -47,9 +47,7 @@ public class BoardService {
     }
 
     public void insertNewBoard(String newBoardName,int companyID){
-        int idx = boardMapper.maxBoardID();
         BoardDTO newBoard = new BoardDTO();
-        newBoard.setBoardID(idx+1);
         newBoard.setCompanyID(companyID);
         newBoard.setBoardName(newBoardName);
         logger.info("newBoard : "+newBoard);

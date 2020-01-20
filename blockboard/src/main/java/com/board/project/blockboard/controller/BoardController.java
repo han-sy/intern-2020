@@ -151,16 +151,19 @@ public class BoardController {
         return boardList;
     }
 
-
-
-    //FIXME 게시판 추가
+    /**
+     * 게시판 추가
+     * @param newBoardName 새로입력받은 보드이름
+     * @param request
+     * @return
+     * @throws Exception
+     */
     @PostMapping(value = "/{boardname}/newboard")
     @ResponseBody
     public List<BoardDTO> insertNewBoard(@PathVariable("boardname") String newBoardName, HttpServletRequest request) throws Exception {
         SessionTokenizer session = new SessionTokenizer(request);
         int companyID = session.getCompanyID();
 
-        log.info("newBoardName"+newBoardName);
         //게시판 삽입
         boardService.insertNewBoard(newBoardName, companyID);
 
