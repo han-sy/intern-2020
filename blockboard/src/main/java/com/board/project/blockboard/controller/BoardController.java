@@ -134,35 +134,16 @@ public class BoardController {
     }
 
 
-    @RequestMapping(value = "/{list}/aa",method = RequestMethod.POST)
+    @RequestMapping(value = "/newtitle",method = RequestMethod.POST)
     @ResponseBody
-    public List<Map<String,Object>>  changeNewBoardName(@RequestParam("boardData") String boardDataJson, HttpServletRequest request) throws NoSuchPaddingException, BadPaddingException, InvalidKeyException, UnsupportedEncodingException, IllegalBlockSizeException, DecoderException, NoSuchAlgorithmException, InvalidAlgorithmParameterException {
+    public List<BoardDTO>  changeNewBoardName(@RequestParam("newTItles") String newTItleList, HttpServletRequest request) throws Exception {
         SessionTokenizer session = new SessionTokenizer(request);
-
-        //String userID = session.getUserID();
         int companyID = session.getCompanyID();
 
-        List<BoardDTO> oldboardList = boardService.getBoardListByCompanyID(companyID); //기존데이터
-
-        //ajax를 통해 넘어온 json 형식의 string을 map 타입으로 변경
-        Gson gsonNewBoardList = new Gson();
-        Type type = new TypeToken<ArrayList<Map<String, String>>>() {}.getType();
-        ArrayList<Map<String,String>> newBoardListMap = gsonNewBoardList.fromJson(boardDataJson,type); //새로운 데이터
-
-        //logger.info("functionInfoList : "+ functionInfoList);
-        log.info(new GsonBuilder().setPrettyPrinting().create().toJson(newBoardListMap));
-
-
-
-        for(int i=0;i<oldboardList.size();i++){
-            if(!oldboardList.get(i).getBoardName().equals(newBoardListMap.get(i).get("boardName"))) {//전후 이름이 다를때만 수정한다
-                boardService.changeBoardName(Integer.parseInt(newBoardListMap.get(i).get("boardID")), newBoardListMap.get(i).get("boardName"));
-            }
-        }
-
+        boardService.updateChangedName(newTItleList,companyID);
         //이름 수정후새로운 게시판 목록들 보내기
-        //return getBoardList();
-        return null;
+        List<BoardDTO> newBoardList = boardService.getBoardListByCompanyID(companyID);
+        return newBoardList;
     }
 
     @DeleteMapping(value = "/list")

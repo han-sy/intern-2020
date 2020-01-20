@@ -4,6 +4,7 @@ import com.board.project.blockboard.dto.BoardDTO;
 import com.board.project.blockboard.dto.PostDTO;
 import com.board.project.blockboard.mapper.BoardMapper;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -118,6 +119,19 @@ public class BoardService {
         }
 
         return postMapData;
+    }
+
+    public void updateChangedName(String newTItleList, int companyID) {
+
+        //ajax를 통해 넘어온 json 형식의 string을 map 타입으로 변경
+        Gson gsonNewBoardList = new Gson();
+        Type type = new TypeToken<ArrayList<Map<String, String>>>() {}.getType();
+        ArrayList<Map<String,String>> newBoardListMap = gsonNewBoardList.fromJson(newTItleList,type); //새로운 데이터
+
+        for(int i=0;i<newBoardListMap.size();i++){
+            changeBoardName(Integer.parseInt(newBoardListMap.get(i).get("boardID")), newBoardListMap.get(i).get("boardName"));
+        }
+
     }
 }
 

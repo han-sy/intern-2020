@@ -88,3 +88,65 @@ function clickSaveDelteBoard() {
     $('#config_container').html("");
   }
 }
+
+//게시판 이름변경 버튼 클릭시
+function clickchangeBoardBtn() {
+  $.ajax({
+    type: 'GET',                 //POST 통신
+    url: '/boards/list',    //탭의 data-tab속성의 값으로 된 html파일로 통신
+    error: function () {  //통신 실패시
+      alert('통신실패!');
+    },
+    success: function (data) {    //통신 성공시 탭 내용담는 div를 읽어들인 값으로 채운다.
+      $('#config_container').html("");
+      $.each(data, function (key, value) {
+        $('#config_container').append("<div class=boardInfo id=board" + value.boardID + "><input type=text name =boardname data-boardid=" + value.boardID + " data-oldname=" + value.boardName + " value=" + value.boardName + " >" +
+          " <span class =deleteBoard data-board =board" + value.boardID + " > 기존 게시판 이름 : " + value.boardName + "</span></div>");
+      });
+      $('#config_container').append(" <br><a id ='addFuncBtn' onclick = javascript:clickSaveChangeBoard(this) style=cursor:pointer>변경하기</a>" +
+        "<button class = 'functionClose' type='button' onclick=javascript:clickConfigClose(this)>닫기</button>");
+    }
+  });
+}
+
+
+//게시판 이름변경 저장하기
+function clickSaveChangeBoard() {
+  var boardDataList = new Array();
+
+  $("input[name=boardname]").each(function () {
+    var boardData = new Object();
+    var clickObj = $(this);
+    var oldBoardName = clickObj.attr("data-oldname");
+    var newBoardName = clickObj.val();
+    var boardID = clickObj.attr("data-boardid");
+    if (oldBoardName != newBoardName) {
+      boardData.boardName = newBoardName;
+      boardData.boardID = boardID;
+      boardDataList.push(boardData);
+    }
+
+
+  });
+
+  var jsonData = JSON.stringify(boardDataList);
+  var askSave = confirm("게시판 이름변경 내용을 저장하시겠습니까?");
+  if (askSave) {
+    $.ajax({
+      type: 'POST',                 //get방식으로 통신
+      url: "/boards/newtitle",    //탭의 data-tab속성의 값으로 된 html파일로 통신
+      data: { newTItles: jsonData },
+      error: function () {  //통신 실패시
+        alert('통신실패!');
+      },
+      success: function (data) {    //통신 성공시 탭 내용담는 div를 읽어들인 값으로 채운다.
+        $('#tab_id').html("");
+        $.each(data, function (key, value) {
+          $("#tab_id").append("<li data-tab=" + value.boardID + "  class=tabmenu id=default>" + value.boardName + "</li>");
+        });
+        $('#config_container').html("");
+      }
+    });
+  }
+  $('#config_container').html("");
+}
