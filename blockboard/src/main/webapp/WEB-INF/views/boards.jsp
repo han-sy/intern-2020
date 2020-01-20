@@ -13,6 +13,7 @@
   <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
   <link rel="stylesheet" type="text/css" href="/static/css/boardstyle.css">
   <script src="/static/js/event.js"></script>
+  <script src="/static/js/boardEvent.js"></script>
   <script src="/static/js/postsEvent.js"></script>
   <script src="/static/ckeditor/ckeditor.js"></script>
   <script src="/static/ckeditor/adapters/jquery.js"></script>

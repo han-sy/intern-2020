@@ -14,7 +14,7 @@
         WHERE company.company_id=user.company_id
         AND user.user_id = #{userID};
     </select>
-    <select id="selectBoardByCompanyID" parameterType="int" resultType="com.board.project.blockboard.dto.BoardDTO">
+    <select id="selectBoardsByCompanyID" parameterType="int" resultType="com.board.project.blockboard.dto.BoardDTO">
         SELECT  board_id as boardID,
                 company_id as companyID,
                 board_name as boardName

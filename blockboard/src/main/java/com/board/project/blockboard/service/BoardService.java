@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,13 +24,11 @@ public class BoardService {
         return boardMapper.selectCompanyNameByUserID(userID);
     }
 
-    public List<BoardDTO> getBoardListByUserID(String userID) {
+    public List<BoardDTO> getBoardListByCompanyID(int companyID) {
         //System.out.println("companyID (session): " + session.getAttribute("COMPANY"));
-        logger.info("companyID"+boardMapper.selectCompanyIDByUserID(userID));
-        int companyID = boardMapper.selectCompanyIDByUserID(userID);
         System.out.println("companyID : "+companyID);
-        List<BoardDTO> boardlist = boardMapper.selectBoardByCompanyID(companyID);
-        return boardlist;
+        List<BoardDTO> boardList= boardMapper.selectBoardsByCompanyID(companyID);
+        return boardList;
     }
 
     public List<PostDTO> getPostListByBoardID(int boardID) {

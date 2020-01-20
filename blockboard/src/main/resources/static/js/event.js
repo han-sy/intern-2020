@@ -54,7 +54,7 @@ function clickTrEvent(trObj) {
 function clickchangeBoardBtn() {
   $.ajax({
     type: 'POST',                 //POST 통신
-    url: '/board/boardlist',    //탭의 data-tab속성의 값으로 된 html파일로 통신
+    url: '/boards/boardlist',    //탭의 data-tab속성의 값으로 된 html파일로 통신
     error: function () {  //통신 실패시
       alert('통신실패!');
     },
@@ -73,7 +73,7 @@ function clickchangeBoardBtn() {
 function clickDeleteBoardBtn() {
   $.ajax({
     type: 'POST',                 //POST 통신
-    url: '/board/boardlist',    //탭의 data-tab속성의 값으로 된 html파일로 통신
+    url: '/boards/boardlist',    //탭의 data-tab속성의 값으로 된 html파일로 통신
     error: function () {  //통신 실패시
       alert('통신실패!');
     },
@@ -178,33 +178,13 @@ function clickaddBoardBtn() {
   console.log("111");
 }
 
-//게시판 저장하기 버튼
-function clickSaveaddedBoard() {
-  console.log($('#input_board_name').val());
-  $.ajax({
-    type: 'POST',                 //get방식으로 통신
-    url: "/board/newboard",    //탭의 data-tab속성의 값으로 된 html파일로 통신
-    data: { boardName: $('#input_board_name').val() },
-    error: function () {  //통신 실패시
-      alert('통신실패!');
-    },
-    success: function (data) {    //통신 성공시 탭 내용담는 div를 읽어들인 값으로 채운다.
-      $('#tab_id').html("");
-      $.each(data, function (key, value) {
-        $("#tab_id").append("<li data-tab=" + value.boardID + "  class=tabmenu id=default>" + value.boardName + "</li>");
-      });
-      $('#config_container').html("");
-    }
-  });
 
-  $('#config_container').html("");
-}
 
-//기능변경 버튼 클릭시
+//"기능변경" 버튼 클릭시
 function changeFunction() {
   $.ajax({
     type: 'POST',                 //POST 통신
-    url: '/board/function-info',    //탭의 data-tab속성의 값으로 된 html파일로 통신
+    url: '/boards/function-info',    //탭의 data-tab속성의 값으로 된 html파일로 통신
     error: function () {  //통신 실패시
       alert('통신실패!');
     },
@@ -426,7 +406,7 @@ function refreshPostList() {
   if(boardID != 0) {
     $.ajax({
       type: 'GET',
-      url: '/board/' + boardID + "/postlist",
+      url: '/boards/' + boardID + "/postlist",
       async: false,
       error: function () {
         alert('통신실패!');

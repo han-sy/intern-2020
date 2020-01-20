@@ -12,7 +12,7 @@ import java.util.Map;
 @Mapper
 public interface BoardMapper {
     List<BoardDTO> selectAllBoard();
-    List<BoardDTO> selectBoardByCompanyID(int companyID);
+    List<BoardDTO> selectBoardsByCompanyID(int companyID);
     List<PostDTO> selectPostByBoardID(int boardID);
     PostDTO selectPostByPostID(int postID);
     int selectCompanyIDByUserID(String userID);
