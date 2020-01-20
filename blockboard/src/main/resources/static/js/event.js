@@ -24,31 +24,23 @@ function clickTrEvent(trObj) {
     success: function (data) {    //통신 성공시 탭 내용담는 div를 읽어들인 값으로 채운다.
       console.log("success" + data);
       $('#writecontent').hide();
-      $('#editorcontent').html("");
       $('#btn_write').show();
       $('#postcontent').html("");
       $('#postcontent').append("<h2>" + data.postTitle + "</h2>");
       $('#postcontent').append("<h5>작성자 : " + data.userName + "</h4>");
       $('#postcontent').append("<h5>작성시간 : " + data.postRegisterTime + "</h4>");
       $('#postcontent').append("<a>" + data.postContent + "</a>");
-      $('#postcontent').append("<a id=currentPostID style=visibility:hidden>" + data.postID + "</a>");
+      $('#postcontent').append("<a id=postID style=visibility:hidden>" + data.postID + "</a>");
       // 작성글의 userID와 현재 로그인한 userID가 같으면 삭제버튼 표시
       console.log("canDelete = " + data.canDelete);
-      if(data.canDelete == true) {
-        $('#postcontent').append("</br><button id=btn_updatePost>수정</button>");
-        $('#postcontent').append("</br><button id=btn_deletePost>삭제</button>");
+      if (data.canDelete == true) {
+        $('#postcontent').append("</br><button onclick=javascript:clickUpdatePost(this)>수정</button>");
+        $('#postcontent').append("</br><button onclick=javascript:clickDeletePost(this)>삭제</button>");
       }
     }
   });
 }
 
-// 게시판 추가버튼 클릭시
-function clickaddBoardBtn(){
-      $('#editorcontent').html("");
-      $('#config_container').html("<input type='text' name='게시판 이름' id = 'input_board_name' class='addBoard' placeholder='게시판 이름'>");
-      $('#config_container').append("<br>");
-      $('#config_container').append(" <a id ='addFuncBtn' onclick = javascript:clickSaveaddedBoard(this) style=cursor:pointer>저장하기</a>");
-      console.log("111");
 //게시판 수정삭제 버튼 클릭시
 function clickchangeBoardBtn() {
   $.ajax({
@@ -82,7 +74,7 @@ function clickDeleteBoardBtn() {
       $('#config_container').html("삭제할 게시판을 선택하시오");
       $.each(data, function (key, value) {
         console.log(value.functionInfoData);
-        $('#config_container').append("<div><span>" + value.boardName + "</span><input type=checkbox name=boardDelete data-boardName="+value.boardName+" value=" +
+        $('#config_container').append("<div><span>" + value.boardName + "</span><input type=checkbox name=boardDelete value=" +
           value.boardID + "></div>");
 
       });
@@ -94,16 +86,16 @@ function clickDeleteBoardBtn() {
 
 //게시판 삭제- 삭제하기버튼 누를시
 function clickSaveDelteBoard() {
-var boardDataList = new Array();
+  var boardDataList = new Array();
 
   $("input[name=boardDelete]").each(function () {
-   if ($(this).is(":checked")) {
-     var boardData = new Object();
-        boardData.boardID = $(this).val();
-       console.log("boardID:"+boardData.boardID);
-       boardData.boardName = $(this).attr("data-boardName");
-    boardDataList.push(boardData);
-   }
+    if ($(this).is(":checked")) {
+      var boardData = new Object();
+      boardData.boardID = $(this).val();
+      console.log("boardID:" + boardData.boardID);
+      boardData.boardName = $(this).attr("data-boardName");
+      boardDataList.push(boardData);
+    }
 
 
   });
@@ -232,17 +224,6 @@ function changeFunction() {
 function clickSaveFunctionChange() {
   var functionDataList = new Array();
 
-// 탭 메뉴 클릭 이벤트 - 해당 게시판의 게시글 불러옴
-$(document).on("click",".tabmenu",function clickTabEvent() {
-    //var activeTab = $(this).attr('data-tab');
-    var activeTab = $(this).attr('data-tab');
-    console.log(activeTab);
-    $('li').css('background-color', 'white');
-    $(this).css('background-color', 'lightgreen');
-    $('#postcontent').html("");
-    $('#writecontent').hide();
-    $('#editorcontent').html("");
-    $('#btn_write').show();
   $("input[name=function]").each(function () {
     var functionData = new Object();
     functionData.functionID = $(this).val();
@@ -320,146 +301,41 @@ $(document).on("click", ".tabmenu", function clickTabEvent() {
 
 // 게시글 작성 버튼 이벤트
 function click_write() {
-    $('postlist').append("test");
-    $('#writecontent').css("display", "");
-    $('#btn_write').css("display", "none");
-    $('#editorcontent').append("<h2> 게시글제목 </h2> <input type=text id=post_title />");
-    $('#editorcontent').append("<textarea id=editor></textarea>");
-    $('#editorcontent').append("<button id=btn_post onclick=javascript:click_post(this)>올리기</button>")
-    $('#editor').ckeditor();
+  $('postlist').append("test");
+  $('#writecontent').css("display", "");
+  $('#btn_write').css("display", "none");
+  $('#editorcontent').html("게시판선택");
+  $('#editorcontent').html("게시글제목<input type=text id=post_title />");
+  $('#editorcontent').append("<textarea id=editor></textarea>");
+  $('#editorcontent').append("<button id=btn_post onclick=javascript:click_post(this)>올리기</button>");
+  $('#editor').ckeditor();
 }
 
 // 게시글 작성 후 올리기 버튼 클릭
 function click_post() {
-    var postTitle = $('#post_title').val();
-    var postContent = CKEDITOR.instances.editor.getData();
-    var boardID = $('#post_board_id option:selected').attr('data-tab');
-    $('#editorcontent').html("");
-    $('#writecontent').css("display", "none");
-    $('#btn_write').css("display", "");
-    $.ajax({
-      type: 'POST',
-      url: "/board/post/insert",
-      data: {postTitle: postTitle,
-            postContent: postContent,
-            boardID: boardID},
-      error: function() {
-        alert('게시글 작성 실패');
-      },
-      success: function() {
-        refreshPostList();
-        console.log("게시글 저장 완료");
-      }
-    });
-    
-}
-
-// 게시글 조회 후 수정 버튼 클릭
-$(document).on("click", "#btn_updatePost", function () {
-    var postID = $("#currentPostID").html();
-    $('#postcontent').html("");
-    if($('#editorcontent').html() == "")
-      click_write(); // 게시글 작성 폼 불러오기
-    $('#btn_post').html('수정하기'); // 게시글 올리기 버튼 텍스트 변경
-    $('#btn_post').attr('id', 'btn_update'); // 저장 버튼 ID 변경
-    $('#btn_update').attr('onclick', 'javascript:updatePost(this)'); // 수정게시글 저장 이벤트 등록
-    $('#editorcontent').append("<a id=currentPostID style=visibility:hidden>" + postID + "</a>"); // 현재 게시글 ID hidden 으로 저장
-    // 게시글 조회
-    $.ajax({
-        type: 'GET',
-        url: "/board/post/" + postID,
-        async: false,
-        data: {postID : postID},
-        error: function() {
-          alert('게시글 수정 실패');
-        },
-        success: function (data) {
-          $('#post_title').val(data.postTitle);
-          CKEDITOR.instances.editor.setData(data.postContent);
-        }
-    });
-});
-
-
-// 수정한 게시물 서버에 저장할 때 이벤트
-function updatePost() {
-  var postID = $("#currentPostID").html();
   var postTitle = $('#post_title').val();
   var postContent = CKEDITOR.instances.editor.getData();
-  var boardID = $('#post_board_id option:selected').attr('data-tab');
+  var boardName = $('#post_board_id option:selected').val();
+  console.log("제목:" + postTitle);
+  console.log("내용:" + postContent);
+  console.log("선택한 게시판:" + boardName);
   $('#editorcontent').html("");
   $('#writecontent').css("display", "none");
   $('#btn_write').css("display", "");
   $.ajax({
-    type: 'PUT',
-    url: "/board/post/update",
-    async: false,
-    data: {postID: postID,
+    type: 'POST',
+    url: "/board/post/insert",
+    data: {
       postTitle: postTitle,
       postContent: postContent,
-      boardID: boardID},
-    error: function() {
-      alert('게시글 수정 실패');
+      boardName: boardName
     },
-    success: function (data) {
-      refreshPostList();
+    error: function () {
+      alert('게시글 작성 실패');
+    },
+    success: function () {
+      console.log("게시글 저장 완료");
     }
   });
 }
 
-
-// 게시글 조회 후 삭제 버튼 클릭
-$(document).on("click", "#btn_deletePost", function () {
-    var postID = $("#currentPostID").html();
-    $('#postcontent').html("");
-    console.log("들어왔니?" + postID);
-    $.ajax({
-        type: 'DELETE',
-        url: "/board/post/delete",
-        async: false,
-        data: {postID : postID},
-        error: function() {
-          alert('게시글 삭제 실패');
-        },
-        success: function (data) {
-          refreshPostList();
-        }
-    });
-});
-
-// 게시글 작성, 수정, 삭제 시 해당 게시판 refresh 하는 함수
-function refreshPostList() {
-  var tabs = $('#tab_id').children();
-  var activeTab = 0;
-  $.each(tabs, function() {
-    var color = $(this).css('background-color');
-    if(color == "rgb(144, 238, 144)") {
-      activeTab = $(this).attr('data-tab');
-    }
-  });
-  if(activeTab != 0) {
-    $.ajax({
-      type: 'GET',
-      url: "/board/tab",
-      data: { activeTab: activeTab },
-      async: false,
-      error: function () {
-        alert('통신실패!');
-      },
-      success: function (data) {
-        console.log("success" + data);
-        $('#postlist').html("");
-        $.each(data, function (key, value) {
-          $('#postlist').append(
-            "<tr height='30' class = 'postclick' data-post = '" + value.postID +
-            "' onclick='javascript:clickTrEvent(this)' onmouseover = 'javascript:changeTrColor(this)' >" +
-            "<td width='379'>" + value.postTitle + "</td>" +
-            "<td width='73'>" + value.userName + "</td>" +
-            "<td width='164'>" + value.postRegisterTime + "</td></tr>" +
-            "<td style='visibility:hidden'>" + value.postID + "</td>"
-          );
-        });
-      }
-    });
-  }
-}
