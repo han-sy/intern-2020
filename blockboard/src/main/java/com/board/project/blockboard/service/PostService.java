@@ -18,7 +18,13 @@ public class PostService{
     public void insertPost(PostDTO post) {
         postMapper.insertPost(post);
     }
-    public void deletePost(int postID) { postMapper.deletePostByPostID(postID);}
-    public PostDTO getPostByPostID(int postID) { return postMapper.getPostByPostID(postID); }
-    public void updatePost(PostDTO post) {postMapper.updatePost(post);}
+    public void deletePost(int postID) {
+        postMapper.deletePostByPostID(postID);
+    }
+    public PostDTO selectPostByPostID(int postID) {
+        return postMapper.selectPostByPostID(postID);
+    }
+    public void updatePost(PostDTO post) {
+        postMapper.updatePost(post);
+    }
 }

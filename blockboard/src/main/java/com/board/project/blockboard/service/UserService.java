@@ -20,13 +20,13 @@ public class UserService {
 
     public boolean loginCheck(UserDTO requestUser) {
         // 로그인 요청 사용자의 정보를 가져온다.
-        UserDTO login_user = userMapper.getUserByID(requestUser.getUserID());
+        UserDTO login_user = userMapper.selectUserByID(requestUser.getUserID());
+        String login_userPassword = login_user.getUserPassword();
+        String requestPassword = requestUser.getUserPassword();
 
         // id에 해당하는 유저가 있으면 패스워드 검사
         if(login_user != null) {
-            if(login_user.getUserPassword().equals(requestUser.getUserPassword())) {
-                return true;
-            }
+            return login_userPassword.equals(requestPassword);
         }
         return false;
     }

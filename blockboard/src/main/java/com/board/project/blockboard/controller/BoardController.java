@@ -12,29 +12,33 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.net.URLCodec;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.util.*;
 
 
+@Slf4j
 @Data
 @Controller
-@RequestMapping("/board")
+@RequestMapping("/boards")
 public class BoardController {
 
     @Autowired
@@ -49,10 +53,9 @@ public class BoardController {
     private int companyID;
     AES256Util aes256;
     URLCodec codec;
-    Logger logger = LoggerFactory.getLogger(getClass());
 
-    @RequestMapping("")
-    public String getMainContent(HttpServletRequest request, HttpSession session,Model model) throws UnsupportedEncodingException {
+    @GetMapping("")
+    public String getMainContent(HttpServletRequest request, HttpSession session,Model model) throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
         // 클라이언트의 쿠키를 가져옴
 
         Cookie[] getCookie = request.getCookies();
@@ -61,34 +64,33 @@ public class BoardController {
         String decode = null;
         // 클라이언트가 보낸 쿠키가 서버가 생성해준건지 검사 (복호화 과정)
         if(getCookie != null){
-            for(int i=0; i<getCookie.length; i++){
-                Cookie c = getCookie[i];
-                String name = c.getName();
-                String value = c.getValue();
-                if(name.equals("sessionID")) {
-                    try {
-                        decode = aes256.aesDecode(codec.decode(value));
-                        userID = decode.substring(0, decode.length()-6); // id 자르기
-                        logger.info(decode);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+            for(Cookie c : getCookie) {
+                if (c.getName().equals("sessionID")) {
+                    decode = aes256.aesDecode(codec.decode(c.getValue()));
+                    log.info(decode);
+
+                    // token[0]=userID, token[1]=companyID, token[2]=serverToken
+                    StringTokenizer tokenizer = new StringTokenizer(decode, "#");
+                    userID = tokenizer.nextToken();
+                    companyID = Integer.parseInt(tokenizer.nextToken());
+                    String serverToken = tokenizer.nextToken();
                 }
             }
         }
 
         List<BoardDTO> boardList = boardService.getBoardListByUserID(userID);
 
-        logger.info("userID : "+userID);
-        companyID = boardService.getCompanyIDByUserID(userID);
+        log.info("userID : "+userID);
+        // companyID = boardService.getCompanyIDByUserID(userID);
 
         System.out.println("list: "+boardList.size());
         model.addAttribute("list",boardList); //게시판 목록
+
         model.addAttribute("companyName",boardService.getCompanyNameByUserID(userID));//회사이름
         model.addAttribute("isadmin",boardService.checkAdmin(userID));
 
         System.out.println(model);
-        return "board";
+        return "boards";
     }
 
 
@@ -97,7 +99,7 @@ public class BoardController {
      * @param boardID
      * @return
      */
-    @RequestMapping(value = "/{boardid}/postlist",method = RequestMethod.GET)
+    @GetMapping("/{boardid}/posts")
     @ResponseBody
     public List<Map<String,Object>> getPostListByBoardID(@PathVariable("boardid") int boardID){
 
@@ -132,7 +134,7 @@ public class BoardController {
      * @param postID
      * @return
      */
-    @RequestMapping(value = "/postlist/{postid}",method = RequestMethod.GET)
+    @RequestMapping(value = "/{boardid}/posts/{postid}",method = RequestMethod.GET)
     @ResponseBody
     public Map<String,Object> getPostByPostID(@PathVariable("postid") int postID,HttpServletRequest request) {
 
@@ -151,8 +153,8 @@ public class BoardController {
         System.out.println(post);
 
         Map<String, Object> map = new HashMap<String, Object>();
-        logger.info("userID = " + userID);
-        logger.info("postUserID = " + post.getUserID());
+        log.info("userID = " + userID);
+        log.info("postUserID = " + post.getUserID());
         try {
             // 현재 로그인한 유저와 게시글 작성자가 같을 경우에 'canDelete' 를 true로 전달
             map.put("canDelete", userID.equals(post.getUserID()) ? true : false);
@@ -169,7 +171,7 @@ public class BoardController {
 
         return map;
     }
-    @RequestMapping(value = "/boardlist")
+    @GetMapping(value = "/{boardid}")
     @ResponseBody
     public List<Map<String,Object>> getBoardList(){
 
@@ -284,7 +286,7 @@ public class BoardController {
         ArrayList<Map<String,String>> newBoardListMap = gsonNewBoardList.fromJson(boardDataJson,type); //새로운 데이터
 
         //logger.info("functionInfoList : "+ functionInfoList);
-        logger.info(new GsonBuilder().setPrettyPrinting().create().toJson(newBoardListMap));
+        log.info(new GsonBuilder().setPrettyPrinting().create().toJson(newBoardListMap));
 
 
 
