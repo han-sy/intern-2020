@@ -1,3 +1,6 @@
+document.write("<script src='/static/ckeditor/ckeditor.js'></script>");
+document.write("<script src='/static/ckeditor/adapters/jquery.js'></script>");
+
 function editorAreaCreate() {
   var editorcontent = $('#editorcontent');
   var writecontent = $('#writecontent');
@@ -18,8 +21,28 @@ function editorClear() {
   $('#btn_write').css("display", "");
 }
 
-function postsClear() {
+// 게시글 조회 화면 Clear
+function postClear() {
   $('#postcontent').html("");
+}
+
+// 게시글 목록 화면 Clear
+function postsClear() {
+  $('#postlist').html("");
+}
+
+function getCurrentBoardID() {
+  var tabs = $('#tab_id').children();
+  var boardID = 0;
+
+  $.each(tabs, function() {
+    var color = $(this).css('background-color');
+    if(color == "rgb(144, 238, 144)") {
+      boardID = $(this).attr('data-tab');
+    }
+  });
+
+  return boardID;
 }
 
 // 게시글 작성 버튼 이벤트
@@ -51,14 +74,15 @@ $(document).on("click", "#btn_post", function () {
 
 // 게시글 조회 후 수정 버튼 클릭
 $(document).on("click", "#btn_updatePost", function () {
-    var postID = $("#currentPostID").html();
-    var post_button = $('#btn_post');
-    var post_title = $('#post_title');
-    postsClear(); // 게시글 리스트 Clear
+    var postID = $("#postID").html();
+    var boardID = getCurrentBoardID();
+    postClear(); // 게시글 조회 화면 Clear
 
     if($('#editorcontent').html() == "")    // 게시글 작성 중이 아닐 경우 게시글 작성 폼 불러오기
       editorAreaCreate();
-
+    var post_title = $('#post_title');
+    var editorcontent = $('#editorcontent');
+    var post_button = $('#btn_post');
     post_button.html('수정하기'); // 게시글 올리기 버튼 텍스트 변경
     post_button.attr('id', 'btn_update'); // 버튼 ID 변경 (btn_post -> btn_update)
 
@@ -66,11 +90,11 @@ $(document).on("click", "#btn_updatePost", function () {
     $.ajax({
         type: 'GET',
         url: "/boards/" + boardID + "/posts/" + postID + "/editor",
-        async: false,
         error: function() {
           alert('게시글 수정 실패');
         },
         success: function (data) {
+          editorcontent.append("<a id=postID style=visibility:hidden>" + postID + "</a>");
           post_title.val(data.postTitle); //
           CKEDITOR.instances.editor.setData(data.postContent);
         }
@@ -79,8 +103,8 @@ $(document).on("click", "#btn_updatePost", function () {
 
 
 // 수정한 게시물 서버에 저장할 때 이벤트
-$(document).on("click", "#btn_updatePost", function () {
-  var postID = $("#currentPostID").html();
+$(document).on("click", "#btn_update", function () {
+  var postID = $("#postID").html();
   var postTitle = $('#post_title').val();
   var postContent = CKEDITOR.instances.editor.getData();
   var boardID = $('#post_board_id option:selected').attr('data-tab');
@@ -89,7 +113,6 @@ $(document).on("click", "#btn_updatePost", function () {
   $.ajax({
     type: 'PUT',
     url: "/boards/" + boardID + "/posts/" + postID,
-    async: false,
     data: {postTitle: postTitle,
       postContent: postContent},
     error: function() {
@@ -104,12 +127,12 @@ $(document).on("click", "#btn_updatePost", function () {
 
 // 게시글 조회 후 삭제 버튼 클릭
 $(document).on("click", "#btn_deletePost", function () {
-    var postID = $("#currentPostID").html();
+    var postID = $("#postID").html();
+    var boardID = getCurrentBoardID();
     postsClear();
     $.ajax({
         type: 'DELETE',
         url: "/boards/" + boardID + "/posts/" + postID,
-        async: false,
         error: function() {
           alert('게시글 삭제 실패');
         },
@@ -121,25 +144,17 @@ $(document).on("click", "#btn_deletePost", function () {
 
 // 게시글 작성, 수정, 삭제 시 해당 게시판 refresh 하는 함수
 function refreshPostList() {
-  var tabs = $('#tab_id').children();
-  var boardID = 0;
-
-  $.each(tabs, function() {
-    var color = $(this).css('background-color');
-    if(color == "rgb(144, 238, 144)") {
-      boardID = $(this).attr('data-tab');
-    }
-  });
+  var boardID = getCurrentBoardID();
   
   if(boardID != 0) {
     $.ajax({
       type: 'GET',
       url: '/boards/' + boardID + "/posts",
-      async: false,
       error: function () {
         alert('통신실패!');
       },
       success: function (data) {
+        postClear();
         postsClear();
         $.each(data, function (key, value) {
           $('#postlist').append(

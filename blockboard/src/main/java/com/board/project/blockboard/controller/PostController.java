@@ -61,7 +61,8 @@ public class PostController {
     public Map<String, Object> selectPostByPostID(@PathVariable("postid") int postid) {
         Map<String, Object> map = new HashMap<String, Object>();
         PostDTO getPost = postService.selectPostByPostID(postid);
-
+        log.debug(String.valueOf(postid));
+        log.debug(String.valueOf(getPost.getPostID()));
         // 수정화면 들어갈 때 postID의 정보를 띄워준다.
         map.put("postTitle", getPost.getPostTitle());
         map.put("postContent", getPost.getPostContent());

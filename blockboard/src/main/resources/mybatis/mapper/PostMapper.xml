@@ -4,7 +4,7 @@
 
 <mapper namespace="com.board.project.blockboard.mapper.PostMapper">
     <insert id="insertPost" parameterType="com.board.project.blockboard.dto.PostDTO">
-        INSERT INTO Post(userID, boardID, companyID, postTitle, postContent)
+        INSERT INTO Post(user_id, board_id, company_id, post_title, post_content)
         VALUES (#{userID}, #{boardID}, #{companyID}, #{postTitle}, #{postContent});
     </insert>
 
@@ -14,16 +14,15 @@
     </delete>
 
     <select id="selectPostByPostID" parameterType="int" resultType="com.board.project.blockboard.dto.PostDTO">
-        SELECT  post_id as postID,
-                user_id as userID,
-                user_name as userName,
-                board_id as boardID,
-                company_id as companyID,
-                post_title as postTitle,
-                post_content as postContent,
-                post_register_time as postRegisterTime,
+        SELECT post_id as postID,
+            user_id as userID,
+            board_id as boardID,
+            company_id as companyID,
+            post_title as postTitle,
+            post_content as postContent,
+            post_register_time as postRegisterTime
         FROM Post
-        WHERE post_id=#{postID};
+        WHERE post_id=${postID};
     </select>
 
     <update id="updatePost" parameterType="com.board.project.blockboard.dto.PostDTO">
