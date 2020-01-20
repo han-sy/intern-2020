@@ -15,12 +15,13 @@
   <script src="/static/js/event.js"></script>
   <script src="/static/js/boardEvent.js"></script>
   <script src="/static/js/postsEvent.js"></script>
+  <script src="/static/js/functionEvent.js"></script>
   <script src="/static/ckeditor/ckeditor.js"></script>
   <script src="/static/ckeditor/adapters/jquery.js"></script>
 </head>
 
 <body>
-  <h1>${companyName} 게시판</h1>
+  <h1 id = "serviceTitle" value =${companyID}>${companyName} 게시판</h1>
   <!--게시판 하위에 관리자일 경우 추가되는 버튼 (기능변경, 게시판추가)-->
   <c:if test="${isadmin}">
         <a id ='addFuncBtn'  onclick = "javascript:changeFunction(this)" style ="cursor:pointer">기능 변경</a>
