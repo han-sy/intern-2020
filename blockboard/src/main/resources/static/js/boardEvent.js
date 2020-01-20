@@ -1,8 +1,9 @@
 // 게시판 추가버튼 클릭시
 function clickaddBoardBtn() {
-  $('#config_container').html("<input type='text' name='게시판 이름' id = 'input_board_name' class='addBoard' placeholder='게시판 이름'>");
-  $('#config_container').append("<br>");
-  $('#config_container').append(" <a id ='addFuncBtn' onclick = javascript:clickSaveaddedBoard(this) style=cursor:pointer>저장하기</a>" +
+  var containerObj = $('#config_container');
+  containerObj.html("<input type='text' name='게시판 이름' id = 'input_board_name' class='addBoard' placeholder='게시판 이름'>");
+  containerObj.append("<br>");
+  containerObj.append(" <a id ='addFuncBtn' onclick = javascript:clickSaveaddedBoard(this) style=cursor:pointer>저장하기</a>" +
     "<button class = 'functionClose' type='button' onclick=javascript:clickConfigClose(this)>닫기</button>");
   console.log("111");
 }
@@ -18,11 +19,11 @@ function clickSaveaddedBoard() {
       alert('통신실패!');
     },
     success: function (data) {    //통신 성공시 탭 내용담는 div를 읽어들인 값으로 채운다.
-      $('#tab_id').html("");
+      var tabUlObj = $('#tab_id');
+      tabUlObj.html("");
       $.each(data, function (key, value) {
-        $("#tab_id").append("<li data-tab=" + value.boardID + "  class=tabmenu id=default>" + value.boardName + "</li>");
+        tabUlObj.append("<li data-tab=" + value.boardID + "  class=tabmenu id=default>" + value.boardName + "</li>");
       });
-      $('#config_container').html("");
     }
   });
   $('#config_container').html("");
@@ -37,16 +38,15 @@ function clickDeleteBoardBtn() {
       alert('통신실패!');
     },
     success: function (data) {    //통신 성공시 탭 내용담는 div를 읽어들인 값으로 채운다.
-      console.log("success" + data);
-      $('#config_container').html("");
-      $('#config_container').html("삭제할 게시판을 선택하시오");
+      var containerObj = $('#config_container');
+      containerObj.html("삭제할 게시판을 선택하시오");
       $.each(data, function (key, value) {
         console.log(value.functionInfoData);
-        $('#config_container').append("<div><span>" + value.boardName + "</span><input type=checkbox name=boardDelete value=" +
+        containerObj.append("<div><span>" + value.boardName + "</span><input type=checkbox name=boardDelete value=" +
           value.boardID + "></div>");
 
       });
-      $('#config_container').append(" <a id ='addFuncBtn' onclick = javascript:clickSaveDelteBoard(this) style=cursor:pointer>삭제하기</a>" +
+      containerObj.append(" <a id ='addFuncBtn' onclick = javascript:clickSaveDelteBoard(this) style=cursor:pointer>삭제하기</a>" +
         "<button class = 'functionClose' type='button' onclick=javascript:clickConfigClose(this)>닫기</button>");
     }
   });
@@ -57,11 +57,12 @@ function clickSaveDelteBoard() {
   var boardDataList = new Array();
 
   $("input[name=boardDelete]").each(function () {
-    if ($(this).is(":checked")) {
+    var checkboxObj = $(this);
+    if (checkboxObj.is(":checked")) {
       var boardData = new Object();
-      boardData.boardID = $(this).val();
+      boardData.boardID = checkboxObj.val();
       console.log("boardID:" + boardData.boardID);
-      boardData.boardName = $(this).attr("data-boardName");
+      boardData.boardName = checkboxObj.attr("data-boardName");
       boardDataList.push(boardData);
     }
   });
@@ -78,11 +79,11 @@ function clickSaveDelteBoard() {
         alert('통신실패!');
       },
       success: function (data) {    //통신 성공시 탭 내용담는 div를 읽어들인 값으로 채운다.
-        $('#tab_id').html("");
+        var tabUlObj =$('#tab_id');
+        tabUlObj.html("");
         $.each(data, function (key, value) {
-          $("#tab_id").append("<li data-tab=" + value.boardID + "  class=tabmenu id=default>" + value.boardName + "</li>");
+          tabUlObj.append("<li data-tab=" + value.boardID + "  class=tabmenu id=default>" + value.boardName + "</li>");
         });
-        $('#config_container').html("");
       }
     });
     $('#config_container').html("");
@@ -98,12 +99,13 @@ function clickchangeBoardBtn() {
       alert('통신실패!');
     },
     success: function (data) {    //통신 성공시 탭 내용담는 div를 읽어들인 값으로 채운다.
-      $('#config_container').html("");
+      var containerObj = $('#config_container')
+      containerObj.html("");
       $.each(data, function (key, value) {
-        $('#config_container').append("<div class=boardInfo id=board" + value.boardID + "><input type=text name =boardname data-boardid=" + value.boardID + " data-oldname=" + value.boardName + " value=" + value.boardName + " >" +
+        containerObj.append("<div class=boardInfo id=board" + value.boardID + "><input type=text name =boardname data-boardid=" + value.boardID + " data-oldname=" + value.boardName + " value=" + value.boardName + " >" +
           " <span class =deleteBoard data-board =board" + value.boardID + " > 기존 게시판 이름 : " + value.boardName + "</span></div>");
       });
-      $('#config_container').append(" <br><a id ='addFuncBtn' onclick = javascript:clickSaveChangeBoard(this) style=cursor:pointer>변경하기</a>" +
+      containerObj.append(" <br><a id ='addFuncBtn' onclick = javascript:clickSaveChangeBoard(this) style=cursor:pointer>변경하기</a>" +
         "<button class = 'functionClose' type='button' onclick=javascript:clickConfigClose(this)>닫기</button>");
     }
   });
@@ -140,7 +142,8 @@ function clickSaveChangeBoard() {
         alert('통신실패!');
       },
       success: function (data) {    //통신 성공시 탭 내용담는 div를 읽어들인 값으로 채운다.
-        $('#tab_id').html("");
+        var tabUlObj =$('#tab_id');
+        tabUlObj.html("");
         $.each(data, function (key, value) {
           $("#tab_id").append("<li data-tab=" + value.boardID + "  class=tabmenu id=default>" + value.boardName + "</li>");
         });

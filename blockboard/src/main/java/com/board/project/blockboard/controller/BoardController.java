@@ -60,6 +60,7 @@ public class BoardController {
         model.addAttribute("boardList",boardList); //게시판 목록
         model.addAttribute("companyName",boardService.getCompanyNameByUserID(userID));//회사이름
         model.addAttribute("isadmin",boardService.checkAdmin(userID));
+        model.addAttribute("companyID",companyID);
 
         return "boards";
     }
@@ -77,13 +78,13 @@ public class BoardController {
     }
 
     /**
-     *
+     * 게시물 조회
      * @param postID
      * @param request
      * @return PostDTO + 유저일치여부 로 구성된 map
      * @throws Exception
      */
-    @RequestMapping(value = "/{boardid}/posts/{postid}",method = RequestMethod.GET)
+    @GetMapping(value = "/{boardid}/posts/{postid}")
     @ResponseBody
     public Map<String,Object> getPostByPostID(@PathVariable("postid") int postID, HttpServletRequest request) throws Exception{
         SessionTokenizer session = new SessionTokenizer(request);
@@ -133,8 +134,14 @@ public class BoardController {
         return newBoardList;
     }
 
-
-    @RequestMapping(value = "/newtitle",method = RequestMethod.POST)
+    /**
+     * 게시판 이름 변경
+     * @param newTItleList 이름이 변경된 리스트
+     * @param request
+     * @return
+     * @throws Exception
+     */
+    @PostMapping(value = "/newtitle")
     @ResponseBody
     public List<BoardDTO>  changeNewBoardName(@RequestParam("newTItles") String newTItleList, HttpServletRequest request) throws Exception {
         SessionTokenizer session = new SessionTokenizer(request);
@@ -146,6 +153,13 @@ public class BoardController {
         return newBoardList;
     }
 
+    /**
+     * 게시판 삭제
+     * @param deleteBoards 삭제리스트
+     * @param request
+     * @return
+     * @throws Exception
+     */
     @DeleteMapping(value = "/list")
     @ResponseBody
     public List<BoardDTO> deleteBoardbyBoardID(@RequestParam("deleteList") String deleteBoards, HttpServletRequest request) throws Exception {

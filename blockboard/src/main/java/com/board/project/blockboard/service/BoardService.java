@@ -100,7 +100,6 @@ public class BoardService {
             deleteAllPostInBoard(boardIDInteger);
             deleteBoard(boardIDInteger);
         }
-
     }
 
     public Map<String, Object> getPostDataAboutSelected(int postID, String userID) {
@@ -117,7 +116,6 @@ public class BoardService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return postMapData;
     }
 
