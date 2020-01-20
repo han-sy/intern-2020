@@ -33,7 +33,6 @@ import java.util.*;
 
 
 @Slf4j
-@Data
 @Controller
 @RequestMapping("/boards")
 public class BoardController {
@@ -141,45 +140,37 @@ public class BoardController {
      * @return
      * @throws Exception
      */
-    //TODO map -> DTO로 수정
     @GetMapping(value = "/{boardid}")
     @ResponseBody
     public List<BoardDTO> getBoardList(HttpServletRequest request) throws Exception {
         SessionTokenizer session = new SessionTokenizer(request);
-
         int companyID = session.getCompanyID();
 
+        //게시판 목록
         List<BoardDTO> boardList = boardService.getBoardListByCompanyID(companyID); // select로 받아오기
-
         return boardList;
     }
 
-    /**
-     * 추가할 boardname 받아오고 삽입후 추가한 boardid와 boardname 리턴
-     * @param newBoardName
-     * @return
-     */
-    //FIXME 작동안됨
+
+
+    //FIXME 게시판 추가
     @PostMapping(value = "/{boardname}/newboard")
     @ResponseBody
-    public List<Map<String,Object>> insertNewBoard(@PathVariable("boardName") String newBoardName, HttpServletRequest request) throws Exception {
+    public List<BoardDTO> insertNewBoard(@PathVariable("boardname") String newBoardName, HttpServletRequest request) throws Exception {
         SessionTokenizer session = new SessionTokenizer(request);
-
-        String userID = session.getUserID();
         int companyID = session.getCompanyID();
 
-        boardService.insertNewBoard(newBoardName,companyID);
+        log.info("newBoardName"+newBoardName);
+        //게시판 삽입
+        boardService.insertNewBoard(newBoardName, companyID);
 
         //insert후 새로운 게시판목록
-        //return getBoardList();
-        return null; //TODO getBoardLIst()로 수정
+        List<BoardDTO> newBoardList = boardService.getBoardListByCompanyID(companyID);
+        return newBoardList;
     }
 
 
-    /**
-     *
-     * @return 고객사별 기능사용정보
-     */
+
     @RequestMapping(value = "/function-info")
     @ResponseBody
     public List<Map<String,Object>> getFunctionInfo(HttpServletRequest request) throws NoSuchPaddingException, BadPaddingException, InvalidKeyException, UnsupportedEncodingException, IllegalBlockSizeException, DecoderException, NoSuchAlgorithmException, InvalidAlgorithmParameterException {
@@ -207,11 +198,7 @@ public class BoardController {
     }
 
 
-    /**
-     *
-     * @param functionDataJson
-     * @return sql문 진행에 이상없으면 //TODO 현재는 에러가 안뜰시 true를 반환하는데 안전을 위해 값비교후 반환해도 될것같다.
-     */
+
     @RequestMapping(value = "/function-change",method = RequestMethod.POST)
     @ResponseBody
     public Boolean insertNewFunctionData(@RequestParam("functionInfoData") String functionDataJson, HttpServletRequest request) throws NoSuchPaddingException, BadPaddingException, InvalidKeyException, UnsupportedEncodingException, IllegalBlockSizeException, DecoderException, NoSuchAlgorithmException, InvalidAlgorithmParameterException {
@@ -248,11 +235,7 @@ public class BoardController {
         return true;
     }
 
-    /**
-     *  게시판 이름 수정
-     * @param boardDataJson
-     * @return
-     */
+
     @RequestMapping(value = "/changed/boardname",method = RequestMethod.POST)
     @ResponseBody
     public List<Map<String,Object>>  changeNewBoardName(@RequestParam("boardData") String boardDataJson, HttpServletRequest request) throws NoSuchPaddingException, BadPaddingException, InvalidKeyException, UnsupportedEncodingException, IllegalBlockSizeException, DecoderException, NoSuchAlgorithmException, InvalidAlgorithmParameterException {
