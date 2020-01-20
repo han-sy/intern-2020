@@ -25,7 +25,7 @@ create table Users(
 
 create table BoardFunction(
 	function_id int(9) not null AUTO_INCREMENT,
-    functionName varchar(150) not null,
+    function_name varchar(150) not null,
     primary key(function_id)
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
@@ -109,7 +109,7 @@ insert into Post values (4,2,1,1,'공지사항 게시판 ','ㅎㅎㅎㅎ테스�
 insert into Post values (5,1,5,1,'자유1','1111',now());
 insert into Post values (6,1,5,1,'자유2','22222',now());
 
-Select boardfunction.function_id,ifnull(functioncheck.company_id,0), boardfunction.functionName, functioncheck.function_data
+Select boardfunction.function_id,ifnull(functioncheck.company_id,0), boardfunction.function_name, functioncheck.function_data
 FROM BoardFunction boardfunction LEFT OUTER JOIN FunctionCheck functioncheck
 ON boardfunction.function_id = functioncheck.function_id and functioncheck.company_id = 2;
 
@@ -119,4 +119,6 @@ SELECT p.post_id,p.user_id, u.user_name,p.board_id,p.company_id,p.post_title,p.p
         FROM Post p , Users u
         WHERE p.user_id = u.user_id and p.board_id=1
         ORDER BY p.post_id DESC;
+        
+
 
