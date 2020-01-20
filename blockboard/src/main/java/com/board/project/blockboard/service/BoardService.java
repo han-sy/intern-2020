@@ -3,11 +3,14 @@ package com.board.project.blockboard.service;
 import com.board.project.blockboard.dto.BoardDTO;
 import com.board.project.blockboard.dto.PostDTO;
 import com.board.project.blockboard.mapper.BoardMapper;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -80,6 +83,41 @@ public class BoardService {
 
     public void deleteAllCommentInBoard(int boardID) {
         boardMapper.deleteAllCommentInBoard(boardID);
+    }
+
+    public void deleteBoardsByDeleteBoardList(int companyID, String deleteBoardListJson) {
+
+        //ajax를 통해 넘어온 json 형식의 string을 map 타입으로 변경
+        Gson gson = new Gson();
+        Type type = new TypeToken<ArrayList<Map<String, String>>>() {}.getType();
+        ArrayList<Map<String,String>> deleteBoardListMap = gson.fromJson(deleteBoardListJson,type); //새로운 데이터
+
+        for(int i=0;i<deleteBoardListMap.size();i++){ //삭제목록 조회
+            //logger.info("boardIDInteger : "+deleteBoardListMap.get(i).get("boardID"));
+            int boardIDInteger = Integer.parseInt(deleteBoardListMap.get(i).get("boardID"));
+            deleteAllCommentInBoard(boardIDInteger);
+            deleteAllPostInBoard(boardIDInteger);
+            deleteBoard(boardIDInteger);
+        }
+
+    }
+
+    public Map<String, Object> getPostDataAboutSelected(int postID, String userID) {
+        Map<String, Object> postMapData = new HashMap<String, Object>();
+        PostDTO postData = getPostByPostID(postID);
+        try {
+            // 현재 로그인한 유저와 게시글 작성자가 같을 경우에 'canDelete' 를 true로 전달
+            postMapData.put("canDelete", userID.equals(postData.getUserID()) ? true : false);
+            postMapData.put("postID", postID);
+            postMapData.put("postTitle", postData.getPostTitle());
+            postMapData.put("postContent", postData.getPostContent());
+            postMapData.put("userName", postData.getUserName());
+            postMapData.put("postRegisterTime", postData.getPostRegisterTime());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return postMapData;
     }
 }
 
