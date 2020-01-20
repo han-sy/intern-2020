@@ -10,9 +10,7 @@ import org.apache.commons.codec.net.URLCodec;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
@@ -35,13 +33,12 @@ public class UserController {
     private String key = "slgi3ibu5phi8euf";
     private String token = "server";
 
-    @RequestMapping("/loginCheck")
+    @PostMapping("/")
     public String loginCheck(@ModelAttribute UserDTO requestUser, HttpServletResponse response) throws UnsupportedEncodingException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException, EncoderException {
-        boolean result = userService.loginCheck(requestUser);
-        log.info(requestUser.getUserID() + requestUser.getUserPassword());
 
+        boolean user_Exist = userService.loginCheck(requestUser);
 
-        if(result) {
+        if(user_Exist) {
             // 암호화 과정
             AES256Util aes256 = new AES256Util(key);
             URLCodec codec = new URLCodec();
@@ -62,7 +59,7 @@ public class UserController {
         return "redirect:/";
     }
 
-    @RequestMapping(value = "/logout", method = RequestMethod.GET)
+    @GetMapping("/logout")
     public String logout(HttpServletResponse response) {
         // s_id 쿠키 새로 생성해서 시간 0으로 설정
         Cookie kc = new Cookie("sessionID", null);
@@ -71,7 +68,7 @@ public class UserController {
         return "redirect:/";
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @GetMapping("/")
     public String login(HttpServletRequest request) throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
         Cookie[] getCookie = request.getCookies();
         AES256Util aes256 = new AES256Util(key);
@@ -92,7 +89,7 @@ public class UserController {
 
                     // serverToken 검사해서 맞으면 board로 return
                     if(serverToken.equals(token)) {
-                        return "redirect:/board";
+                        return "redirect:/boards";
                     }
                 }
             }

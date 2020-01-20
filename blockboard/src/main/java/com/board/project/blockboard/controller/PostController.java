@@ -35,9 +35,9 @@ public class PostController {
 
     private String key = "slgi3ibu5phi8euf";
 
-    @PostMapping(value = "/insert")
+    @PostMapping("/")
     @ResponseBody
-    public void insertPost(@ModelAttribute PostDTO receivePost, HttpServletRequest request) throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
+    public void insertPost(@PathVariable("boardID") int boardID, @ModelAttribute PostDTO receivePost, HttpServletRequest request) throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
         Cookie[] cookies = request.getCookies();
         AES256Util aes256 = new AES256Util(key);
         URLCodec codec = new URLCodec();
@@ -60,28 +60,33 @@ public class PostController {
         }
         receivePost.setUserID(userID);
         receivePost.setCompanyID(companyID);
+        receivePost.setBoardID(boardID);
         postService.insertPost(receivePost);
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping("/{postID}")
     @ResponseBody
-    public void deletePost(@RequestParam String postID) {
-        postService.deletePost(Integer.parseInt(postID));
+    public void deletePost(@PathVariable("postID") int postID) {
+        postService.deletePost(postID);
     }
 
     @GetMapping("/{postID}")
     @ResponseBody
-    public Map<String, Object> getPostByPostID(@PathVariable("postID") int postID) {
+    public Map<String, Object> selectPostByPostID(@PathVariable("postID") int postID) {
         Map<String, Object> map = new HashMap<String, Object>();
-        PostDTO getPost = new PostDTO(postService.getPostByPostID(postID));
+        PostDTO getPost = postService.selectPostByPostID(postID);
+
+        // 수정화면 들어갈 때 postID의 정보를 띄워준다.
         map.put("postTitle", getPost.getPostTitle());
         map.put("postContent", getPost.getPostContent());
         return map;
     }
 
-    @PutMapping("/update")
+    @PutMapping("/{postID}")
     @ResponseBody
-    public void updatePost(@ModelAttribute PostDTO requestPost) {
+    public void updatePost(@PathVariable("boardID") int boardID, @PathVariable("postID") int postID, @ModelAttribute PostDTO requestPost) {
+        requestPost.setPostID(postID);
+        requestPost.setBoardID(boardID);
         postService.updatePost(requestPost);
     }
 }

@@ -13,8 +13,8 @@
         WHERE postID=#{postID};
     </delete>
 
-    <select id="getPostByPostID" parameterType="int" resultType="com.board.project.blockboard.dto.PostDTO">
-        SELECT *
+    <select id="selectPostByPostID" parameterType="int" resultType="com.board.project.blockboard.dto.PostDTO">
+        SELECT postID, userID, boardID, companyID, postTitle, postContent, postRegisterTime
         FROM Post
         WHERE postID=#{postID};
     </select>
