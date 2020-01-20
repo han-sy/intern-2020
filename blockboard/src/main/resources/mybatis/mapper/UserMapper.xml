@@ -4,14 +4,18 @@
 
 <mapper namespace="com.board.project.blockboard.mapper.UserMapper">
     <select id="getUserByID" parameterType="string" resultType="com.board.project.blockboard.dto.UserDTO">
-        SELECT *
+        SELECT user_id as userID,
+                company_id as companyID,
+                user_name as userName,
+                user_password as userPassword,
+                user_type as userType
         FROM Users
-        WHERE userID=#{userID};
+        WHERE user_id=#{userID};
     </select>
 
     <select id="selectCompanyIDByUserID" parameterType="string" resultType="int">
-        SELECT companyID
+        SELECT company_id
         FROM Users users
-        WHERE users.userID = #{userID};
+        WHERE users.user_id = #{userID};
     </select>
 </mapper>

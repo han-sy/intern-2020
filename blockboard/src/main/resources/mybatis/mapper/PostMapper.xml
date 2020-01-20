@@ -10,18 +10,25 @@
 
     <delete id="deletePostByPostID" parameterType="int">
         DELETE FROM Post
-        WHERE postID=#{postID};
+        WHERE post_id=#{postID};
     </delete>
 
     <select id="getPostByPostID" parameterType="int" resultType="com.board.project.blockboard.dto.PostDTO">
-        SELECT *
+        SELECT  post_id as postID,
+                user_id as userID,
+                user_name as userName,
+                board_id as boardID,
+                company_id as companyID,
+                post_title as postTitle,
+                post_content as postContent,
+                post_register_time as postRegisterTime,
         FROM Post
-        WHERE postID=#{postID};
+        WHERE post_id=#{postID};
     </select>
 
     <update id="updatePost" parameterType="com.board.project.blockboard.dto.PostDTO">
         UPDATE Post
-        SET postTitle=#{postTitle}, postContent=#{postContent}, boardID=#{boardID}
-        WHERE postID=#{postID};
+        SET post_title=#{postTitle}, post_content=#{postContent}, board_id=#{boardID}
+        WHERE post_id=#{postID};
     </update>
 </mapper>

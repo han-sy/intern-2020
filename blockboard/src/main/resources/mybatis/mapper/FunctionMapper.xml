@@ -5,13 +5,14 @@
 <mapper namespace="com.board.project.blockboard.mapper.FunctionMapper">
 
     <select id="selectFunctionCheckByCompanyID" parameterType="int" resultType="com.board.project.blockboard.dto.FunctionDTO">
-        SELECT  boardfunction.functionID,
-                ifnull(functioncheck.companyID,0) as companyID,
-                boardfunction.functionName,
-                functioncheck.functionData
+        SELECT  boardfunction.function_id as functionID,
+                ifnull(functioncheck.company_id,0) as companyID,
+                boardfunction.function_name as functionName,
+                functioncheck.function_data as functionData
         FROM BoardFunction boardfunction
         LEFT OUTER JOIN FunctionCheck functioncheck
-        ON boardfunction.functionID = functioncheck.functionID AND functioncheck.companyID = #{companyID};
+        ON boardfunction.function_id = functioncheck.function_id
+        AND functioncheck.company_id = #{companyID};
     </select>
 
     <insert id="insertFunctionCheckData" parameterType="hashmap">
@@ -21,6 +22,7 @@
 
     <delete id="deleteFunctionCheckData" parameterType="hashmap">
         DELETE FROM FunctionCheck
-        WHERE companyID = #{companyID} AND functionID = #{functionID};
+        WHERE companyID = #{companyID}
+        AND functionID = #{functionID};
     </delete>
 </mapper>
