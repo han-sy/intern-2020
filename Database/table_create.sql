@@ -8,71 +8,71 @@ drop table Board;
 drop table Company;
 
 create table Company(
-	companyID int(9) not null,
-    companyName varchar(20) not null,
-    primary key(companyID)
+	company_id int(9) not null,
+    company_name varchar(20) not null,
+    primary key(company_id)
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
 create table Users(
-	userID varchar(20) not null,
-    companyID int(9) not null,
-    userName varchar(30) not null,
-    userPassword varchar(100) not null,
-    userType varchar(20) not null,
-    foreign key(companyID) references Company(companyID),
-    primary key(userID,companyID)
+	user_id varchar(20) not null,
+    company_id int(9) not null,
+    user_name varchar(30) not null,
+    user_password varchar(100) not null,
+    user_type varchar(20) not null,
+    foreign key(company_id) references Company(company_id),
+    primary key(user_id,company_id)
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
 create table BoardFunction(
-	functionID int(9) not null AUTO_INCREMENT,
+	function_id int(9) not null AUTO_INCREMENT,
     functionName varchar(150) not null,
-    primary key(functionID)
+    primary key(function_id)
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
 create table FunctionCheck(
-	companyID int(9) not null,
-    functionID int(9) not null,
-    functionData varchar(300),
-    foreign key(companyID) references Company(companyID),
-    foreign key(functionID) references BoardFunction(functionID),
-    primary key(companyID,functionID)
+	company_id int(9) not null,
+    function_id int(9) not null,
+    function_data varchar(300),
+    foreign key(company_id) references Company(company_id),
+    foreign key(function_id) references BoardFunction(function_id),
+    primary key(company_id,function_id)
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
 create table Board(
-	boardID int(9) not null AUTO_INCREMENT,
-    companyID int(9) not null,
-    boardName varchar(150) not null,
-	foreign key(companyID) references Company(companyID),
-    primary key(boardID)
+	board_id int(9) not null AUTO_INCREMENT,
+    company_id int(9) not null,
+    board_name varchar(150) not null,
+	foreign key(company_id) references Company(company_id),
+    primary key(board_id)
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
 create table Post(
-	postID int(9) not null AUTO_INCREMENT,
-    userID varchar(20) not null,
-    boardID int(9) not null,
-    companyID int(9) not null,
-    postTitle varchar(150) not null,
-    postContent varchar(4000) not null,
-    postRegisterTime timestamp not null,
-	foreign key(userID) references Users(userID),
-	foreign key(boardID) references Board(boardID),
-	foreign key(companyID) references Company(companyID),
-	primary key(postID)
+	post_id int(9) not null AUTO_INCREMENT,
+    user_id varchar(20) not null,
+    board_id int(9) not null,
+    company_id int(9) not null,
+    post_title varchar(150) not null,
+    post_content varchar(10000) not null,
+    post_register_time timestamp not null,
+	foreign key(user_id) references Users(user_id),
+	foreign key(board_id) references Board(board_id),
+	foreign key(company_id) references Company(company_id),
+	primary key(post_id)
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
 create table Comments(
-	commentID int(9) not null AUTO_INCREMENT,
-    boardID int(9) not null,
-	postID int(9) not null,
-	userID varchar(20) not null,
-	companyID int(9) not null,
-	foreign key(postID) references Post(postID),
-	foreign key(userID) references Users(userID),
-	foreign key(companyID) references Company(companyID),
-    commentContent varchar(4000) not null,
-    commentRegisterTime timestamp not null,
-    commentReferencedID int(9),
-    primary key(commentID,boardID)
+	comment_id int(9) not null AUTO_INCREMENT,
+    board_id int(9) not null,
+	post_id int(9) not null,
+	user_id varchar(20) not null,
+	company_id int(9) not null,
+	foreign key(post_id) references Post(post_id),
+	foreign key(user_id) references Users(user_id),
+	foreign key(company_id) references Company(company_id),
+    comment_content varchar(4000) not null,
+    comment_register_time timestamp not null,
+    comment_referenced_ID int(9),
+    primary key(comment_id,board_id)
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
 insert into Company values(1,'wm');
@@ -109,15 +109,15 @@ insert into Post values (4,2,1,1,'공지사항 게시판 ','ㅎㅎㅎㅎ테스�
 insert into Post values (5,1,5,1,'자유1','1111',now());
 insert into Post values (6,1,5,1,'자유2','22222',now());
 
-Select boardfunction.functionID,ifnull(functioncheck.companyID,0), boardfunction.functionName, functioncheck.functionData
+Select boardfunction.function_id,ifnull(functioncheck.company_id,0), boardfunction.functionName, functioncheck.function_data
 FROM BoardFunction boardfunction LEFT OUTER JOIN FunctionCheck functioncheck
-ON boardfunction.functionID = functioncheck.functionID and functioncheck.companyID = 2;
+ON boardfunction.function_id = functioncheck.function_id and functioncheck.company_id = 2;
 
 
-update Board set boardName ="공지사항" where boardID=1;
-SELECT p.postID,p.userID, u.userName,p.boardID,p.companyID,p.postTitle,p.postContent,p.postRegisterTime
+update Board set board_name ="공지사항" where board_id=1;
+SELECT p.post_id,p.user_id, u.user_name,p.board_id,p.company_id,p.post_title,p.post_content,p.post_register_time
         FROM Post p , Users u
-        WHERE p.userID = u.userID and p.boardID=1
-        ORDER BY p.postID DESC;
+        WHERE p.user_id = u.user_id and p.board_id=1
+        ORDER BY p.post_id DESC;
         
         
