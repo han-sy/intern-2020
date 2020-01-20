@@ -33,7 +33,6 @@ import java.util.*;
 
 
 @Slf4j
-@Data
 @Controller
 @RequestMapping("/boards")
 public class BoardController {
