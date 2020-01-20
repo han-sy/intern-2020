@@ -10,7 +10,7 @@ import java.util.Map;
 @Repository
 @Mapper
 public interface PostMapper {
-    void insertPost(PostDTO post);
+    int insertPost(PostDTO post);
     void deletePostByPostID(int postID);
     PostDTO selectPostByPostID(int postID);
     void updatePost(PostDTO post);

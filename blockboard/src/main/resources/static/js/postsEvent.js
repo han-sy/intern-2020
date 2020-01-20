@@ -55,21 +55,29 @@ $(document).on("click", "#btn_post", function () {
   var postTitle = $('#post_title').val();
   var postContent = CKEDITOR.instances.editor.getData();
   var boardID = $('#post_board_id option:selected').attr('data-tab');
-
-  editorClear();
-  $.ajax({
-    type: 'POST',
-    url: "/boards/" + boardID + "/posts/",
-    data: {postTitle: postTitle,
-          postContent: postContent},
-    error: function() {
-      alert('게시글 작성 실패');
-    },
-    success: function() {
-      refreshPostList();
-      console.log("게시글 저장 완료");
+  if(postTitle == "") {
+    alert("게시글 제목을 입력해주세요."); 
+  } else {
+    if(postContent == "") {
+        alert("게시글 내용을 입력해주세요.")
     }
-  });
+    else {
+        editorClear();
+        $.ajax({
+          type: 'POST',
+          url: "/boards/" + boardID + "/posts/",
+          data: {postTitle: postTitle,
+                postContent: postContent},
+          error: function(data) {
+            console.log("Error");
+          },
+          success: function() {
+            refreshPostList();
+            console.log("Success!!");
+          }
+        });
+    }
+  }
 });
 
 // 게시글 조회 후 수정 버튼 클릭

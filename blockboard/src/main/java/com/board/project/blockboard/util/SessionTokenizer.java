@@ -1,6 +1,7 @@
 package com.board.project.blockboard.util;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.net.URLCodec;
 
@@ -16,6 +17,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.StringTokenizer;
 
 @Data
+@NoArgsConstructor
 public class SessionTokenizer {
     private String userID;
     private int companyID;
