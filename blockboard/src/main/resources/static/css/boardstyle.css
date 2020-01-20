@@ -44,7 +44,5 @@
       padding: 14px 16px;
       font-size: 17px;
     }
-    .toggleBG{background: #CCCCCC; width: 35px; height: 15px; border: 1px solid #CCCCCC; border-radius: 15px;}
-    .toggleFG{background: #FFFFFF; width: 15px; height: 15px; border: none; border-radius: 15px; position: relative;}
 
   </style>

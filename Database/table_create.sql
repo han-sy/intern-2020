@@ -24,8 +24,8 @@ create table Users(
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
 create table BoardFunction(
-	functionID int(9) not null,
-    function_name varchar(150) not null,
+	functionID int(9) not null AUTO_INCREMENT,
+    functionName varchar(150) not null,
     primary key(functionID)
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
@@ -39,7 +39,7 @@ create table FunctionCheck(
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
 create table Board(
-	boardID int(9) not null,
+	boardID int(9) not null AUTO_INCREMENT,
     companyID int(9) not null,
     boardName varchar(150) not null,
 	foreign key(companyID) references Company(companyID),
@@ -47,21 +47,22 @@ create table Board(
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
 create table Post(
-	postID int(9) not null,
+	postID int(9) not null AUTO_INCREMENT,
     userID varchar(20) not null,
     boardID int(9) not null,
     companyID int(9) not null,
     postTitle varchar(150) not null,
     postContent varchar(4000) not null,
-    postRegisterTime datetime not null,
+    postRegisterTime timestamp not null,
 	foreign key(userID) references Users(userID),
 	foreign key(boardID) references Board(boardID),
 	foreign key(companyID) references Company(companyID),
-	primary key(postID) 
+	primary key(postID)
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
 create table Comments(
-	commentID int(9) not null,
+	commentID int(9) not null AUTO_INCREMENT,
+    boardID int(9) not null,
 	postID int(9) not null,
 	userID varchar(20) not null,
 	companyID int(9) not null,
@@ -69,12 +70,12 @@ create table Comments(
 	foreign key(userID) references Users(userID),
 	foreign key(companyID) references Company(companyID),
     commentContent varchar(4000) not null,
-    commentRegisterTime datetime not null,
+    commentRegisterTime timestamp not null,
     commentReferencedID int(9),
-    primary key(commentID)
+    primary key(commentID,boardID)
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
-insert into Company values(1,'wm'); 
+insert into Company values(1,'wm');
 insert into Company values(2,'naver');
 insert into Board values(1,1,"공지사항");
 insert into Board values(2,1,"건의사항");
@@ -85,22 +86,38 @@ insert into Board values(5,1,"자유게시판");
 insert into Users values(1,1,'김동욱','123','관리자');
 insert into Users values(2,1,'전우혁','123','사원');
 insert into Users values(3,2,'곽대훈','123','관리자');
-insert into BoardFunction values(1,'댓글작성');
+insert into BoardFunction values(1,'댓글');
+insert into BoardFunction values(2,'대댓글');
+insert into BoardFunction values(3,'파일첨부');
+insert into BoardFunction values(4,'inline 이미지');
+insert into BoardFunction values(5,'임시저장');
+insert into BoardFunction values(6,'스티커');
 insert into FunctionCheck values(1,1,null);
+insert into FunctionCheck values(2,4,null);
 insert into Post values(1,1,1,1,'첫게시글','첫내용',now());
-insert into Comments values(1,1,1,1,'첫 댓글',now(),null);
-insert into Comments values(2,1,1,1,'첫 답글',now(),1);
+insert into Comments values(1,1,1,1,1,'첫 댓글',now(),null);
+insert into Comments values(2,1,1,1,1,'첫 답글',now(),1);
 
 Select * from Post;
 select * from Users;
+select * from FunctionCheck;
+select * from Board;
+
 insert into Post values (2,1,1,1,'두번째 게시글','두번째 게시글내용',now());
 insert into Post values (3,2,1,1,'건의사항 게시판 첫글','공지사항이네',now());
 insert into Post values (4,2,1,1,'공지사항 게시판 ','ㅎㅎㅎㅎ테스트',now());
 insert into Post values (5,1,5,1,'자유1','1111',now());
 insert into Post values (6,1,5,1,'자유2','22222',now());
- 
 
+Select boardfunction.functionID,ifnull(functioncheck.companyID,0), boardfunction.functionName, functioncheck.functionData
+FROM BoardFunction boardfunction LEFT OUTER JOIN FunctionCheck functioncheck
+ON boardfunction.functionID = functioncheck.functionID and functioncheck.companyID = 2;
+
+
+update Board set boardName ="공지사항" where boardID=1;
 SELECT p.postID,p.userID, u.userName,p.boardID,p.companyID,p.postTitle,p.postContent,p.postRegisterTime
         FROM Post p , Users u
         WHERE p.userID = u.userID and p.boardID=1
         ORDER BY p.postID DESC;
+        
+        

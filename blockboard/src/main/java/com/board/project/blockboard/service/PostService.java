@@ -15,9 +15,6 @@ public class PostService{
     @Autowired
     private BoardMapper boardMapper;
 
-    public int getBoardIDByComIDAndBoardName(Map<String, Object> map) {
-        return boardMapper.selectBoardIDByComIDAndBoardName(map);
-    }
     public void insertPost(PostDTO post) {
         postMapper.insertPost(post);
     }

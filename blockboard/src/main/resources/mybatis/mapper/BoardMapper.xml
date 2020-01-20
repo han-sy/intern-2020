@@ -11,12 +11,12 @@
         from Company company, Users user
         where company.companyID=user.companyID and user.userID = #{userID};
     </select>
-    <select id="selectCompanyIDByUserID" parameterType="string" resultType="string">
+    <select id="selectCompanyIDByUserID" parameterType="string" resultType="int">
         Select company.companyID
         from Company company, Users user
         where company.companyID=user.companyID and user.userID = #{userID};
     </select>
-    <select id="selectBoardByCompanyID" parameterType="string" resultType="com.board.project.blockboard.dto.BoardDTO">
+    <select id="selectBoardByCompanyID" parameterType="int" resultType="com.board.project.blockboard.dto.BoardDTO">
         SELECT *
         FROM Board
         WHERE companyID=#{companyID};
@@ -28,7 +28,7 @@
     </select>
 
     <!--추후에 디비 수정후 쿼리 변경해야됨-->
-    <select id="selectPostByBoardID" parameterType="string" resultType="com.board.project.blockboard.dto.PostDTO">
+    <select id="selectPostByBoardID" parameterType="int" resultType="com.board.project.blockboard.dto.PostDTO">
         SELECT post.postID,post.userID, user.userName,post.boardID,post.companyID,post.postTitle,post.postContent,post.postRegisterTime
         FROM Post post, Users user
         WHERE post.userID = user.userID and post.boardID=#{boardID}
@@ -36,7 +36,7 @@
     </select>
 
     <!--게시글 id로 게시글반환-->
-    <select id="selectPostByPostID" parameterType="string" resultType="com.board.project.blockboard.dto.PostDTO">
+    <select id="selectPostByPostID" parameterType="int" resultType="com.board.project.blockboard.dto.PostDTO">
         SELECT post.postID,post.userID, user.userName,post.boardID,post.companyID,post.postTitle,post.postContent,post.postRegisterTime
         FROM Post post, Users user
         WHERE post.userID = user.userID and post.postID=#{postID}
@@ -64,5 +64,19 @@
         FROM Board
         WHERE companyID=#{companyID} AND boardName=#{boardName};
     </select>
+    <update id = "updateBoardName" parameterType="hashmap">
+        update Board set boardName =#{boardName} where boardID=#{boardID};
+    </update>
+
+    <delete id="deleteAllPostInBoard" parameterType="int">
+        delete from Post where boardID = #{boardID};
+    </delete>
+
+    <delete id="deleteBoard" parameterType="int">
+        delete from Board where boardID = #{boardID};
+    </delete>
+    <delete id="deleteAllCommentInBoard" parameterType="int">
+        delete from Comments where boardID = #{boardID};
+    </delete>
 
 </mapper>

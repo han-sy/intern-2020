@@ -12,15 +12,18 @@ import java.util.Map;
 @Mapper
 public interface BoardMapper {
     List<BoardDTO> selectAllBoard();
-    List<BoardDTO> selectBoardByCompanyID(String companyID);
-    List<PostDTO> selectPostByBoardID(String boardID);
-    PostDTO selectPostByPostID(String postID);
-    String selectCompanyIDByUserID(String userID);
+    List<BoardDTO> selectBoardByCompanyID(int companyID);
+    List<PostDTO> selectPostByBoardID(int boardID);
+    PostDTO selectPostByPostID(int postID);
+    int selectCompanyIDByUserID(String userID);
     String selectCompanyNameByUserID(String userID);
     String selectUserTypeByUserID(String userID);
     int maxBoardID();
     void insertBoard(BoardDTO newBoard);
     BoardDTO selectBoardByBoardName(String newBoardName);
-    int selectBoardIDByComIDAndBoardName(Map<String, Object> map);
+    void updateBoardName(Map<String, Object> boardAttributes);
+    void deleteAllPostInBoard(int boardID);
+    void deleteBoard(int boardID);
+    void deleteAllCommentInBoard(int boardID);
 }
 
