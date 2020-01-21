@@ -58,11 +58,8 @@ public class UserController {
                 return "redirect:/";
             }
             Cookie sessionCookie = new Cookie("sessionID", encrypt); // 클라이언트에게 전달할 쿠키 생성
-            Cookie userIDCookie = new Cookie("userID", requestUser.getUserID()); // userID 쿠키 생성
             sessionCookie.setMaxAge(60*60);
-            userIDCookie.setMaxAge(60*60);
             response.addCookie(sessionCookie);
-            response.addCookie(userIDCookie);
         }
         return "redirect:/";
     }

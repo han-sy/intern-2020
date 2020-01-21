@@ -1,5 +1,6 @@
 document.write("<script src='/static/ckeditor/ckeditor.js'></script>");
 document.write("<script src='/static/ckeditor/adapters/jquery.js'></script>");
+document.write("<script src='/static/js/jquery.tmpl.js'></script>");
 
 function editorAreaCreate() {
   editorClear();
@@ -178,3 +179,39 @@ function refreshPostList() {
     });
   }
 }
+
+// 게시글 검색
+$(document).on("click", "#search", function () {
+  var option = $('#search_option option:selected');
+  var keyword = $('#search_keyword');
+
+  $.ajax({
+    type: 'GET',
+    url: '/boards/0/posts/search',
+    data: {
+      option: option.html(),
+      keyword: keyword.val()
+    },
+    error: function() {
+      alert('검색 실패');
+    },
+    success: function (data) {  
+      postClear(); // 게시글 조회 화면 Clear
+      postsClear(); // 게시글 목록 화면 Clear
+      console.log("검색결과 = " + data);
+      keyword.val("");
+
+      $.template("searchResultTmpl", 
+        '<tr height="30" class=postclick data-post=${postID} onclick="javascript:clickTrEvent(this)"' +
+        'onmouseover = "javascript:changeTrColor(this)">' +
+        '<td width="379">${postTitle}</td>' +
+        '<td width="73">${userName}</td>' +
+        '<td width="164">${postRegisterTime}</td></tr>' +
+        '<td style="visibility:hidden">${postID}</td>' +
+        '<td style="visibility:hidden">${boardID}</td>'
+      );
+
+      $.tmpl("searchResultTmpl", data).appendTo("#postlist");
+    }
+  });
+});

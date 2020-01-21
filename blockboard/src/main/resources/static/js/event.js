@@ -1,4 +1,4 @@
-
+document.write("<script src='/static/js/jquery.tmpl.js'></script>");
 
 //색변경 탭에 mouseover시 실행
 function changeTrColor(trObj) {
@@ -262,8 +262,19 @@ $(document).on("click", ".tabmenu", function clickTabEvent() {
       alert('통신실패!');
     },
     success: function (data) {    //통신 성공시 탭 내용담는 div를 읽어들인 값으로 채운다.
-      console.log("success" + data);
       $('#postlist').html("");
+
+      $.template("postlistTmpl", 
+      '<tr height="30" class=postclick data-post=${postID} onclick="javascript:clickTrEvent(this)"' +
+      'onmouseover = "javascript:changeTrColor(this)">' +
+      '<td width="379">${postTitle}</td>' +
+      '<td width="73">${userName}</td>' +
+      '<td width="164">${postRegisterTime}</td></tr>' +
+      '<td style="visibility:hidden">${postID}</td>'
+      );
+
+      $.tmpl("postlistTmpl", data).appendTo("#postlist");
+      /*
       $.each(data, function (key, value) {
         $('#postlist').append(
           "<tr height='30' class = 'postclick' data-post = '" + value.postID +
@@ -273,8 +284,8 @@ $(document).on("click", ".tabmenu", function clickTabEvent() {
           "<td width='164'>" + value.postRegisterTime + "</td></tr>" +
           "<td style='visibility:hidden'>" + value.postID + "</td>"
         );
-        //alert($this);
       });
+      */
     }
   });
 });

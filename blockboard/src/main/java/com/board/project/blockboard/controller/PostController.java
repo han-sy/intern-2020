@@ -5,6 +5,7 @@ import com.board.project.blockboard.service.BoardService;
 import com.board.project.blockboard.service.PostService;
 import com.board.project.blockboard.util.SessionTokenizer;
 import lombok.extern.slf4j.Slf4j;
+import org.json.simple.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -87,4 +88,31 @@ public class PostController {
         requestPost.setBoardID(boardid);
         postService.updatePost(requestPost);
     }
+
+    /**
+     * 수정한 게시물을 저장할 때
+     * @param option 검색 옵션 (ex : 제목, 내용, 작성자)
+     * @param keyword 검색할 문자열
+     * @return searchList
+     */
+    @GetMapping("/search")
+    @ResponseBody
+    public JSONArray searchPost(@RequestParam("option") String option, @RequestParam("keyword") String keyword) {
+        switch (option) {
+            case "제목":
+                option = "post_title";
+                break;
+            case "내용":
+                option = "post_content";
+                break;
+            case "작성자":
+                option = "user_name";
+                break;
+            default:
+                option = "mix";
+        }
+        JSONArray searchList = postService.searchPost(option, keyword);
+        return searchList;
+    }
+
 }

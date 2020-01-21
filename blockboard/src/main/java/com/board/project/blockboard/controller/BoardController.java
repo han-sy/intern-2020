@@ -14,6 +14,8 @@ import com.google.gson.reflect.TypeToken;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.DecoderException;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Controller;
@@ -72,9 +74,23 @@ public class BoardController {
      */
     @GetMapping("/{boardid}/posts")
     @ResponseBody
-    public List<PostDTO> getPostListByBoardID(@PathVariable("boardid") int boardID){
+    public JSONArray getPostListByBoardID(@PathVariable("boardid") int boardID){
         List<PostDTO> postList = boardService.getPostListByBoardID(boardID);
-        return postList;
+        JSONArray postlist = new JSONArray();
+
+        for(PostDTO post : postList) {
+            JSONObject object = new JSONObject();
+            object.put("postTitle", post.getPostTitle());
+            object.put("postID", post.getPostID());
+            object.put("companyID", post.getCompanyID());
+            object.put("boardID", post.getBoardID());
+            object.put("postContent", post.getPostContent());
+            object.put("userName", post.getUserName());
+            object.put("userID", post.getUserID());
+            object.put("postRegisterTime", post.getPostRegisterTime());
+            postlist.add(object);
+        }
+        return postlist;
     }
 
     /**
