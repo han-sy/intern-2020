@@ -43,7 +43,7 @@ public class FunctionController {
     public List<FunctionDTO> getFunctionInfo(HttpServletRequest request) throws Exception {
         SessionTokenizer session = new SessionTokenizer(request);
         int companyID = session.getCompanyID();
-        log.info("111122222");
+
         List<FunctionDTO> functionInfoList = functionService.getfunctionInfoListByCompanyID(companyID);
         return functionInfoList;
     }
@@ -57,12 +57,14 @@ public class FunctionController {
      */
     @PostMapping(value = "{companyid}/new-info")
     @ResponseBody
-    public Boolean insertNewFunctionData(@RequestParam("functionInfoData") String functionInfoData, HttpServletRequest request) throws Exception {
+    public List<FunctionDTO> insertNewFunctionData(@RequestParam("functionInfoData") String functionInfoData, HttpServletRequest request) throws Exception {
         SessionTokenizer session = new SessionTokenizer(request);
         int companyID = session.getCompanyID();
 
-        boolean success = functionService.updateNewFunctionsInfo(companyID,functionInfoData);
-        return success;
+        functionService.updateNewFunctionsInfo(companyID,functionInfoData);
+
+        List<FunctionDTO> functionInfoList = functionService.getfunctionInfoListByCompanyID(companyID);
+        return functionInfoList;
     }
 
 }

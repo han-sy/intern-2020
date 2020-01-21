@@ -1,3 +1,4 @@
+
 //"기능변경" 버튼 클릭시
 function changeFunction() {
   var companyID = $('#serviceTitle').attr("value");
@@ -56,9 +57,21 @@ function clickSaveFunctionChange() {
       error: function () {  //통신 실패시
         alert('통신실패!');
       },
-      success: function () {    //통신 성공시 탭 내용담는 div를 읽어들인 값으로 채운다.
-        alert("기능이 변경되었습니다.");
-      }
+      success: function (data) {    //통신 성공시 탭 내용담는 div를 읽어들인 값으로 채운다.
+            console.log("success" + data);
+            var containerObj = $('#fuctionListContainer');
+            containerObj.html("현재 사용중인 기능 : ");
+            $.each(data, function (key, value) {
+              console.log(value.functionName + " : "+value.companyID);
+              if (value.companyID == 0) {
+                containerObj.append("<span id = functionAble"+value.functionID+" style=display:none >" + value.functionName + "</span>");
+              }
+              else {
+                containerObj.append("<span id = functionAble"+value.functionID +">"+ value.functionName + " </span>");
+              }
+
+            });
+          }
     });
   }
 

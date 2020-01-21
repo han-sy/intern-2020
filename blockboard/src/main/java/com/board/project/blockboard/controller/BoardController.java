@@ -40,6 +40,8 @@ public class BoardController {
     private BoardService boardService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private FunctionService functionService;
 
     /**
      * 메인 화면
@@ -61,6 +63,7 @@ public class BoardController {
         model.addAttribute("companyName",boardService.getCompanyNameByUserID(userID));//회사이름
         model.addAttribute("isadmin",boardService.checkAdmin(userID));
         model.addAttribute("companyID",companyID);
+        model.addAttribute("functionInfoList",functionService.getfunctionInfoListByCompanyID(companyID));
 
         return "boards";
     }

@@ -57,7 +57,7 @@ public class FunctionService {
         return functionInfoDataList;
     }
 
-    public boolean updateNewFunctionsInfo(int companyID, String functionInfoData) {
+    public void updateNewFunctionsInfo(int companyID, String functionInfoData) {
         List<FunctionDTO> functionInfoList = getFunctionInfoByCompanyID(companyID); //기존데이터
         //ajax를 통해 넘어온 json 형식의 string을 map 타입으로 변경
         Gson gson = new Gson();
@@ -77,8 +77,8 @@ public class FunctionService {
             }
         }
         catch (Exception e){
-            return false;
+            e.printStackTrace();
         }
-        return true;
+
     }
 }
