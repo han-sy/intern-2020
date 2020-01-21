@@ -46,7 +46,6 @@ function getBoardListToDelete(){
           var containerObj = $('#config_container');
           containerObj.html("삭제할 게시판을 선택하시오");
           $.each(data, function (key, value) {
-            console.log(value.functionInfoData);
             containerObj.append("<div><span>" + value.boardName + "</span><input type=checkbox name=boardDelete value=" +
               value.boardID + "></div>");
           });
@@ -55,3 +54,47 @@ function getBoardListToDelete(){
         }
       });
 }
+
+function getPostDataAfterPostClick(postID, boardID){
+  var postContentObj = $('#postcontent');
+     $.ajax({
+        type: 'GET',                 //get방식으로 통신
+        url: "/boards/" + boardID + "/posts/" + postID,    //탭의 data-tab속성의 값으로 된 html파일로 통신
+        error: function () {  //통신 실패시
+          alert('통신실패!');
+        },
+        success: function (data) {    //통신 성공시 탭 내용담는 div를 읽어들인 값으로 채운다.
+          console.log("success" + data);
+          $('#writecontent').hide();
+          $('#btn_write').show();
+          postContentObj.html("");
+          postContentObj.append("<h2>" + data.postTitle + "</h2>");
+          postContentObj.append("<h5>작성자 : " + data.userName + "</h4>");
+          postContentObj.append("<h5>작성시간 : " + data.postRegisterTime + "</h4>");
+          postContentObj.append("<a>" + data.postContent + "</a>");
+          postContentObj.append("<a id=postID style=visibility:hidden>" + data.postID + "</a>");
+          // 작성글의 userID와 현재 로그인한 userID가 같으면 삭제버튼 표시
+
+          var commentAbleObj = $('#functionAble1');
+          //console.log("comment 여부 : " + commentAbleObj.attr("value"));
+
+          if (data.canDelete == true) {
+            postContentObj.append("</br><button id=btn_updatePost>수정</button>");
+            postContentObj.append("</br><button id=btn_deletePost>삭제</button>");
+          }
+
+
+          if (commentAbleObj.attr("value") == "on") {
+
+          $(function () {
+
+                          getCommentAllContents(postID, boardID, postContentObj); //삭제이후 tab에 게시판목록 업데이트
+                     });
+
+          }
+
+
+        }
+      });
+}
+

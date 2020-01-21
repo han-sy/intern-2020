@@ -6,6 +6,7 @@ import com.board.project.blockboard.mapper.BoardMapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +18,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 public class BoardService {
     @Autowired
     private BoardMapper boardMapper;
 
-    Logger logger = LoggerFactory.getLogger(getClass());
 
     public String getCompanyNameByUserID(String userID) {
         return boardMapper.selectCompanyNameByUserID(userID);
@@ -54,12 +55,12 @@ public class BoardService {
         BoardDTO newBoard = new BoardDTO();
         newBoard.setCompanyID(companyID);
         newBoard.setBoardName(newBoardName);
-        logger.info("newBoard : "+newBoard);
+        log.info("newBoard : "+newBoard);
         boardMapper.insertBoard(newBoard);
     }
 
     public int getCompanyIDByUserID(String userID) {
-        logger.info("boardMapper userid: "+ userID);
+        log.info("boardMapper userid: "+ userID);
         return boardMapper.selectCompanyIDByUserID(userID);
     }
     

@@ -2,6 +2,7 @@ package com.board.project.blockboard.service;
 
 import com.board.project.blockboard.mapper.UserMapper;
 import com.board.project.blockboard.dto.UserDTO;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.util.List;
 
+@Slf4j
 @Service
 public class UserService {
     @Autowired

@@ -5,6 +5,7 @@ import com.board.project.blockboard.mapper.FunctionMapper;
 import com.board.project.blockboard.mapper.PostMapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 public class FunctionService {
     @Autowired
