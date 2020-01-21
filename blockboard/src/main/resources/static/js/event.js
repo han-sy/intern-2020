@@ -10,15 +10,18 @@ function changeTrColor(trObj) {
 
 // 게시글 목록에서 게시글 클릭시
 function clickTrEvent(trObj) {
+
   //alert(trObj.getAttribute("data-post"));
   var postID = trObj.getAttribute("data-post");
   var boardID;
   var tabs = $('#tab_id').children();
 
-  $.each(tabs, function() {
-    var color = $(this).css('background-color');
-    if(color == "rgb(144, 238, 144)") {
-      boardID = $(this).attr('data-tab');
+  var postContentObj = $('#postcontent');
+  $.each(tabs, function () {
+    var clickObj = $(this);
+    var color = clickObj.css('background-color');
+    if (color == "rgb(144, 238, 144)") {
+      boardID = clickObj.attr('data-tab');
     }
   });
   //console.log(postID);
@@ -33,208 +36,37 @@ function clickTrEvent(trObj) {
       console.log("success" + data);
       $('#writecontent').hide();
       $('#btn_write').show();
-      $('#postcontent').html("");
-      $('#postcontent').append("<h2>" + data.postTitle + "</h2>");
-      $('#postcontent').append("<h5>작성자 : " + data.userName + "</h4>");
-      $('#postcontent').append("<h5>작성시간 : " + data.postRegisterTime + "</h4>");
-      $('#postcontent').append("<a>" + data.postContent + "</a>");
-      $('#postcontent').append("<a id=postID style=visibility:hidden>" + data.postID + "</a>");
+      postContentObj.html("");
+      postContentObj.append("<h2>" + data.postTitle + "</h2>");
+      postContentObj.append("<h5>작성자 : " + data.userName + "</h4>");
+      postContentObj.append("<h5>작성시간 : " + data.postRegisterTime + "</h4>");
+      postContentObj.append("<a>" + data.postContent + "</a>");
+      postContentObj.append("<a id=postID style=visibility:hidden>" + data.postID + "</a>");
       // 작성글의 userID와 현재 로그인한 userID가 같으면 삭제버튼 표시
-      console.log("canDelete = " + data.canDelete);
+
+      var commentAbleObj = $('#functionAble1');
+      console.log("comment 여부 : " + commentAbleObj.attr("value"));
+
       if (data.canDelete == true) {
-        $('#postcontent').append("</br><button id=btn_updatePost>수정</button>");
-        $('#postcontent').append("</br><button id=btn_deletePost>삭제</button>");
+        postContentObj.append("</br><button id=btn_updatePost>수정</button>");
+        postContentObj.append("</br><button id=btn_deletePost>삭제</button>");
       }
-    }
-  });
-}
 
-//게시판 수정삭제 버튼 클릭시
-function clickchangeBoardBtn() {
-  $.ajax({
-    type: 'POST',                 //POST 통신
-    url: '/boards/boardlist',    //탭의 data-tab속성의 값으로 된 html파일로 통신
-    error: function () {  //통신 실패시
-      alert('통신실패!');
-    },
-    success: function (data) {    //통신 성공시 탭 내용담는 div를 읽어들인 값으로 채운다.
-      $('#config_container').html("");
-      $.each(data, function (key, value) {
-        $('#config_container').append("<div class=boardInfo id=board" + value.boardID + "><input type=text name =boardname data-boardid=" + value.boardID + " value=" + value.boardName + " >" +
-          " <span class =deleteBoard data-board =board" + value.boardID + " >" + value.boardName + "</span></div>");
-      });
-      $('#config_container').append(" <br><a id ='addFuncBtn' onclick = javascript:clickSaveChangeBoard(this) style=cursor:pointer>변경하기</a>" +
-        "<button class = 'functionClose' type='button' onclick=javascript:clickConfigClose(this)>닫기</button>");
-    }
-  });
-}
-//게시판 삭제버튼 누를시
-function clickDeleteBoardBtn() {
-  $.ajax({
-    type: 'POST',                 //POST 통신
-    url: '/boards/boardlist',    //탭의 data-tab속성의 값으로 된 html파일로 통신
-    error: function () {  //통신 실패시
-      alert('통신실패!');
-    },
-    success: function (data) {    //통신 성공시 탭 내용담는 div를 읽어들인 값으로 채운다.
-      console.log("success" + data);
-      $('#config_container').html("");
-      $('#config_container').html("삭제할 게시판을 선택하시오");
-      $.each(data, function (key, value) {
-        console.log(value.functionInfoData);
-        $('#config_container').append("<div><span>" + value.boardName + "</span><input type=checkbox name=boardDelete value=" +
-          value.boardID + "></div>");
-
-      });
-      $('#config_container').append(" <a id ='addFuncBtn' onclick = javascript:clickSaveDelteBoard(this) style=cursor:pointer>삭제하기</a>" +
-        "<button class = 'functionClose' type='button' onclick=javascript:clickConfigClose(this)>닫기</button>");
-    }
-  });
-}
-
-//게시판 삭제- 삭제하기버튼 누를시
-function clickSaveDelteBoard() {
-  var boardDataList = new Array();
-
-  $("input[name=boardDelete]").each(function () {
-    if ($(this).is(":checked")) {
-      var boardData = new Object();
-      boardData.boardID = $(this).val();
-      console.log("boardID:" + boardData.boardID);
-      boardData.boardName = $(this).attr("data-boardName");
-      boardDataList.push(boardData);
-    }
-
-
-  });
-
-  var jsonData = JSON.stringify(boardDataList);
-  var askSave = confirm("선택한 게시판을 정말 삭제하시겠습니까? 게시물또한 모두 삭제됩니다.");
-  if (askSave) {
-    $("input[name=boardDelete]").each(function () {
-
-      var boardID = $(this).val();
-      if ($(this).is(":checked")) {
-        $.ajax({
-          type: 'POST',                 //get방식으로 통신
-          url: "/board/deletion/board",    //탭의 data-tab속성의 값으로 된 html파일로 통신
-          data: { deleteBoardList: jsonData },
-          error: function () {  //통신 실패시
-            alert('통신실패!');
-          },
-          success: function (data) {    //통신 성공시 탭 내용담는 div를 읽어들인 값으로 채운다.
-            $('#tab_id').html("");
-            $.each(data, function (key, value) {
-              $("#tab_id").append("<li data-tab=" + value.boardID + "  class=tabmenu id=default>" + value.boardName + "</li>");
-            });
-            $('#config_container').html("");
-          }
-        });
+      if (commentAbleObj.attr("value") == "on") {
+       var commentHtml ="";
+        commentHtml += "<div><span><strong>Comments</strong></span> <span id=commentCount></span></div>";
+        commentHtml += "<table class=commentHtml>";
+        commentHtml += "<tr><td>";
+        commentHtml += "<textarea style='width: 80% rows=3 cols=30' id=commentText name=commentTrxt placeholder='댓글을 입력하세요'></textarea>";
+        commentHtml += "<div></br><button id=btn_openComment>등록</button></div>";
+        commentHtml += "</td></tr></table>";
+        postContentObj.append(commentHtml);
       }
-    });
-    $('#config_container').html("");
-  }
-}
-
-//게시판 이름변경 저장하기
-function clickSaveChangeBoard() {
-  var boardDataList = new Array();
-
-  $("input[name=boardname]").each(function () {
-    var boardData = new Object();
-    boardData.boardName = $(this).val();
-    boardData.boardID = $(this).attr("data-boardid");
-    boardDataList.push(boardData);
-  });
-
-  var jsonData = JSON.stringify(boardDataList);
-  var askSave = confirm("게시판 이름변경 내용을 저장하시겠습니까?");
-  if (askSave) {
-    $.ajax({
-      type: 'POST',                 //get방식으로 통신
-      url: "/board/changed/boardname",    //탭의 data-tab속성의 값으로 된 html파일로 통신
-      data: { boardData: jsonData },
-      error: function () {  //통신 실패시
-        alert('통신실패!');
-      },
-      success: function (data) {    //통신 성공시 탭 내용담는 div를 읽어들인 값으로 채운다.
-        $('#tab_id').html("");
-        $.each(data, function (key, value) {
-          $("#tab_id").append("<li data-tab=" + value.boardID + "  class=tabmenu id=default>" + value.boardName + "</li>");
-        });
-        $('#config_container').html("");
-      }
-    });
-  }
-  $('#config_container').html("");
-}
 
 
-
-//"기능변경" 버튼 클릭시
-function changeFunction() {
-  $.ajax({
-    type: 'POST',                 //POST 통신
-    url: '/boards/function-info',    //탭의 data-tab속성의 값으로 된 html파일로 통신
-    error: function () {  //통신 실패시
-      alert('통신실패!');
-    },
-    success: function (data) {    //통신 성공시 탭 내용담는 div를 읽어들인 값으로 채운다.
-      console.log("success" + data);
-      $('#config_container').html("");
-      $.each(data, function (key, value) {
-        console.log(value.functionInfoData);
-
-        if (value.companyID == 0) {
-          $('#config_container').append("<div><span>" + value.functionName + "</span> <label><input type=checkbox name=function value=" +
-            value.functionID + ">현재상태 OFF</label></div>");
-        }
-        else {
-          $('#config_container').append("<div><span>" + value.functionName + "</span> <label><input type=checkbox name=function value=" +
-            value.functionID + " checked>현재상태 ON</label></div>");
-        }
-
-      });
-      $('#config_container').append(" <a id ='addFuncBtn' onclick = javascript:clickSaveFunctionChange(this) style=cursor:pointer>저장하기</a>" +
-        "<button class = 'functionClose' type='button' onclick=javascript:clickConfigClose(this)>닫기</button>");
     }
   });
 }
-//기능변경사항 저장하기 버튼
-function clickSaveFunctionChange() {
-  var functionDataList = new Array();
-
-  $("input[name=function]").each(function () {
-    var functionData = new Object();
-    functionData.functionID = $(this).val();
-    if ($(this).is(":checked")) {
-      functionData.functionCheck = 1;
-    }
-    else {
-      functionData.functionCheck = 0;
-    }
-    functionDataList.push(functionData);
-  });
-
-  var jsonData = JSON.stringify(functionDataList);
-  var askSave = confirm("기능변경 내용을 저장하시겠습니까?");
-  if (askSave) {
-    $.ajax({
-      type: 'POST',                 //get방식으로 통신
-      url: "/board/function-change",    //탭의 data-tab속성의 값으로 된 html파일로 통신
-      data: { functionInfoData: jsonData },
-      error: function () {  //통신 실패시
-        alert('통신실패!');
-      },
-      success: function () {    //통신 성공시 탭 내용담는 div를 읽어들인 값으로 채운다.
-        alert("기능이 변경되었습니다.");
-      }
-    });
-  }
-
-  $('#config_container').html("");
-}
-
 
 //닫기 버튼 클릭
 $(document).on('click', '.functionClose', clickConfigClose());
@@ -277,4 +109,4 @@ $(document).on("click", ".tabmenu", function clickTabEvent() {
       });
     }
   });
-});
+})

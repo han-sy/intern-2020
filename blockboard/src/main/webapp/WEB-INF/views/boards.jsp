@@ -14,6 +14,7 @@
   <script src="/static/js/event.js"></script>
   <script src="/static/js/boardEvent.js"></script>
   <script src="/static/js/postsEvent.js"></script>
+  <script src="/static/js/commentEvent.js"></script>
   <script src="/static/js/functionEvent.js"></script>
   <script src="/static/ckeditor/ckeditor.js"></script>
   <script src="/static/ckeditor/adapters/jquery.js"></script>
@@ -27,10 +28,10 @@
         현재 사용중인 기능 :
         <c:forEach items="${functionInfoList}" var="functionList" varStatus="status">
              <c:if test="${functionList.companyID == 1}">
-                <span id = functionAble${functionList.functionID} > ${functionList.functionName} </span>
+                <span id = functionAble${functionList.functionID} value = on> ${functionList.functionName} </span>
              </c:if>
              <c:if test="${functionList.companyID == 0}">
-                <span id = functionAble${functionList.functionID} style=display:none > ${functionList.functionName} </span>
+                <span id = functionAble${functionList.functionID} style=display:none value =off> ${functionList.functionName} </span>
              </c:if>
 
         </c:forEach>
@@ -71,7 +72,8 @@
     <div id="editorcontent"></div>
   </div>
 
-  <div id="postcontent"></div>
+  <div id="postcontent">
+  </div>
   <div id="tabcontent">
     <table width="90%" cellpadding="0" cellspacing="0" border="0">
       <thead>
