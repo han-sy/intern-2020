@@ -28,7 +28,7 @@ function clickSaveFunctionChange() {
   var askSave = confirm("기능변경 내용을 저장하시겠습니까?");
   if (askSave) {
     $(function () {
-      getNewFunctionInfo(companyID, jsonData);
+      getNewFunctionInfo(companyID, jsonData);//새로운 기능목록 불러와 기능목록 변경
     });
   }
   $('#config_container').html("");

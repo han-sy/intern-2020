@@ -1,3 +1,4 @@
+//기능변경후 새로운 사용중인기능목록 불러오기
 function getNewFunctionInfo(companyID, jsonData) {
   $.ajax({
     type: 'POST',                 //get방식으로 통신
@@ -26,6 +27,7 @@ function getNewFunctionInfo(companyID, jsonData) {
   });
 }
 
+//기존 기능목록 불러와 체크박스와 함께 출력
 function getOldFunctionInfoForChange(companyID) {
   $.ajax({
     type: 'GET',                 //POST 통신

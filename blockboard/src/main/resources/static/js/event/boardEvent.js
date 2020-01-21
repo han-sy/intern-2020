@@ -91,21 +91,8 @@ function clickSaveChangeBoard() {
   var jsonData = JSON.stringify(boardDataList);
   var askSave = confirm("게시판 이름변경 내용을 저장하시겠습니까?");
   if (askSave) {
-    $.ajax({
-      type: 'POST',                 //get방식으로 통신
-      url: "/boards/newtitle",    //탭의 data-tab속성의 값으로 된 html파일로 통신
-      data: { newTItles: jsonData },
-      error: function () {  //통신 실패시
-        alert('통신실패!');
-      },
-      success: function (data) {    //통신 성공시 탭 내용담는 div를 읽어들인 값으로 채운다.
-        var tabUlObj = $('#tab_id');
-        tabUlObj.html("");
-        $.each(data, function (key, value) {
-          $("#tab_id").append("<li data-tab=" + value.boardID + "  class=tabmenu id=default>" + value.boardName + "</li>");
-        });
-        $('#config_container').html("");
-      }
+    $(function () {
+      updateTabByNewBoardListAfterDeleteBoard(jsonData);
     });
   }
   $('#config_container').html("");
@@ -123,8 +110,6 @@ function changeTrColor(trObj) {
 
 // 게시글 목록에서 게시글 클릭시
 function clickTrEvent(trObj) {
-
-  //alert(trObj.getAttribute("data-post"));
   var postID = trObj.getAttribute("data-post");
   var boardID;
   var tabs = $('#tab_id').children();
@@ -135,24 +120,20 @@ function clickTrEvent(trObj) {
       boardID = clickObj.attr('data-tab');
     }
   });
-  //console.log(postID);
-  //$('#postcontent').html("activerRow : " + trObj.getAttribute("data-post"));
   $(function () {
-      getPostDataAfterPostClick(postID, boardID);
-    });
+    getPostDataAfterPostClick(postID, boardID);
+  });
 }
 
 //닫기 버튼 클릭
 $(document).on('click', '.functionClose', clickConfigClose());
 function clickConfigClose() {
-
   console.log("닫기버튼");
   $('#config_container').html("");
 }
 
 // 탭 메뉴 클릭 이벤트 - 해당 게시판의 게시글 불러옴
 $(document).on("click", ".tabmenu", function clickTabEvent() {
-  //var activeTab = $(this).attr('data-tab');
   console.log("!!!!");
   var boardID = $(this).attr('data-tab');
   console.log(boardID);
@@ -161,26 +142,7 @@ $(document).on("click", ".tabmenu", function clickTabEvent() {
   $('#postcontent').html("");
   $('#writecontent').hide();
   $('#btn_write').show();
-  $.ajax({
-    type: 'GET',                 //get방식으로 통신
-    url: '/boards/' + boardID + "/posts",    //탭의 data-tab속성의 값으로 된 html파일로 통신
-    error: function () {  //통신 실패시
-      alert('통신실패!');
-    },
-    success: function (data) {    //통신 성공시 탭 내용담는 div를 읽어들인 값으로 채운다.
-      console.log("success" + data);
-      $('#postlist').html("");
-      $.each(data, function (key, value) {
-        $('#postlist').append(
-          "<tr height='30' class = 'postclick' data-post = '" + value.postID +
-          "' onclick='javascript:clickTrEvent(this)' onmouseover = 'javascript:changeTrColor(this)' >" +
-          "<td width='379'>" + value.postTitle + "</td>" +
-          "<td width='73'>" + value.userName + "</td>" +
-          "<td width='164'>" + value.postRegisterTime + "</td></tr>" +
-          "<td style='visibility:hidden'>" + value.postID + "</td>"
-        );
-        //alert($this);
-      });
-    }
+  $(function () {
+    getPostsAfterTabClick(boardID);
   });
 })
