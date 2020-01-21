@@ -2,10 +2,10 @@ document.write("<script src='/static/ckeditor/ckeditor.js'></script>");
 document.write("<script src='/static/ckeditor/adapters/jquery.js'></script>");
 
 function editorAreaCreate() {
+  editorClear();
   var editorcontent = $('#editorcontent');
   var writecontent = $('#writecontent');
   var btn_write = $('#btn_write');
-
   writecontent.css("display", "");
   btn_write.css("display", "none");
   editorcontent.append("<h2> 게시글제목 </h2> <input type=text id=post_title />");
