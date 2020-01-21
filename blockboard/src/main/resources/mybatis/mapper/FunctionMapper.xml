@@ -22,7 +22,7 @@
 
     <delete id="deleteFunctionCheckData" parameterType="hashmap">
         DELETE FROM FunctionCheck
-        WHERE companyID = #{companyID}
-        AND functionID = #{functionID};
+        WHERE company_id = #{companyID}
+        AND function_id = #{functionID};
     </delete>
 </mapper>

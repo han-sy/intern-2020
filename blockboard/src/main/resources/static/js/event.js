@@ -168,14 +168,6 @@ function clickSaveChangeBoard() {
   }
   $('#config_container').html("");
 }
-// 게시판 추가버튼 클릭시
-function clickaddBoardBtn() {
-  $('#config_container').html("<input type='text' name='게시판 이름' id = 'input_board_name' class='addBoard' placeholder='게시판 이름'>");
-  $('#config_container').append("<br>");
-  $('#config_container').append(" <a id ='addFuncBtn' onclick = javascript:clickSaveaddedBoard(this) style=cursor:pointer>저장하기</a>" +
-    "<button class = 'functionClose' type='button' onclick=javascript:clickConfigClose(this)>닫기</button>");
-  console.log("111");
-}
 
 
 
