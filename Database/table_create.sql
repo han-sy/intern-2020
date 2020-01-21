@@ -75,13 +75,17 @@ create table Comments(
     primary key(comment_id,board_id)
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
+alter table Board auto_increment=1;
+alter table Post auto_increment=1;
+alter table Comments auto_increment=1;
+
 insert into Company values(1,'wm');
 insert into Company values(2,'naver');
-insert into Board values(1,1,"공지사항");
-insert into Board values(2,1,"건의사항");
-insert into Board values(3,2,"공지사항");
-insert into Board values(4,2,"건의사항");
-insert into Board values(5,1,"자유게시판");
+insert into Board (company_id,board_name) values(1,"공지사항");
+insert into Board (company_id,board_name) values(2,"건의사항");
+insert into Board (company_id,board_name) values(2,"공지사항");
+insert into Board (company_id,board_name) values(2,"건의사항");
+insert into Board (company_id,board_name) values(1,"자유게시판");
 
 insert into Users values(1,1,'김동욱','123','관리자');
 insert into Users values(2,1,'전우혁','123','사원');
