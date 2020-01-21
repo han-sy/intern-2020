@@ -48,7 +48,7 @@
   <div id="writecontent" style="display:none">
     <div id="boardlistcontent">
       <h2> 게시판 선택 </h2>
-      <select id="post_board_id">
+      <select id="boardIDinEditor">
         <c:forEach items="${boardList}" var="boardList" varStatus="status">
           <option data-tab="${boardList.boardID}" class='tabmenu' id="default">
             <c:out value="${boardList.boardName}" />
