@@ -18,6 +18,13 @@ public class CommentController {
     @Autowired
     private CommentService commentService;
 
+    /**
+     * postID 일치하는 댓글 목록 리턴 ( 대댓글은 반환하지 않는다.)
+     * @param postID
+     * @param request
+     * @return
+     * @throws Exception
+     */
     @GetMapping("/{postid}/comments")
     @ResponseBody
     public List<CommentDTO> getCommentsByPost(@PathVariable("postid") int postID, HttpServletRequest request) throws Exception {

@@ -11,6 +11,8 @@
   <title>BLOCK BOARD</title>
   <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
   <link rel="stylesheet" type="text/css" href="/static/css/boardstyle.css">
+  <script type="text/javascript" src="/js/jquery-1.4.1.min.js"></script>
+  <script type="text/javascript" src="/js/jquery.tmpl.js"></script>
   <script src="/static/js/event/boardEvent.js"></script>
   <script src="/static/js/event/postsEvent.js"></script>
   <script src="/static/js/event/commentEvent.js"></script>

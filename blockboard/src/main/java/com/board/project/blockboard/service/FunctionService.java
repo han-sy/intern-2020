@@ -64,15 +64,15 @@ public class FunctionService {
         //ajax를 통해 넘어온 json 형식의 string을 map 타입으로 변경
         Gson gson = new Gson();
         Type type = new TypeToken<ArrayList<Map<String, Integer>>>() {}.getType();
-        ArrayList<Map<String,Integer>> functionListMap = gson.fromJson(functionInfoData,type); //새로운 데이터
+        ArrayList<Map<String,Boolean>> functionListMap = gson.fromJson(functionInfoData,type); //새로운 데이터
 
         try{
             for(int i=0;i<functionInfoList.size();i++){
-                if(functionInfoList.get(i).getCompanyID()>0&&functionListMap.get(i).get("functionCheck")==0){//on->off
+                if(functionInfoList.get(i).getCompanyID()>0&&functionListMap.get(i).get("functionCheck")==false){//on->off
                     //insert문
                     changeFunctionOnToOff(functionInfoList.get(i).getFunctionID(),companyID);
                 }
-                else if(functionInfoList.get(i).getCompanyID()==0&&functionListMap.get(i).get("functionCheck")==1){//off->on
+                else if(functionInfoList.get(i).getCompanyID()==0&&functionListMap.get(i).get("functionCheck")==true){//off->on
                     //delete문
                     changeFunctionOffToOn(functionInfoList.get(i).getFunctionID(),companyID);
                 }

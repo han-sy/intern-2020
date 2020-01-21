@@ -90,20 +90,26 @@ function getPostDataAfterPostClick(postID, boardID) {
       console.log("success" + data);
       $('#writecontent').hide();
       $('#btn_write').show();
-      postContentObj.html("");
-      postContentObj.append("<h2>" + data.postTitle + "</h2>");
-      postContentObj.append("<h5>작성자 : " + data.userName + "</h4>");
-      postContentObj.append("<h5>작성시간 : " + data.postRegisterTime + "</h4>");
-      postContentObj.append("<a>" + data.postContent + "</a>");
-      postContentObj.append("<a id=postID style=visibility:hidden>" + data.postID + "</a>");
+
+      //게시글 내용용
+     var postContentHtml = "";
+      postContentHtml += "<h2>" + data.postTitle + "</h2>";
+      postContentHtml += "<h2>" + data.postTitle + "</h2>";
+      postContentHtml += "<h5>작성자 : " + data.userName + "</h4>";
+      postContentHtml +="<h5>작성시간 : " + data.postRegisterTime + "</h4>";
+      postContentHtml +="<a>" + data.postContent + "</a>" ;
+      postContentHtml +="<a id=postID style=visibility:hidden>" + data.postID + "</a>";
+      postContentObj.html(postContentHtml);
       // 작성글의 userID와 현재 로그인한 userID가 같으면 삭제버튼 표시
 
       var commentAbleObj = $('#functionAble1');
       //console.log("comment 여부 : " + commentAbleObj.attr("value"));
 
       if (data.canDelete == true) {
-        postContentObj.append("</br><button id=btn_updatePost>수정</button>");
-        postContentObj.append("</br><button id=btn_deletePost>삭제</button>");
+        postContentObj.append(
+        "</br><button id=btn_updatePost>수정</button>"+
+        "</br><button id=btn_deletePost>삭제</button>"
+        );
       }
       if (commentAbleObj.attr("value") == "on") {
         $(function () {

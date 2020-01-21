@@ -71,7 +71,7 @@ create table Comments(
 	foreign key(company_id) references Company(company_id),
     comment_content varchar(4000) character set utf8mb4 collate utf8mb4_unicode_ci not null,
     comment_register_time timestamp not null,
-    comment_referenced_ID int(9),
+    comment_referenced_id int(9),
     primary key(comment_id,board_id)
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
@@ -124,5 +124,19 @@ SELECT p.post_id,p.user_id, u.user_name,p.board_id,p.company_id,p.post_title,p.p
         WHERE p.user_id = u.user_id and p.board_id=1
         ORDER BY p.post_id DESC;
         
+        
+SELECT  comments.comment_id as commentID,
+                comments.board_id as boardID,
+                comments.post_id as postID,
+                comments.user_id as userID,
+                users.user_name as userName,
+                comments.company_id as companyID,
+                comments.comment_content as commentContent,
+                comments.comment_register_time as commentRegisterTime,
+                comments.comment_referenced_id as commentReferencedID
+        FROM Comments comments , Users users
+        where comments.user_id = users.user_id
+        AND comments.post_id = 1
+        AND comments.comment_referenced_id is not null;
 
 

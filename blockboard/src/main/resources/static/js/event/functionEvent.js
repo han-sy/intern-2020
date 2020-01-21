@@ -16,10 +16,10 @@ function clickSaveFunctionChange() {
     var functionData = new Object();
     functionData.functionID = $(this).val();
     if ($(this).is(":checked")) {
-      functionData.functionCheck = 1;
+      functionData.functionCheck = true;
     }
     else {
-      functionData.functionCheck = 0;
+      functionData.functionCheck = false;
     }
     functionDataList.push(functionData);
   });
