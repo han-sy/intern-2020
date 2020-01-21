@@ -5,22 +5,11 @@ import com.board.project.blockboard.service.UserService;
 import com.board.project.blockboard.util.AES256Util;
 import com.board.project.blockboard.util.SessionTokenizer;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.codec.DecoderException;
-import org.apache.commons.codec.EncoderException;
 import org.apache.commons.codec.net.URLCodec;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import org.springframework.web.bind.annotation.*;
-
-import java.io.UnsupportedEncodingException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
-import java.util.NoSuchElementException;
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -31,7 +20,12 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-
+    /**
+     * 로그인 검증
+     * @param requestUser   로그인을 요청한 User의 정보
+     * @param response      쿠키를 담은 객체
+     * @return              로그인 메인화면으로 redirect
+     */
     @PostMapping("/")
     public String loginCheck(@ModelAttribute UserDTO requestUser, HttpServletResponse response) {
         SessionTokenizer sessionTokenizer = new SessionTokenizer();
@@ -73,22 +67,31 @@ public class UserController {
         return "redirect:/";
     }
 
+    /**
+     * 로그아웃
+     * @param response      유효기간이 0인 쿠키를 담은 객체
+     * @return              로그인 메인화면으로 redirect
+     */
     @GetMapping("/logout")
     public String logout(HttpServletResponse response) {
-        // s_id 쿠키 새로 생성해서 시간 0으로 설정
         Cookie kc = new Cookie("sessionID", null);
         kc.setMaxAge(0);
         response.addCookie(kc);
         return "redirect:/";
     }
 
+    /**
+     * 로그인 메인 화면
+     * @param request       쿠키 조회하기 위한 객체
+     * @return              server가 만들어 준 쿠키가 있다면 -> /boards redirect
+     *                      없다면 -> 로그인 화면 띄운다.
+     */
     @GetMapping("/")
     public String login(HttpServletRequest request) {
         SessionTokenizer session = null;
         try {
             session = new SessionTokenizer(request);
             String serverToken = session.getServerToken();
-            // serverToken 검사해서 맞으면 board로 return
             if (serverToken.equals(session.getToken())) {
                 return "redirect:/boards";
             }

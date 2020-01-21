@@ -17,10 +17,9 @@ public class PostService{
     @Autowired
     private BoardMapper boardMapper;
 
-    public PostDTO insertPost(PostDTO post) {
-        int val = postMapper.insertPost(post);
-        log.info("result = " + val);
-        return val == 1? post : null;
+    public void insertPost(PostDTO post) {
+        postMapper.insertPost(post);
+
     }
     public void deletePost(int postID) {
         postMapper.deletePostByPostID(postID);
