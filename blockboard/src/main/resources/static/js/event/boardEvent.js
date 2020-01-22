@@ -11,6 +11,10 @@ function clickaddBoardBtn() {
 //게시판 저장하기 버튼
 function clickSaveaddedBoard() {
   var boardName = $('#input_board_name').val();
+  if(boardName ==""){
+    alert("게시판 제목을 입력하세요.");
+    return;
+  }
   console.log("boardName :" + boardName);
   $(function () {
     updateTabByNewBoardListAfterAddBoard(boardName);
@@ -80,6 +84,10 @@ function clickSaveChangeBoard() {
     var clickObj = $(this);
     var oldBoardName = clickObj.attr("data-oldname");
     var newBoardName = clickObj.val();
+    if(newBoardName ==""){
+        alert("기존"+oldBoardName+"게시판 제목이 비었습니다.");
+        return;
+    }
     var boardID = clickObj.attr("data-boardid");
     if (oldBoardName != newBoardName) {
       boardData.boardName = newBoardName;

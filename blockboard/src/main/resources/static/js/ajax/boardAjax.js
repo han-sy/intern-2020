@@ -42,8 +42,8 @@ function updateTabByNewBoardListAfterUpdateBoardName(jsonData) {
     type: 'POST',                 //get방식으로 통신
     url: "/boards/newtitle",    //탭의 data-tab속성의 값으로 된 html파일로 통신
     data: { newTItles: jsonData },
-    error: function () {  //통신 실패시
-      alert('통신실패!');
+    error: function (error) {  //통신 실패시
+      alert(error);
     },
     success: function (data) {    //통신 성공시 탭 내용담는 div를 읽어들인 값으로 채운다.
       var tabUlObj = $('#tab_id');
