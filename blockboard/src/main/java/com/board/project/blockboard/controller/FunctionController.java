@@ -38,7 +38,7 @@ public class FunctionController {
      * @return
      * @throws Exception
      */
-    @GetMapping(value = "/{companyid}/info")
+    @GetMapping(value = "/{companyid}")
     @ResponseBody
     public List<FunctionDTO> getFunctionInfo(HttpServletRequest request) throws Exception {
         SessionTokenizer session = new SessionTokenizer(request);
@@ -55,7 +55,7 @@ public class FunctionController {
      * @return
      * @throws Exception
      */
-    @PostMapping(value = "{companyid}/new-info")
+    @PostMapping(value = "/{companyid}")
     @ResponseBody
     public List<FunctionDTO> insertNewFunctionData(@RequestParam("functionInfoData") String functionInfoData, HttpServletRequest request) throws Exception {
         SessionTokenizer session = new SessionTokenizer(request);

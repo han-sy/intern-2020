@@ -2,10 +2,10 @@
 function getNewFunctionInfo(companyID, jsonData) {
   $.ajax({
     type: 'POST',                 //get방식으로 통신
-    url: "/functions/" + companyID + "/new-info",    //탭의 data-tab속성의 값으로 된 html파일로 통신
+    url: "/functions/" + companyID ,    //탭의 data-tab속성의 값으로 된 html파일로 통신
     data: { functionInfoData: jsonData },
     error: function () {  //통신 실패시
-      alert('통신실패!');
+      alert('통신실패!'+error);
     },
     success: function (data) {    //통신 성공시 탭 내용담는 div를 읽어들인 값으로 채운다.
       console.log("success" + data);
@@ -31,9 +31,9 @@ function getNewFunctionInfo(companyID, jsonData) {
 function getOldFunctionInfoForChange(companyID) {
   $.ajax({
     type: 'GET',                 //POST 통신
-    url: "/functions/" + companyID + "/info",    //탭의 data-tab속성의 값으로 된 html파일로 통신
-    error: function () {  //통신 실패시
-      alert('통신실패!');
+    url: "/functions/" + companyID ,    //탭의 data-tab속성의 값으로 된 html파일로 통신
+    error: function (error) {  //통신 실패시
+      alert('통신실패!'+error);
     },
     success: function (data) {    //통신 성공시 탭 내용담는 div를 읽어들인 값으로 채운다.
       console.log("success" + data);

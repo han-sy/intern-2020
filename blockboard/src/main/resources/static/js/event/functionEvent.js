@@ -16,15 +16,16 @@ function clickSaveFunctionChange() {
     var functionData = new Object();
     functionData.functionID = $(this).val();
     if ($(this).is(":checked")) {
-      functionData.functionCheck = true;
+      functionData.functionCheck = "ON";
     }
     else {
-      functionData.functionCheck = false;
+      functionData.functionCheck = "OFF";
     }
     functionDataList.push(functionData);
   });
 
   var jsonData = JSON.stringify(functionDataList);
+  alert(jsonData);
   var askSave = confirm("기능변경 내용을 저장하시겠습니까?");
   if (askSave) {
     $(function () {

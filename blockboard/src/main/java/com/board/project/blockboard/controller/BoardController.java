@@ -112,7 +112,7 @@ public class BoardController {
      * @return
      * @throws Exception
      */
-    @PostMapping(value = "/{boardname}/newboard")
+    @PostMapping(value = "/{boardname}")
     @ResponseBody
     public List<BoardDTO> insertNewBoard(@PathVariable("boardname") String newBoardName, HttpServletRequest request) throws Exception {
         SessionTokenizer session = new SessionTokenizer(request);
@@ -133,7 +133,7 @@ public class BoardController {
      * @return
      * @throws Exception
      */
-    @PostMapping(value = "/newtitle")
+    @PostMapping(value = "/newtitles")
     @ResponseBody
     public List<BoardDTO>  changeNewBoardName(@RequestParam("newTItles") String newTItleList, HttpServletRequest request) throws Exception {
         SessionTokenizer session = new SessionTokenizer(request);

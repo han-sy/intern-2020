@@ -2,7 +2,7 @@
 function updateTabByNewBoardListAfterAddBoard(boardName) {
   $.ajax({
     type: 'POST',                 //get방식으로 통신
-    url: "/boards/" + boardName + "/newboard",    //탭의 data-tab속성의 값으로 된 html파일로 통신
+    url: "/boards/" + boardName,    //탭의 data-tab속성의 값으로 된 html파일로 통신
     error: function () {  //통신 실패시
       alert('통신실패!');
     },
@@ -40,7 +40,7 @@ function updateTabByNewBoardListAfterDeleteBoard(jsonData) {
 function updateTabByNewBoardListAfterUpdateBoardName(jsonData) {
   $.ajax({
     type: 'POST',                 //get방식으로 통신
-    url: "/boards/newtitle",    //탭의 data-tab속성의 값으로 된 html파일로 통신
+    url: "/boards/newtitles",    //탭의 data-tab속성의 값으로 된 html파일로 통신
     data: { newTItles: jsonData },
     error: function (error) {  //통신 실패시
       alert(error);

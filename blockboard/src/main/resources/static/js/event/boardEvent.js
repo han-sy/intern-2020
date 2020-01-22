@@ -100,7 +100,7 @@ function clickSaveChangeBoard() {
   var askSave = confirm("게시판 이름변경 내용을 저장하시겠습니까?");
   if (askSave) {
     $(function () {
-      updateTabByNewBoardListAfterDeleteBoard(jsonData);
+      updateTabByNewBoardListAfterUpdateBoardName(jsonData);
     });
   }
   $('#config_container').html("");
