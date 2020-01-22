@@ -95,21 +95,13 @@ $(document).on("click", "#btn_updatePost", function () {
     post_button.html('수정하기'); // 게시글 올리기 버튼 텍스트 변경
     post_button.attr('id', 'btn_update'); // 버튼 ID 변경 (btn_post -> btn_update)
 
-    // 수정 화면에 저장되어 있던 게시글 정보(postTitle, postContent)를 띄워 준다.
-    $.ajax({
-        type: 'GET',
-        url: "/boards/" + boardID + "/posts/" + postID + "/editor",
-        error: function() {
-          alert('게시글 수정 실패');
-        },
-        success: function (data) {
-          editorcontent.append("<a id=postID style=visibility:hidden>" + postID + "</a>");
-          post_title.val(data.postTitle); //
-          CKEDITOR.instances.editor.setData(data.postContent);
-        }
+    $.getJSON("/boards/" + boardID + "/posts/" + postID + "/editor", function(data) {
+      editorcontent.append("<a id=postID style=visibility:hidden>" + postID + "</a>");
+      post_title.val(data.postTitle); //
+      CKEDITOR.instances.editor.setData(data.postContent);
+      console.log(data);
     });
 });
-
 
 // 수정한 게시물 서버에 저장할 때 이벤트
 $(document).on("click", "#btn_update", function () {
@@ -192,13 +184,14 @@ $(document).on("click", "#search", function () {
       option: option.html(),
       keyword: keyword.val()
     },
+    dataType: 'JSON',
     error: function() {
       alert('검색 실패');
     },
-    success: function (data) {  
+    success: function (data) {
       postClear(); // 게시글 조회 화면 Clear
       postsClear(); // 게시글 목록 화면 Clear
-      console.log("검색결과 = " + data);
+      console.log("검색결과 = " + data[0]);
       keyword.val("");
 
       $.template("searchResultTmpl", 

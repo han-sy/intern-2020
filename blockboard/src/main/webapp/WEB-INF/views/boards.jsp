@@ -96,6 +96,7 @@
         <option>제목</option>
         <option>작성자</option>
         <option>내용</option>
+        <option>제목+내용</option>
       </select>
       <input id="search_keyword" type="text"/>
       <button id="search">조회</button> 

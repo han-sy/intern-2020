@@ -33,22 +33,7 @@ public class PostService{
     public void updatePost(PostDTO post) {
         postMapper.updatePost(post);
     }
-    public JSONArray searchPost(String option, String keyword) {
-        List<PostDTO> result =  postMapper.search(option,keyword);;
-        JSONArray resultToJSON = new JSONArray();
-        for(PostDTO post : result) {
-            JSONObject object = new JSONObject();
-            object.put("postTitle", post.getPostTitle());
-            object.put("postID", post.getPostID());
-            object.put("companyID", post.getCompanyID());
-            object.put("boardID", post.getBoardID());
-            object.put("postContent", post.getPostContent());
-            object.put("userName", post.getUserName());
-            object.put("userID", post.getUserID());
-            object.put("postRegisterTime", post.getPostRegisterTime());
-            object.put("boardName",post.getBoardName());
-            resultToJSON.add(object);
-        }
-        return resultToJSON;
+    public List<PostDTO> searchPost(String option, String keyword) {
+        return postMapper.search(option,keyword);
     }
 }

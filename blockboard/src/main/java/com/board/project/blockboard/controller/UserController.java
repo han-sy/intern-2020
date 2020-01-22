@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 @Slf4j
 @Controller
@@ -33,7 +34,6 @@ public class UserController {
         String token = sessionTokenizer.getToken();
 
         boolean user_Exist = userService.loginCheck(requestUser);
-
         if(user_Exist) {
             // 암호화 과정
             AES256Util aes256 = null;
@@ -86,6 +86,9 @@ public class UserController {
     @GetMapping("/")
     public String login(HttpServletRequest request) {
         SessionTokenizer session = null;
+        HttpSession session_test = request.getSession();
+        log.info("Request sessionID = " + session_test.getId());
+        log.info("CreateTime sessionID = " + session_test.getCreationTime());
         try {
             session = new SessionTokenizer(request);
             String serverToken = session.getServerToken();
