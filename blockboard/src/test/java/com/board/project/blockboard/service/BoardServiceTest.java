@@ -11,7 +11,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-/*
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration
 class BoardServiceTest {
@@ -25,4 +24,4 @@ class BoardServiceTest {
         assertEquals("wm",companyName);
     }
 
-}*/
+}

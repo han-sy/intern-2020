@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 @Slf4j
-@Controller
+@RestController
 @RequestMapping("/functions")
 public class FunctionController {
     @Autowired
@@ -39,7 +39,6 @@ public class FunctionController {
      * @throws Exception
      */
     @GetMapping(value = "/{companyid}")
-    @ResponseBody
     public List<FunctionDTO> getFunctionInfo(HttpServletRequest request) throws Exception {
         SessionTokenizer session = new SessionTokenizer(request);
         int companyID = session.getCompanyID();
@@ -56,7 +55,6 @@ public class FunctionController {
      * @throws Exception
      */
     @PostMapping(value = "/{companyid}")
-    @ResponseBody
     public List<FunctionDTO> insertNewFunctionData(@RequestParam("functionInfoData") String functionInfoData, HttpServletRequest request) throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
         SessionTokenizer session = new SessionTokenizer(request);
         int companyID = session.getCompanyID();

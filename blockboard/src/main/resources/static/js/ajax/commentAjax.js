@@ -9,7 +9,8 @@ function getCommentAllContents(postID, boardID, postContentObj) {
       alert('통신실패!');
     },
     success: function (data) {    //통신 성공시 탭 내용담는 div를 읽어들인 값으로 채운다.
-      $.each(data, function (key, value) {
+     //TODO Template 적용예정
+     $.each(data, function (key, value) {
         postContentObj.append("<div><span style ='width:500px'><strong>ㄴ" + value.userName + " : </strong></span>   <span>" + value.commentContent + "</span></div>");
       });
 

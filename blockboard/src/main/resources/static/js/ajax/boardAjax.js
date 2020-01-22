@@ -1,17 +1,20 @@
+//새로운 탭 내용으로 교체
+function updateTab(data){
+      $('#tab_id').html("");
+      $.template("tabListTmpl","<li data-tab=${boardID} class=tabmenu id=default> ${boardName} </li>");
+      $.tmpl("tabListTmpl", data).appendTo("#tab_id");
+}
+
 //탭 업데이트 새로운 게시판 목록으로
 function updateTabByNewBoardListAfterAddBoard(boardName) {
   $.ajax({
-    type: 'POST',                 //get방식으로 통신
-    url: "/boards/" + boardName,    //탭의 data-tab속성의 값으로 된 html파일로 통신
+    type: 'POST',
+    url: "/boards/" + boardName,
     error: function () {  //통신 실패시
       alert('통신실패!');
     },
     success: function (data) {    //들어오는 data는 boardDTOlist
-      var tabUlObj = $('#tab_id');
-      tabUlObj.html("");
-      $.each(data, function (key, value) {
-        tabUlObj.append("<li data-tab=" + value.boardID + "  class=tabmenu id=default>" + value.boardName + "</li>");
-      });
+        updateTab(data);//새로운 탭 내용으로 교체
     }
   });
 }
@@ -20,17 +23,13 @@ function updateTabByNewBoardListAfterAddBoard(boardName) {
 function updateTabByNewBoardListAfterDeleteBoard(jsonData) {
   $.ajax({
     type: 'DELETE',
-    url: "/boards/list",    //탭의 data-tab속성의 값으로 된 html파일로 통신
+    url: "/boards/list",
     data: { deleteList: jsonData },
     error: function () {  //통신 실패시
       alert('통신실패!');
     },
-    success: function (data) {    //통신 성공시 탭 내용담는 div를 읽어들인 값으로 채운다.
-      var tabUlObj = $('#tab_id');
-      tabUlObj.html("");
-      $.each(data, function (key, value) {
-        tabUlObj.append("<li data-tab=" + value.boardID + "  class=tabmenu id=default>" + value.boardName + "</li>");
-      });
+    success: function (data) {
+      updateTab(data);//새로운 탭 내용으로 교체
     }
   });
   $('#config_container').html("");
@@ -39,19 +38,14 @@ function updateTabByNewBoardListAfterDeleteBoard(jsonData) {
 //게시판 이름변경후 탭업데이트
 function updateTabByNewBoardListAfterUpdateBoardName(jsonData) {
   $.ajax({
-    type: 'POST',                 //get방식으로 통신
-    url: "/boards/newtitles",    //탭의 data-tab속성의 값으로 된 html파일로 통신
-    data: { newTItles: jsonData },
+    type: 'POST',
+    url: "/boards/newtitles",
+    data: { newTitles: jsonData },
     error: function (error) {  //통신 실패시
       alert(error);
     },
-    success: function (data) {    //통신 성공시 탭 내용담는 div를 읽어들인 값으로 채운다.
-      var tabUlObj = $('#tab_id');
-      tabUlObj.html("");
-      $.each(data, function (key, value) {
-        $("#tab_id").append("<li data-tab=" + value.boardID + "  class=tabmenu id=default>" + value.boardName + "</li>");
-      });
-      $('#config_container').html("");
+    success: function (data) {
+        updateTab(data);//새로운 탭 내용으로 교체
     }
   });
 }
@@ -60,16 +54,17 @@ function updateTabByNewBoardListAfterUpdateBoardName(jsonData) {
 function getBoardListToDelete() {
   $.ajax({
     type: 'GET',
-    url: '/boards/list',    //탭의 data-tab속성의 값으로 된 html파일로 통신
+    url: '/boards/list',
     error: function () {  //통신 실패시
       alert('통신실패!');
     },
-    success: function (data) {    //통신 성공시 탭 내용담는 div를 읽어들인 값으로 채운다.
-      var containerObj = $('#config_container');
-      containerObj.html("삭제할 게시판을 선택하시오");
+    success: function (data) {
+      $('#config_container').html("삭제할 게시판을 선택하시오");
+      $.template("deleteListTmpl","<div><span>${boardName}</span><input type=checkbox name=boardDelete value=${boardID}></div>")
+      $.tmpl("deleteListTmpl", data).appendTo("#config_container");
+      //TODO Template 적용예정
       $.each(data, function (key, value) {
-        containerObj.append("<div><span>" + value.boardName + "</span><input type=checkbox name=boardDelete value=" +
-          value.boardID + "></div>");
+        containerObj.append();
       });
       containerObj.append(" <a id ='addFuncBtn' onclick = javascript:clickSaveDelteBoard(this) style=cursor:pointer>삭제하기</a>" +
         "<button class = 'functionClose' type='button' onclick=javascript:clickConfigClose(this)>닫기</button>");
@@ -81,12 +76,12 @@ function getBoardListToDelete() {
 function getPostDataAfterPostClick(postID, boardID) {
   var postContentObj = $('#postcontent');
   $.ajax({
-    type: 'GET',                 //get방식으로 통신
-    url: "/boards/" + boardID + "/posts/" + postID,    //탭의 data-tab속성의 값으로 된 html파일로 통신
+    type: 'GET',
+    url: "/boards/" + boardID + "/posts/" + postID,
     error: function () {  //통신 실패시
       alert('통신실패!');
     },
-    success: function (data) {    //통신 성공시 탭 내용담는 div를 읽어들인 값으로 채운다.
+    success: function (data) {
       console.log("success" + data);
       $('#writecontent').hide();
       $('#btn_write').show();
@@ -103,7 +98,6 @@ function getPostDataAfterPostClick(postID, boardID) {
       // 작성글의 userID와 현재 로그인한 userID가 같으면 삭제버튼 표시
 
       var commentAbleObj = $('#functionAble1');
-      //console.log("comment 여부 : " + commentAbleObj.attr("value"));
 
       if (data.canDelete == true) {
         postContentObj.append(
@@ -120,17 +114,19 @@ function getPostDataAfterPostClick(postID, boardID) {
   });
 }
 
+
 //탭클릭후 게시판 목록 불러오기
 function getPostsAfterTabClick(boardID) {
   $.ajax({
-    type: 'GET',                 //get방식으로 통신
-    url: '/boards/' + boardID + "/posts",    //탭의 data-tab속성의 값으로 된 html파일로 통신
+    type: 'GET',
+    url: '/boards/' + boardID + "/posts",
     error: function () {  //통신 실패시
       alert('통신실패!');
     },
-    success: function (data) {    //통신 성공시 탭 내용담는 div를 읽어들인 값으로 채운다.
+    success: function (data) {
       console.log("success" + data);
       $('#postlist').html("");
+      //TODO Template 적용예정
       $.each(data, function (key, value) {
         $('#postlist').append(
           "<tr height='30' class = 'postclick' data-post = '" + value.postID +

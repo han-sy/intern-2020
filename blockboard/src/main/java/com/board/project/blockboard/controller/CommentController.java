@@ -20,7 +20,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 @Slf4j
-@Controller
+@RestController
 @RequestMapping("/boards/{boardid}/posts")
 public class CommentController {
     @Autowired
@@ -34,7 +34,6 @@ public class CommentController {
      * @throws Exception
      */
     @GetMapping("/{postid}/comments")
-    @ResponseBody
     public List<CommentDTO> getCommentsByPost(@PathVariable("postid") int postID, HttpServletRequest request) throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
         List<CommentDTO> commentList = commentService.getCommentListByPostID(postID);
         return commentList;

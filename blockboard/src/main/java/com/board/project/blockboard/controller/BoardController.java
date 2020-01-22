@@ -143,7 +143,7 @@ public class BoardController {
      */
     @PostMapping(value = "/newtitles")
     @ResponseBody
-    public List<BoardDTO>  changeNewBoardName(@RequestParam("newTItles") String newTItleList, HttpServletRequest request) throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
+    public List<BoardDTO>  changeNewBoardName(@RequestParam("newTitles") String newTItleList, HttpServletRequest request) throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
         SessionTokenizer session = new SessionTokenizer(request);
         int companyID = session.getCompanyID();
 

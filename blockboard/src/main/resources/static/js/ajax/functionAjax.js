@@ -11,6 +11,7 @@ function getNewFunctionInfo(companyID, jsonData) {
       console.log("success" + data);
       var containerObj = $('#fuctionListContainer');
       containerObj.html("현재 사용중인 기능 : ");
+      //TODO Template 적용예정
       $.each(data, function (key, value) {
         console.log(value.functionName + " : " + value.companyID);
         if (value.companyID == 0) {
@@ -39,6 +40,7 @@ function getOldFunctionInfoForChange(companyID) {
       console.log("success" + data);
       var containerObj = $('#config_container');
       containerObj.html("");
+      //TODO Template 적용예정
       $.each(data, function (key, value) {
         console.log(value.functionInfoData);
         if (value.companyID == 0) {
