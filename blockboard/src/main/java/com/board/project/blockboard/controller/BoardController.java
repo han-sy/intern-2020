@@ -11,13 +11,21 @@ import com.board.project.blockboard.util.SessionTokenizer;
 
 import lombok.extern.slf4j.Slf4j;
 
+import org.apache.commons.codec.DecoderException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.servlet.http.HttpServletRequest;
 
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 
@@ -64,7 +72,7 @@ public class BoardController {
      */
     @GetMapping("/{boardid}/posts")
     @ResponseBody
-    public List<PostDTO> getPostListByBoardID(@PathVariable("boardid") int boardID){
+    public List<PostDTO> getPostListByBoardID(@PathVariable("boardid") int boardID) throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException{
         List<PostDTO> postList = boardService.getPostListByBoardID(boardID);
         return postList;
     }
@@ -78,7 +86,7 @@ public class BoardController {
      */
     @GetMapping(value = "/{boardid}/posts/{postid}")
     @ResponseBody
-    public Map<String,Object> getPostByPostID(@PathVariable("postid") int postID, HttpServletRequest request) throws Exception{
+    public Map<String,Object> getPostByPostID(@PathVariable("postid") int postID, HttpServletRequest request) throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
         SessionTokenizer session = new SessionTokenizer(request);
         String userID = session.getUserID();
         int companyID = session.getCompanyID();
@@ -92,11 +100,11 @@ public class BoardController {
      * 게시판 목록 가져오기
      * @param request
      * @return
-     * @throws Exception
+     * @throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException
      */
     @GetMapping(value = "/list")
     @ResponseBody
-    public List<BoardDTO> getBoardList(HttpServletRequest request) throws Exception {
+    public List<BoardDTO> getBoardList(HttpServletRequest request) throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
         SessionTokenizer session = new SessionTokenizer(request);
         int companyID = session.getCompanyID();
 
@@ -110,11 +118,11 @@ public class BoardController {
      * @param newBoardName 새로입력받은 보드이름
      * @param request
      * @return
-     * @throws Exception
+     * @throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException
      */
     @PostMapping(value = "/{boardname}")
     @ResponseBody
-    public List<BoardDTO> insertNewBoard(@PathVariable("boardname") String newBoardName, HttpServletRequest request) throws Exception {
+    public List<BoardDTO> insertNewBoard(@PathVariable("boardname") String newBoardName, HttpServletRequest request) throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
         SessionTokenizer session = new SessionTokenizer(request);
         int companyID = session.getCompanyID();
 
@@ -135,7 +143,7 @@ public class BoardController {
      */
     @PostMapping(value = "/newtitles")
     @ResponseBody
-    public List<BoardDTO>  changeNewBoardName(@RequestParam("newTItles") String newTItleList, HttpServletRequest request) throws Exception {
+    public List<BoardDTO>  changeNewBoardName(@RequestParam("newTItles") String newTItleList, HttpServletRequest request) throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
         SessionTokenizer session = new SessionTokenizer(request);
         int companyID = session.getCompanyID();
 
@@ -150,11 +158,11 @@ public class BoardController {
      * @param deleteBoards 삭제리스트
      * @param request
      * @return
-     * @throws Exception
+     * @throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException
      */
     @DeleteMapping(value = "/list")
     @ResponseBody
-    public List<BoardDTO> deleteBoardbyBoardID(@RequestParam("deleteList") String deleteBoards, HttpServletRequest request) throws Exception {
+    public List<BoardDTO> deleteBoardbyBoardID(@RequestParam("deleteList") String deleteBoards, HttpServletRequest request) throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
         SessionTokenizer session = new SessionTokenizer(request);
         int companyID = session.getCompanyID();
 

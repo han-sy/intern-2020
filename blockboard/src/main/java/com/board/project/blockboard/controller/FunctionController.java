@@ -57,7 +57,7 @@ public class FunctionController {
      */
     @PostMapping(value = "/{companyid}")
     @ResponseBody
-    public List<FunctionDTO> insertNewFunctionData(@RequestParam("functionInfoData") String functionInfoData, HttpServletRequest request) throws Exception {
+    public List<FunctionDTO> insertNewFunctionData(@RequestParam("functionInfoData") String functionInfoData, HttpServletRequest request) throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
         SessionTokenizer session = new SessionTokenizer(request);
         int companyID = session.getCompanyID();
 
