@@ -3,12 +3,12 @@ function getCommentAllContents(postID, boardID, postContentObj) {
   console.log("conmment ajax 함수 호출");
   postContentObj.append("<div><span><strong>Comments</strong></span> <span id=commentCount></span></div>");
   $.ajax({
-    type: 'GET',                 //get방식으로 통신
-    url: "/boards/" + boardID + "/posts/" + postID + "/comments",    //탭의 data-tab속성의 값으로 된 html파일로 통신
+    type: 'GET',
+    url: "/boards/" + boardID + "/posts/" + postID + "/comments",
     error: function () {  //통신 실패시
       alert('통신실패!');
     },
-    success: function (data) {    //통신 성공시 탭 내용담는 div를 읽어들인 값으로 채운다.
+    success: function (data) {
      //TODO Template 적용예정
      $.each(data, function (key, value) {
         postContentObj.append("<div><span style ='width:500px'><strong>ㄴ" + value.userName + " : </strong></span>   <span>" + value.commentContent + "</span></div>");

@@ -107,7 +107,7 @@ function getPostDataAfterPostClick(postID, boardID) {
       }
       if (commentAbleObj.attr("value") == "on") {
         $(function () {
-          getCommentAllContents(postID, boardID, postContentObj); //삭제이후 tab에 게시판목록 업데이트
+          getCommentAllContents(postID, boardID, postContentObj); //삭제이후 tab에 게시판목록 업데이트 //CommentAjax.js 에 있음
         });
       }
     }
