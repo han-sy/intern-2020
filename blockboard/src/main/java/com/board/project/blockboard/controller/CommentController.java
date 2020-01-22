@@ -2,6 +2,7 @@ package com.board.project.blockboard.controller;
 
 import com.board.project.blockboard.dto.CommentDTO;
 import com.board.project.blockboard.service.CommentService;
+import com.board.project.blockboard.util.SessionTokenizer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.DecoderException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 @Slf4j
-@RestController
+@Controller
 @RequestMapping("/boards/{boardid}/posts")
 public class CommentController {
     @Autowired
@@ -34,7 +35,27 @@ public class CommentController {
      * @throws Exception
      */
     @GetMapping("/{postid}/comments")
+    @ResponseBody
     public List<CommentDTO> getCommentsByPost(@PathVariable("postid") int postID, HttpServletRequest request) throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
+        log.info("!!!!");
+        List<CommentDTO> commentList = commentService.getCommentListByPostID(postID);
+
+        return commentList;
+    }
+
+    @PostMapping("/{postid}/comments")
+    @ResponseBody
+    public List<CommentDTO> writeComment(@PathVariable("postid") int postID,@PathVariable("boardid") int boardID,@ModelAttribute CommentDTO receiveComment, HttpServletRequest request) throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
+        log.info("writeComment 들어옴");
+        SessionTokenizer session = new SessionTokenizer(request);
+        String userID = session.getUserID();
+        int companyID = session.getCompanyID();
+
+        receiveComment.setBoardID(boardID);
+        receiveComment.setUserID(userID);
+        receiveComment.setPostID(postID);
+        commentService.writeCommentWithUserInfo(userID,receiveComment,boardID,companyID,postID);
+
         List<CommentDTO> commentList = commentService.getCommentListByPostID(postID);
         return commentList;
     }

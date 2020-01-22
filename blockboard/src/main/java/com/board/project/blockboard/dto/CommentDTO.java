@@ -9,7 +9,8 @@ public class CommentDTO {
     private int commmentID;
     private int boardID;
     private int postID;
-    private int userID;
+    private int companyID;
+    private String userID;
     private String userName;
     private String commentContent;
     private String commentRegisterTime;

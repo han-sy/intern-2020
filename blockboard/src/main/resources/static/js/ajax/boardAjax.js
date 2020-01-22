@@ -12,7 +12,7 @@ function loadPostContent(data){
           postContentHtml +="<h5>작성시간 : " + data.postRegisterTime + "</h4>";
           postContentHtml +="<a>" + data.postContent + "</a>" ;
           postContentHtml +="<a id=postID style=visibility:hidden>" + data.postID + "</a>";
-          postContentObj.html(postContentHtml);
+          $('#postcontent').html(postContentHtml);
 }
 //게시글 목록
 function loadPostList(data){
@@ -20,7 +20,7 @@ function loadPostList(data){
     var postContentHtml =  "<tr height='30' class = 'postclick' data-post = ${postID}"+
                          " onclick='javascript:clickTrEvent(this)' onmouseover = 'javascript:changeTrColor(this)' >" +
                          "<td width='379'>${postTitle}</td>" +
-                         "<td width='73'>&{userName}</td>" +
+                         "<td width='73'>${userName}</td>" +
                          "<td width='164'>${postRegisterTime}</td></tr>" +
                          "<td style='visibility:hidden'>${postID}</td>";
     $.template("postListTmpl",postContentHtml);
@@ -85,7 +85,7 @@ function getBoardListToDelete() {
       $('#config_container').html("삭제할 게시판을 선택하시오");
       $.template("deleteListTmpl","<div><span>${boardName}</span><input type=checkbox name=boardDelete value=${boardID}></div>")
       $.tmpl("deleteListTmpl", data).appendTo("#config_container");
-      containerObj.append(" <a id ='addFuncBtn' onclick = javascript:clickSaveDelteBoard(this) style=cursor:pointer>삭제하기</a>" +
+      $('#config_container').append(" <a id ='addFuncBtn' onclick = javascript:clickSaveDelteBoard(this) style=cursor:pointer>삭제하기</a>" +
         "<button class = 'functionClose' type='button' onclick=javascript:clickConfigClose(this)>닫기</button>");
     }
   });
@@ -94,6 +94,7 @@ function getBoardListToDelete() {
 //게시물 클릭후 게시물 데이터 받아오기
 function getPostDataAfterPostClick(postID, boardID) {
   var postContentObj = $('#postcontent');
+  postContentObj.html("");
   $.ajax({
     type: 'GET',
     url: "/boards/" + boardID + "/posts/" + postID,
@@ -112,12 +113,20 @@ function getPostDataAfterPostClick(postID, boardID) {
       if (data.canDelete == true) {
         postContentObj.append(
         "</br><button id=btn_updatePost>수정</button>"+
-        "</br><button id=btn_deletePost>삭제</button>"
+        "</br><button id=btn_deletePost>삭제</button><br>"
         );
       }
+            var postContentHtml ="";
+
       if (commentAbleObj.attr("value") == "on") {
+
         $(function () {
-          getCommentAllContents(postID, boardID, postContentObj); //삭제이후 tab에 게시판목록 업데이트 //CommentAjax.js 에 있음
+        postContentObj.append("<br><br><div class= comment_section <div><span><strong>댓글</strong></span> <span id=commentCount></span></div>");
+        postContentHtml +="<div class = comment_list_container></div>";
+        postContentHtml +="<div class = comment_input_container></div>";
+        postContentObj.append(postContentHtml);
+
+          getCommentAllContents(postID, boardID); //삭제이후 tab에 게시판목록 업데이트 //CommentAjax.js 에 있음
         });
       }
     }

@@ -18,4 +18,9 @@
         FROM Users users
         WHERE users.user_id = #{userID};
     </select>
+    <select id="selectUserNameByUserID" parameterType="string" resultType="string">
+        SELECT user_name as userName
+        FROM Users
+        WHERE user_id = #{userID};
+    </select>
 </mapper>
