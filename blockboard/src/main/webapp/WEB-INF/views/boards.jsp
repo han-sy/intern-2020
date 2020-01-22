@@ -28,8 +28,12 @@
 
 <body>
   <h1 id = "serviceTitle" value =${companyID}>${companyName} 게시판</h1>
+  <h3 class = "currentUser">User :
+  <span id ="current_user_id">${userID}</span>(
+  <span id ="current_user_name">${userName}</span>)
+  </h3>
   <!--게시판 하위에 관리자일 경우 추가되는 버튼 (기능변경, 게시판추가)-->
-  <c:if test="${isadmin}">
+
         <div id = "fuctionListContainer">
         현재 사용중인 기능 :
         <c:forEach items="${functionInfoList}" var="functionList" varStatus="status">
@@ -41,6 +45,7 @@
              </c:if>
 
         </c:forEach>
+        <c:if test="${isadmin}">
         </div>
         <br>
         <a id ='addFuncBtn'  onclick = "javascript:changeFunction(this)" style ="cursor:pointer">기능 변경</a>

@@ -36,4 +36,8 @@ public class UserService {
     public int selectCompanyIDByUserID(String userID) {
         return userMapper.selectCompanyIDByUserID(userID);
     }
+
+    public String getUserNameByUserID(String userID) {
+        return userMapper.selectUserNameByUserID(userID);
+    }
 }

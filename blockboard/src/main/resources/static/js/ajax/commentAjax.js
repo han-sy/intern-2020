@@ -2,10 +2,26 @@
 function getCommentList(data) {
   $(".comment_list_container").html("");
   var commentHtml = "";
-  commentHtml += "<hr><div><div><table class='table'><h4><strong>${userName}</strong></h4>";
-  commentHtml += "${commentContent}<tr><td></td></tr></table></div></div>";
-  $.template("commentListTmpl", commentHtml);
-  $.tmpl("commentListTmpl", data).appendTo(".comment_list_container");
+
+  //console.log(${userID}+"------"+$("#current_user_id").text())
+
+  $.each(data, function (key, value) {
+    commentHtml += "<hr><div><div>";
+    commentHtml += ("<p class=user><span class=name>" + value.userName + "</strong> <span class=date> " + value.commentRegisterTime + "</span></p>");
+    commentHtml += ("<p class =comment_area>" + value.commentContent + "</p></div>");
+    commentHtml += "<div class=btn>";
+    if ($('#functionAble2').attr("value") == "on") {
+      commentHtml += "<button type=button class=_no_print>답글</button>";
+    }
+    if (value.userID == $("#current_user_id").text()) {
+      commentHtml += "<button type=button id = edit_comment>수정</button>";
+      commentHtml += "<button type=button id = delete_comment>삭제</button>";
+    }
+    commentHtml += "</div></div>";
+  });
+
+
+  $(".comment_list_container").append(commentHtml);
 }
 
 //댓글 inputform 받아오기
@@ -28,23 +44,21 @@ function getCommentAllContents(postID, boardID) {
       alert('통신실패!');
     },
     success: function (data) {
-      //TODO Template 적용예정
       getCommentList(data);
       getCommentInputHtml();
     }
   });
 }
 
-function updateComment(boardID,postID,commentText) {
+function updateComment(boardID, postID, commentText) {
   $.ajax({
     type: 'POST',
     url: "/boards/" + boardID + "/posts/" + postID + "/comments",
-    data: {commentContent: commentText},
+    data: { commentContent: commentText },
     error: function () {  //통신 실패시
       alert('통신실패!');
     },
     success: function (data) {
-      //TODO Template 적용예정
       getCommentList(data);
     }
   });

@@ -38,15 +38,4 @@ public class CommentService {
         return result ==1? comment : null;
     }
 
-
-    /*public void writeCommentWithUserInfo(String userID, String commentText, int boardID, int companyID, int postID) {
-        Map<String, Object> commentInfo = new HashMap<String, Object>();
-        commentInfo.put("userID",userID);
-        commentInfo.put("boardID",boardID);
-        commentInfo.put("commentText",commentText);
-        commentInfo.put("companyID",companyID);
-        commentInfo.put("postID",postID);
-        log.info("null check"+commentInfo);
-        commentMapper.insertNewCommentByCommentInfo(commentInfo);
-    }*/
 }

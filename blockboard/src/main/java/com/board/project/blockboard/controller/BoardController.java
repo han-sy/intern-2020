@@ -60,6 +60,8 @@ public class BoardController {
         model.addAttribute("companyName",boardService.getCompanyNameByUserID(userID));//회사이름
         model.addAttribute("isadmin",boardService.checkAdmin(userID));
         model.addAttribute("companyID",companyID);
+        model.addAttribute("userID",userID);
+        model.addAttribute("userName",userService.getUserNameByUserID(userID));
         model.addAttribute("functionInfoList",functionService.getfunctionInfoListByCompanyID(companyID));
 
         return "boards";
