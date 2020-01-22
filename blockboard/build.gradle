@@ -41,6 +41,7 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok:1.18.6'
 	annotationProcessor 'org.projectlombok:lombok:1.18.6'
 	compile "com.google.code.gson:gson"
+	compile "io.jsonwebtoken:jjwt:0.6.0"
 }
 
 test {

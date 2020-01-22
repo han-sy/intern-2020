@@ -2,16 +2,12 @@ package com.board.project.blockboard.controller;
 
 import com.board.project.blockboard.dto.PostDTO;
 import com.board.project.blockboard.service.BoardService;
+import com.board.project.blockboard.service.JwtService;
 import com.board.project.blockboard.service.PostService;
-import com.board.project.blockboard.util.SessionTokenizer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.HttpClientErrorException;
-
-import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,26 +19,24 @@ public class PostController {
     private PostService postService;
     @Autowired
     private BoardService boardService;
-
+    @Autowired
+    private JwtService jwtService;
     /**
      * 게시물 작성
      * @param boardid 게시물을 올릴 게시판 id
      * @param receivePost 받은 게시물 정보
-     * @param request sessionID가 담긴 쿠키 받아오기위한 객체
      * @return
      * @throws Exception
      */
     @PostMapping("/")
     @ResponseBody
-    public void insertPost(@PathVariable("boardid") int boardid, @ModelAttribute PostDTO receivePost, HttpServletRequest request) throws Exception {
-        SessionTokenizer session = new SessionTokenizer(request);
-        String userID = session.getUserID();
-        int companyID = session.getCompanyID();
+    public void insertPost(@PathVariable("boardid") int boardid, @ModelAttribute PostDTO receivePost) {
+        String userID = jwtService.getUserId();
+        int companyID = jwtService.getCompanyId();
 
         receivePost.setUserID(userID);
         receivePost.setCompanyID(companyID);
         receivePost.setBoardID(boardid);
-
         postService.insertPost(receivePost);
     }
 
