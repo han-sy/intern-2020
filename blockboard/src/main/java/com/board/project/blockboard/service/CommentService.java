@@ -38,4 +38,7 @@ public class CommentService {
         return result ==1? comment : null;
     }
 
+    public void deleteComment(int commentID) {
+        commentMapper.deleteCommentByCommentID(commentID);
+    }
 }

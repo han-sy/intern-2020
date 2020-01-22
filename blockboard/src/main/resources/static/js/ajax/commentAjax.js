@@ -6,7 +6,7 @@ function getCommentList(data) {
   //console.log(${userID}+"------"+$("#current_user_id").text())
 
   $.each(data, function (key, value) {
-    commentHtml += "<hr><div><div>";
+    commentHtml += "<hr><div id=comment"+value.commentID+"><div>";
     commentHtml += ("<p class=user><span class=name>" + value.userName + "</strong> <span class=date> " + value.commentRegisterTime + "</span></p>");
     commentHtml += ("<p class =comment_area>" + value.commentContent + "</p></div>");
     commentHtml += "<div class=btn>";
@@ -55,6 +55,19 @@ function updateComment(boardID, postID, commentText) {
     type: 'POST',
     url: "/boards/" + boardID + "/posts/" + postID + "/comments",
     data: { commentContent: commentText },
+    error: function () {  //통신 실패시
+      alert('통신실패!');
+    },
+    success: function (data) {
+      getCommentList(data);
+    }
+  });
+}
+
+function deleteCommentByCommentID(postID,boardID,commentID){
+  $.ajax({
+    type: 'DELETE',
+    url: "/boards/" + boardID + "/posts/" + postID + "/comments/"+commentID,
     error: function () {  //통신 실패시
       alert('통신실패!');
     },

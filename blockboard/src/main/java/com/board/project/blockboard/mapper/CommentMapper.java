@@ -11,4 +11,5 @@ import java.util.List;
 public interface CommentMapper {
     List<CommentDTO> selectCommentsByPostID(int postID);
     int insertNewCommentByCommentInfo(CommentDTO commentInfo);
+    void deleteCommentByCommentID(int commentID);
 }

@@ -21,7 +21,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 @Slf4j
-@Controller
+@RestController
 @RequestMapping("/boards/{boardid}/posts")
 public class CommentController {
     @Autowired
@@ -35,7 +35,6 @@ public class CommentController {
      * @throws Exception
      */
     @GetMapping("/{postid}/comments")
-    @ResponseBody
     public List<CommentDTO> getCommentsByPost(@PathVariable("postid") int postID, HttpServletRequest request) throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
         log.info("!!!!");
         List<CommentDTO> commentList = commentService.getCommentListByPostID(postID);
@@ -44,7 +43,6 @@ public class CommentController {
     }
 
     @PostMapping("/{postid}/comments")
-    @ResponseBody
     public List<CommentDTO> writeComment(@PathVariable("postid") int postID,@PathVariable("boardid") int boardID,@ModelAttribute CommentDTO receiveComment, HttpServletRequest request) throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
         log.info("writeComment 들어옴");
         SessionTokenizer session = new SessionTokenizer(request);
@@ -55,6 +53,17 @@ public class CommentController {
         receiveComment.setUserID(userID);
         receiveComment.setPostID(postID);
         commentService.writeCommentWithUserInfo(userID,receiveComment,boardID,companyID,postID);
+
+        List<CommentDTO> commentList = commentService.getCommentListByPostID(postID);
+        return commentList;
+    }
+    @DeleteMapping("/{postid}/comments/{commentid}")
+    public List<CommentDTO> deleteComment(@PathVariable("commentid") int commentID,@PathVariable("postid") int postID,@PathVariable("boardid") int boardID, HttpServletRequest request) throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
+        log.info("writeComment 들어옴");
+        /*SessionTokenizer session = new SessionTokenizer(request);
+        String userID = session.getUserID();
+        int companyID = session.getCompanyID();*/
+        commentService.deleteComment(commentID);
 
         List<CommentDTO> commentList = commentService.getCommentListByPostID(postID);
         return commentList;

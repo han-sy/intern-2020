@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class CommentDTO {
-    private int commmentID;
+    private int commentID;
     private int boardID;
     private int postID;
     private int companyID;

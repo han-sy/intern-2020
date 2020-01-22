@@ -22,4 +22,10 @@
         INSERT INTO Comments(board_id,post_id,user_id,company_id,comment_content,comment_referenced_id)
         VALUES (#{boardID},#{postID},#{userID},#{companyID},#{commentContent},null);
     </insert>
+
+    <delete id="deleteCommentByCommentID" parameterType="int">
+        DELETE
+        FROM Comments
+        WHERE Comment_id = #{commentID};
+    </delete>
 </mapper>
