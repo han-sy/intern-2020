@@ -129,7 +129,7 @@ function clickTrEvent(trObj) {
     }
   });
   $(function () {
-    getPostDataAfterPostClick(postID, boardID);
+    getPostDataAfterPostClick(postID, boardID); //boardAjax.js 참고
   });
 }
 

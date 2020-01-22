@@ -4,6 +4,29 @@ function updateTab(data){
       $.template("tabListTmpl","<li data-tab=${boardID} class=tabmenu id=default> ${boardName} </li>");
       $.tmpl("tabListTmpl", data).appendTo("#tab_id");
 }
+//게시글 내용
+function loadPostContent(data){
+     var postContentHtml = "";
+          postContentHtml += "<h2>" + data.postTitle + "</h2>";
+          postContentHtml += "<h5>작성자 : " + data.userName + "</h4>";
+          postContentHtml +="<h5>작성시간 : " + data.postRegisterTime + "</h4>";
+          postContentHtml +="<a>" + data.postContent + "</a>" ;
+          postContentHtml +="<a id=postID style=visibility:hidden>" + data.postID + "</a>";
+          postContentObj.html(postContentHtml);
+}
+//게시글 목록
+function loadPostList(data){
+    $('#postlist').html("");
+    var postContentHtml =  "<tr height='30' class = 'postclick' data-post = ${postID}"+
+                         " onclick='javascript:clickTrEvent(this)' onmouseover = 'javascript:changeTrColor(this)' >" +
+                         "<td width='379'>${postTitle}</td>" +
+                         "<td width='73'>&{userName}</td>" +
+                         "<td width='164'>${postRegisterTime}</td></tr>" +
+                         "<td style='visibility:hidden'>${postID}</td>";
+    $.template("postListTmpl",postContentHtml);
+    $.tmpl("postListTmpl", data).appendTo("#postlist");
+}
+
 
 //탭 업데이트 새로운 게시판 목록으로
 function updateTabByNewBoardListAfterAddBoard(boardName) {
@@ -62,10 +85,6 @@ function getBoardListToDelete() {
       $('#config_container').html("삭제할 게시판을 선택하시오");
       $.template("deleteListTmpl","<div><span>${boardName}</span><input type=checkbox name=boardDelete value=${boardID}></div>")
       $.tmpl("deleteListTmpl", data).appendTo("#config_container");
-      //TODO Template 적용예정
-      $.each(data, function (key, value) {
-        containerObj.append();
-      });
       containerObj.append(" <a id ='addFuncBtn' onclick = javascript:clickSaveDelteBoard(this) style=cursor:pointer>삭제하기</a>" +
         "<button class = 'functionClose' type='button' onclick=javascript:clickConfigClose(this)>닫기</button>");
     }
@@ -82,23 +101,14 @@ function getPostDataAfterPostClick(postID, boardID) {
       alert('통신실패!');
     },
     success: function (data) {
-      console.log("success" + data);
       $('#writecontent').hide();
       $('#btn_write').show();
 
-      //게시글 내용용
-     var postContentHtml = "";
-      postContentHtml += "<h2>" + data.postTitle + "</h2>";
-      postContentHtml += "<h2>" + data.postTitle + "</h2>";
-      postContentHtml += "<h5>작성자 : " + data.userName + "</h4>";
-      postContentHtml +="<h5>작성시간 : " + data.postRegisterTime + "</h4>";
-      postContentHtml +="<a>" + data.postContent + "</a>" ;
-      postContentHtml +="<a id=postID style=visibility:hidden>" + data.postID + "</a>";
-      postContentObj.html(postContentHtml);
+      //게시글 내용 출력
+     loadPostContent(data);
+
       // 작성글의 userID와 현재 로그인한 userID가 같으면 삭제버튼 표시
-
       var commentAbleObj = $('#functionAble1');
-
       if (data.canDelete == true) {
         postContentObj.append(
         "</br><button id=btn_updatePost>수정</button>"+
@@ -124,20 +134,7 @@ function getPostsAfterTabClick(boardID) {
       alert('통신실패!');
     },
     success: function (data) {
-      console.log("success" + data);
-      $('#postlist').html("");
-      //TODO Template 적용예정
-      $.each(data, function (key, value) {
-        $('#postlist').append(
-          "<tr height='30' class = 'postclick' data-post = '" + value.postID +
-          "' onclick='javascript:clickTrEvent(this)' onmouseover = 'javascript:changeTrColor(this)' >" +
-          "<td width='379'>" + value.postTitle + "</td>" +
-          "<td width='73'>" + value.userName + "</td>" +
-          "<td width='164'>" + value.postRegisterTime + "</td></tr>" +
-          "<td style='visibility:hidden'>" + value.postID + "</td>"
-        );
-        //alert($this);
-      });
+      loadPostList(data);
     }
   });
 }
