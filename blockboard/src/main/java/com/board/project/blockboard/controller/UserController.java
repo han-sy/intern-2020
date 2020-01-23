@@ -3,8 +3,6 @@ package com.board.project.blockboard.controller;
 import com.board.project.blockboard.dto.UserDTO;
 import com.board.project.blockboard.service.JwtService;
 import com.board.project.blockboard.service.UserService;
-import com.board.project.blockboard.util.AES256Util;
-import com.board.project.blockboard.util.SessionTokenizer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.net.URLCodec;
 import org.springframework.beans.factory.annotation.Autowired;
