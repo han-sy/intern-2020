@@ -94,6 +94,8 @@ fabric.properties
 ### Java ###
 # Compiled class file
 *.class
+*.classpath
+*.project
 
 # Log file
 *.log
@@ -127,6 +129,9 @@ gradle/
 
 ### bin ###
 bin/
+
+### settings ###
+.settings/
 
 # Ignore Gradle GUI config
 gradle-app.setting
