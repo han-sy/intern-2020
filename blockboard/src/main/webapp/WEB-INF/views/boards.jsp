@@ -116,6 +116,16 @@
   </div>
       <button id="btn_write">글쓰기</button>
   </div>
+  <div id="searchcontent">
+      <select id="search_option" style="width:100px;font-size:15px;">
+        <option>제목</option>
+        <option>작성자</option>
+        <option>내용</option>
+        <option>제목+내용</option>
+      </select>
+      <input id="search_keyword" type="text"/>
+      <button id="search">조회</button> 
+  </div>
 
 </body>
 

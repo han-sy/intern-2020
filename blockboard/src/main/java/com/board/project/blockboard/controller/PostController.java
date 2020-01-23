@@ -6,17 +6,13 @@ import com.board.project.blockboard.service.PostService;
 import com.board.project.blockboard.util.SessionTokenizer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.HttpClientErrorException;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 @Slf4j
-@Controller
+@RestController
 @RequestMapping("/boards/{boardid}/posts")
 public class PostController {
     @Autowired
@@ -33,7 +29,6 @@ public class PostController {
      * @throws Exception
      */
     @PostMapping("/")
-    @ResponseBody
     public void insertPost(@PathVariable("boardid") int boardid, @ModelAttribute PostDTO receivePost, HttpServletRequest request) throws Exception {
         SessionTokenizer session = new SessionTokenizer(request);
         String userID = session.getUserID();
@@ -52,7 +47,6 @@ public class PostController {
      * @return
      */
     @DeleteMapping("/{postid}")
-    @ResponseBody
     public void deletePost(@PathVariable("postid") int postid) {
         postService.deletePost(postid);
     }
@@ -63,14 +57,8 @@ public class PostController {
      * @return 게시물 제목, 내용
      */
     @GetMapping("/{postid}/editor")
-    @ResponseBody
-    public Map<String, Object> selectPostByPostID(@PathVariable("postid") int postid) {
-        Map<String, Object> map = new HashMap<String, Object>();
-        PostDTO getPost = postService.selectPostByPostID(postid);
-        // 수정화면 들어갈 때 postID의 정보를 띄워준다.
-        map.put("postTitle", getPost.getPostTitle());
-        map.put("postContent", getPost.getPostContent());
-        return map;
+    public PostDTO selectPostByPostID(@PathVariable("postid") int postid) {
+        return postService.selectPostByPostID(postid);
     }
 
     /**
@@ -81,10 +69,33 @@ public class PostController {
      * @return
      */
     @PutMapping("/{postid}")
-    @ResponseBody
     public void updatePost(@PathVariable("boardid") int boardid, @PathVariable("postid") int postid, @ModelAttribute PostDTO requestPost) {
         requestPost.setPostID(postid);
         requestPost.setBoardID(boardid);
         postService.updatePost(requestPost);
+    }
+
+    /**
+     * 수정한 게시물을 저장할 때
+     * @param option 검색 옵션 (ex : 제목, 내용, 작성자)
+     * @param keyword 검색할 문자열
+     * @return searchList 검색한 결과들이 담긴
+     */
+    @GetMapping("/search")
+    public List<PostDTO> searchPost(@RequestParam("option") String option, @RequestParam("keyword") String keyword) {
+        switch (option) {
+            case "제목":
+                option = "post_title";
+                break;
+            case "내용":
+                option = "post_content";
+                break;
+            case "작성자":
+                option = "user_name";
+                break;
+            default:
+                option = "mix";
+        }
+        return postService.searchPost(option, keyword);
     }
 }

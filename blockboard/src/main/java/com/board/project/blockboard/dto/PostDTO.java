@@ -12,6 +12,7 @@ public class PostDTO {
     private String userID;
     private String userName;
     private int boardID;
+    private String boardName;
     private int companyID;
     private String postTitle;
     private String postContent;

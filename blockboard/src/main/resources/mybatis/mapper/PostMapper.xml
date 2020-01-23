@@ -30,4 +30,38 @@
         SET post_title=#{postTitle}, post_content=#{postContent}, board_id=#{boardID}
         WHERE post_id=#{postID};
     </update>
+
+    <select id="search" parameterType="string" resultType="com.board.project.blockboard.dto.PostDTO">
+        SELECT post.post_id as postID,
+            post.user_id as userID,
+            post.board_id as boardID,
+            post.company_id as companyID,
+            post.post_title as postTitle,
+            post.post_content as postContent,
+            post.post_register_time as postRegisterTime,
+            board.board_name as boardName,
+            users.user_name as userName
+        FROM Post post,
+            Board board,
+            Users users
+        WHERE (users.user_id = post.user_id AND board.board_id = post.board_id)
+        <include refid="searchoption"></include>
+        ORDER BY postRegisterTime DESC;
+    </select>
+
+    <sql id="searchoption">
+        <choose>
+            <!-- 검색옵션이 제목+내용 일 경우 -->
+            <when test="option == 'mix'">
+                AND (post.post_title LIKE '%${keyword}%' OR post.post_content LIKE '%${keyword}%')
+            </when>
+            <when test="option == 'user_name'">
+                AND (users.user_name LIKE '%${keyword}%')
+            </when>
+            <!-- 아닐 경우 -->
+            <otherwise>
+                AND (post.${option} LIKE '%${keyword}%')
+            </otherwise>
+        </choose>
+    </sql>
 </mapper>
