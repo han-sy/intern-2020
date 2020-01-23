@@ -60,12 +60,12 @@ function clickSaveDelteBoard() {
 //게시판 이름변경 버튼 클릭시
 function clickchangeBoardBtn() {
   $.ajax({
-    type: 'GET',                 //POST 통신
-    url: '/boards/list',    //탭의 data-tab속성의 값으로 된 html파일로 통신
+    type: 'GET',
+    url: '/boards/list',
     error: function () {  //통신 실패시
       alert('통신실패!');
     },
-    success: function (data) {    //통신 성공시 탭 내용담는 div를 읽어들인 값으로 채운다.
+    success: function (data) {    
       var containerObj = $('#config_container')
       containerObj.html("");
       $.each(data, function (key, value) {
