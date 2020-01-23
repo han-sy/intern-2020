@@ -1,3 +1,7 @@
+/**
+ * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+ * @file BoardController.java
+ */
 package com.board.project.blockboard.controller;
 
 

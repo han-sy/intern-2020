@@ -1,3 +1,7 @@
+/**
+ * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+ * @file functionAjax.js
+ */
 //기능변경후 새로운 사용중인기능목록 불러오기
 function getNewFunctionInfo(companyID, jsonData) {
   $.ajax({

@@ -1,3 +1,8 @@
+/**
+ * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+ * @file commentAjax.js
+ */
+
 //댓글 리스트 받아오기
 function getCommentList(data) {
   $(".comment_list_container").html("");

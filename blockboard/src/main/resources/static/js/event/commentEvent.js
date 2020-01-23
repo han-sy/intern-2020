@@ -1,4 +1,7 @@
-
+/**
+ * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+ * @file commentEvent.js
+ */
 function clickSendCommentBtn() {
   var postID = $("#postID").html();
   var boardID = getCurrentBoardID();

@@ -1,3 +1,8 @@
+/**
+ * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+ * @file functionEvent.js
+ */
+
 //"기능변경" 버튼 클릭시
 function changeFunction() {
   var companyID = $('#serviceTitle').attr("value");
