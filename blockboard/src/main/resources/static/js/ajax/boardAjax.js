@@ -1,8 +1,11 @@
 //새로운 탭 내용으로 교체
 function updateTab(data){
       $('#tab_id').html("");
+      $('#boardIDinEditor').html("");
       $.template("tabListTmpl","<li data-tab=${boardID} class=tabmenu id=default> ${boardName} </li>");
       $.tmpl("tabListTmpl", data).appendTo("#tab_id");
+      $.template("tabListTmpl","<option data-tab=${boardID} class=tabmenu id=default> ${boardName} </option>");
+      $.tmpl("tabListTmpl", data).appendTo("#boardIDinEditor");
 }
 //게시글 내용
 function loadPostContent(data){
