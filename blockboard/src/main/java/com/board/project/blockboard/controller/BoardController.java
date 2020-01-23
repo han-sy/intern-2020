@@ -143,7 +143,7 @@ public class BoardController {
      */
     @PostMapping(value = "/newtitles")
     @ResponseBody
-    public List<BoardDTO>  changeNewBoardName(@RequestParam("newTItles") String newTItleList, HttpServletRequest request) {
+    public List<BoardDTO>  changeNewBoardName(@RequestParam("newTitles") String newTItleList, HttpServletRequest request) {
         int companyID = jwtService.getCompanyId();
 
         boardService.updateChangedName(newTItleList,companyID);

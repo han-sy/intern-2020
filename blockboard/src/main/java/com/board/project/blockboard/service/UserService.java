@@ -29,7 +29,7 @@ public class UserService {
             login_user.setUserPassword(null); // 비밀번호는 JWT 토큰에 담지 않는다.
             jwtToken = jwtService.create(HEADER_NAME, login_user, "user_info");
             Cookie jwtCookie = new Cookie(HEADER_NAME, jwtToken);
-            jwtCookie.setMaxAge(60 * 3);
+            jwtCookie.setMaxAge(60 * 60);
             response.addCookie(jwtCookie);
             return true;
         }

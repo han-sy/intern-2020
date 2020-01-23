@@ -63,12 +63,14 @@ public class UserController {
     public String login(HttpServletRequest request) {
         // 이미 JWT 토큰을 가지고 있으면 로그인 생략 후 메인화면으로 이동
         Cookie[] getCookie = request.getCookies();
-        for(Cookie c : getCookie) {
-            if(c.getName().equals(HEADER_NAME)) {
-                if(jwtService.isUsable(c.getValue()))
-                    return "redirect:/boards";
+        if (getCookie != null) {
+            for (Cookie c : getCookie) {
+                if (c.getName().equals(HEADER_NAME)) {
+                    if (jwtService.isUsable(c.getValue()))
+                        return "redirect:/boards";
+                }
             }
         }
-        return "login";
+    return "login";
     }
 }
