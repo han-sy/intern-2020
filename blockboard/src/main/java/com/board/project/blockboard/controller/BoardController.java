@@ -127,13 +127,13 @@ public class BoardController {
     }
 
     /**
-     * 게시판 이름 변경
+     * 게시판 이름 변경 변경된 리스트를 받아와서 수정한다.
      * @param newTItleList 이름이 변경된 리스트
      * @param request
      * @return
      * @throws Exception
      */
-    @PostMapping(value = "/newtitles")
+    @PutMapping(value = "")
     @ResponseBody
     public List<BoardDTO>  changeNewBoardName(@RequestParam("newTitles") String newTItleList, HttpServletRequest request) {
         int companyID = jwtService.getCompanyId();

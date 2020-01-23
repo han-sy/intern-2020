@@ -66,8 +66,8 @@ function updateTabByNewBoardListAfterDeleteBoard(jsonData) {
 //게시판 이름변경후 탭업데이트
 function updateTabByNewBoardListAfterUpdateBoardName(jsonData) {
   $.ajax({
-    type: 'POST',
-    url: "/boards/newtitles",
+    type: 'PUT',
+    url: "/boards",
     data: { newTitles: jsonData },
     error: function (error) {  //통신 실패시
       alert(error);
