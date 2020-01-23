@@ -75,6 +75,7 @@ create table Comments(
     primary key(comment_id,board_id)
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
+
 alter table Board auto_increment=1;
 alter table Post auto_increment=1;
 alter table Comments auto_increment=1;
@@ -101,7 +102,15 @@ insert into FunctionCheck values(2,4,null);
 insert into Post values(1,1,1,1,'첫게시글','첫내용',now());
 insert into Comments values(1,1,1,1,1,'첫 댓글',now(),null);
 insert into Comments values(2,1,1,1,1,'첫 답글',now(),1);
-
+INSERT INTO Comments(board_id,post_id,user_id,company_id,comment_content,comment_referenced_id)
+        VALUES (
+            1,
+            1,
+            1,
+            1,
+            'hihi',
+            null);
+Select * from Comments;
 Select * from Post;
 select * from Users;
 select * from FunctionCheck;
