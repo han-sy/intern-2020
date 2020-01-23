@@ -1,3 +1,7 @@
+/**
+ * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
+ * @file    PostController.java
+ */
 package com.board.project.blockboard.controller;
 
 import com.board.project.blockboard.dto.PostDTO;

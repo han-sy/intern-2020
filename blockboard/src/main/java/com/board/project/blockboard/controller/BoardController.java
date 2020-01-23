@@ -2,19 +2,15 @@ package com.board.project.blockboard.controller;
 
 
 import com.board.project.blockboard.dto.BoardDTO;
-import com.board.project.blockboard.dto.FunctionDTO;
 import com.board.project.blockboard.dto.PostDTO;
 import com.board.project.blockboard.service.BoardService;
 import com.board.project.blockboard.service.FunctionService;
 import com.board.project.blockboard.service.JwtService;
 import com.board.project.blockboard.service.UserService;
-import com.board.project.blockboard.util.SessionTokenizer;
 
 import lombok.extern.slf4j.Slf4j;
 
 import org.apache.commons.codec.DecoderException;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

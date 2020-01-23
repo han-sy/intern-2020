@@ -10,17 +10,16 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <title>BLOCK BOARD</title>
   <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
   <link rel="stylesheet" type="text/css" href="/static/css/boardstyle.css">
-  <script type="text/javascript" src="/js/jquery-1.4.1.min.js"></script>
-  <script type="text/javascript" src="./jquery.cookie.js"></script>
-  <script type="text/javascript" src="/js/jquery.tmpl.js"></script>
+  <script type="text/javascript" src="/static/js/util/jquery.tmpl.js"></script>
   <script src="/static/js/event/boardEvent.js"></script>
-  <script src="/static/js/util/jquery.tmpl.js"></script>
-  <script src="/static/js/event/postsEvent.js"></script>
+  <script src="/static/js/event/postEvent.js"></script>
   <script src="/static/js/event/commentEvent.js"></script>
   <script src="/static/js/event/functionEvent.js"></script>
   <script src="/static/js/ajax/functionAjax.js"></script>
   <script src="/static/js/ajax/commentAjax.js"></script>
+  <script src="/static/js/ajax/postAjax.js"></script>
   <script src="/static/js/ajax/boardAjax.js"></script>
   <script src="/static/ckeditor/ckeditor.js"></script>
   <script src="/static/ckeditor/adapters/jquery.js"></script>

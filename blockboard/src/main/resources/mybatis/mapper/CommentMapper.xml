@@ -28,4 +28,9 @@
         FROM Comments
         WHERE Comment_id = #{commentID};
     </delete>
+    <delete id="deleteCommentsByPostID" parameterType="int">
+        DELETE
+        FROM Comments
+        WHERE post_id = #{postID};
+    </delete>
 </mapper>

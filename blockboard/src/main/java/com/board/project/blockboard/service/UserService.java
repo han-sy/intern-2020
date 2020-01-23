@@ -1,3 +1,7 @@
+/**
+ * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
+ * @file    UserService.java
+ */
 package com.board.project.blockboard.service;
 
 import com.board.project.blockboard.mapper.UserMapper;

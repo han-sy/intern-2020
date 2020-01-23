@@ -1,3 +1,7 @@
+/**
+ * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
+ * @file    PostDTO.java
+ */
 package com.board.project.blockboard.dto;
 
 import lombok.Data;

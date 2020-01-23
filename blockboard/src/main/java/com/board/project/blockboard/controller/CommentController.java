@@ -3,22 +3,11 @@ package com.board.project.blockboard.controller;
 import com.board.project.blockboard.dto.CommentDTO;
 import com.board.project.blockboard.service.CommentService;
 import com.board.project.blockboard.service.JwtService;
-import com.board.project.blockboard.util.SessionTokenizer;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.codec.DecoderException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
 import javax.servlet.http.HttpServletRequest;
-import java.io.UnsupportedEncodingException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 @Slf4j

@@ -1,3 +1,7 @@
+/**
+ * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
+ * @file    PostMapper.java
+ */
 package com.board.project.blockboard.mapper;
 
 import com.board.project.blockboard.dto.PostDTO;
