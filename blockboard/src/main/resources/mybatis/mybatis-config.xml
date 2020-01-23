@@ -6,5 +6,6 @@
         <mapper resource="BoardMapper.xml"/>
         <mapper resource="PostMapper.xml"/>
         <mapper resource="FunctionMapper.xml"/>
+        <mapper resource="CommentMapper.xml"/>
     </mappers>
 </configuration>

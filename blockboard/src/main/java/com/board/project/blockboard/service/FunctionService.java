@@ -5,6 +5,7 @@ import com.board.project.blockboard.mapper.FunctionMapper;
 import com.board.project.blockboard.mapper.PostMapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @Service
 public class FunctionService {
     @Autowired
@@ -57,28 +59,29 @@ public class FunctionService {
         return functionInfoDataList;
     }
 
-    public boolean updateNewFunctionsInfo(int companyID, String functionInfoData) {
+    public void updateNewFunctionsInfo(int companyID, String functionInfoData) {
         List<FunctionDTO> functionInfoList = getFunctionInfoByCompanyID(companyID); //기존데이터
         //ajax를 통해 넘어온 json 형식의 string을 map 타입으로 변경
         Gson gson = new Gson();
-        Type type = new TypeToken<ArrayList<Map<String, Integer>>>() {}.getType();
-        ArrayList<Map<String,Integer>> functionListMap = gson.fromJson(functionInfoData,type); //새로운 데이터
+        Type type = new TypeToken<ArrayList<Map<String, String>>>() {}.getType();
+        log.info("@@@@"+functionInfoData);
+        ArrayList<Map<String,String>> functionListMap = gson.fromJson(functionInfoData,type); //새로운 데이터
 
         try{
             for(int i=0;i<functionInfoList.size();i++){
-                if(functionInfoList.get(i).getCompanyID()>0&&functionListMap.get(i).get("functionCheck")==0){//on->off
+                if(functionInfoList.get(i).getCompanyID()>0&&functionListMap.get(i).get("functionCheck").equals("OFF")){//on->off
                     //insert문
                     changeFunctionOnToOff(functionInfoList.get(i).getFunctionID(),companyID);
                 }
-                else if(functionInfoList.get(i).getCompanyID()==0&&functionListMap.get(i).get("functionCheck")==1){//off->on
+                else if(functionInfoList.get(i).getCompanyID()==0&&functionListMap.get(i).get("functionCheck").equals("ON")){//off->on
                     //delete문
                     changeFunctionOffToOn(functionInfoList.get(i).getFunctionID(),companyID);
                 }
             }
         }
         catch (Exception e){
-            return false;
+            e.printStackTrace();
         }
-        return true;
+
     }
 }

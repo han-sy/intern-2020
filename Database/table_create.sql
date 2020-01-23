@@ -71,9 +71,10 @@ create table Comments(
 	foreign key(company_id) references Company(company_id),
     comment_content varchar(4000) character set utf8mb4 collate utf8mb4_unicode_ci not null,
     comment_register_time timestamp not null,
-    comment_referenced_ID int(9),
+    comment_referenced_id int(9),
     primary key(comment_id,board_id)
 )ENGINE =InnoDB DEFAULT charset= utf8;
+
 
 alter table Board auto_increment=1;
 alter table Post auto_increment=1;
@@ -101,7 +102,15 @@ insert into FunctionCheck values(2,4,null);
 insert into Post values(1,1,1,1,'첫게시글','첫내용',now());
 insert into Comments values(1,1,1,1,1,'첫 댓글',now(),null);
 insert into Comments values(2,1,1,1,1,'첫 답글',now(),1);
-
+INSERT INTO Comments(board_id,post_id,user_id,company_id,comment_content,comment_referenced_id)
+        VALUES (
+            1,
+            1,
+            1,
+            1,
+            'hihi',
+            null);
+Select * from Comments;
 Select * from Post;
 select * from Users;
 select * from FunctionCheck;
@@ -123,6 +132,18 @@ SELECT p.post_id,p.user_id, u.user_name,p.board_id,p.company_id,p.post_title,p.p
         FROM Post p , Users u
         WHERE p.user_id = u.user_id and p.board_id=1
         ORDER BY p.post_id DESC;
-        
 
 
+SELECT  comments.comment_id as commentID,
+                comments.board_id as boardID,
+                comments.post_id as postID,
+                comments.user_id as userID,
+                users.user_name as userName,
+                comments.company_id as companyID,
+                comments.comment_content as commentContent,
+                comments.comment_register_time as commentRegisterTime,
+                comments.comment_referenced_id as commentReferencedID
+        FROM Comments comments , Users users
+        where comments.user_id = users.user_id
+        AND comments.post_id = 1
+        AND comments.comment_referenced_id is not null;

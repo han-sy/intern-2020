@@ -7,23 +7,47 @@
 <html>
 
 <head>
-
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-  <title>mysql 연동</title>
+  <title>BLOCK BOARD</title>
   <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
   <link rel="stylesheet" type="text/css" href="/static/css/boardstyle.css">
-  <script src="/static/js/event.js"></script>
-  <script src="/static/js/boardEvent.js"></script>
-  <script src="/static/js/postsEvent.js"></script>
-  <script src="/static/js/functionEvent.js"></script>
+  <script type="text/javascript" src="/js/jquery-1.4.1.min.js"></script>
+  <script type="text/javascript" src="./jquery.cookie.js"></script>
+  <script type="text/javascript" src="/js/jquery.tmpl.js"></script>
+  <script src="/static/js/event/boardEvent.js"></script>
+  <script src="/static/js/util/jquery.tmpl.js"></script>
+  <script src="/static/js/event/postsEvent.js"></script>
+  <script src="/static/js/event/commentEvent.js"></script>
+  <script src="/static/js/event/functionEvent.js"></script>
+  <script src="/static/js/ajax/functionAjax.js"></script>
+  <script src="/static/js/ajax/commentAjax.js"></script>
+  <script src="/static/js/ajax/boardAjax.js"></script>
   <script src="/static/ckeditor/ckeditor.js"></script>
   <script src="/static/ckeditor/adapters/jquery.js"></script>
 </head>
 
 <body>
   <h1 id = "serviceTitle" value =${companyID}>${companyName} 게시판</h1>
+  <h3 class = "currentUser">User :
+  <span id ="current_user_id">${userID}</span>(
+  <span id ="current_user_name">${userName}</span>)
+  </h3>
   <!--게시판 하위에 관리자일 경우 추가되는 버튼 (기능변경, 게시판추가)-->
-  <c:if test="${isadmin}">
+
+        <div id = "fuctionListContainer">
+        현재 사용중인 기능 :
+        <c:forEach items="${functionInfoList}" var="functionList" varStatus="status">
+             <c:if test="${functionList.companyID == 1}">
+                <span id = functionAble${functionList.functionID} value = on> ${functionList.functionName} </span>
+             </c:if>
+             <c:if test="${functionList.companyID == 0}">
+                <span id = functionAble${functionList.functionID} style=display:none value =off> ${functionList.functionName} </span>
+             </c:if>
+
+        </c:forEach>
+        <c:if test="${isadmin}">
+        </div>
+        <br>
         <a id ='addFuncBtn'  onclick = "javascript:changeFunction(this)" style ="cursor:pointer">기능 변경</a>
         <a id ='addBoardBtn' onclick = "javascript:clickaddBoardBtn(this)"  style="cursor:pointer">게시판 추가</a>
         <a id ='addBoardBtn' onclick = "javascript:clickchangeBoardBtn(this)"  style="cursor:pointer">게시판 이름변경</a>
@@ -59,7 +83,8 @@
     <div id="editorcontent"></div>
   </div>
 
-  <div id="postcontent"></div>
+  <div id="postcontent">
+  </div>
   <div id="tabcontent">
     <table width="90%" cellpadding="0" cellspacing="0" border="0">
       <thead>
