@@ -60,7 +60,7 @@ public class JwtService {
                     .parseClaimsJws(jwt);
             return true;
         } catch (Exception e) {
-            throw new UnauthorizedException();
+            return false;
         }
     }
 

@@ -68,6 +68,8 @@ public class UserController {
                 if (c.getName().equals(HEADER_NAME)) {
                     if (jwtService.isUsable(c.getValue()))
                         return "redirect:/boards";
+                    else
+                        return "login";
                 }
             }
         }

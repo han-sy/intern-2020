@@ -64,9 +64,9 @@ public class FunctionService {
         //ajax를 통해 넘어온 json 형식의 string을 map 타입으로 변경
         Gson gson = new Gson();
         Type type = new TypeToken<ArrayList<Map<String, String>>>() {}.getType();
-        log.info("@@@@"+functionInfoData);
+        log.info("functionInfoData : "+functionInfoData);
         ArrayList<Map<String,String>> functionListMap = gson.fromJson(functionInfoData,type); //새로운 데이터
-
+        log.info("functionListMap : "+functionListMap);
         try{
             for(int i=0;i<functionInfoList.size();i++){
                 if(functionInfoList.get(i).getCompanyID()>0&&functionListMap.get(i).get("functionCheck").equals("OFF")){//on->off
