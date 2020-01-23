@@ -2,6 +2,7 @@ package com.board.project.blockboard.controller;
 
 import com.board.project.blockboard.dto.CommentDTO;
 import com.board.project.blockboard.service.CommentService;
+import com.board.project.blockboard.service.JwtService;
 import com.board.project.blockboard.util.SessionTokenizer;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.DecoderException;
@@ -26,6 +27,8 @@ import java.util.List;
 public class CommentController {
     @Autowired
     private CommentService commentService;
+    @Autowired
+    private JwtService jwtService;
 
     /**
      * postID 일치하는 댓글 목록 리턴 ( 대댓글은 반환하지 않는다.)
@@ -35,19 +38,16 @@ public class CommentController {
      * @throws Exception
      */
     @GetMapping("/{postid}/comments")
-    public List<CommentDTO> getCommentsByPost(@PathVariable("postid") int postID, HttpServletRequest request) throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
-        log.info("!!!!");
+    public List<CommentDTO> getCommentsByPost(@PathVariable("postid") int postID, HttpServletRequest request) {
         List<CommentDTO> commentList = commentService.getCommentListByPostID(postID);
 
         return commentList;
     }
 
     @PostMapping("/{postid}/comments")
-    public List<CommentDTO> writeComment(@PathVariable("postid") int postID,@PathVariable("boardid") int boardID,@ModelAttribute CommentDTO receiveComment, HttpServletRequest request) throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
-        log.info("writeComment 들어옴");
-        SessionTokenizer session = new SessionTokenizer(request);
-        String userID = session.getUserID();
-        int companyID = session.getCompanyID();
+    public List<CommentDTO> writeComment(@PathVariable("postid") int postID,@PathVariable("boardid") int boardID,@ModelAttribute CommentDTO receiveComment, HttpServletRequest request) {
+        String userID = jwtService.getUserId();
+        int companyID = jwtService.getCompanyId();
 
         receiveComment.setBoardID(boardID);
         receiveComment.setUserID(userID);
@@ -58,11 +58,7 @@ public class CommentController {
         return commentList;
     }
     @DeleteMapping("/{postid}/comments/{commentid}")
-    public List<CommentDTO> deleteComment(@PathVariable("commentid") int commentID,@PathVariable("postid") int postID,@PathVariable("boardid") int boardID, HttpServletRequest request) throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
-        log.info("writeComment 들어옴");
-        /*SessionTokenizer session = new SessionTokenizer(request);
-        String userID = session.getUserID();
-        int companyID = session.getCompanyID();*/
+    public List<CommentDTO> deleteComment(@PathVariable("commentid") int commentID,@PathVariable("postid") int postID,@PathVariable("boardid") int boardID, HttpServletRequest request) {
         commentService.deleteComment(commentID);
 
         List<CommentDTO> commentList = commentService.getCommentListByPostID(postID);

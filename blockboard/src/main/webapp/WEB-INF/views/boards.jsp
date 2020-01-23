@@ -61,13 +61,13 @@
   <div id="container">
 
   </div>
-  <ul class="tab" id = "tab_id">
-    <c:forEach items="${boardList}" var="boardList" varStatus="status">
-      <li data-tab="${boardList.boardID}" class='tabmenu' id="default">
-        <c:out value="${boardList.boardName}" />
-      </li>
-    </c:forEach>
-  </ul>
+    <ul class="tab" id = "tab_id">
+        <c:forEach items="${boardList}" var="boardList" varStatus="status">
+          <li data-tab="${boardList.boardID}" class='tabmenu' id="default">
+            <c:out value="${boardList.boardName}" />
+          </li>
+        </c:forEach>
+    </ul>
 
   <div id="writecontent" style="display:none">
     <div id="boardlistcontent">

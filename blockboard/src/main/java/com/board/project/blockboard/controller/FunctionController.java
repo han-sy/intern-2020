@@ -2,6 +2,7 @@ package com.board.project.blockboard.controller;
 
 import com.board.project.blockboard.dto.FunctionDTO;
 import com.board.project.blockboard.service.FunctionService;
+import com.board.project.blockboard.service.JwtService;
 import com.board.project.blockboard.util.SessionTokenizer;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -31,7 +32,8 @@ import java.util.Map;
 public class FunctionController {
     @Autowired
     private FunctionService functionService;
-
+    @Autowired
+    private JwtService jwtService;
     /**
      * 기존 기능 on/off 정보
      * @param request
@@ -39,10 +41,8 @@ public class FunctionController {
      * @throws Exception
      */
     @GetMapping(value = "/{companyid}")
-    public List<FunctionDTO> getFunctionInfo(HttpServletRequest request) throws Exception {
-        SessionTokenizer session = new SessionTokenizer(request);
-        int companyID = session.getCompanyID();
-
+    public List<FunctionDTO> getFunctionInfo(HttpServletRequest request) {
+        int companyID = jwtService.getCompanyId();
         List<FunctionDTO> functionInfoList = functionService.getfunctionInfoListByCompanyID(companyID);
         return functionInfoList;
     }
@@ -55,9 +55,8 @@ public class FunctionController {
      * @throws Exception
      */
     @PostMapping(value = "/{companyid}")
-    public List<FunctionDTO> insertNewFunctionData(@RequestParam("functionInfoData") String functionInfoData, HttpServletRequest request) throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
-        SessionTokenizer session = new SessionTokenizer(request);
-        int companyID = session.getCompanyID();
+    public List<FunctionDTO> insertNewFunctionData(@RequestParam("functionInfoData") String functionInfoData, HttpServletRequest request) {
+        int companyID = jwtService.getCompanyId();
 
         functionService.updateNewFunctionsInfo(companyID,functionInfoData);
 

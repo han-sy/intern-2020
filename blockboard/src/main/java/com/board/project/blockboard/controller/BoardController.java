@@ -6,6 +6,7 @@ import com.board.project.blockboard.dto.FunctionDTO;
 import com.board.project.blockboard.dto.PostDTO;
 import com.board.project.blockboard.service.BoardService;
 import com.board.project.blockboard.service.FunctionService;
+import com.board.project.blockboard.service.JwtService;
 import com.board.project.blockboard.service.UserService;
 import com.board.project.blockboard.util.SessionTokenizer;
 
@@ -41,7 +42,8 @@ public class BoardController {
     private UserService userService;
     @Autowired
     private FunctionService functionService;
-
+    @Autowired
+    private JwtService jwtService;
     /**
      * 메인 화면
      * @param request
@@ -50,11 +52,9 @@ public class BoardController {
      * @throws Exception
      */
     @GetMapping("")
-    public String getMainContent(HttpServletRequest request, Model model) throws Exception {  // 일일이 예외처리 안해서 Exception으로 수정 (동욱)
-        SessionTokenizer session = new SessionTokenizer(request);
-
-        String userID = session.getUserID();
-        int companyID = session.getCompanyID();
+    public String getMainContent(HttpServletRequest request, Model model){  // 일일이 예외처리 안해서 Exception으로 수정 (동욱)
+        String userID = jwtService.getUserId();
+        int companyID = jwtService.getCompanyId();
 
         List<BoardDTO> boardList = boardService.getBoardListByCompanyID(companyID);
 
@@ -90,10 +90,9 @@ public class BoardController {
      */
     @GetMapping(value = "/{boardid}/posts/{postid}")
     @ResponseBody
-    public Map<String,Object> getPostByPostID(@PathVariable("postid") int postID, HttpServletRequest request) throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
-        SessionTokenizer session = new SessionTokenizer(request);
-        String userID = session.getUserID();
-        int companyID = session.getCompanyID();
+    public Map<String,Object> getPostByPostID(@PathVariable("postid") int postID, HttpServletRequest request) {
+        String userID = jwtService.getUserId();
+        int companyID = jwtService.getCompanyId();
 
         //postData는 PostDTO + 유저 일치여부
         Map<String, Object> postData  = boardService.getPostDataAboutSelected(postID,userID);
@@ -108,9 +107,8 @@ public class BoardController {
      */
     @GetMapping(value = "/list")
     @ResponseBody
-    public List<BoardDTO> getBoardList(HttpServletRequest request) throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
-        SessionTokenizer session = new SessionTokenizer(request);
-        int companyID = session.getCompanyID();
+    public List<BoardDTO> getBoardList(HttpServletRequest request) {
+        int companyID = jwtService.getCompanyId();
 
         //게시판 목록
         List<BoardDTO> boardList = boardService.getBoardListByCompanyID(companyID); // select로 받아오기
@@ -126,10 +124,8 @@ public class BoardController {
      */
     @PostMapping(value = "/{boardname}")
     @ResponseBody
-    public List<BoardDTO> insertNewBoard(@PathVariable("boardname") String newBoardName, HttpServletRequest request) throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
-        SessionTokenizer session = new SessionTokenizer(request);
-        int companyID = session.getCompanyID();
-
+    public List<BoardDTO> insertNewBoard(@PathVariable("boardname") String newBoardName, HttpServletRequest request){
+        int companyID = jwtService.getCompanyId();
         //게시판 삽입
         boardService.insertNewBoard(newBoardName, companyID);
 
@@ -147,9 +143,8 @@ public class BoardController {
      */
     @PostMapping(value = "/newtitles")
     @ResponseBody
-    public List<BoardDTO>  changeNewBoardName(@RequestParam("newTitles") String newTItleList, HttpServletRequest request) throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
-        SessionTokenizer session = new SessionTokenizer(request);
-        int companyID = session.getCompanyID();
+    public List<BoardDTO>  changeNewBoardName(@RequestParam("newTItles") String newTItleList, HttpServletRequest request) {
+        int companyID = jwtService.getCompanyId();
 
         boardService.updateChangedName(newTItleList,companyID);
         //이름 수정후새로운 게시판 목록들 보내기
@@ -166,9 +161,8 @@ public class BoardController {
      */
     @DeleteMapping(value = "/list")
     @ResponseBody
-    public List<BoardDTO> deleteBoardbyBoardID(@RequestParam("deleteList") String deleteBoards, HttpServletRequest request) throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
-        SessionTokenizer session = new SessionTokenizer(request);
-        int companyID = session.getCompanyID();
+    public List<BoardDTO> deleteBoardbyBoardID(@RequestParam("deleteList") String deleteBoards, HttpServletRequest request) {
+        int companyID = jwtService.getCompanyId();
 
         log.info("deleteBoards : "+deleteBoards);
         boardService.deleteBoardsByDeleteBoardList(companyID,deleteBoards); //기존데이터

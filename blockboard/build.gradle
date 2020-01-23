@@ -42,7 +42,7 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok:1.18.6'
 	compile "com.google.code.gson:gson"
 	testCompile group: 'junit', name: 'junit', version: '4.12'
-
+	compile "io.jsonwebtoken:jjwt:0.6.0"
 }
 
 test {
