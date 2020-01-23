@@ -3,7 +3,7 @@ package com.board.project.blockboard.controller;
 import com.board.project.blockboard.dto.FunctionDTO;
 import com.board.project.blockboard.service.FunctionService;
 import com.board.project.blockboard.service.JwtService;
-import com.board.project.blockboard.util.SessionTokenizer;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import lombok.extern.slf4j.Slf4j;
