@@ -74,18 +74,6 @@ public class BoardController {
     }
 
     /**
-     * boardid 받아와서 해당하는 게시판의 게시글목록들 리턴
-     * @param boardID
-     * @return
-     */
-    @GetMapping("/{boardid}/posts")
-    @ResponseBody
-    public List<PostDTO> getPostListByBoardID(@PathVariable("boardid") int boardID) throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException{
-        List<PostDTO> postList = boardService.getPostListByBoardID(boardID);
-        return postList;
-    }
-
-    /**
      * 게시물 조회
      * @param postID
      * @param request

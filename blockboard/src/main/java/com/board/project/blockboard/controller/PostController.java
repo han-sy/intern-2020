@@ -5,8 +5,17 @@ import com.board.project.blockboard.service.BoardService;
 import com.board.project.blockboard.service.JwtService;
 import com.board.project.blockboard.service.PostService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.DecoderException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 @Slf4j
@@ -37,7 +46,19 @@ public class PostController {
         receivePost.setBoardID(boardid);
         postService.insertPost(receivePost);
     }
-
+    /**
+     * 게시물 목록 띄우기
+     * boardid 받아와서 해당하는 게시판의 게시글목록들 리턴
+     * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+     * @param boardID
+     * @return
+     */
+    @GetMapping("")
+    @ResponseBody
+    public List<PostDTO> getPostListByBoardID(@PathVariable("boardid") int boardID) throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
+        List<PostDTO> postList = boardService.getPostListByBoardID(boardID);
+        return postList;
+    }
     /**
      * 게시물 삭제
      * @param postid 삭제할 게시물 id
