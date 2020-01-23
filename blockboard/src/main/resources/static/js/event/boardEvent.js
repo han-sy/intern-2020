@@ -65,7 +65,7 @@ function clickchangeBoardBtn() {
     error: function () {  //통신 실패시
       alert('통신실패!');
     },
-    success: function (data) {    
+    success: function (data) {
       var containerObj = $('#config_container')
       containerObj.html("");
       $.each(data, function (key, value) {
