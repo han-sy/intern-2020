@@ -8,7 +8,7 @@ import com.board.project.blockboard.service.BoardService;
 import com.board.project.blockboard.service.FunctionService;
 import com.board.project.blockboard.service.JwtService;
 import com.board.project.blockboard.service.UserService;
-import com.board.project.blockboard.util.SessionTokenizer;
+
 
 import lombok.extern.slf4j.Slf4j;
 
