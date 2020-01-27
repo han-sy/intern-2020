@@ -32,7 +32,8 @@ function loadPostList(data){
 function updateTabByNewBoardListAfterAddBoard(boardName) {
   $.ajax({
     type: 'POST',
-    url: "/boards/" + boardName,
+    url: "/boards",
+    data:{ boardName : boardName},
     error: function () {  //통신 실패시
       alert('통신실패!');
     },

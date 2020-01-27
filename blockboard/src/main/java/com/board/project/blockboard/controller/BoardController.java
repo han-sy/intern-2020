@@ -122,9 +122,9 @@ public class BoardController {
      * @return
      * @throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException
      */
-    @PostMapping(value = "/{boardname}")
+    @PostMapping(value = "")
     @ResponseBody
-    public List<BoardDTO> insertNewBoard(@PathVariable("boardname") String newBoardName, HttpServletRequest request){
+    public List<BoardDTO> insertNewBoard(@RequestParam("boardName") String newBoardName, HttpServletRequest request){
         int companyID = jwtService.getCompanyId();
         //게시판 삽입
         boardService.insertNewBoard(newBoardName, companyID);
