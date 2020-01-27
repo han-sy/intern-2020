@@ -57,7 +57,7 @@ function clickSaveDelteBoard() {
 function clickchangeBoardBtn() {
   $.ajax({
     type: 'GET',                 //POST 통신
-    url: '/boards/list',    //탭의 data-tab속성의 값으로 된 html파일로 통신
+    url: '/boards',    //탭의 data-tab속성의 값으로 된 html파일로 통신
     error: function () {  //통신 실패시
       alert('통신실패!');
     },
