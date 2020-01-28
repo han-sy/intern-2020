@@ -22,9 +22,11 @@ function insertPost(boardID, postTitle, postContent) {
 function loadPost(boardID, postID) {
     var post_title = $('#post_title');
     var editorcontent = $('#editorcontent');
+    var editor = $('#editor');
     $.ajax({
         type: 'GET',
         url: "/boards/" + boardID + "/posts/" + postID + "/editor",
+        async: false,
         error: function (response) {
             response.
                 console.log("Error");
@@ -32,7 +34,8 @@ function loadPost(boardID, postID) {
         success: function (data) {
             editorcontent.append("<a id=postID style=visibility:hidden>" + postID + "</a>");
             post_title.val(data.postTitle);
-            CKEDITOR.instances.editor.setData(data.postContent);
+            editor.val(data.postContent);
+            //CKEDITOR.instances.editor.updateElement();
         }
     });
 }

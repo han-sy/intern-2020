@@ -9,6 +9,7 @@ function editorAreaCreate() {
   var editorcontent = $('#editorcontent');
   var writecontent = $('#writecontent');
   var btn_write = $('#btn_write');
+  writecontent.show();
   writecontent.css("display", "");
   btn_write.css("display", "none");
   
@@ -19,17 +20,15 @@ function editorAreaCreate() {
     '<button id=btn_post>올리기</button>'
   );
   $.tmpl("editorTmpl").appendTo(editorcontent);
-  /*
-  editorcontent.append("<h2> 게시글제목 </h2> <input type=text id=post_title />");
-  editorcontent.append("<textarea id=editor></textarea>");
-  editorcontent.append("<button id=btn_post>올리기</button>")
-  */
   // textarea에 CKEditor 적용
   $('#editor').ckeditor();
 }
 
 // 에디터 div 내용 삭제
 function editorClear() {
+  if(CKEDITOR.instances.editor) {
+    CKEDITOR.instances.editor.destroy();
+  }
   $('#editorcontent').html("");
   $('#writecontent').css("display", "none");
   $('#btn_write').css("display", "");
@@ -88,9 +87,7 @@ $(document).on("click", "#btn_updatePost", function () {
   var postID = $("#postID").html();
   var boardID = getCurrentBoardID();
   postClear();
-
-  if ($('#editorcontent').html() == "")    // 게시글 작성 중이 아닐 경우 게시글 작성 폼 불러오기
-    editorAreaCreate();
+  editorAreaCreate();
   var post_button = $('#btn_post');
   post_button.html('수정하기'); // 게시글 올리기 버튼 텍스트 변경
   post_button.attr('id', 'btn_update'); // 버튼 ID 변경 (btn_post -> btn_update)
@@ -103,7 +100,6 @@ $(document).on("click", "#btn_update", function () {
   var postTitle = $('#post_title').val();
   var postContent = CKEDITOR.instances.editor.getData();
   var boardID = $('#boardIDinEditor option:selected').attr('data-tab');
-
   editorClear();
   updatePost(boardID, postID, postTitle, postContent);
 });
