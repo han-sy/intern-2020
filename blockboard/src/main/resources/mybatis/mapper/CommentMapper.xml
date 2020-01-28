@@ -28,4 +28,9 @@
         FROM Comments
         WHERE Comment_id = #{commentID};
     </delete>
+    <update id="updateComment" parameterType="hashmap">
+        UPDATE Comments
+        SET comment_content =#{newComment}
+        WHERE comment_id=#{commentID};
+    </update>
 </mapper>

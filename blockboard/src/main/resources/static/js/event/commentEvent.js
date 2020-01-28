@@ -27,3 +27,27 @@ $(document).on('click', '#delete_comment', function () {
     deleteCommentByCommentID(postID, boardID, commentID);
   });
 })
+
+//수정 버튼 눌렀을때
+$(document).on('click', '#edit_comment', function () {
+  var postID = $("#postID").html();
+  var boardID = getCurrentBoardID();
+  var editDivID = $(this).parents("div").parents("div").attr("id");
+  var commentID = editDivID.substring(7);
+
+  $(function () {
+    EditCommentByCommentID(postID, boardID, commentID);
+  });
+})
+
+//댓글수정후 수정하기 버튼 눌렀을때
+$(document).on('click', '#btn_edit_comment_complete', function () {
+  commentDiv = $(this).parents("div").parents("div");
+  var newComment = commentDiv.children('#commentText').val();
+  var commentID = commentDiv.parents("div").attr("id").substring(7);
+  var postID = $("#postID").html();
+  var boardID = getCurrentBoardID();
+  $(function () {
+    editComment(postID, boardID, commentID, newComment);
+  });
+})

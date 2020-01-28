@@ -43,4 +43,11 @@ public class CommentService {
     public void deleteComment(int commentID) {
         commentMapper.deleteCommentByCommentID(commentID);
     }
+
+    public void updateComment(int commentID, String newComment) {
+        Map<String, Object> commentAttribute = new HashMap<String, Object>();
+        commentAttribute.put("commentID",commentID);
+        commentAttribute.put("newComment",newComment);
+        commentMapper.updateComment(commentAttribute);
+    }
 }

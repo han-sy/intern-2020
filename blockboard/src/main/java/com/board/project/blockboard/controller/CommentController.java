@@ -43,6 +43,13 @@ public class CommentController {
     }
 
 
+    /**
+     * 댓글 추가
+     * @param postID
+     * @param boardID
+     * @param commentContent
+     * @param request
+     */
     @PostMapping("/{postid}/comments")
     public void writeComment(@RequestParam("postID") int postID,@RequestParam("boardID") int boardID,@RequestParam("commentContent") String commentContent, HttpServletRequest request) {
         String userID = jwtService.getUserId();
@@ -52,7 +59,7 @@ public class CommentController {
     }
 
     /**
-     *
+     * 댓글 삭제
      * @param commentID
      * @param postID
      * @param boardID
@@ -61,5 +68,18 @@ public class CommentController {
     @DeleteMapping("/{postid}/comments/{commentid}")
     public void deleteComment(@PathVariable("commentid") int commentID,@PathVariable("postid") int postID,@PathVariable("boardid") int boardID, HttpServletRequest request) {
         commentService.deleteComment(commentID);
+    }
+
+    /**
+     * 댓글 수정하기
+     * @param commentID
+     * @param postID
+     * @param boardID
+     * @param newComment 변경된 새로운 내용
+     * @param request
+     */
+    @PutMapping("/{postid}/comments/{commentid}")
+    public void editComment(@PathVariable("commentid") int commentID,@PathVariable("postid") int postID,@PathVariable("boardid") int boardID,@RequestParam("newComment") String newComment, HttpServletRequest request) {
+        commentService.updateComment(commentID,newComment);
     }
 }
