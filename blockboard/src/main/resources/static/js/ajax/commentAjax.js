@@ -6,12 +6,12 @@ function UpdateCommentListUI(data) {
   //console.log(${userID}+"------"+$("#current_user_id").text())
 
   $.each(data, function (key, value) {
-    commentHtml += "<hr><div id=comment" + value.commentID + "><div>";
-    commentHtml += ("<p class=user><span class=name>" + value.userName + "</strong> <span class=date> " + value.commentRegisterTime + "</span></p>");
+    commentHtml += ("<hr><div class =referenceCommentContainer data-id="+value.commentID+"><div class = commentContainer id=comment" + value.commentID + "><div>");
+    commentHtml += ("<p class=user><span class=name>" + value.userName + "</span></strong> <span class=date> " + value.commentRegisterTime + "</span></p>");
     commentHtml += ("<p class =comment_area id=translate_area>" + value.commentContent + "</p></div>");
     commentHtml += "<div class=btn>";
     if ($('#functionAble2').attr("value") == "on") {
-      commentHtml += "<button type=button class=_no_print>답글달기</button>";
+      commentHtml += "<button type=button class=replyBtn>답글</button>";
     }
     if (value.userID == $("#current_user_id").text()) {
       commentHtml += "<button type=button id = edit_comment>수정</button>";
@@ -20,8 +20,9 @@ function UpdateCommentListUI(data) {
     commentHtml += "</div>"
     if ($('#functionAble2').attr("value") == "on") {
       commentHtml += "</div><div style ='padding: 5px 1px 3px 20px;' class=replyContainer id=reply_container" + value.commentID + " ></div>"
+      commentHtml += "<div style ='padding: 5px 1px 3px 20px;' class=replyContainer id=reply_input_container" + value.commentID + " ></div>"
     }
-    commentHtml += "</div>";
+    commentHtml += "</div></div>";
   });
   //답글 추가
   if ($('#functionAble2').attr("value") == "on") {
@@ -33,22 +34,26 @@ function UpdateCommentListUI(data) {
 
 
 //댓글 inputform 받아오기
-function getCommentInputHtml() {
+function getCommentInputHtml(type,buttonName,tag,className) {
   var commentInputHtml = "";
   commentInputHtml += "<br><div style='width: 100%' class=commentHtml>";
-  commentInputHtml += "<textarea style='width: 1100px' id=commentText placeholder = '댓글을 입력하세요' name=commentTxt ></textarea>";
-  commentInputHtml += "<div><button id=btn_openComment onclick = javascript:clickSendCommentBtn()>입력</button></div>";
-  commentInputHtml += "</div>";
-  $(".comment_input_container").append(commentInputHtml + "</div>");
+  commentInputHtml += ("<strong class=tag style='cursor:pointer'>"+tag+"</strong>");
+  commentInputHtml += ("<textarea style='width: 1100px' id=commentText placeholder = '"+type+"을 입력하세요' name=commentTxt ></textarea>");
+  commentInputHtml += ("<div><button id=btn_openComment onclick = javascript:clickSendCommentBtn()>"+buttonName+"</button>");
+  if(type=="답글"){
+    commentInputHtml += ("<button id=btn_close_cmt_input >취소</button>");
+  }
+  commentInputHtml += "</div></div>";
+  $(className).append(commentInputHtml + "</div>");
 }
 
 //댓글 컨텐츠 모두 불러오기
 function getCommentAllContents(data) {
   UpdateCommentListUI(data);
-  getCommentInputHtml();
+  getCommentInputHtml("댓글","입력","",".comment_input_container");
 }
 
-//리스트 받아오기
+//댓글리스트 받아오기
 function getCommentList(boardID, postID, successFunction) {
   console.log("!!!boardID : " + boardID + ",postID : " + postID);
   $.ajax({
@@ -131,12 +136,12 @@ function getReplyListUI(commentID,data) {
 
   $.each(data, function (key, value) {
     console.log("답글"+value.commentID);
-    commentHtml += "<div id=comment" + value.commentID + "><div>";
-    commentHtml += ("<p class=user><span class=name>└" + value.userName + "</strong> <span class=date> " + value.commentRegisterTime + "</span></p>");
+    commentHtml += "<div class = commentContainer id=comment" + value.commentID + "><div>";
+    commentHtml += ("<p class=user>└<span class=name>" + value.userName + "</span></strong> <span class=date> " + value.commentRegisterTime + "</span></p>");
     commentHtml += ("<p class =comment_area id=translate_area>" + value.commentContent + "</p></div>");
     commentHtml += "<div class=btn>";
     if ($('#functionAble2').attr("value") == "on") {
-      commentHtml += "<button type=button class=_no_print>답글달기</button>";
+      commentHtml += "<button type=button class=replyBtn>답글</button>";
     }
     if (value.userID == $("#current_user_id").text()) {
       commentHtml += "<button type=button id = edit_comment>수정</button>";

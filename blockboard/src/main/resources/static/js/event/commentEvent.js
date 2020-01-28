@@ -51,3 +51,11 @@ $(document).on('click', '#btn_edit_comment_complete', function () {
     editComment(postID, boardID, commentID, newComment);
   });
 })
+
+
+//답글달기 버튼
+$(document).on('click', '.replyBtn', function () {
+    var referenceCommentContainer = $(this).closest(".referenceCommentContainer");
+    var referenceUserName = $(this).closest(".commentContainer").find(".name").html();
+    getCommentInputHtml("답글","입력","<strong class =tag style ='cursor:pointer;'>"+referenceUserName+"</strong>","."+referenceCommentContainer.attr("class"));
+})
