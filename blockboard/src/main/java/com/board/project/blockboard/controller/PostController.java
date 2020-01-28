@@ -30,7 +30,7 @@ public class PostController {
      * @return
      * @throws Exception
      */
-    @PostMapping("/")
+    @PostMapping("")
     @ResponseBody
     public void insertPost(@PathVariable("boardid") int boardid, @ModelAttribute PostDTO receivePost) {
         String userID = jwtService.getUserId();

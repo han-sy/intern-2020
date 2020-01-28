@@ -17,6 +17,7 @@
   <script src="/static/js/event/postEvent.js"></script>
   <script src="/static/js/event/commentEvent.js"></script>
   <script src="/static/js/event/functionEvent.js"></script>
+  <script src="/static/js/event/common.js"></script>
   <script src="/static/js/ajax/functionAjax.js"></script>
   <script src="/static/js/ajax/commentAjax.js"></script>
   <script src="/static/js/ajax/postAjax.js"></script>
