@@ -39,38 +39,27 @@ public class CommentController {
     @GetMapping("/{postid}/comments")
     public List<CommentDTO> getCommentsByPost(@PathVariable("postid") int postID, HttpServletRequest request) {
         List<CommentDTO> commentList = commentService.getCommentListByPostID(postID);
-
         return commentList;
+    }
+
+
+    @PostMapping("/{postid}/comments")
+    public void writeComment(@RequestParam("postID") int postID,@RequestParam("boardID") int boardID,@RequestParam("commentContent") String commentContent, HttpServletRequest request) {
+        String userID = jwtService.getUserId();
+        int companyID = jwtService.getCompanyId();
+        log.info("!!!!"+postID+","+boardID+":"+commentContent);
+        commentService.writeCommentWithUserInfo(userID,commentContent,boardID,companyID,postID);
     }
 
     /**
      *
+     * @param commentID
      * @param postID
      * @param boardID
-     * @param receiveComment
      * @param request
-     * @return
      */
-    @PostMapping("/{postid}/comments")
-    public void writeComment(@PathVariable("postid") int postID,@PathVariable("boardid") int boardID,@ModelAttribute CommentDTO receiveComment, HttpServletRequest request) {
-        String userID = jwtService.getUserId();
-        int companyID = jwtService.getCompanyId();
-
-        receiveComment.setBoardID(boardID);
-        receiveComment.setUserID(userID);
-        receiveComment.setPostID(postID);
-        commentService.writeCommentWithUserInfo(userID,receiveComment,boardID,companyID,postID);
-
-       /* //TODO 따로 분리
-        List<CommentDTO> commentList = commentService.getCommentListByPostID(postID);
-        return commentList;*/
-    }
     @DeleteMapping("/{postid}/comments/{commentid}")
     public void deleteComment(@PathVariable("commentid") int commentID,@PathVariable("postid") int postID,@PathVariable("boardid") int boardID, HttpServletRequest request) {
         commentService.deleteComment(commentID);
-
-        /*//TODO 따로 분리
-        List<CommentDTO> commentList = commentService.getCommentListByPostID(postID);
-        return commentList;*/
     }
 }

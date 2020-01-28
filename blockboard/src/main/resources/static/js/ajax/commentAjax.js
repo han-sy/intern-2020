@@ -60,7 +60,7 @@ function updateComment(boardID, postID, commentText) {
   $.ajax({
     type: 'POST',
     url: "/boards/" + boardID + "/posts/" + postID + "/comments",
-    data: { commentContent: commentText },
+    data: { boardID: boardID, postID: postID,commentContent: commentText },
     error: function () {  //통신 실패시
       alert('통신실패!');
     },
