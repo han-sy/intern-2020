@@ -55,13 +55,11 @@ public class FunctionController {
      * @throws Exception
      */
     @PostMapping(value = "/{companyid}")
-    public List<FunctionDTO> insertNewFunctionData(@RequestParam("functionInfoData") String functionInfoData, HttpServletRequest request) {
+    public void insertNewFunctionData(@RequestParam("functionInfoData") String functionInfoData, HttpServletRequest request) {
         int companyID = jwtService.getCompanyId();
 
         functionService.updateNewFunctionsInfo(companyID,functionInfoData);
 
-        List<FunctionDTO> functionInfoList = functionService.getfunctionInfoListByCompanyID(companyID);
-        return functionInfoList;
-    }
+}
 
 }

@@ -1,5 +1,5 @@
-//댓글 리스트 받아오기
-function getCommentList(data) {
+//댓글 출력
+function UpdateCommentListUI(data) {
   $(".comment_list_container").html("");
   var commentHtml = "";
 
@@ -34,22 +34,28 @@ function getCommentInputHtml() {
   $(".comment_input_container").append(commentInputHtml + "</div>");
 }
 
+//댓글 컨텐츠 모두 불러오기
+function getCommentAllContents(data){
+    UpdateCommentListUI(data);
+    getCommentInputHtml();
+}
 
-function getCommentAllContents(postID, boardID) {
-  console.log("conmment ajax 함수 호출");
+//리스트 받아오기
+function getCommentList(boardID, postID,successFunction) {
+    console.log("!!!boardID : "+boardID+",postID : "+postID);
   $.ajax({
     type: 'GET',
     url: "/boards/" + boardID + "/posts/" + postID + "/comments",
-    error: function () {  //통신 실패시
-      alert('통신실패!');
+    error: function (error) {  //통신 실패시
+      alert('통신실패!'+error);
     },
     success: function (data) {
-      getCommentList(data);
-      getCommentInputHtml();
+      successFunction(data);
     }
   });
 }
 
+//댓글 추가
 function updateComment(boardID, postID, commentText) {
   $.ajax({
     type: 'POST',
@@ -59,11 +65,12 @@ function updateComment(boardID, postID, commentText) {
       alert('통신실패!');
     },
     success: function (data) {
-      getCommentList(data);
+      getCommentList(boardID, postID,UpdateCommentListUI);//성공하면 댓글목록 갱신
     }
   });
 }
 
+//댓글삭제
 function deleteCommentByCommentID(postID,boardID,commentID){
   $.ajax({
     type: 'DELETE',
@@ -72,7 +79,7 @@ function deleteCommentByCommentID(postID,boardID,commentID){
       alert('통신실패!');
     },
     success: function (data) {
-      getCommentList(data);
+      getCommentList(boardID, postID,UpdateCommentListUI);//성공하면 댓글목록 갱신
     }
   });
 }

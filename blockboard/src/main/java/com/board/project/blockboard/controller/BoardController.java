@@ -49,7 +49,6 @@ public class BoardController {
      * @param request
      * @param model
      * @return
-     * @throws Exception
      */
     @GetMapping("/contents")
     public String getMainContent(HttpServletRequest request, Model model){  // 일일이 예외처리 안해서 Exception으로 수정 (동욱)
@@ -86,7 +85,6 @@ public class BoardController {
      * @param postID
      * @param request
      * @return PostDTO + 유저일치여부 로 구성된 map
-     * @throws Exception
      */
     @GetMapping(value = "/{boardid}/posts/{postid}")
     @ResponseBody
@@ -102,8 +100,7 @@ public class BoardController {
     /**
      * 게시판 목록 가져오기
      * @param request
-     * @return
-     * @throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException
+     * @return 게시판 목록
      */
     @GetMapping(value = "")
     @ResponseBody
@@ -119,56 +116,39 @@ public class BoardController {
      * 게시판 추가
      * @param newBoardName 새로입력받은 보드이름
      * @param request
-     * @return
-     * @throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException
      */
     @PostMapping(value = "")
     @ResponseBody
-    public List<BoardDTO> insertNewBoard(@RequestParam("boardName") String newBoardName, HttpServletRequest request){
+    public void insertNewBoard(@RequestParam("boardName") String newBoardName, HttpServletRequest request){
         int companyID = jwtService.getCompanyId();
         //게시판 삽입
         boardService.insertNewBoard(newBoardName, companyID);
-
-        //insert후 새로운 게시판목록
-        List<BoardDTO> newBoardList = boardService.getBoardListByCompanyID(companyID);
-        return newBoardList;
     }
 
     /**
      * 게시판 이름 변경
      * @param newTItleList 이름이 변경된 리스트
      * @param request
-     * @return
-     * @throws Exception
      */
     @PostMapping(value = "/newtitles")
     @ResponseBody
-    public List<BoardDTO>  changeNewBoardName(@RequestParam("newTitles") String newTItleList, HttpServletRequest request) {
+    public void  changeNewBoardName(@RequestParam("newTitles") String newTItleList, HttpServletRequest request) {
         int companyID = jwtService.getCompanyId();
-
         boardService.updateChangedName(newTItleList,companyID);
-        //이름 수정후새로운 게시판 목록들 보내기
-        List<BoardDTO> newBoardList = boardService.getBoardListByCompanyID(companyID);
-        return newBoardList;
     }
 
     /**
      * 게시판 삭제
      * @param deleteBoards 삭제리스트
      * @param request
-     * @return
-     * @throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException
      */
     @DeleteMapping(value = "")
     @ResponseBody
-    public List<BoardDTO> deleteBoardbyBoardID(@RequestParam("deleteList") String deleteBoards, HttpServletRequest request) {
+    public void deleteBoardbyBoardID(@RequestParam("deleteList") String deleteBoards, HttpServletRequest request) {
         int companyID = jwtService.getCompanyId();
 
         log.info("deleteBoards : "+deleteBoards);
         boardService.deleteBoardsByDeleteBoardList(companyID,deleteBoards); //기존데이터
-
-        List<BoardDTO> newBoardList = boardService.getBoardListByCompanyID(companyID);
-        return newBoardList;
     }
 
 }

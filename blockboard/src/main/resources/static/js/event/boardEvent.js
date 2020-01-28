@@ -11,7 +11,7 @@ function clickaddBoardBtn() {
 //게시판 저장하기 버튼
 function clickSaveaddedBoard() {
   var boardName = $('#input_board_name').val();
-  if(boardName ==""){
+  if (boardName == "") {
     alert("게시판 제목을 입력하세요.");
     return;
   }
@@ -25,7 +25,7 @@ function clickSaveaddedBoard() {
 //게시판 삭제버튼 누를시
 function clickDeleteBoardBtn() {
   $(function () {
-    getBoardListToDelete();
+    getBoardList(getBoardListToDelete);
   });
 }
 
@@ -55,22 +55,8 @@ function clickSaveDelteBoard() {
 
 //게시판 이름변경 버튼 클릭시
 function clickchangeBoardBtn() {
-  $.ajax({
-    type: 'GET',
-    url: '/boards',
-    error: function () {  //통신 실패시
-      alert('통신실패!');
-    },
-    success: function (data) {
-      var containerObj = $('#config_container')
-      containerObj.html("");
-      $.each(data, function (key, value) {
-        containerObj.append("<div class=boardInfo id=board" + value.boardID + "><input type=text name =boardname data-boardid=" + value.boardID + " data-oldname=" + value.boardName + " value=" + value.boardName + " >" +
-          " <span class =deleteBoard data-board =board" + value.boardID + " > 기존 게시판 이름 : " + value.boardName + "</span></div>");
-      });
-      containerObj.append(" <br><a id ='addFuncBtn' onclick = javascript:clickSaveChangeBoard(this) style=cursor:pointer>변경하기</a>" +
-        "<button class = 'functionClose' type='button' onclick=javascript:clickConfigClose(this)>닫기</button>");
-    }
+  $(function () {
+    getBoardList(getBoardListToChangeName);
   });
 }
 
@@ -84,9 +70,9 @@ function clickSaveChangeBoard() {
     var clickObj = $(this);
     var oldBoardName = clickObj.attr("data-oldname");
     var newBoardName = clickObj.val();
-    if(newBoardName ==""){
-        alert("기존"+oldBoardName+"게시판 제목이 비었습니다.");
-        return;
+    if (newBoardName == "") {
+      alert("기존" + oldBoardName + "게시판 제목이 비었습니다.");
+      return;
     }
     var boardID = clickObj.attr("data-boardid");
     if (oldBoardName != newBoardName) {

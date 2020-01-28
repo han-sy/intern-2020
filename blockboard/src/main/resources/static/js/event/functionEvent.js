@@ -4,7 +4,7 @@ function changeFunction() {
   var companyID = $('#serviceTitle').attr("value");
   console.log("companyID : " + companyID);
   $(function () {
-    getOldFunctionInfoForChange(companyID);
+    getFunctionList(companyID,getFunctionCheckList);
   });
 }
 //기능변경사항 저장하기 버튼
@@ -25,7 +25,7 @@ function clickSaveFunctionChange() {
   });
 
   var jsonData = JSON.stringify(functionDataList);
-  alert(jsonData);
+  //alert(jsonData);
   var askSave = confirm("기능변경 내용을 저장하시겠습니까?");
   if (askSave) {
     $(function () {

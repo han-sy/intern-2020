@@ -1,4 +1,5 @@
 
+//댓글 추가버튼 누를때
 function clickSendCommentBtn() {
   var postID = $("#postID").html();
   var boardID = getCurrentBoardID();
@@ -11,10 +12,9 @@ function clickSendCommentBtn() {
     updateComment(boardID, postID, commentText);
   });
   //$('#config_container').html("");
-
 }
 
-//TODO 삭제이벤트 구현하기
+//댓글삭제버튼 누를때
 //삭제클릭한곳의 부모의 div의 id뽑게했음
 $(document).on('click', '#delete_comment', function () {
   var postID = $("#postID").html();
@@ -27,11 +27,3 @@ $(document).on('click', '#delete_comment', function () {
     deleteCommentByCommentID(postID, boardID, commentID);
   });
 })
-
-function clickCommentDeleteBtn(clickObj) {
-
-  console.log(clickObj);
-  console.log($(this));
-  console.log(clickObj.parents("div").parents("div"));
-
-}

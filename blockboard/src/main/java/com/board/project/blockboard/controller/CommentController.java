@@ -35,7 +35,6 @@ public class CommentController {
      * @param postID
      * @param request
      * @return
-     * @throws Exception
      */
     @GetMapping("/{postid}/comments")
     public List<CommentDTO> getCommentsByPost(@PathVariable("postid") int postID, HttpServletRequest request) {
@@ -44,8 +43,16 @@ public class CommentController {
         return commentList;
     }
 
+    /**
+     *
+     * @param postID
+     * @param boardID
+     * @param receiveComment
+     * @param request
+     * @return
+     */
     @PostMapping("/{postid}/comments")
-    public List<CommentDTO> writeComment(@PathVariable("postid") int postID,@PathVariable("boardid") int boardID,@ModelAttribute CommentDTO receiveComment, HttpServletRequest request) {
+    public void writeComment(@PathVariable("postid") int postID,@PathVariable("boardid") int boardID,@ModelAttribute CommentDTO receiveComment, HttpServletRequest request) {
         String userID = jwtService.getUserId();
         int companyID = jwtService.getCompanyId();
 
@@ -54,14 +61,16 @@ public class CommentController {
         receiveComment.setPostID(postID);
         commentService.writeCommentWithUserInfo(userID,receiveComment,boardID,companyID,postID);
 
+       /* //TODO 따로 분리
         List<CommentDTO> commentList = commentService.getCommentListByPostID(postID);
-        return commentList;
+        return commentList;*/
     }
     @DeleteMapping("/{postid}/comments/{commentid}")
-    public List<CommentDTO> deleteComment(@PathVariable("commentid") int commentID,@PathVariable("postid") int postID,@PathVariable("boardid") int boardID, HttpServletRequest request) {
+    public void deleteComment(@PathVariable("commentid") int commentID,@PathVariable("postid") int postID,@PathVariable("boardid") int boardID, HttpServletRequest request) {
         commentService.deleteComment(commentID);
 
+        /*//TODO 따로 분리
         List<CommentDTO> commentList = commentService.getCommentListByPostID(postID);
-        return commentList;
+        return commentList;*/
     }
 }
