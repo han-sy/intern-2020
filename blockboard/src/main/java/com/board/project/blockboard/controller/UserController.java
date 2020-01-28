@@ -8,6 +8,7 @@ import com.board.project.blockboard.dto.UserDTO;
 import com.board.project.blockboard.service.JwtService;
 import com.board.project.blockboard.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.binary.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -46,7 +47,7 @@ public class UserController {
      */
     @GetMapping("/logout")
     public String logout(HttpServletResponse response) {
-        Cookie c = new Cookie("Authorization", null);
+        Cookie c = new Cookie(HEADER_NAME, null);
         c.setMaxAge(0);
         response.addCookie(c);
         return "redirect:/";
@@ -64,7 +65,7 @@ public class UserController {
         Cookie[] getCookie = request.getCookies();
         if (getCookie != null) {
             for (Cookie c : getCookie) {
-                if (c.getName().equals(HEADER_NAME)) {
+                if (StringUtils.equals(c.getName(),HEADER_NAME)) {
                     if (jwtService.isUsable(c.getValue()))
                         return "redirect:/boards";
                     else

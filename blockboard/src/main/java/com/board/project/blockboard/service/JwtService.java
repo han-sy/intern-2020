@@ -10,6 +10,7 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.binary.StringUtils;
 import org.springframework.stereotype.Service;
 import javax.servlet.http.Cookie;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -24,7 +25,7 @@ import java.util.Map;
 @Slf4j
 @Service("jwtService")
 public class JwtService {
-    private static final String SALT = "blockboard";
+    private static final String SALT = "blockboard"; // Secret Key
     private static final String HEADER_NAME = "Authorization";
 
     public <T> String create(String key, T data, String subject) {
@@ -51,7 +52,7 @@ public class JwtService {
             if(log.isInfoEnabled()) {
                 e.printStackTrace();
             }else {
-                log.error("Making JWT Key Error ::: {}", e.getMessage());
+                log.error("Making JWT Key Error {}", e.getMessage());
             }
         }
         return key;
@@ -73,7 +74,7 @@ public class JwtService {
         Cookie[] getCookie = request.getCookies();
         String jwt = null;
         for(Cookie c : getCookie) {
-            if(c.getName().equals(HEADER_NAME))
+            if(StringUtils.equals(c.getName(),HEADER_NAME))
                 jwt = c.getValue();
         }
         Jws<Claims> claims = null;

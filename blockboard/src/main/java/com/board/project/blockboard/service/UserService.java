@@ -4,11 +4,13 @@
  */
 package com.board.project.blockboard.service;
 
-import com.board.project.blockboard.mapper.UserMapper;
 import com.board.project.blockboard.dto.UserDTO;
+import com.board.project.blockboard.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.binary.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
@@ -29,11 +31,11 @@ public class UserService {
         String jwtToken = "";
 
         // 패스워드 검사
-        if(login_userPassword.equals(requestPassword)) {
+        if(StringUtils.equals(login_userPassword,requestPassword)) {
             login_user.setUserPassword(null); // 비밀번호는 JWT 토큰에 담지 않는다.
             jwtToken = jwtService.create(HEADER_NAME, login_user, "user_info");
             Cookie jwtCookie = new Cookie(HEADER_NAME, jwtToken);
-            jwtCookie.setMaxAge(60 * 60);
+            jwtCookie.setHttpOnly(true);
             response.addCookie(jwtCookie);
             return true;
         }
@@ -41,10 +43,12 @@ public class UserService {
     }
 
     public int selectCompanyIDByUserID(String userID) {
+
         return userMapper.selectCompanyIDByUserID(userID);
     }
 
     public String getUserNameByUserID(String userID) {
+
         return userMapper.selectUserNameByUserID(userID);
     }
 }
