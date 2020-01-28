@@ -59,6 +59,11 @@ public class FunctionService {
         return functionInfoDataList;
     }
 
+    /**
+     * @param companyID
+     * @param functionInfoData functionID, functionCheck(ON or OFF)  두가지 키를 가지는 Jsonlist
+     *                         /js/functionEvent.js 에 있는 clickSaveFunctionChange()에서 json 생성
+     */
     public void updateNewFunctionsInfo(int companyID, String functionInfoData) {
         List<FunctionDTO> functionInfoList = getFunctionInfoByCompanyID(companyID); //기존데이터
         //ajax를 통해 넘어온 json 형식의 string을 map 타입으로 변경
