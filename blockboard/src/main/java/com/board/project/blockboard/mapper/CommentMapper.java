@@ -14,4 +14,6 @@ public interface CommentMapper {
     int insertNewCommentByCommentInfo(CommentDTO commentInfo);
     void deleteCommentByCommentID(int commentID);
     void updateComment(Map<String, Object> commentAttribute);
+
+    List<CommentDTO> selectRepliesByCommentID(int commentReferencedID);
 }

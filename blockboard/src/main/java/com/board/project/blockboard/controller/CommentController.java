@@ -41,6 +41,11 @@ public class CommentController {
         List<CommentDTO> commentList = commentService.getCommentListByPostID(postID);
         return commentList;
     }
+    @GetMapping("/{postid}/comments/{commentid}")
+    public List<CommentDTO> getReplysByComment(@PathVariable("postid") int postID,@PathVariable("commentid") int commentReferencedID, HttpServletRequest request) {
+        List<CommentDTO> replyList = commentService.getReplyListByCommentID(commentReferencedID);
+        return replyList;
+    }
 
 
     /**

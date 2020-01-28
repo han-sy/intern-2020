@@ -11,18 +11,26 @@ function UpdateCommentListUI(data) {
     commentHtml += ("<p class =comment_area id=translate_area>" + value.commentContent + "</p></div>");
     commentHtml += "<div class=btn>";
     if ($('#functionAble2').attr("value") == "on") {
-      commentHtml += "<button type=button class=_no_print>답글</button>";
+      commentHtml += "<button type=button class=_no_print>답글달기</button>";
     }
     if (value.userID == $("#current_user_id").text()) {
       commentHtml += "<button type=button id = edit_comment>수정</button>";
       commentHtml += "<button type=button id = delete_comment>삭제</button>";
     }
-    commentHtml += "</div></div>";
+    commentHtml += "</div>"
+    if ($('#functionAble2').attr("value") == "on") {
+      commentHtml += "</div><div style ='padding: 5px 1px 3px 20px;' class=replyContainer id=reply_container" + value.commentID + " ></div>"
+    }
+    commentHtml += "</div>";
   });
-
-
+  //답글 추가
+  if ($('#functionAble2').attr("value") == "on") {
+    getAllReplyList(data);
+  }
   $(".comment_list_container").append(commentHtml);
 }
+
+
 
 //댓글 inputform 받아오기
 function getCommentInputHtml() {
@@ -109,6 +117,54 @@ function editComment(postID, boardID, commentID, newComment) {
     },
     success: function (data) {
       getCommentList(boardID, postID, UpdateCommentListUI);//성공하면 댓글목록 갱신
+    }
+  });
+}
+
+//답글 ui 구성
+function getReplyListUI(commentID,data) {
+    //console.log("댓글"+commentID);
+  $("#reply_container"+commentID).html("");
+  var commentHtml = "";
+
+  //console.log(${userID}+"------"+$("#current_user_id").text())
+
+  $.each(data, function (key, value) {
+    console.log("답글"+value.commentID);
+    commentHtml += "<div id=comment" + value.commentID + "><div>";
+    commentHtml += ("<p class=user><span class=name>└" + value.userName + "</strong> <span class=date> " + value.commentRegisterTime + "</span></p>");
+    commentHtml += ("<p class =comment_area id=translate_area>" + value.commentContent + "</p></div>");
+    commentHtml += "<div class=btn>";
+    if ($('#functionAble2').attr("value") == "on") {
+      commentHtml += "<button type=button class=_no_print>답글달기</button>";
+    }
+    if (value.userID == $("#current_user_id").text()) {
+      commentHtml += "<button type=button id = edit_comment>수정</button>";
+      commentHtml += "<button type=button id = delete_comment>삭제</button>";
+    }
+    commentHtml += "</div></div>";
+
+  });
+  $("#reply_container"+commentID).append(commentHtml);
+}
+
+//답글전체 받아오기
+function getAllReplyList(data) {
+  $.each(data, function (key, value) {
+    getReplyList(value.boardID, value.postID, value.commentID, getReplyListUI);
+  });
+}
+
+//답글리스트 받아오기
+function getReplyList(boardID, postID, commentID, successFunction) {
+  $.ajax({
+    type: 'GET',
+    url: "/boards/" + boardID + "/posts/" + postID + "/comments/" + commentID,
+    error: function (error) {  //통신 실패시
+      alert('통신실패!' + error);
+    },
+    success: function (data) {
+      successFunction(commentID,data);
     }
   });
 }

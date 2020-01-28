@@ -50,4 +50,8 @@ public class CommentService {
         commentAttribute.put("newComment",newComment);
         commentMapper.updateComment(commentAttribute);
     }
+
+    public List<CommentDTO> getReplyListByCommentID(int commentReferencedID) {
+        return commentMapper.selectRepliesByCommentID(commentReferencedID);
+    }
 }
