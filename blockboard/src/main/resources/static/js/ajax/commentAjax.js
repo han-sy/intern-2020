@@ -66,6 +66,7 @@ function updateComment(boardID, postID, commentText) {
     },
     success: function (data) {
       getCommentList(boardID, postID,UpdateCommentListUI);//성공하면 댓글목록 갱신
+      $('#commentText').val("");
     }
   });
 }
