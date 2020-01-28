@@ -36,6 +36,10 @@
         INSERT INTO Comments(board_id,post_id,user_id,company_id,comment_content,comment_referenced_id)
         VALUES (#{boardID},#{postID},#{userID},#{companyID},#{commentContent},null);
     </insert>
+    <insert id="insertNewReplyByCommentInfo" parameterType="hashmap" >
+        INSERT INTO Comments(board_id,post_id,user_id,company_id,comment_content,comment_referenced_id)
+        VALUES (#{boardID},#{postID},#{userID},#{companyID},#{commentContent},#{commentReferencedID});
+    </insert>
 
     <delete id="deleteCommentByCommentID" parameterType="int">
         DELETE

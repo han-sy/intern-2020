@@ -7,7 +7,7 @@ function UpdateCommentListUI(data) {
 
   $.each(data, function (key, value) {
     commentHtml += ("<hr><div class =referenceCommentContainer data-id="+value.commentID+"><div class = commentContainer id=comment" + value.commentID + "><div>");
-    commentHtml += ("<p class=user><span class=name>" + value.userName + "</span></strong> <span class=date> " + value.commentRegisterTime + "</span></p>");
+    commentHtml += ("<p class=user><span class=name data-id="+value.userID+">" + value.userName + "</span></strong> <span class=date> " + value.commentRegisterTime + "</span></p>");
     commentHtml += ("<p class =comment_area id=translate_area>" + value.commentContent + "</p></div>");
     commentHtml += "<div class=btn>";
     if ($('#functionAble2').attr("value") == "on") {
@@ -41,10 +41,10 @@ function getCommentInputHtml(type,buttonName,tag,className) {
   commentInputHtml += ("<textarea style='width: 1100px' id=commentText placeholder = '"+type+"을 입력하세요' name=commentTxt ></textarea>");
   commentInputHtml += ("<div><button id=btn_openComment onclick = javascript:clickSendCommentBtn()>"+buttonName+"</button>");
   if(type=="답글"){
-    commentInputHtml += ("<button id=btn_close_cmt_input >취소</button>");
+    commentInputHtml += ("<button class=btn_close_cmt_input >취소</button>");
   }
   commentInputHtml += "</div></div>";
-  $(className).append(commentInputHtml + "</div>");
+  $(className).html(commentInputHtml + "</div>");
 }
 
 //댓글 컨텐츠 모두 불러오기
@@ -70,6 +70,7 @@ function getCommentList(boardID, postID, successFunction) {
 
 //댓글 추가
 function updateComment(boardID, postID, commentText) {
+    alert(postID+","+boardID+":"+commentText);
   $.ajax({
     type: 'POST',
     url: "/boards/" + boardID + "/posts/" + postID + "/comments",

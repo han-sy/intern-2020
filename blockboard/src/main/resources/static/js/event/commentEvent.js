@@ -1,9 +1,23 @@
 
 //댓글 추가버튼 누를때
+/*$(document).on('click', '#btn_openComment', function () {
+  alert(postID+","+boardID+":"+commentText);
+  var postID = $("#postID").html();
+  var boardID = getCurrentBoardID();
+  var commentText = $(this).closest(".commentHtml").find(".commentText").val();
+  if (commentText == "") {
+      alert("내용을 입력하세요.");
+      return;
+  }
+  $(function () {
+      updateComment(boardID, postID, commentText);
+  });
+})*/
 function clickSendCommentBtn() {
   var postID = $("#postID").html();
   var boardID = getCurrentBoardID();
   var commentText = $('#commentText').val();
+
   if (commentText == "") {
     alert("내용을 입력하세요.");
     return;
@@ -11,7 +25,7 @@ function clickSendCommentBtn() {
   $(function () {
     updateComment(boardID, postID, commentText);
   });
-  //$('#config_container').html("");
+  $('#config_container').html("");
 }
 
 //댓글삭제버튼 누를때
@@ -57,5 +71,14 @@ $(document).on('click', '#btn_edit_comment_complete', function () {
 $(document).on('click', '.replyBtn', function () {
     var referenceCommentContainer = $(this).closest(".referenceCommentContainer");
     var referenceUserName = $(this).closest(".commentContainer").find(".name").html();
-    getCommentInputHtml("답글","입력","<strong class =tag style ='cursor:pointer;'>"+referenceUserName+"</strong>","."+referenceCommentContainer.attr("class"));
+    var referenceUserID = $(this).closest(".commentContainer").find(".name").attr("data-id");
+    var inputID = referenceCommentContainer.find("#reply_input_container"+referenceCommentContainer.attr("data-id")).attr("id");
+    getCommentInputHtml("답글","입력","To <strong class =tag style ='cursor:pointer;' data-id="+referenceUserID+" >"+referenceUserName+"</strong>","#"+inputID);
+})
+
+
+$(document).on('click', '.btn_close_cmt_input', function () {
+    var referenceCommentContainer = $(this).closest(".referenceCommentContainer");
+    var replyInputContainer = $(this).closest(".replyContainer");
+    replyInputContainer.html("");
 })
