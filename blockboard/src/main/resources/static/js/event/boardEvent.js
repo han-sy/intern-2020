@@ -147,9 +147,7 @@ $(document).on("click", ".tabmenu", function clickTabEvent() {
   console.log(boardID);
   $('li').css('background-color', 'white');
   $(this).css('background-color', 'lightgreen');
-  $('#postcontent').html("");
-  $('#writecontent').hide();
-  $('#btn_write').show();
+  editorClear();
   $(function () {
     getPostsAfterTabClick(boardID);
   });
