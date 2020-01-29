@@ -54,4 +54,17 @@ public class CommentService {
     public List<CommentDTO> getReplyListByCommentID(int commentReferencedID) {
         return commentMapper.selectRepliesByCommentID(commentReferencedID);
     }
+
+    public void writeReplyWithUserInfo(String userID, String commentContent, int boardID, int companyID, int postID,int commentReferencedID) {
+        CommentDTO reply = new CommentDTO();
+        reply.setUserID(userID);
+        reply.setCommentContent(commentContent);
+        reply.setBoardID(boardID);
+        reply.setCompanyID(companyID);
+        reply.setPostID(postID);
+        reply.setUserName(userMapper.selectUserNameByUserID(userID));
+        reply.setCommentReferencedID(commentReferencedID);
+        int result = commentMapper.insertNewReplyByCommentInfo(reply);
+
+    }
 }

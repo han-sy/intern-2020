@@ -10,7 +10,7 @@ function UpdateCommentListUI(data) {
     commentHtml += ("<p class=user><span class=name data-id="+value.userID+">" + value.userName + "</span></strong> <span class=date> " + value.commentRegisterTime + "</span></p>");
     commentHtml += ("<p class =comment_area id=translate_area>" + value.commentContent + "</p></div>");
     commentHtml += "<div class=btn>";
-    if ($('#functionAble2').attr("value") == "on") {
+    if ($('#functionAble2').attr("value") == "on") { //대댓글 기능 on일때
       commentHtml += "<button type=button class=replyBtn>답글</button>";
     }
     if (value.userID == $("#current_user_id").text()) {
@@ -18,14 +18,14 @@ function UpdateCommentListUI(data) {
       commentHtml += "<button type=button id = delete_comment>삭제</button>";
     }
     commentHtml += "</div>"
-    if ($('#functionAble2').attr("value") == "on") {
-      commentHtml += "</div><div style ='padding: 5px 1px 3px 20px;' class=replyContainer id=reply_container" + value.commentID + " ></div>"
+    if ($('#functionAble2').attr("value") == "on") { //대댓글 기능 on 일때
+      commentHtml += "</div><div style ='padding: 5px 1px 3px 30px;' class=replyContainer id=reply_container" + value.commentID + " ></div>"
       commentHtml += "<div style ='padding: 5px 1px 3px 20px;' class=replyContainer id=reply_input_container" + value.commentID + " ></div>"
     }
     commentHtml += "</div></div>";
   });
-  //답글 추가
-  if ($('#functionAble2').attr("value") == "on") {
+  //답글리스트 추가
+  if ($('#functionAble2').attr("value") == "on") { //대댓글 기능 on 일때
     getAllReplyList(data);
   }
   $(".comment_list_container").append(commentHtml);
@@ -34,12 +34,12 @@ function UpdateCommentListUI(data) {
 
 
 //댓글 inputform 받아오기
-function getCommentInputHtml(type,buttonName,tag,className) {
+function getCommentInputHtml(type,buttonName,tag,className,buttonSelector) {
   var commentInputHtml = "";
   commentInputHtml += "<br><div style='width: 100%' class=commentHtml>";
   commentInputHtml += ("<strong class=tag style='cursor:pointer'>"+tag+"</strong>");
   commentInputHtml += ("<textarea style='width: 1100px' id=commentText placeholder = '"+type+"을 입력하세요' name=commentTxt ></textarea>");
-  commentInputHtml += ("<div><button id=btn_openComment onclick = javascript:clickSendCommentBtn()>"+buttonName+"</button>");
+  commentInputHtml += ("<div><button "+buttonSelector+" >"+buttonName+"</button>");
   if(type=="답글"){
     commentInputHtml += ("<button class=btn_close_cmt_input >취소</button>");
   }
@@ -50,7 +50,7 @@ function getCommentInputHtml(type,buttonName,tag,className) {
 //댓글 컨텐츠 모두 불러오기
 function getCommentAllContents(data) {
   UpdateCommentListUI(data);
-  getCommentInputHtml("댓글","입력","",".comment_input_container");
+  getCommentInputHtml("댓글","입력","",".comment_input_container","id=btn_openComment");
 }
 
 //댓글리스트 받아오기
@@ -69,8 +69,7 @@ function getCommentList(boardID, postID, successFunction) {
 }
 
 //댓글 추가
-function updateComment(boardID, postID, commentText) {
-    alert(postID+","+boardID+":"+commentText);
+function insertComment(boardID, postID, commentText) {
   $.ajax({
     type: 'POST',
     url: "/boards/" + boardID + "/posts/" + postID + "/comments",
@@ -138,7 +137,7 @@ function getReplyListUI(commentID,data) {
   $.each(data, function (key, value) {
     console.log("답글"+value.commentID);
     commentHtml += "<div class = commentContainer id=comment" + value.commentID + "><div>";
-    commentHtml += ("<p class=user>└<span class=name>" + value.userName + "</span></strong> <span class=date> " + value.commentRegisterTime + "</span></p>");
+    commentHtml += ("<p class=user><span class=name>" + value.userName + "</span></strong> <span class=date> " + value.commentRegisterTime + "</span></p>");
     commentHtml += ("<p class =comment_area id=translate_area>" + value.commentContent + "</p></div>");
     commentHtml += "<div class=btn>";
     if ($('#functionAble2').attr("value") == "on") {
@@ -171,6 +170,22 @@ function getReplyList(boardID, postID, commentID, successFunction) {
     },
     success: function (data) {
       successFunction(commentID,data);
+    }
+  });
+}
+
+//댓글 추가
+function insertReply(boardID, postID, commentText,commentReferencedID) {
+  $.ajax({
+    type: 'POST',
+    url: "/boards/" + boardID + "/posts/" + postID + "/comments/"+commentReferencedID,
+    data: { boardID: boardID, postID: postID, commentContent: commentText,commentReferencedID:commentReferencedID },
+    error: function () {  //통신 실패시
+      alert('통신실패!');
+    },
+    success: function (data) {
+      getReplyList(boardID, postID,commentReferencedID, getReplyListUI);//성공하면 댓글목록 갱신
+      $('#reply_input_container'+commentReferencedID).html("");
     }
   });
 }

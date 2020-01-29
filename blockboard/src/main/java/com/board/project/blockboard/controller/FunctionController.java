@@ -55,6 +55,6 @@ public class FunctionController {
     public void insertNewFunctionData(@RequestParam("functionInfoData") String functionInfoData, HttpServletRequest request) {
         int companyID = jwtService.getCompanyId();
         functionService.updateNewFunctionsInfo(companyID,functionInfoData);
-}
+    }
 
 }

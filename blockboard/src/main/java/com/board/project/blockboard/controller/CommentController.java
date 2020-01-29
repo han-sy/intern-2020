@@ -64,6 +64,22 @@ public class CommentController {
     }
 
     /**
+     * 답글 추가
+     * @param postID
+     * @param boardID
+     * @param commentReferencedID 참조하는 댓글 id
+     * @param commentContent  답글내용
+     * @param request
+     */
+    @PostMapping("/{postid}/comments/{commentid}")
+    public void writeReply(@RequestParam("postID") int postID,@RequestParam("boardID") int boardID,@RequestParam("commentReferencedID") int commentReferencedID,@RequestParam("commentContent") String commentContent, HttpServletRequest request) {
+        String userID = jwtService.getUserId();
+        int companyID = jwtService.getCompanyId();
+        log.info("!!!!"+postID+","+boardID+","+commentReferencedID+":"+commentContent);
+        commentService.writeReplyWithUserInfo(userID,commentContent,boardID,companyID,postID,commentReferencedID);
+    }
+
+    /**
      * 댓글 삭제
      * @param commentID
      * @param postID
