@@ -26,13 +26,17 @@ public class JwtInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object object) throws Exception {
         CookieUtils cookieUtils = new CookieUtils();
         String token = cookieUtils.getCookie(request, HEADER_AUTH);
+
+        // JWT Token 만료 검사
         if (token != null && jwtService.isUsable(token)) {
             return true;
         } else {
-            if(isAjaxRequest(request))
+            if(isAjaxRequest(request)) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+            }
             else
-                response.sendRedirect(request.getContextPath() + "/");
+                response.sendRedirect(request.getContextPath() + "/login");
             return false;
         }
     }

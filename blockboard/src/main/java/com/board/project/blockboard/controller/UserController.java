@@ -4,11 +4,11 @@
  */
 package com.board.project.blockboard.controller;
 
+import com.board.project.blockboard.common.util.CookieUtils;
 import com.board.project.blockboard.dto.UserDTO;
 import com.board.project.blockboard.service.JwtService;
 import com.board.project.blockboard.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.codec.binary.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -37,7 +37,7 @@ public class UserController {
         if(isValid)
             return "redirect:/boards";
         else
-            return "redirect:/";
+            return "redirect:/login";
     }
 
     /**
@@ -50,7 +50,7 @@ public class UserController {
         Cookie c = new Cookie(HEADER_NAME, null);
         c.setMaxAge(0);
         response.addCookie(c);
-        return "redirect:/";
+        return "redirect:/login";
     }
 
     /**
@@ -59,20 +59,15 @@ public class UserController {
      * @return              server가 만들어 준 쿠키가 있다면 -> /boards redirect
      *                      없다면 -> 로그인 화면 띄운다.
      */
-    @GetMapping("/")
+    @GetMapping("/login")
     public String login(HttpServletRequest request) {
         // 이미 JWT 토큰을 가지고 있으면 로그인 생략 후 메인화면으로 이동
-        Cookie[] getCookie = request.getCookies();
-        if (getCookie != null) {
-            for (Cookie c : getCookie) {
-                if (StringUtils.equals(c.getName(),HEADER_NAME)) {
-                    if (jwtService.isUsable(c.getValue()))
-                        return "redirect:/boards";
-                    else
-                        return "login";
-                }
-            }
-        }
-    return "login";
+        CookieUtils cookieUtils = new CookieUtils();
+        String token = cookieUtils.getCookie(request,HEADER_NAME);
+
+        if(jwtService.isUsable(token))
+            return "redirect:/boards";
+        else
+            return "login";
     }
 }

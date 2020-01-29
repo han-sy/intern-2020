@@ -12,3 +12,9 @@ function getContextPath() {
     var hostIndex = location.href.indexOf( location.host ) + location.host.length;
     return location.href.substring( hostIndex, location.href.indexOf('/', hostIndex + 1) );
 }
+
+function errorFunction(xhr) {
+    if(xhr.status == 401) { // Token 만료 에러
+        returnToLoginPage();
+    }
+}

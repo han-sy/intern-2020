@@ -12,8 +12,8 @@ function insertPost(boardID, postTitle, postContent) {
             postTitle: postTitle,
             postContent: postContent
         },
-        error: function () {
-            returnToLoginPage();
+        error: function (xhr) {
+            errorFunction(xhr);
         },
         success: function () {
             refreshPostList();
@@ -29,8 +29,8 @@ function loadPost(boardID, postID) {
         type: 'GET',
         url: "/boards/" + boardID + "/posts/" + postID + "/editor",
         async: false,
-        error: function () {
-            returnToLoginPage();
+        error: function (xhr) {
+            errorFunction(xhr);
         },
         success: function (data) {
             editorcontent.append("<a id=postID style=visibility:hidden>" + postID + "</a>");
@@ -48,8 +48,8 @@ function updatePost(boardID, postID, postTitle, postContent) {
             postTitle: postTitle,
             postContent: postContent
         },
-        error: function () {
-            returnToLoginPage();
+        error: function (xhr) {
+            errorFunction(xhr);
         },
         success: function () {
             refreshPostList();
@@ -61,8 +61,8 @@ function deletePost(boardID, postID) {
     $.ajax({
         type: 'DELETE',
         url: "/boards/" + boardID + "/posts/" + postID,
-        error: function () {
-            returnToLoginPage();
+        error: function (xhr) {
+            errorFunction(xhr);
         },
         success: function () {
             refreshPostList();
@@ -86,8 +86,8 @@ function searchPost(option, keyword) {
             keyword: keyword.val()
         },
         dataType: 'JSON',
-        error: function () {
-            returnToLoginPage();
+        error: function (xhr) {
+            errorFunction(xhr);
         },
         success: function (data) {
             postClear(); // 게시글 조회 화면 Clear
