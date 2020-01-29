@@ -94,8 +94,17 @@
     <div id="editorcontent"></div>
   </div>
 
-  <div id="postcontent">
-  </div>
+  <div id="postcontent"></div>
+  <!--게시물 내용 템플릿-->
+  <script id="postcontent-template" type="text/x-handlebars-template">
+    {{#post}}
+      <h2>{{postTitle}}</h2>
+      <h5>작성자 : {{userName}}</h5>
+      <h5>작성시간 : {{postRegisterTime}}</h5>
+      <a>{{{postContent}}}</a>
+      <a id=postID style="visibility: hidden;">{{postID}}</a>
+    {{/post}}
+  </script>
   <div id="tabcontent">
     <table width="90%" cellpadding="0" cellspacing="0" border="0">
       <thead>

@@ -5,12 +5,9 @@
 
 //새로운 탭 내용으로 교체
 function updateTab(data) {
-  // $('#tab_id').html("");
-  // $.template("tabListTmpl", "<li data-tab=${boardID} class=tabmenu id=default> ${boardName} </li>");
-  // $.tmpl("tabListTmpl", data).appendTo("#tab_id");
   var source = $('#boards-template').html();
   var template = Handlebars.compile(source);
-  var board = {boards:data};
+  var board = { boards: data };
   var itemList = template(board);
   $('#tab_id').html(itemList);
 }
@@ -23,18 +20,14 @@ function loadPostContent(data) {
   postContentHtml += "<a>" + data.postContent + "</a>";
   postContentHtml += "<a id=postID style=visibility:hidden>" + data.postID + "</a>";
   $('#postcontent').html(postContentHtml);
+  var source = $('#postcontent-template').html();
+  var template = Handlebars.compile(source);
+  var post = { post: data };
+  var item = template(post);
+  $('#postcontent').html(item);
 }
 //게시글 목록
 function loadPostList(data) {
-  /*$('#postlist').html("");
-  var postContentHtml = "<tr height='30' class = 'postclick' data-post = ${postID}" +
-    " onclick='javascript:clickTrEvent(this)' onmouseover = 'javascript:changeTrColor(this)' >" +
-    "<td width='379'>${postTitle}</td>" +
-    "<td width='73'>${userName}</td>" +
-    "<td width='164'>${postRegisterTime}</td></tr>" +
-    "<td style='visibility:hidden'>${postID}</td>";
-  $.template("postListTmpl", postContentHtml);
-  $.tmpl("postListTmpl", data).appendTo("#postlist");*/
   var source = $('#posts-template').html();
   var template = Handlebars.compile(source);
   var post = { posts: data };
