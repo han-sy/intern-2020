@@ -73,6 +73,12 @@
       </li>
     </c:forEach>
   </ul>
+  <!--게시판 목록 템플릿-->
+  <script id="boards-template" type="text/x-handlebars-template">
+    {{#boards}}
+      <li data-tab=${boardID} class=tabmenu id=default> {{boardName}} </li>
+    {{/boards}}
+  </script>
 
   <div id="writecontent" style="display:none">
     <div id="boardlistcontent">

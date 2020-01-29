@@ -5,9 +5,14 @@
 
 //새로운 탭 내용으로 교체
 function updateTab(data) {
-  $('#tab_id').html("");
-  $.template("tabListTmpl", "<li data-tab=${boardID} class=tabmenu id=default> ${boardName} </li>");
-  $.tmpl("tabListTmpl", data).appendTo("#tab_id");
+  // $('#tab_id').html("");
+  // $.template("tabListTmpl", "<li data-tab=${boardID} class=tabmenu id=default> ${boardName} </li>");
+  // $.tmpl("tabListTmpl", data).appendTo("#tab_id");
+  var source = $('#boards-template').html();
+  var template = Handlebars.compile(source);
+  var board = {boards:data};
+  var itemList = template(board);
+  $('#tab_id').html(itemList);
 }
 //게시글 내용
 function loadPostContent(data) {
@@ -21,11 +26,21 @@ function loadPostContent(data) {
 }
 //게시글 목록
 function loadPostList(data) {
+  /*$('#postlist').html("");
+  var postContentHtml = "<tr height='30' class = 'postclick' data-post = ${postID}" +
+    " onclick='javascript:clickTrEvent(this)' onmouseover = 'javascript:changeTrColor(this)' >" +
+    "<td width='379'>${postTitle}</td>" +
+    "<td width='73'>${userName}</td>" +
+    "<td width='164'>${postRegisterTime}</td></tr>" +
+    "<td style='visibility:hidden'>${postID}</td>";
+  $.template("postListTmpl", postContentHtml);
+  $.tmpl("postListTmpl", data).appendTo("#postlist");*/
   var source = $('#posts-template').html();
   var template = Handlebars.compile(source);
   var post = { posts: data };
   var itemList = template(post);
   $('#postlist').html(itemList);
+
 }
 
 //삭제를 위한 UI

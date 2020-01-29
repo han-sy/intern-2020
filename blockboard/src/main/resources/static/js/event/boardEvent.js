@@ -3,6 +3,7 @@
  * @file boardEvent.js
  */
 // 게시판 추가버튼 클릭시
+//TODO Handlebar 적용
 function clickaddBoardBtn() {
   var containerObj = $('#config_container');
   containerObj.html("<input type='text' name='게시판 이름' id = 'input_board_name' class='addBoard' placeholder='게시판 이름'>");
