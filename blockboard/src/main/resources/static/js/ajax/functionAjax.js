@@ -15,7 +15,7 @@ function getFunctionList(companyID, successFunction) {
     }
   });
 }
-
+//TODO
 function updateNewFunctionInfoUI(data) {
   console.log("success" + data);
   var containerObj = $('#fuctionListContainer');

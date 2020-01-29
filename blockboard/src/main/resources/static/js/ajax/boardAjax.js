@@ -21,15 +21,11 @@ function loadPostContent(data) {
 }
 //게시글 목록
 function loadPostList(data) {
-  $('#postlist').html("");
-  var postContentHtml = "<tr height='30' class = 'postclick' data-post = ${postID}" +
-    " onclick='javascript:clickTrEvent(this)' onmouseover = 'javascript:changeTrColor(this)' >" +
-    "<td width='379'>${postTitle}</td>" +
-    "<td width='73'>${userName}</td>" +
-    "<td width='164'>${postRegisterTime}</td></tr>" +
-    "<td style='visibility:hidden'>${postID}</td>";
-  $.template("postListTmpl", postContentHtml);
-  $.tmpl("postListTmpl", data).appendTo("#postlist");
+  var source = $('#posts-template').html();
+  var template = Handlebars.compile(source);
+  var post = { posts: data };
+  var itemList = template(post);
+  $('#postlist').html(itemList);
 }
 
 //삭제를 위한 UI
@@ -102,18 +98,18 @@ function updateTabByNewBoardListAfterUpdateBoardName(jsonData) {
 }
 
 //리스트 받아오기
- function getBoardList(successFunction) {
-   $.ajax({
-     type: 'GET',
-     url: '/boards',
-     error: function () {  //통신 실패시
-       alert('통신실패!');
-     },
-     success: function (data) {
-       successFunction(data);
-     }
-   });
- }
+function getBoardList(successFunction) {
+  $.ajax({
+    type: 'GET',
+    url: '/boards',
+    error: function () {  //통신 실패시
+      alert('통신실패!');
+    },
+    success: function (data) {
+      successFunction(data);
+    }
+  });
+}
 
 //게시물 클릭후 게시물 데이터 받아오기
 function getPostDataAfterPostClick(postID, boardID) {
@@ -123,7 +119,7 @@ function getPostDataAfterPostClick(postID, boardID) {
     type: 'GET',
     url: "/boards/" + boardID + "/posts/" + postID,
     error: function (error) {  //통신 실패시
-      alert('통신실패!'+error);
+      alert('통신실패!' + error);
     },
     success: function (data) {
       $('#writecontent').hide();
@@ -150,7 +146,7 @@ function getPostDataAfterPostClick(postID, boardID) {
           postContentHtml += "<div class = comment_input_container></div>";
           postContentObj.append(postContentHtml);
 
-          getCommentList(boardID, postID,getCommentAllContents); //삭제이후 tab에 게시판목록 업데이트 //CommentAjax.js 에 있음
+          getCommentList(boardID, postID, getCommentAllContents); //삭제이후 tab에 게시판목록 업데이트 //CommentAjax.js 에 있음
         });
       }
     }

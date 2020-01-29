@@ -9,7 +9,7 @@ function UpdateCommentListUI(data) {
   var commentHtml = "";
 
   //console.log(${userID}+"------"+$("#current_user_id").text())
-
+  //TODO handlebar 적용
   $.each(data, function (key, value) {
     commentHtml += ("<hr><div class =referenceCommentContainer data-id="+value.commentID+"><div class = commentContainer id=comment" + value.commentID + "><div>");
     commentHtml += ("<p class=user><span class=name data-id="+value.userID+">" + value.userName + "</span></strong> <span class=date> " + value.commentRegisterTime + "</span></p>");
@@ -39,6 +39,7 @@ function UpdateCommentListUI(data) {
 
 
 //댓글 inputform 받아오기
+//TODO handlebar 적용
 function getCommentInputHtml(type,buttonName,tag,className,buttonSelector) {
   var commentInputHtml = "";
   commentInputHtml += "<br><div style='width: 100%' class=commentHtml>";
@@ -104,6 +105,7 @@ function deleteCommentByCommentID(postID, boardID, commentID) {
 }
 
 //댓글수정모드
+//TODO handlebar 적용
 function EditCommentByCommentID(postID, boardID, commentID) {
   var oldText = $('#comment' + commentID).children().children("#translate_area").html();
   //$('#comment'+commentID).html("!!");
@@ -132,6 +134,7 @@ function editComment(postID, boardID, commentID, newComment) {
 }
 
 //답글 ui 구성
+//TODO handlebar 적용
 function getReplyListUI(commentID,data) {
     //console.log("댓글"+commentID);
   $("#reply_container"+commentID).html("");
