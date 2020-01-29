@@ -51,7 +51,7 @@ public class BoardController {
      * @return
      * @throws Exception
      */
-    @GetMapping("")
+    @GetMapping("/contents")
     public String getMainContent(HttpServletRequest request, Model model){  // 일일이 예외처리 안해서 Exception으로 수정 (동욱)
         String userID = jwtService.getUserId();
         int companyID = jwtService.getCompanyId();
@@ -105,7 +105,7 @@ public class BoardController {
      * @return
      * @throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException
      */
-    @GetMapping(value = "/list")
+    @GetMapping(value = "")
     @ResponseBody
     public List<BoardDTO> getBoardList(HttpServletRequest request) {
         int companyID = jwtService.getCompanyId();
@@ -122,9 +122,9 @@ public class BoardController {
      * @return
      * @throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException
      */
-    @PostMapping(value = "/{boardname}")
+    @PostMapping(value = "")
     @ResponseBody
-    public List<BoardDTO> insertNewBoard(@PathVariable("boardname") String newBoardName, HttpServletRequest request){
+    public List<BoardDTO> insertNewBoard(@RequestParam("boardName") String newBoardName, HttpServletRequest request){
         int companyID = jwtService.getCompanyId();
         //게시판 삽입
         boardService.insertNewBoard(newBoardName, companyID);
@@ -159,7 +159,7 @@ public class BoardController {
      * @return
      * @throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException
      */
-    @DeleteMapping(value = "/list")
+    @DeleteMapping(value = "")
     @ResponseBody
     public List<BoardDTO> deleteBoardbyBoardID(@RequestParam("deleteList") String deleteBoards, HttpServletRequest request) {
         int companyID = jwtService.getCompanyId();

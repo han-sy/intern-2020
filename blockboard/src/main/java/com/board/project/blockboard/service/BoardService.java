@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.binary.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,7 +109,7 @@ public class BoardService {
         PostDTO postData = getPostByPostID(postID);
         try {
             // 현재 로그인한 유저와 게시글 작성자가 같을 경우에 'canDelete' 를 true로 전달
-            postMapData.put("canDelete", userID.equals(postData.getUserID()) ? true : false);
+            postMapData.put("canDelete", StringUtils.equals(userID,postData.getUserID()) ? true : false);
             postMapData.put("postID", postID);
             postMapData.put("postTitle", postData.getPostTitle());
             postMapData.put("postContent", postData.getPostContent());
