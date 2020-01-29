@@ -1,33 +1,53 @@
+/**
+ * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+ * @file boardAjax.js
+ */
+
 //새로운 탭 내용으로 교체
-function updateTab(data){
-      $('#tab_id').html("");
-      $('#boardIDinEditor').html("");
-      $.template("tabListTmpl","<li data-tab=${boardID} class=tabmenu id=default> ${boardName} </li>");
-      $.tmpl("tabListTmpl", data).appendTo("#tab_id");
-      $.template("tabListTmpl","<option data-tab=${boardID} class=tabmenu id=default> ${boardName} </option>");
-      $.tmpl("tabListTmpl", data).appendTo("#boardIDinEditor");
+function updateTab(data) {
+  var source = $('#boards-template').html();
+  var template = Handlebars.compile(source);
+  var board = { boards: data };
+  var itemList = template(board);
+  $('#tab_id').html(itemList);
 }
 //게시글 내용
-function loadPostContent(data){
-     var postContentHtml = "";
-          postContentHtml += "<h2>" + data.postTitle + "</h2>";
-          postContentHtml += "<h5>작성자 : " + data.userName + "</h4>";
-          postContentHtml +="<h5>작성시간 : " + data.postRegisterTime + "</h4>";
-          postContentHtml +="<a>" + data.postContent + "</a>" ;
-          postContentHtml +="<a id=postID style=visibility:hidden>" + data.postID + "</a>";
-          $('#postcontent').html(postContentHtml);
+function loadPostContent(data) {
+  var source = $('#postcontent-template').html();
+  var template = Handlebars.compile(source);
+  var post = { post: data };
+  var item = template(post);
+  $('#postcontent').html(item);
 }
 //게시글 목록
-function loadPostList(data){
-    $('#postlist').html("");
-    var postContentHtml =  "<tr height='30' class = 'postclick' data-post = ${postID}"+
-                         " onclick='javascript:clickTrEvent(this)' onmouseover = 'javascript:changeTrColor(this)' >" +
-                         "<td width='379'>${postTitle}</td>" +
-                         "<td width='73'>${userName}</td>" +
-                         "<td width='164'>${postRegisterTime}</td></tr>" +
-                         "<td style='visibility:hidden'>${postID}</td>";
-    $.template("postListTmpl",postContentHtml);
-    $.tmpl("postListTmpl", data).appendTo("#postlist");
+function loadPostList(data) {
+  var source = $('#posts-template').html();
+  var template = Handlebars.compile(source);
+  var post = { posts: data };
+  var itemList = template(post);
+  $('#postlist').html(itemList);
+
+}
+
+//삭제를 위한 UI
+function getBoardListToDelete(data) {
+  var source = $('#deleteboards-template').html();
+  var template = Handlebars.compile(source);
+  var boardList = { boards: data };
+  var itemList = template(boardList);
+  $('#config_container').html(itemList);
+}
+
+//이름변경을 위한 UI
+function getBoardListToChangeName(data) {
+  var containerObj = $('#config_container')
+  containerObj.html("");
+  $.each(data, function (key, value) {
+    containerObj.append("<div class=boardInfo id=board" + value.boardID + "><input type=text name =boardname data-boardid=" + value.boardID + " data-oldname=" + value.boardName + " value=" + value.boardName + " >" +
+      " <span class =deleteBoard data-board =board" + value.boardID + " > 기존 게시판 이름 : " + value.boardName + "</span></div>");
+  });
+  containerObj.append(" <br><a id ='addFuncBtn' onclick = javascript:clickSaveChangeBoard(this) style=cursor:pointer>변경하기</a>" +
+    "<button class = 'functionClose' type='button' onclick=javascript:clickConfigClose(this)>닫기</button>");
 }
 
 
@@ -35,12 +55,13 @@ function loadPostList(data){
 function updateTabByNewBoardListAfterAddBoard(boardName) {
   $.ajax({
     type: 'POST',
-    url: "/boards/" + boardName,
+    url: "/boards",
+    data: { boardName: boardName },
     error: function () {  //통신 실패시
       alert('통신실패!');
     },
     success: function (data) {    //들어오는 data는 boardDTOlist
-        updateTab(data);//새로운 탭 내용으로 교체
+      getBoardList(updateTab);//새로운 탭 내용으로 교체
     }
   });
 }
@@ -49,13 +70,13 @@ function updateTabByNewBoardListAfterAddBoard(boardName) {
 function updateTabByNewBoardListAfterDeleteBoard(jsonData) {
   $.ajax({
     type: 'DELETE',
-    url: "/boards/list",
+    url: "/boards",
     data: { deleteList: jsonData },
     error: function () {  //통신 실패시
       alert('통신실패!');
     },
-    success: function (data) {
-      updateTab(data);//새로운 탭 내용으로 교체
+    success: function () {
+      getBoardList(updateTab);//새로운 탭 내용으로 교체
     }
   });
   $('#config_container').html("");
@@ -64,32 +85,28 @@ function updateTabByNewBoardListAfterDeleteBoard(jsonData) {
 //게시판 이름변경후 탭업데이트
 function updateTabByNewBoardListAfterUpdateBoardName(jsonData) {
   $.ajax({
-    type: 'POST',
-    url: "/boards/newtitles",
+    type: 'PUT',
+    url: "/boards",
     data: { newTitles: jsonData },
     error: function (error) {  //통신 실패시
       alert(error);
     },
-    success: function (data) {
-        updateTab(data);//새로운 탭 내용으로 교체
+    success: function () {
+      getBoardList(updateTab);//새로운 탭 내용으로 교체
     }
   });
 }
 
-//삭제를 위한 리스트 받아오기
-function getBoardListToDelete() {
+//리스트 받아오기
+function getBoardList(successFunction) {
   $.ajax({
     type: 'GET',
-    url: '/boards/list',
+    url: '/boards',
     error: function () {  //통신 실패시
       alert('통신실패!');
     },
     success: function (data) {
-      $('#config_container').html("삭제할 게시판을 선택하시오");
-      $.template("deleteListTmpl","<div><span>${boardName}</span><input type=checkbox name=boardDelete value=${boardID}></div>")
-      $.tmpl("deleteListTmpl", data).appendTo("#config_container");
-      $('#config_container').append(" <a id ='addFuncBtn' onclick = javascript:clickSaveDelteBoard(this) style=cursor:pointer>삭제하기</a>" +
-        "<button class = 'functionClose' type='button' onclick=javascript:clickConfigClose(this)>닫기</button>");
+      successFunction(data);
     }
   });
 }
@@ -101,35 +118,35 @@ function getPostDataAfterPostClick(postID, boardID) {
   $.ajax({
     type: 'GET',
     url: "/boards/" + boardID + "/posts/" + postID,
-    error: function () {  //통신 실패시
-      alert('통신실패!');
+    error: function (error) {  //통신 실패시
+      alert('통신실패!' + error);
     },
     success: function (data) {
       $('#writecontent').hide();
       $('#btn_write').show();
 
       //게시글 내용 출력
-     loadPostContent(data);
+      loadPostContent(data);
 
       // 작성글의 userID와 현재 로그인한 userID가 같으면 삭제버튼 표시
       var commentAbleObj = $('#functionAble1');
       if (data.canDelete == true) {
         postContentObj.append(
-        "</br><button id=btn_updatePost>수정</button>"+
-        "</br><button id=btn_deletePost>삭제</button><br>"
+          "</br><button id=btn_updatePost>수정</button>" +
+          "</br><button id=btn_deletePost>삭제</button><br>"
         );
       }
-            var postContentHtml ="";
+      var postContentHtml = "";
 
       if (commentAbleObj.attr("value") == "on") {
 
         $(function () {
-        postContentObj.append("<br><br><div class= comment_section <div><span><strong>댓글</strong></span> <span id=commentCount></span></div>");
-        postContentHtml +="<div class = comment_list_container></div>";
-        postContentHtml +="<div class = comment_input_container></div>";
-        postContentObj.append(postContentHtml);
+          postContentObj.append("<br><br><div class= comment_section <div><span><strong>댓글</strong></span> <span id=commentCount></span></div>");
+          postContentHtml += "<div class = comment_list_container></div>";
+          postContentHtml += "<div class = comment_input_container></div>";
+          postContentObj.append(postContentHtml);
 
-          getCommentAllContents(postID, boardID); //삭제이후 tab에 게시판목록 업데이트 //CommentAjax.js 에 있음
+          getCommentList(boardID, postID, getCommentAllContents); //삭제이후 tab에 게시판목록 업데이트 //CommentAjax.js 에 있음
         });
       }
     }

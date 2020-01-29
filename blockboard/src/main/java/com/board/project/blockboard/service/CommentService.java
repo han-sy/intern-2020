@@ -1,17 +1,18 @@
+/**
+ * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+ * @file CommentService.java
+ */
 package com.board.project.blockboard.service;
 
 import com.board.project.blockboard.dto.CommentDTO;
 import com.board.project.blockboard.mapper.CommentMapper;
-import com.board.project.blockboard.mapper.FunctionMapper;
-
 import com.board.project.blockboard.mapper.UserMapper;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
@@ -27,7 +28,9 @@ public class CommentService {
         return commentMapper.selectCommentsByPostID(postID);
     }
 
-    public CommentDTO writeCommentWithUserInfo(String userID, CommentDTO comment, int boardID, int companyID, int postID) {
+    public CommentDTO writeCommentWithUserInfo(String userID, String commentContent, int boardID, int companyID, int postID) {
+        CommentDTO comment = new CommentDTO();
+        comment.setCommentContent(commentContent);
         comment.setUserName(userMapper.selectUserNameByUserID(userID));
         comment.setPostID(postID);
         comment.setBoardID(boardID);
@@ -40,5 +43,29 @@ public class CommentService {
 
     public void deleteComment(int commentID) {
         commentMapper.deleteCommentByCommentID(commentID);
+    }
+
+    public void updateComment(int commentID, String newComment) {
+        Map<String, Object> commentAttribute = new HashMap<String, Object>();
+        commentAttribute.put("commentID",commentID);
+        commentAttribute.put("newComment",newComment);
+        commentMapper.updateComment(commentAttribute);
+    }
+
+    public List<CommentDTO> getReplyListByCommentID(int commentReferencedID) {
+        return commentMapper.selectRepliesByCommentID(commentReferencedID);
+    }
+
+    public void writeReplyWithUserInfo(String userID, String commentContent, int boardID, int companyID, int postID,int commentReferencedID) {
+        CommentDTO reply = new CommentDTO();
+        reply.setUserID(userID);
+        reply.setCommentContent(commentContent);
+        reply.setBoardID(boardID);
+        reply.setCompanyID(companyID);
+        reply.setPostID(postID);
+        reply.setUserName(userMapper.selectUserNameByUserID(userID));
+        reply.setCommentReferencedID(commentReferencedID);
+        int result = commentMapper.insertNewReplyByCommentInfo(reply);
+
     }
 }

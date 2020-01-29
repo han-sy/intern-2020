@@ -35,7 +35,7 @@ public class UserController {
     public String loginCheck(@ModelAttribute UserDTO requestUser, HttpServletResponse response) {
         boolean isValid = userService.loginCheck(requestUser, response);
         if(isValid)
-            return "redirect:/boards";
+            return "redirect:/boards/contents";
         else
             return "redirect:/login";
     }
@@ -66,7 +66,7 @@ public class UserController {
         String token = cookieUtils.getCookie(request,HEADER_NAME);
 
         if(jwtService.isUsable(token))
-            return "redirect:/boards";
+            return "redirect:/boards/contents";
         else
             return "login";
     }

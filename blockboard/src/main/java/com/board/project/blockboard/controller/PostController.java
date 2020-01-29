@@ -8,10 +8,27 @@ import com.board.project.blockboard.dto.PostDTO;
 import com.board.project.blockboard.service.BoardService;
 import com.board.project.blockboard.service.JwtService;
 import com.board.project.blockboard.service.PostService;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.DecoderException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
@@ -41,7 +58,19 @@ public class PostController {
         receivePost.setBoardID(boardid);
         postService.insertPost(receivePost);
     }
-
+    /**
+     * 게시물 목록 띄우기
+     * boardid 받아와서 해당하는 게시판의 게시글목록들 리턴
+     * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+     * @param boardID
+     * @return
+     */
+    @GetMapping("")
+    @ResponseBody
+    public List<PostDTO> getPostListByBoardID(@PathVariable("boardid") int boardID) throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
+        List<PostDTO> postList = boardService.getPostListByBoardID(boardID);
+        return postList;
+    }
     /**
      * 게시물 삭제
      * @param postid 삭제할 게시물 id

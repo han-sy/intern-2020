@@ -6,30 +6,22 @@
  // 에디터 div 생성
 function editorAreaCreate() {
   editorClear();
-  var editorcontent = $('#editorcontent');
   var writecontent = $('#writecontent');
   var btn_write = $('#btn_write');
-  writecontent.show();
   writecontent.css("display", "");
   btn_write.css("display", "none");
   
-  $.template("editorTmpl",
-    '<h2> 게시글제목 </h2> ' +
-    '<input type="text" id="post_title" />' +
-    '<textarea id=editor></textarea>' + 
-    '<button id=btn_post>올리기</button>'
-  );
-  $.tmpl("editorTmpl").appendTo(editorcontent);
   // textarea에 CKEditor 적용
   $('#editor').ckeditor();
 }
 
-// 에디터 div 내용 삭제
+// 작성 폼 초기화
 function editorClear() {
   if(CKEDITOR.instances.editor) {
+    CKEDITOR.instances.editor.setData("");
     CKEDITOR.instances.editor.destroy();
   }
-  $('#editorcontent').html("");
+  $('#post_title').val("");
   $('#writecontent').css("display", "none");
   $('#btn_write').css("display", "");
 }
@@ -117,4 +109,14 @@ $(document).on("click", "#search", function () {
   var option = $('#search_option option:selected').attr('value');
   var keyword = $('#search_keyword');
   searchPost(option, keyword);
+});
+
+$(document).on("click", "#btn_cancel", function () {
+  if(confirm("작성된 내용이 저장되지 않을 수도 있습니다. 이동하시겠습니까?") == true) {
+    editorClear();
+    // 브라우저의 history값 구현 후에 마저 구현하기
+    console.log("확인버튼 클릭");
+  } else {
+    console.log("취소버튼 클릭");
+  }
 });

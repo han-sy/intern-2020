@@ -1,3 +1,7 @@
+/**
+ * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+ * @file CommentMapper.java
+ */
 package com.board.project.blockboard.mapper;
 
 import com.board.project.blockboard.dto.CommentDTO;
@@ -5,6 +9,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Repository
 @Mapper
@@ -13,4 +18,9 @@ public interface CommentMapper {
     int insertNewCommentByCommentInfo(CommentDTO commentInfo);
     void deleteCommentByCommentID(int commentID);
     void deleteCommentsByPostID(int postID);
+    void updateComment(Map<String, Object> commentAttribute);
+
+    List<CommentDTO> selectRepliesByCommentID(int commentReferencedID);
+
+    int insertNewReplyByCommentInfo(CommentDTO reply);
 }

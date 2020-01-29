@@ -1,3 +1,7 @@
+/**
+ * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+ * @file BoardController.java
+ */
 package com.board.project.blockboard.controller;
 
 
@@ -7,25 +11,29 @@ import com.board.project.blockboard.service.BoardService;
 import com.board.project.blockboard.service.FunctionService;
 import com.board.project.blockboard.service.JwtService;
 import com.board.project.blockboard.service.UserService;
-
-import lombok.extern.slf4j.Slf4j;
-
-import org.apache.commons.codec.DecoderException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
-import javax.servlet.http.HttpServletRequest;
-
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.DecoderException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 
 @Slf4j
@@ -45,9 +53,8 @@ public class BoardController {
      * @param request
      * @param model
      * @return
-     * @throws Exception
      */
-    @GetMapping("")
+    @GetMapping("/contents")
     public String getMainContent(HttpServletRequest request, Model model){  // 일일이 예외처리 안해서 Exception으로 수정 (동욱)
         String userID = jwtService.getUserId();
         int companyID = jwtService.getCompanyId();
@@ -66,23 +73,10 @@ public class BoardController {
     }
 
     /**
-     * boardid 받아와서 해당하는 게시판의 게시글목록들 리턴
-     * @param boardID
-     * @return
-     */
-    @GetMapping("/{boardid}/posts")
-    @ResponseBody
-    public List<PostDTO> getPostListByBoardID(@PathVariable("boardid") int boardID) throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException{
-        List<PostDTO> postList = boardService.getPostListByBoardID(boardID);
-        return postList;
-    }
-
-    /**
      * 게시물 조회
      * @param postID
      * @param request
      * @return PostDTO + 유저일치여부 로 구성된 map
-     * @throws Exception
      */
     @GetMapping(value = "/{boardid}/posts/{postid}")
     @ResponseBody
@@ -98,10 +92,9 @@ public class BoardController {
     /**
      * 게시판 목록 가져오기
      * @param request
-     * @return
-     * @throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException
+     * @return 게시판 목록
      */
-    @GetMapping(value = "/list")
+    @GetMapping(value = "")
     @ResponseBody
     public List<BoardDTO> getBoardList(HttpServletRequest request) {
         int companyID = jwtService.getCompanyId();
@@ -115,56 +108,39 @@ public class BoardController {
      * 게시판 추가
      * @param newBoardName 새로입력받은 보드이름
      * @param request
-     * @return
-     * @throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException
      */
-    @PostMapping(value = "/{boardname}")
+    @PostMapping(value = "")
     @ResponseBody
-    public List<BoardDTO> insertNewBoard(@PathVariable("boardname") String newBoardName, HttpServletRequest request){
+    public void insertNewBoard(@RequestParam("boardName") String newBoardName, HttpServletRequest request){
         int companyID = jwtService.getCompanyId();
         //게시판 삽입
         boardService.insertNewBoard(newBoardName, companyID);
-
-        //insert후 새로운 게시판목록
-        List<BoardDTO> newBoardList = boardService.getBoardListByCompanyID(companyID);
-        return newBoardList;
     }
 
     /**
-     * 게시판 이름 변경
+     * 게시판 이름 변경 변경된 리스트를 받아와서 수정한다.
      * @param newTItleList 이름이 변경된 리스트
      * @param request
-     * @return
-     * @throws Exception
      */
-    @PostMapping(value = "/newtitles")
+    @PutMapping(value = "")
     @ResponseBody
-    public List<BoardDTO>  changeNewBoardName(@RequestParam("newTitles") String newTItleList, HttpServletRequest request) {
+    public void  changeNewBoardName(@RequestParam("newTitles") String newTItleList, HttpServletRequest request) {
         int companyID = jwtService.getCompanyId();
-
         boardService.updateChangedName(newTItleList,companyID);
-        //이름 수정후새로운 게시판 목록들 보내기
-        List<BoardDTO> newBoardList = boardService.getBoardListByCompanyID(companyID);
-        return newBoardList;
     }
 
     /**
      * 게시판 삭제
      * @param deleteBoards 삭제리스트
      * @param request
-     * @return
-     * @throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException
      */
-    @DeleteMapping(value = "/list")
+    @DeleteMapping(value = "")
     @ResponseBody
-    public List<BoardDTO> deleteBoardbyBoardID(@RequestParam("deleteList") String deleteBoards, HttpServletRequest request) {
+    public void deleteBoardbyBoardID(@RequestParam("deleteList") String deleteBoards, HttpServletRequest request) {
         int companyID = jwtService.getCompanyId();
 
         log.info("deleteBoards : "+deleteBoards);
         boardService.deleteBoardsByDeleteBoardList(companyID,deleteBoards); //기존데이터
-
-        List<BoardDTO> newBoardList = boardService.getBoardListByCompanyID(companyID);
-        return newBoardList;
     }
 
 }

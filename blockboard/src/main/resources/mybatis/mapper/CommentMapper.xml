@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
+<!--
+ * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+ * @file CommentMapper.xml
+-->
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.board.project.blockboard.mapper.CommentMapper">
@@ -18,9 +21,27 @@
         AND comments.post_id = #{postID}
         AND comments.comment_referenced_id is null;
     </select>
+    <select id="selectRepliesByCommentID" parameterType="int" resultType="com.board.project.blockboard.dto.CommentDTO">
+        SELECT  comments.comment_id as commentID,
+        comments.board_id as boardID,
+        comments.post_id as postID,
+        comments.user_id as userID,
+        users.user_name as userName,
+        comments.company_id as companyID,
+        comments.comment_content as commentContent,
+        comments.comment_register_time as commentRegisterTime,
+        comments.comment_referenced_id as commentReferencedID
+        FROM Comments comments , Users users
+        where comments.user_id = users.user_id
+        AND comments.comment_referenced_id = ${commentReferencedID};
+    </select>
     <insert id="insertNewCommentByCommentInfo" parameterType="hashmap" >
         INSERT INTO Comments(board_id,post_id,user_id,company_id,comment_content,comment_referenced_id)
         VALUES (#{boardID},#{postID},#{userID},#{companyID},#{commentContent},null);
+    </insert>
+    <insert id="insertNewReplyByCommentInfo" parameterType="hashmap" >
+        INSERT INTO Comments(board_id,post_id,user_id,company_id,comment_content,comment_referenced_id)
+        VALUES (#{boardID},#{postID},#{userID},#{companyID},#{commentContent},#{commentReferencedID});
     </insert>
 
     <delete id="deleteCommentByCommentID" parameterType="int">
@@ -33,4 +54,9 @@
         FROM Comments
         WHERE post_id = #{postID};
     </delete>
+    <update id="updateComment" parameterType="hashmap">
+        UPDATE Comments
+        SET comment_content =#{newComment}
+        WHERE comment_id=#{commentID};
+    </update>
 </mapper>
