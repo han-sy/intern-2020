@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -69,18 +70,6 @@ public class BoardController {
         model.addAttribute("functionInfoList",functionService.getfunctionInfoListByCompanyID(companyID));
 
         return "boards";
-    }
-
-    /**
-     * boardid 받아와서 해당하는 게시판의 게시글목록들 리턴
-     * @param boardID
-     * @return
-     */
-    @GetMapping("/{boardid}/posts")
-    @ResponseBody
-    public List<PostDTO> getPostListByBoardID(@PathVariable("boardid") int boardID) throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException{
-        List<PostDTO> postList = boardService.getPostListByBoardID(boardID);
-        return postList;
     }
 
     /**
@@ -129,11 +118,11 @@ public class BoardController {
     }
 
     /**
-     * 게시판 이름 변경
+     * 게시판 이름 변경 변경된 리스트를 받아와서 수정한다.
      * @param newTItleList 이름이 변경된 리스트
      * @param request
      */
-    @PostMapping(value = "/newtitles")
+    @PutMapping(value = "")
     @ResponseBody
     public void  changeNewBoardName(@RequestParam("newTitles") String newTItleList, HttpServletRequest request) {
         int companyID = jwtService.getCompanyId();
