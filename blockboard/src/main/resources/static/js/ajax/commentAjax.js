@@ -1,3 +1,8 @@
+/**
+ * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+ * @file commentAjax.js
+ */
+
 //댓글 출력
 function UpdateCommentListUI(data) {
   $(".comment_list_container").html("");

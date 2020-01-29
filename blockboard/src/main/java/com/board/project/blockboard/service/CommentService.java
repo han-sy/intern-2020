@@ -1,17 +1,18 @@
+/**
+ * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+ * @file CommentService.java
+ */
 package com.board.project.blockboard.service;
 
 import com.board.project.blockboard.dto.CommentDTO;
 import com.board.project.blockboard.mapper.CommentMapper;
-import com.board.project.blockboard.mapper.FunctionMapper;
-
 import com.board.project.blockboard.mapper.UserMapper;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service

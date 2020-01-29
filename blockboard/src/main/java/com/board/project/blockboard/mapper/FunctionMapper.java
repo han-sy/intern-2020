@@ -1,3 +1,7 @@
+/**
+ * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+ * @file FunctionMapper.java
+ */
 package com.board.project.blockboard.mapper;
 
 import com.board.project.blockboard.dto.FunctionDTO;

@@ -1,4 +1,7 @@
-
+/**
+ * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+ * @file commentEvent.js
+ */
 //댓글 추가버튼 누를때
 $(document).on('click', '#btn_openComment', function () {
   var postID = $("#postID").html();

@@ -3,18 +3,15 @@ package com.board.project.blockboard.controller;
 import com.board.project.blockboard.dto.UserDTO;
 import com.board.project.blockboard.service.JwtService;
 import com.board.project.blockboard.service.UserService;
-
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.codec.net.URLCodec;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
-import org.springframework.stereotype.Controller;
-
-import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Slf4j
 @Controller

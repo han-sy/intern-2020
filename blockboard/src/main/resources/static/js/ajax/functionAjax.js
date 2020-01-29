@@ -1,3 +1,7 @@
+/**
+ * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+ * @file functionAjax.js
+ */
 //리스트 받아오기
 function getFunctionList(companyID, successFunction) {
   $.ajax({

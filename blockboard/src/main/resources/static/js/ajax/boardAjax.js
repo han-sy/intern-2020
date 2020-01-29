@@ -1,3 +1,8 @@
+/**
+ * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+ * @file boardAjax.js
+ */
+
 //새로운 탭 내용으로 교체
 function updateTab(data) {
   $('#tab_id').html("");

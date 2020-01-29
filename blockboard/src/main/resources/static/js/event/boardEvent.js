@@ -1,3 +1,7 @@
+/**
+ * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+ * @file boardEvent.js
+ */
 // 게시판 추가버튼 클릭시
 function clickaddBoardBtn() {
   var containerObj = $('#config_container');
