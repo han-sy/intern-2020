@@ -118,10 +118,10 @@
   </div>
   <div id="searchcontent">
       <select id="search_option" style="width:100px;font-size:15px;">
-        <option>제목</option>
-        <option>작성자</option>
-        <option>내용</option>
-        <option>제목+내용</option>
+        <option value = 0>제목</option>
+        <option value = 1>작성자</option>
+        <option value = 2>내용</option>
+        <option value = 3>제목+내용</option>
       </select>
       <input id="search_keyword" type="text"/>
       <button id="search">조회</button> 

@@ -11,6 +11,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class HomeController {
   @GetMapping("")
   public String home() {
-    return "login";
+    return "redirect:/login";
   }
 }

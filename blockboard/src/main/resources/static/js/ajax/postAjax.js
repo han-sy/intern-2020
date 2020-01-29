@@ -82,7 +82,7 @@ function searchPost(option, keyword) {
         type: 'GET',
         url: '/boards/0/posts/search',
         data: {
-            option: option.html(),
+            option: option,
             keyword: keyword.val()
         },
         dataType: 'JSON',

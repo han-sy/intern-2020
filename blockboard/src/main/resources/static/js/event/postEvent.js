@@ -114,7 +114,7 @@ $(document).on("click", "#btn_deletePost", function () {
 
 // 게시글 검색 버튼 이벤트
 $(document).on("click", "#search", function () {
-  var option = $('#search_option option:selected');
+  var option = $('#search_option option:selected').attr('value');
   var keyword = $('#search_keyword');
   searchPost(option, keyword);
 });
