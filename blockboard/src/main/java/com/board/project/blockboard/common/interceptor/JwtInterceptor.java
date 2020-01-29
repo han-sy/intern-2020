@@ -4,16 +4,15 @@
  */
 package com.board.project.blockboard.common.interceptor;
 
+import com.board.project.blockboard.common.util.CookieUtils;
 import com.board.project.blockboard.service.JwtService;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 @Slf4j
 @Component
@@ -25,12 +24,8 @@ public class JwtInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object object) throws Exception {
-        Cookie[] getCookie = request.getCookies();
-        String token = null;
-        for (Cookie c : getCookie) {
-            if (c.getName().equals(HEADER_AUTH))
-                token = c.getValue();
-        }
+        CookieUtils cookieUtils = new CookieUtils();
+        String token = cookieUtils.getCookie(request, HEADER_AUTH);
         if (token != null && jwtService.isUsable(token)) {
             return true;
         } else {
