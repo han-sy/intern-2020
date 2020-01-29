@@ -47,7 +47,7 @@ function updateTabByNewBoardListAfterAddBoard(boardName) {
 function updateTabByNewBoardListAfterDeleteBoard(jsonData) {
   $.ajax({
     type: 'DELETE',
-    url: "/boards/list",
+    url: "/boards",
     data: { deleteList: jsonData },
     error: function () {  //통신 실패시
       alert('통신실패!');
@@ -78,7 +78,7 @@ function updateTabByNewBoardListAfterUpdateBoardName(jsonData) {
 function getBoardListToDelete() {
   $.ajax({
     type: 'GET',
-    url: '/boards/list',
+    url: '/boards',
     error: function () {  //통신 실패시
       alert('통신실패!');
     },
