@@ -13,13 +13,6 @@ function updateTab(data) {
 }
 //게시글 내용
 function loadPostContent(data) {
-  var postContentHtml = "";
-  postContentHtml += "<h2>" + data.postTitle + "</h2>";
-  postContentHtml += "<h5>작성자 : " + data.userName + "</h4>";
-  postContentHtml += "<h5>작성시간 : " + data.postRegisterTime + "</h4>";
-  postContentHtml += "<a>" + data.postContent + "</a>";
-  postContentHtml += "<a id=postID style=visibility:hidden>" + data.postID + "</a>";
-  $('#postcontent').html(postContentHtml);
   var source = $('#postcontent-template').html();
   var template = Handlebars.compile(source);
   var post = { post: data };
