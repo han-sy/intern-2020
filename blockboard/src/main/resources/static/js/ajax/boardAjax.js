@@ -31,12 +31,11 @@ function loadPostList(data) {
 
 //삭제를 위한 UI
 function getBoardListToDelete(data) {
-
-  $('#config_container').html("삭제할 게시판을 선택하시오");
-  $.template("deleteListTmpl", "<div><span>${boardName}</span><input type=checkbox name=boardDelete value=${boardID}></div>")
-  $.tmpl("deleteListTmpl", data).appendTo("#config_container");
-  $('#config_container').append(" <a id ='addFuncBtn' onclick = javascript:clickSaveDelteBoard(this) style=cursor:pointer>삭제하기</a>" +
-    "<button class = 'functionClose' type='button' onclick=javascript:clickConfigClose(this)>닫기</button>");
+  var source = $('#deleteboards-template').html();
+  var template = Handlebars.compile(source);
+  var boardList = { boards: data };
+  var itemList = template(boardList);
+  $('#config_container').html(itemList);
 }
 
 //이름변경을 위한 UI

@@ -50,19 +50,30 @@
       </c:if>
 
     </c:forEach>
-    <c:if test="${isadmin}">
   </div>
-  <br>
-  <a id='addFuncBtn' onclick="javascript:changeFunction(this)" style="cursor:pointer">기능 변경</a>
-  <a id='addBoardBtn' onclick="javascript:clickaddBoardBtn(this)" style="cursor:pointer">게시판 추가</a>
-  <a id='addBoardBtn' onclick="javascript:clickchangeBoardBtn(this)" style="cursor:pointer">게시판 이름변경</a>
-  <a id='addBoardBtn' onclick="javascript:clickDeleteBoardBtn(this)" style="cursor:pointer">게시판 삭제</a>
+  <c:if test="${isadmin}">
+    <br>
+    <a id='addFuncBtn' onclick="javascript:changeFunction(this)" style="cursor:pointer">기능 변경</a>
+    <a id='addBoardBtn' onclick="javascript:clickaddBoardBtn(this)" style="cursor:pointer">게시판 추가</a>
+    <a id='addBoardBtn' onclick="javascript:clickchangeBoardBtn(this)" style="cursor:pointer">게시판 이름변경</a>
+    <a id='addBoardBtn' onclick="javascript:clickDeleteBoardBtn(this)" style="cursor:pointer">게시판 삭제</a>
   </c:if>
-
   <a href="logout">로그아웃</a>
   <div id="config_container">
     <!--게시판 추가버튼 누를때 -->
   </div>
+  <!--게시판 삭제 템플릿-->
+  <script id="deleteboards-template" type="text/x-handlebars-template">
+    <h3>삭제할 게시판을 선택하시오.</h3>
+    {{#boards}}
+    <div>
+      <span>{{boardName}}</span>
+      <input type='checkbox' name='boardDelete' value={{boardID}}/>
+    </div>
+    {{/boards}}
+    <a id ='addFuncBtn' onclick = javascript:clickSaveDelteBoard(this) style=cursor:pointer>삭제하기</a>
+    <button class = 'functionClose' type='button' onclick=javascript:clickConfigClose(this)>닫기</button>
+  </script>
   <div id="container">
 
   </div>
