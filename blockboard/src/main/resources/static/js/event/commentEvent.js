@@ -70,13 +70,15 @@ $(document).on('click', '.btn_openReply', function () {
     var boardID = getCurrentBoardID();
     var commentText = $(this).closest(".commentHtml").find("#commentText").val();
     var commentReferencedID = $(this).closest(".referenceCommentContainer").attr("data-id");
+    var commentReferencedUserID = $(this).closest(".commentHtml").find(".tag").attr("data-id");
+    alert("@@@"+commentReferencedUserID);
     //alert("commentText ("+commentReferencedID+"): "+ commentText);
     if (commentText == "") {
         alert("내용을 입력하세요.");
         return;
     }
     $(function () {
-        insertReply(boardID, postID, commentText, commentReferencedID);
+        insertReply(boardID, postID, commentText, commentReferencedID,commentReferencedUserID);
     });
 })
 

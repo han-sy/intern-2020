@@ -41,8 +41,7 @@ function UpdateCommentListUI(data) {
 //TODO handlebar 적용
 function getCommentInputHtml(type, buttonName, tag, className, buttonSelector) {
     var commentInputHtml = "";
-    commentInputHtml += "<br><div style='width: 100%' class=commentHtml>";
-    commentInputHtml += ("<strong class=tag style='cursor:pointer'>" + tag + "</strong>");
+    commentInputHtml += ("<br><div style='width: 100%' class=commentHtml>"+ tag);
     commentInputHtml += ("<textarea style='width: 1100px' id=commentText placeholder = '" + type + "을 입력하세요' name=commentTxt ></textarea>");
     commentInputHtml += ("<div><button " + buttonSelector + " >" + buttonName + "</button>");
     if (type == "답글") {
@@ -144,8 +143,8 @@ function getReplyListUI(commentID, data) {
     $.each(data, function (key, value) {
         console.log("답글" + value.commentID);
         commentHtml += "<div class = commentContainer id=comment" + value.commentID + "><div>";
-        commentHtml += ("<p class=user><span class=name>" + value.userName + "</span></strong> <span class=date> " + value.commentRegisterTime + "</span></p>");
-        commentHtml += ("<p class =comment_area id=translate_area>" + value.commentContent + "</p></div>");
+        commentHtml += ("<p class=user><span class=name data-id ="+value.userID+" >" + value.userName + "</span></strong> <span class=date> " + value.commentRegisterTime + "</span></p>");
+        commentHtml += ("<p class =comment_area id=translate_area><strong class =nametag data-id="+value.commentReferencedUserID+" >"+value.commentReferencedUserName+"</strong> "+ value.commentContent + "</p></div>");
         commentHtml += "<div class=btn>";
         if ($('#functionAble2').attr("value") == "on") {
             commentHtml += "<button type=button class=replyBtn>답글</button>";
@@ -181,12 +180,24 @@ function getReplyList(boardID, postID, commentID, successFunction) {
     });
 }
 
-//댓글 추가
-function insertReply(boardID, postID, commentText, commentReferencedID) {
+//답글 추가
+function insertReply(boardID, postID, commentContent, commentReferencedID,commentReferencedUserID) {
+    /*var commentData = new Object();
+    commentData.boardID = boardID;
+    commentData.postID = postID;
+    commentData.commentContent =commentContent;
+    commentData.commentReferencedID = commentReferencedID;
+    commentData.commentReferencedUserID = commentReferencedUserID;*/
+    alert("!!!"+commentReferencedUserID);
     $.ajax({
         type: 'POST',
         url: "/boards/" + boardID + "/posts/" + postID + "/comments/" + commentReferencedID,
-        data: {boardID: boardID, postID: postID, commentContent: commentText, commentReferencedID: commentReferencedID},
+        data: {
+            boardID:boardID,
+            postID:postID,
+            commentContent:commentContent,
+            commentReferencedID:commentReferencedID,
+            commentReferencedUserID:commentReferencedUserID},
         error: function () {  //통신 실패시
             alert('통신실패!');
         },
