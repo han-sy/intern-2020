@@ -39,3 +39,18 @@ function clickSaveFunctionChange() {
     $('#config_container').html("");
 
 }
+
+//기능변경 on/off버튼 텍스트 바꾸기
+$(document).on('click', '._function-switch', function () {
+    var switchText = $(this).find("._switch");
+    if(switchText.html()=="ON"){
+        $(this).removeClass('btn-success');
+        $(this).addClass('btn-default');
+        switchText.html("OFF");
+    }
+    else{
+        $(this).removeClass('btn-default');
+        $(this).addClass('btn-success');
+        switchText.html("ON");
+    }
+});

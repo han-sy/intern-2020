@@ -109,16 +109,25 @@
     <h5>기능 변경</h5>
     {{#functions}}
         {{#isAbleFunction}}
-            <div>
-                <span>{{functionName}}</span>
-                <label><input type='checkbox' name='function' value={{functionID}} >현재상태 OFF</label>
+            <div class="btn-group" data-toggle="buttons">
+                <label class="btn btn-default _function-switch">
+                    <span>{{functionName}}</span>
+                    <input type='checkbox' name='function' value={{functionID}} >
+                    <span class='_switch'>OFF</span>
+                </label>
             </div>
         {{else}}
-            <div>
-                <span>{{functionName}}</span>
-                <label><input type='checkbox' name='function' value={{functionID}} checked>현재상태 ON</label>
+            <div class="btn-group" data-toggle="buttons">
+
+                <label class="btn btn-success active _function-switch">
+                    <span>{{functionName}}</span>
+                    <input type='checkbox' name='function' value={{functionID}} checked>
+                    <span class='_switch'>ON</span>
+                </label>
             </div>
         {{/isAbleFunction}}
+    <br>
+    <br>
     {{/functions}}
     <a id ='saveFuncBtn' onclick = javascript:clickSaveFunctionChange(this) style=cursor:pointer>저장하기</a>
     <button class = 'functionClose' type='button' onclick=javascript:clickConfigClose(this)>닫기</button>
