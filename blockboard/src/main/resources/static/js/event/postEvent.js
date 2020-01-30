@@ -88,7 +88,8 @@ $(document).on("click", "#btn_updatePost", function () {
 
 // '수정' 버튼 클릭 후 '수정하기' 버튼 이벤트
 $(document).on("click", "#btn_update", function () {
-  var postID = $("#postID").html();
+  var postID = $("#editor_postID").html();
+  console.log("수정하기 버튼 눌렀을 때 postID = " + postID);
   var postTitle = $('#post_title').val();
   var postContent = CKEDITOR.instances.editor.getData();
   var boardID = $('#boardIDinEditor option:selected').attr('data-tab');

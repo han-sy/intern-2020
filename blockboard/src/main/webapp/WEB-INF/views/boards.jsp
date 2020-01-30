@@ -108,6 +108,11 @@
       <textarea id="editor"></textarea>
       <button id="btn_post">저장</button>
       <button id="btn_cancel">작성취소</button>
+      <div id="editorcontent-hidden">
+      </div>
+      <script id="postid-template" type="text/x-handlebars-template">
+        <a id="editor_postID" style="visibility:hidden">{{postID}}</a>
+      </script>
     </div>
   </div>
 
@@ -119,7 +124,7 @@
       <h5>작성자 : {{userName}}</h5>
       <h5>작성시간 : {{postRegisterTime}}</h5>
       <a>{{{postContent}}}</a>
-      <a id=postID style="visibility: hidden;">{{postID}}</a>
+      <a id="postID" style="visibility: hidden;">{{postID}}</a>
     {{/post}}
   </script>
   <div id="tabcontent">

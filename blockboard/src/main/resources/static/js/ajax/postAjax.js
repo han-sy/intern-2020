@@ -23,7 +23,6 @@ function insertPost(boardID, postTitle, postContent) {
 
 function loadPost(boardID, postID) {
     var post_title = $('#post_title');
-    var editorcontent = $('#editorcontent');
     var editor = $('#editor');
     $.ajax({
         type: 'GET',
@@ -33,7 +32,7 @@ function loadPost(boardID, postID) {
             errorFunction(xhr);
         },
         success: function (data) {
-            editorcontent.append("<a id=postID style=visibility:hidden>" + postID + "</a>");
+            addPostIdToEditor(postID);
             post_title.val(data.postTitle);
             editor.val(data.postContent);
         }
@@ -78,9 +77,10 @@ function refreshPostList() {
 }
 
 function searchPost(option, keyword) {
+    var boardID = getCurrentBoardID();
     $.ajax({
         type: 'GET',
-        url: '/boards/0/posts/search',
+        url: '/boards/' + boardID + '/posts/search',
         data: {
             option: option,
             keyword: keyword.val()
@@ -94,17 +94,16 @@ function searchPost(option, keyword) {
             postsClear(); // 게시글 목록 화면 Clear
             keyword.val("");
 
-            $.template("searchResultTmpl",
-                '<tr height="30" class=postclick data-post=${postID} onclick="javascript:clickTrEvent(this)"' +
-                'onmouseover = "javascript:changeTrColor(this)">' +
-                '<td width="379">${postTitle}</td>' +
-                '<td width="73">${userName}</td>' +
-                '<td width="164">${postRegisterTime}</td></tr>' +
-                '<td style="visibility:hidden">${postID}</td>' +
-                '<td style="visibility:hidden">${boardID}</td>'
-            );
-
-            $.tmpl("searchResultTmpl", data).appendTo("#postlist");
+            loadPostList(data);
         }
     });
+}
+
+function addPostIdToEditor(postID) {
+    var source = $('#postid-template').html();
+    var template = Handlebars.compile(source);
+    var IDitem = { postID: postID };
+    var itemList = template(IDitem);
+    console.log(" = " + JSON.stringify(IDitem));
+    $('#editorcontent-hidden').html(itemList);
 }
