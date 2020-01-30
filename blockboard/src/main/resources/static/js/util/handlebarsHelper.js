@@ -44,3 +44,4 @@ Handlebars.registerHelper('isTemp', function(option) {
     } else {
         return option.inverse(this);
     }
+});
