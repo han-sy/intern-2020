@@ -182,12 +182,6 @@ function getReplyList(boardID, postID, commentID, successFunction) {
 
 //답글 추가
 function insertReply(boardID, postID, commentContent, commentReferencedID,commentReferencedUserID) {
-    /*var commentData = new Object();
-    commentData.boardID = boardID;
-    commentData.postID = postID;
-    commentData.commentContent =commentContent;
-    commentData.commentReferencedID = commentReferencedID;
-    commentData.commentReferencedUserID = commentReferencedUserID;*/
     alert("!!!"+commentReferencedUserID);
     $.ajax({
         type: 'POST',
