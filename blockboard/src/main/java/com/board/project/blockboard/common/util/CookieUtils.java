@@ -13,9 +13,11 @@ public class CookieUtils {
   public String getCookie(HttpServletRequest request, String cookieName) {
     Cookie[] getCookie = request.getCookies();
     String token = null;
-    for (Cookie c : getCookie) {
-      if (StringUtils.equals(c.getName(), cookieName))
-        token = c.getValue();
+    if(getCookie != null) {
+      for (Cookie c : getCookie) {
+        if (StringUtils.equals(c.getName(), cookieName))
+          token = c.getValue();
+      }
     }
     return token;
   }
