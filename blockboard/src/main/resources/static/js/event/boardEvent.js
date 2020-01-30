@@ -108,19 +108,11 @@ function changeTrColor(trObj) {
 
 // 게시글 목록에서 게시글 클릭시
 function clickTrEvent(trObj) {
-    var postID = trObj.getAttribute("data-post");
-    var boardID;
-    var tabs = $('#tab_id').children();
-    $.each(tabs, function () {
-        var clickObj = $(this);
-        var color = clickObj.css('background-color');
-        if (color == "rgb(144, 238, 144)") {
-            boardID = clickObj.attr('data-tab');
-        }
-    });
-    $(function () {
-        getPostDataAfterPostClick(postID, boardID); //boardAjax.js 참고
-    });
+  var postID = trObj.getAttribute("data-post");
+  var boardID = getActiveBoardID();
+  $(function () {
+    getPostDataAfterPostClick(postID, boardID); //boardAjax.js 참고
+  });
 }
 
 //닫기 버튼 클릭
@@ -137,7 +129,9 @@ $(document).on("click", ".tabmenu", function clickTabEvent() {
   var boardID = $(this).attr('data-tab');
   console.log(boardID);
   $('li').css('background-color', 'white');
+  $('li').removeClass("active_tab");
   $(this).css('background-color', 'lightgreen');
+  $(this).addClass("active_tab");
   postClear();
   editorClear();
   if(boardID > 0) {
@@ -149,3 +143,14 @@ $(document).on("click", ".tabmenu", function clickTabEvent() {
     getTempPosts();
   }
 })
+
+// 현재 선택된 게시판 ID 찾기
+function getActiveBoardID() {
+  var boardID;
+  var tabs = $('#tab_id').children();
+  $.each(tabs, function () {
+    if(tabs.hasClass("active_tab") == true)
+      boardID = tabs.attr('data-tab');
+  });
+  return boardID;
+}
