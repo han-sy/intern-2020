@@ -8,6 +8,7 @@ import com.board.project.blockboard.dto.PostDTO;
 import com.board.project.blockboard.mapper.BoardMapper;
 import com.board.project.blockboard.mapper.CommentMapper;
 import com.board.project.blockboard.mapper.PostMapper;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,8 @@ public class PostService{
     private CommentMapper commentMapper;
 
     public void insertPost(PostDTO post) {
-
+        log.info("post ID<" + post.getPostID() + ">");
+        log.info("post Temp?<" + post.getIsTemp() + ">");
         postMapper.insertPost(post);
     }
     public void deletePost(int postID) {
@@ -43,5 +45,11 @@ public class PostService{
     public List<PostDTO> searchPost(String option, String keyword) {
 
         return postMapper.search(option,keyword);
+    }
+    public PostDTO selectRecentTemp(Map<String, Object> param) {
+        return postMapper.selectRecentTempPost(param);
+    }
+    public List<PostDTO> getTempPosts(Map<String,Object> param) {
+        return postMapper.selectTempPosts(param);
     }
 }

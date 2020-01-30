@@ -8,6 +8,8 @@ import com.board.project.blockboard.common.util.CookieUtils;
 import com.board.project.blockboard.dto.UserDTO;
 import com.board.project.blockboard.service.JwtService;
 import com.board.project.blockboard.service.UserService;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -69,5 +71,14 @@ public class UserController {
             return "redirect:/boards/contents";
         else
             return "login";
+    }
+
+    @GetMapping("/info")
+    @ResponseBody
+    public Map<String, Object> info() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("userID", jwtService.getUserId());
+        map.put("companyID", jwtService.getCompanyId());
+        return map;
     }
 }

@@ -54,6 +54,7 @@ create table Post(
     post_title varchar(150) not null,
     post_content varchar(10000) character set utf8mb4 collate utf8mb4_unicode_ci not null,
     post_register_time timestamp not null,
+    is_temp boolean not null,
 	foreign key(user_id) references Users(user_id),
 	foreign key(board_id) references Board(board_id),
 	foreign key(company_id) references Company(company_id),
@@ -99,7 +100,7 @@ insert into BoardFunction values(5,'임시저장');
 insert into BoardFunction values(6,'스티커');
 insert into FunctionCheck values(1,1,null);
 insert into FunctionCheck values(2,4,null);
-insert into Post values(1,1,1,1,'첫게시글','첫내용',now());
+insert into Post values(1,1,1,1,'첫게시글','첫내용',now(),false);
 insert into Comments values(1,1,1,1,1,'첫 댓글',now(),null);
 insert into Comments values(2,1,1,1,1,'첫 답글',now(),1);
 INSERT INTO Comments(board_id,post_id,user_id,company_id,comment_content,comment_referenced_id)
@@ -116,11 +117,11 @@ select * from Users;
 select * from FunctionCheck;
 select * from Board;
 
-insert into Post values (2,1,1,1,'두번째 게시글','두번째 게시글내용',now());
-insert into Post values (3,2,1,1,'건의사항 게시판 첫글','공지사항이네',now());
-insert into Post values (4,2,1,1,'공지사항 게시판 ','ㅎㅎㅎㅎ테스트',now());
-insert into Post values (5,1,5,1,'자유1','1111',now());
-insert into Post values (6,1,5,1,'자유2','22222',now());
+insert into Post values (2,1,1,1,'두번째 게시글','두번째 게시글내용',now(),false);
+insert into Post values (3,2,1,1,'건의사항 게시판 첫글','공지사항이네',now(),false);
+insert into Post values (4,2,1,1,'공지사항 게시판 ','ㅎㅎㅎㅎ테스트',now(),false);
+insert into Post values (5,1,5,1,'자유1','1111',now(),false);
+insert into Post values (6,1,5,1,'자유2','22222',now(),false);
 
 Select boardfunction.function_id,ifnull(functioncheck.company_id,0), boardfunction.function_name, functioncheck.function_data
 FROM BoardFunction boardfunction LEFT OUTER JOIN FunctionCheck functioncheck

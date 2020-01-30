@@ -140,7 +140,12 @@ $(document).on("click", ".tabmenu", function clickTabEvent() {
   $(this).css('background-color', 'lightgreen');
   postClear();
   editorClear();
-  $(function () {
-    getPostsAfterTabClick(boardID);
-  });
+  if(boardID > 0) {
+    $(function () {
+      getPostsAfterTabClick(boardID);
+    });
+  }
+  else {
+    getTempPosts();
+  }
 })

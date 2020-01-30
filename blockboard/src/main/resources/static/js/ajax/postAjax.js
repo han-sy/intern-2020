@@ -10,13 +10,38 @@ function insertPost(boardID, postTitle, postContent) {
         url: "/boards/" + boardID + "/posts",
         data: {
             postTitle: postTitle,
-            postContent: postContent
+            postContent: postContent,
+            isTemp: false
         },
         error: function (xhr) {
             errorFunction(xhr);
         },
         success: function () {
             refreshPostList();
+        }
+    });
+}
+
+function insertTempPost(boardID, postID, temp_title, temp_content, is_temp) {
+    $.ajax({
+        type: 'POST',
+        url: "/boards/" + boardID + "/posts",
+        async: false,
+        data: {
+            postID: postID,
+            postTitle: temp_title,
+            postContent: temp_content,
+            isTemp: is_temp
+        },
+        error: function (xhr) {
+            errorFunction(xhr);
+        },
+        success: function () {
+            $.getJSON("/boards/" + boardID + "/posts/recent", function (data) {
+                addPostIdToEditor(data.postID);
+            });
+            if(is_temp)
+                alert("임시저장 되었습니다.");
         }
     });
 }
@@ -64,6 +89,7 @@ function deletePost(boardID, postID) {
             errorFunction(xhr);
         },
         success: function () {
+            editorClear();
             refreshPostList();
         }
     });
@@ -99,11 +125,31 @@ function searchPost(option, keyword) {
     });
 }
 
-function addPostIdToEditor(postID) {
-    var source = $('#postid-template').html();
-    var template = Handlebars.compile(source);
-    var IDitem = { postID: postID };
-    var itemList = template(IDitem);
-    console.log(" = " + JSON.stringify(IDitem));
-    $('#editorcontent-hidden').html(itemList);
+function getTempPosts() {
+    $.ajax({
+        type: 'GET',
+        url: "/boards/-1/posts/temp",
+        error: function (xhr) {
+            errorFunction(xhr);
+        },
+        success: function (data) {
+            loadPostList(data);
+        }
+    })
+}
+
+function getTempPost(postID) {
+    var postContentObj = $('#postcontent');
+    postContentObj.html("");
+    $.ajax({
+        type: 'GET',
+        url: "/boards/0/posts/" + postID,
+        error: function (error) {  //통신 실패시
+            alert('통신실패!' + error);
+        },
+        success: function (data) {
+            $('#btn_write').show();
+            loadPost(0, postID);
+        }
+    });
 }

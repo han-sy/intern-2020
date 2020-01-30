@@ -130,11 +130,14 @@ function getPostDataAfterPostClick(postID, boardID) {
 
       // 작성글의 userID와 현재 로그인한 userID가 같으면 삭제버튼 표시
       var commentAbleObj = $('#functionAble1');
+      var btn_deletePost = $('#btn_deletePost');
+      var btn_updatePost = $('#btn_updatePost');
       if (data.canDelete == true) {
-        postContentObj.append(
-          "</br><button id=btn_updatePost>수정</button>" +
-          "</br><button id=btn_deletePost>삭제</button><br>"
-        );
+        btn_deletePost.attr('style', 'visibility:visible');
+        btn_updatePost.attr('style', 'visibility:visible');
+      } else {
+        btn_deletePost.attr('style', 'visibility:hidden');
+        btn_updatePost.attr('style', 'visibility:hidden');
       }
       var postContentHtml = "";
 
@@ -156,15 +159,19 @@ function getPostDataAfterPostClick(postID, boardID) {
 
 //탭클릭후 게시판 목록 불러오기
 function getPostsAfterTabClick(boardID) {
-  $.ajax({
-    type: 'GET',
-    url: '/boards/' + boardID + "/posts",
-    error: function () {  //통신 실패시
-      alert('통신실패!');
-    },
-    success: function (data) {
-      loadPostList(data);
-    }
-  });
+  if(boardID == -1) {
+    getTempPosts();
+  } else {
+    $.ajax({
+      type: 'GET',
+      url: '/boards/' + boardID + "/posts",
+      error: function () {  //통신 실패시
+        alert('통신실패!');
+      },
+      success: function (data) {
+        loadPostList(data);
+      }
+    });
+  }
 }
 

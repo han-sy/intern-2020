@@ -83,12 +83,14 @@
         <c:out value="${boardList.boardName}" />
       </li>
     </c:forEach>
+    <li data-tab="-1" class=tabmenu id=default> 임시보관함 </li>
   </ul>
   <!--게시판 목록 템플릿-->
   <script id="boards-template" type="text/x-handlebars-template">
     {{#boards}}
       <li data-tab=${boardID} class=tabmenu id=default> {{boardName}} </li>
     {{/boards}}
+    <li data-tab="-1" class=tabmenu id=default> 임시보관함 </li>
   </script>
 
   <div id="writecontent" style="display:none">
@@ -102,12 +104,14 @@
         </c:forEach>
       </select>
     </div>
+    <!--에디터 부분-->
     <div id="editorcontent">
       <h2>게시글제목</h2>
       <input type="text" id="post_title" />
       <textarea id="editor"></textarea>
-      <button id="btn_post">저장</button>
-      <button id="btn_cancel">작성취소</button>
+      <button id="btn_post" onclick="javascript:postFunction()">저장</button>
+      <button id="btn_cancel" onclick="javascript:writeCancel()">작성취소</button>
+      <button id="btn_temp" onclick="javascript:tempsaveFunction()">임시저장</button>
       <div id="editorcontent-hidden">
       </div>
       <script id="postid-template" type="text/x-handlebars-template">
@@ -125,6 +129,9 @@
       <h5>작성시간 : {{postRegisterTime}}</h5>
       <a>{{{postContent}}}</a>
       <a id="postID" style="visibility: hidden;">{{postID}}</a>
+      <br>
+      <button id="btn_updatePost" style="visibility:hidden" onclick="javascript:postUpdateFunction()">수정</button>
+      <button id="btn_deletePost" style="visibility:hidden" onclick="javascript:postDeleteFunction()">삭제</button>
     {{/post}}
   </script>
   <div id="tabcontent">
@@ -151,8 +158,13 @@
       <tbody id="postlist"></tbody>
       <script id="posts-template" type="text/x-handlebars-template">
               {{#posts}}
+                {{#isTemp}}
+                <tr height="30" class="postclick" data-post={{postID}} onclick="javascript:clickTempPostEvent(this)" onmouseover="javascript:changeTrColor(this)">
+                  <td width="379">{{postTitle}}</td>
+                {{else}}
                 <tr height="30" class="postclick" data-post={{postID}} onclick="javascript:clickTrEvent(this)" onmouseover="javascript:changeTrColor(this)">
                   <td width="379">{{postTitle}}</td>
+                {{/isTemp}}
                   <td width="73">{{userName}}</td>
                   <td width="164">{{postRegisterTime}}</td>
                   <td style="visibility:hidden">{{postID}}</td>
@@ -175,7 +187,7 @@
       <option value = 3>제목+내용</option>
     </select>
     <input id="search_keyword" type="text"/>
-    <button id="search">조회</button> 
+    <button id="search" onclick="javascript:search(this)">조회</button> 
   </div>
 
 </body>
