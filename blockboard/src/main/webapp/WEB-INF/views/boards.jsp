@@ -295,21 +295,21 @@
       </thead>
       <tbody id="postlist"></tbody>
       <script id="posts-template" type="text/x-handlebars-template">
-              {{#posts}}
-                {{#isTemp}}
-                <tr height="30" class="postclick" data-post={{postID}} onclick="javascript:clickTempPostEvent(this)" onmouseover="javascript:changeTrColor(this)">
-                  <td width="379">{{postTitle}}</td>
-                {{else}}
-                <tr height="30" class="postclick" data-post={{postID}} onclick="javascript:clickTrEvent(this)" onmouseover="javascript:changeTrColor(this)">
-                  <td width="379">{{postTitle}}</td>
-                {{/isTemp}}
-                  <td width="73">{{userName}}</td>
-                  <td width="164">{{postRegisterTime}}</td>
-                  <td style="visibility:hidden">{{postID}}</td>
-                  <td style="visibility:hidden">{{boardID}}</td>
-                </tr>
-              {{/posts}}
-            </script>
+        {{#posts}}
+          {{#isTemp}}
+          <tr height="30" class="postclick" data-post={{postID}} onclick="javascript:clickTempPostEvent(this)" onmouseover="javascript:changeTrColor(this)">
+            <td width="379">{{postTitle}}</td>
+          {{else}}
+          <tr height="30" class="postclick" data-post={{postID}} onclick="javascript:clickTrEvent(this)" onmouseover="javascript:changeTrColor(this)">
+            <td width="379">{{postTitle}}</td>
+          {{/isTemp}}
+            <td width="73">{{userName}}</td>
+            <td width="164">{{postRegisterTime}}</td>
+            <td style="visibility:hidden">{{postID}}</td>
+            <td style="visibility:hidden">{{boardID}}</td>
+          </tr>
+        {{/posts}}
+      </script>
       <!--게시글 목록 -->
 
     </table>
