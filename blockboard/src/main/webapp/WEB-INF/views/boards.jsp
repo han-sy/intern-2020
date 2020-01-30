@@ -12,31 +12,37 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <title>BLOCK BOARD</title>
-  <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
-  <link rel="stylesheet" type="text/css" href="/static/css/boardstyle.css">
-  <script src="/static/js/util/jquery.tmpl.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
-  <script src="/static/js/event/boardEvent.js"></script>
-  <script src="/static/js/event/postEvent.js"></script>
-  <script src="/static/js/event/commentEvent.js"></script>
-  <script src="/static/js/event/functionEvent.js"></script>
-  <script src="/static/js/event/common.js"></script>
-  <script src="/static/js/ajax/functionAjax.js"></script>
-  <script src="/static/js/ajax/commentAjax.js"></script>
-  <script src="/static/js/ajax/postAjax.js"></script>
-  <script src="/static/js/ajax/boardAjax.js"></script>
-  <script src="/static/ckeditor/ckeditor.js"></script>
-  <script src="/static/ckeditor/adapters/jquery.js"></script>
-  <script src="/static/js/util/handlebarsHelper.js"></script>
+    <link rel="stylesheet" href="/webjars/bootstrap/3.3.4/dist/css/bootstrap.min.css">
+    <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="/webjars/bootstrap/3.3.4/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/css/boardstyle.css">
+    <script src="/static/js/util/jquery.tmpl.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+    <script src="/static/js/event/boardEvent.js"></script>
+    <script src="/static/js/event/postEvent.js"></script>
+    <script src="/static/js/event/commentEvent.js"></script>
+    <script src="/static/js/event/functionEvent.js"></script>
+    <script src="/static/js/event/common.js"></script>
+    <script src="/static/js/ajax/functionAjax.js"></script>
+    <script src="/static/js/ajax/commentAjax.js"></script>
+    <script src="/static/js/ajax/postAjax.js"></script>
+    <script src="/static/js/ajax/boardAjax.js"></script>
+    <script src="/static/ckeditor/ckeditor.js"></script>
+    <script src="/static/ckeditor/adapters/jquery.js"></script>
+    <script src="/static/js/util/handlebarsHelper.js"></script>
 </head>
 
-<body>
-<h1 id="serviceTitle" value=${companyID}>${companyName} 게시판</h1>
-<h3 class="currentUser">User :
-    <span id="current_user_id">${userID}</span>(
-    <span id="current_user_name">${userName}</span>)
-</h3>
+<body class="container">
+<div class="jumbotron">
+    <h1 id="serviceTitle" value=${companyID}>${companyName} 게시판</h1>
+    <h3 class="currentUser">User :
+        <span id="current_user_id">${userID}</span>(
+        <span id="current_user_name">${userName}</span>)
+    </h3>
+</div>
+
+
 <!--게시판 하위에 관리자일 경우 추가되는 버튼 (기능변경, 게시판추가)-->
 
 <div id="fuctionListContainer">
