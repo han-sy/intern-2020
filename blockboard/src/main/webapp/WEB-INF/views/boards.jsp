@@ -79,7 +79,7 @@
     {{#boards}}
     <div>
         <span>{{boardName}}</span>
-        <input type='checkbox' name='boardDelete' value={{boardID}}/>
+        <input type='checkbox' name='boardDelete' value={{boardID}} />
     </div>
     {{/boards}}
     <a id='deleteBoardBtn' onclick=javascript:clickSaveDelteBoard(this) style=cursor:pointer>삭제하기</a>
