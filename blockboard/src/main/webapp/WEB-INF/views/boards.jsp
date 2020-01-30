@@ -132,7 +132,7 @@
   <!--게시판 목록 템플릿-->
   <script id="boards-template" type="text/x-handlebars-template">
     {{#boards}}
-    <li data-tab=${boardID} class=tabmenu id=default> {{boardName}}</li>
+    <li data-tab={{boardID}} class=tabmenu id=default> {{boardName}}</li>
     {{/boards}}
     <li data-tab="-1" class=tabmenu id=default> 임시보관함 </li>
   </script>
