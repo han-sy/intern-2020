@@ -4,36 +4,15 @@
  */
 
 //댓글 출력
-function UpdateCommentListUI(data) {
-    $(".comment_list_container").html("");
-    var commentHtml = "";
-
-    //console.log(${userID}+"------"+$("#current_user_id").text())
-    //TODO handlebar 적용
-    $.each(data, function (key, value) {
-        commentHtml += ("<hr><div class =referenceCommentContainer data-id=" + value.commentID + "><div class = commentContainer id=comment" + value.commentID + "><div>");
-        commentHtml += ("<p class=user><span class=name data-id=" + value.userID + ">" + value.userName + "</span></strong> <span class=date> " + value.commentRegisterTime + "</span></p>");
-        commentHtml += ("<p class =comment_area id=translate_area>" + value.commentContent + "</p></div>");
-        commentHtml += "<div class=btn>";
-        if ($('#functionAble2').attr("value") == "on") { //대댓글 기능 on일때
-            commentHtml += "<button type=button class=replyBtn>답글</button>";
-        }
-        if (value.userID == $("#current_user_id").text()) {
-            commentHtml += "<button type=button id = edit_comment>수정</button>";
-            commentHtml += "<button type=button id = delete_comment>삭제</button>";
-        }
-        commentHtml += "</div>"
-        if ($('#functionAble2').attr("value") == "on") { //대댓글 기능 on 일때
-            commentHtml += "</div><div style ='padding: 5px 1px 3px 30px;' class=replyContainer id=reply_container" + value.commentID + " ></div>"
-            commentHtml += "<div style ='padding: 5px 1px 3px 20px;' class=replyContainer id=reply_input_container" + value.commentID + " ></div>"
-        }
-        commentHtml += "</div></div>";
-    });
-    //답글리스트 추가
+function updateCommentListUI(data) {
+    var source = $('#commentList-template').html();
+    var template = Handlebars.compile(source);
+    var comments = {comments: data};
+    var itemList = template(comments);
+    $('.comment_list_container').html(itemList);
     if ($('#functionAble2').attr("value") == "on") { //대댓글 기능 on 일때
         getAllReplyList(data);
     }
-    $(".comment_list_container").append(commentHtml);
 }
 
 
@@ -54,7 +33,7 @@ function getCommentInputHtml(type, buttonName, tag, className, buttonSelector) {
 
 //댓글 컨텐츠 모두 불러오기
 function getCommentAllContents(data) {
-    UpdateCommentListUI(data);
+    updateCommentListUI(data);
     getCommentInputHtml("댓글", "입력", "", ".comment_input_container", "id=btn_openComment");
 }
 
@@ -83,7 +62,7 @@ function insertComment(boardID, postID, commentText) {
             alert('통신실패!');
         },
         success: function (data) {
-            getCommentList(boardID, postID, UpdateCommentListUI);//성공하면 댓글목록 갱신
+            getCommentList(boardID, postID, updateCommentListUI);//성공하면 댓글목록 갱신
             $('#commentText').val("");
         }
     });
@@ -98,7 +77,7 @@ function deleteCommentByCommentID(postID, boardID, commentID) {
             alert('통신실패!');
         },
         success: function (data) {
-            getCommentList(boardID, postID, UpdateCommentListUI);//성공하면 댓글목록 갱신
+            getCommentList(boardID, postID, updateCommentListUI);//성공하면 댓글목록 갱신
         }
     });
 }
@@ -127,7 +106,7 @@ function editComment(postID, boardID, commentID, newComment) {
             alert('통신실패!수정');
         },
         success: function (data) {
-            getCommentList(boardID, postID, UpdateCommentListUI);//성공하면 댓글목록 갱신
+            getCommentList(boardID, postID, updateCommentListUI);//성공하면 댓글목록 갱신
         }
     });
 }

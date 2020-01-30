@@ -136,15 +136,12 @@ function getPostDataAfterPostClick(postID, boardID) {
                 );
             }
             var postContentHtml = "";
-
             if (commentAbleObj.attr("value") == "on") {
-
                 $(function () {
                     postContentObj.append("<br><br><div class= comment_section <div><span><strong>댓글</strong></span> <span id=commentCount></span></div>");
                     postContentHtml += "<div class = comment_list_container></div>";
                     postContentHtml += "<div class = comment_input_container></div>";
                     postContentObj.append(postContentHtml);
-
                     getCommentList(boardID, postID, getCommentAllContents); //삭제이후 tab에 게시판목록 업데이트 //CommentAjax.js 에 있음
                 });
             }

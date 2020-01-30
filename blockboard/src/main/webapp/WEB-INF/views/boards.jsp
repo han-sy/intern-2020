@@ -49,9 +49,9 @@
         <span id=functionAble${functionList.functionID} style=display:none value=off> ${functionList.functionName}
         </span>
         </c:if>
-
     </c:forEach>
 </div>
+<!--현재 기능 사용 여부 현황 템플릿-->
 <script id="functionList-template" type="text/x-handlebars-template">
     <h5>현재 사용중인 기능</h5>
     {{#functions}}
@@ -98,6 +98,25 @@
     <a id ='changeBoardNameBtn' onclick = javascript:clickSaveChangeBoard(this) style=cursor:pointer>변경하기</a>
     <button class = 'functionClose' type='button' onclick=javascript:clickConfigClose(this)>닫기</button>
 </script>
+<!--기능변경 템플릿-->
+<script id="changeFunctionInfo-template" type="text/x-handlebars-template">
+    <h5>기능 변경</h5>
+    {{#functions}}
+        {{#isAbleFunction}}
+            <div>
+                <span>{{functionName}}</span>
+                <label><input type='checkbox' name='function' value={{functionID}} >현재상태 OFF</label>
+            </div>
+        {{else}}
+            <div>
+                <span>{{functionName}}</span>
+                <label><input type='checkbox' name='function' value={{functionID}} checked>현재상태 ON</label>
+            </div>
+        {{/isAbleFunction}}
+    {{/functions}}
+    <a id ='saveFuncBtn' onclick = javascript:clickSaveFunctionChange(this) style=cursor:pointer>저장하기</a>
+    <button class = 'functionClose' type='button' onclick=javascript:clickConfigClose(this)>닫기</button>
+</script>
 
 <div id="container">
 
@@ -141,6 +160,43 @@
     <a id=postID style="visibility: hidden;">{{postID}}</a>
     {{/post}}
 </script>
+<!--댓글리스트 템플릿-->
+<script id="commentList-template" type="text/x-handlebars-template">
+    {{#comments}}
+    <hr>
+    <div class ='referenceCommentContainer' data-id='{{commentID}}' >
+        <div class ='commentContainer' id='comment{{commentID}}' >
+            <div>
+                <p class=user>
+                    <span class=name data-id={{userID}} >{{userName}}</span>
+                    <span class=date>{{commentRegisterTime}}</span>
+                </p>
+                <p class =comment_area id=translate_area>
+                    {{commentContent}}
+                </p>
+            </div>
+            <div class="btn">
+                {{#isReplyAble}}
+                    <button type=button class=replyBtn>답글</button>
+                {{else}}
+                {{/isReplyAble}}
+
+                {{#isSameUser}}
+                    <button type=button id = edit_comment>수정</button>
+                    <button type=button id = delete_comment>삭제</button>
+                {{else}}
+                {{/isSameUser}}
+            </div>
+            {{#isReplyAble}}
+            <div style ='padding: 5px 1px 3px 30px;' class='replyContainer' id='reply_container{{commentID}}' >
+            </div>
+            {{else}}
+            {{/isReplyAble}}
+        </div>
+    </div>
+    {{/comments}}
+</script>
+
 <div id="tabcontent">
     <table width="90%" cellpadding="0" cellspacing="0" border="0">
         <thead>
@@ -176,7 +232,6 @@
             {{/posts}}
         </script>
         <!--게시글 목록 -->
-
     </table>
 </div>
 <div>

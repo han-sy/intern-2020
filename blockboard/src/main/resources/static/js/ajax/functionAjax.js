@@ -16,7 +16,6 @@ function getFunctionList(companyID, successFunction) {
     });
 }
 
-//TODO
 function updateNewFunctionInfoUI(data) {
     var source = $('#functionList-template').html();
     var template = Handlebars.compile(source);
@@ -29,23 +28,12 @@ function updateNewFunctionInfoUI(data) {
 
 
 function getFunctionCheckList(data) {
-    console.log("success" + data);
-    var containerObj = $('#config_container');
-    containerObj.html("");
-    $.each(data, function (key, value) {
-        if (value.companyID == 0) {
-            containerObj.append("<div><span>" + value.functionName + "</span> <label><input type=checkbox name=function value=" +
-                value.functionID + ">현재상태 OFF</label></div>");
-        } else {
-            containerObj.append("<div><span>" + value.functionName + "</span> <label><input type=checkbox name=function value=" +
-                value.functionID + " checked>현재상태 ON</label></div>");
-        }
-
-    });
-    containerObj.append(" <a id ='addFuncBtn' onclick = javascript:clickSaveFunctionChange(this) style=cursor:pointer>저장하기</a>" +
-        "<button class = 'functionClose' type='button' onclick=javascript:clickConfigClose(this)>닫기</button>");
+    var source = $('#changeFunctionInfo-template').html();
+    var template = Handlebars.compile(source);
+    var functions = {functions: data};
+    var itemList = template(functions);
+    $('#config_container').html(itemList);
 }
-
 
 //기능변경후 새로운 사용중인기능목록 불러오기
 function getNewFunctionInfo(companyID, jsonData) {
