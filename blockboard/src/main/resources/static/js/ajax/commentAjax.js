@@ -15,20 +15,15 @@ function updateCommentListUI(data) {
     }
 }
 
-
 //댓글 inputform 받아오기
 //TODO handlebar 적용
 function getCommentInputHtml(type, buttonName, tag, className, buttonSelector) {
-    var commentInputHtml = "";
-    commentInputHtml += "<br><div style='width: 100%' class=commentHtml>";
-    commentInputHtml += ("<strong class=tag style='cursor:pointer'>" + tag + "</strong>");
-    commentInputHtml += ("<textarea style='width: 1100px' id=commentText placeholder = '" + type + "을 입력하세요' name=commentTxt ></textarea>");
-    commentInputHtml += ("<div><button " + buttonSelector + " >" + buttonName + "</button>");
-    if (type == "답글") {
-        commentInputHtml += ("<button class=btn_close_cmt_input >취소</button>");
-    }
-    commentInputHtml += "</div></div>";
-    $(className).html(commentInputHtml + "</div>");
+    data ={type : type, buttonName:buttonName, tag:tag, buttonSelector:buttonSelector};
+    var source = $('#commentInputForm-template').html();
+    var template = Handlebars.compile(source);
+    var attribute = {attribute: data};
+    var itemList = template(attribute);
+    $(className).html(itemList+"</div>");
 }
 
 //댓글 컨텐츠 모두 불러오기
@@ -39,7 +34,6 @@ function getCommentAllContents(data) {
 
 //댓글리스트 받아오기
 function getCommentList(boardID, postID, successFunction) {
-    console.log("!!!boardID : " + boardID + ",postID : " + postID);
     $.ajax({
         type: 'GET',
         url: "/boards/" + boardID + "/posts/" + postID + "/comments",
@@ -86,14 +80,12 @@ function deleteCommentByCommentID(postID, boardID, commentID) {
 //TODO handlebar 적용
 function EditCommentByCommentID(postID, boardID, commentID) {
     var oldText = $('#comment' + commentID).children().children("#translate_area").html();
-    //$('#comment'+commentID).html("!!");
-    var commentInputHtml = "";
-    commentInputHtml += "<br><div style='width: 100%' class=commentHtml>";
-    commentInputHtml += ("<textarea style='width: 1100px' id=commentText placeholder ='댓글을 입력하세요' name=commentTxt >" + oldText + "</textarea>");
-    commentInputHtml += "<div><button id=btn_edit_comment_complete >수정하기</button></div>";
-    commentInputHtml += "</div>";
-    $('#comment' + commentID).html(commentInputHtml + "</div>");
-    //$('#comment'+commentID).html();
+    data = {oldText:oldText};
+    var source = $('#editCommentForm-template').html();
+    var template = Handlebars.compile(source);
+    var attribute = {attribute: data};
+    var itemList = template(attribute);
+    $('#comment' + commentID).html(itemList+"</div>");
 }
 
 //댓글 수정
@@ -114,29 +106,11 @@ function editComment(postID, boardID, commentID, newComment) {
 //답글 ui 구성
 //TODO handlebar 적용
 function getReplyListUI(commentID, data) {
-    //console.log("댓글"+commentID);
-    $("#reply_container" + commentID).html("");
-    var commentHtml = "";
-
-    //console.log(${userID}+"------"+$("#current_user_id").text())
-
-    $.each(data, function (key, value) {
-        console.log("답글" + value.commentID);
-        commentHtml += "<div class = commentContainer id=comment" + value.commentID + "><div>";
-        commentHtml += ("<p class=user><span class=name>" + value.userName + "</span></strong> <span class=date> " + value.commentRegisterTime + "</span></p>");
-        commentHtml += ("<p class =comment_area id=translate_area>" + value.commentContent + "</p></div>");
-        commentHtml += "<div class=btn>";
-        if ($('#functionAble2').attr("value") == "on") {
-            commentHtml += "<button type=button class=replyBtn>답글</button>";
-        }
-        if (value.userID == $("#current_user_id").text()) {
-            commentHtml += "<button type=button id = edit_comment>수정</button>";
-            commentHtml += "<button type=button id = delete_comment>삭제</button>";
-        }
-        commentHtml += "</div></div>";
-
-    });
-    $("#reply_container" + commentID).append(commentHtml);
+    var source = $('#replyList-template').html();
+    var template = Handlebars.compile(source);
+    var replies = {replies: data};
+    var itemList = template(replies);
+    $("#reply_container" + commentID).html(itemList);
 }
 
 //답글전체 받아오기

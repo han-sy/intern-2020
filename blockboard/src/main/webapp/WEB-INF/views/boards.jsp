@@ -171,30 +171,87 @@
                     <span class=name data-id={{userID}} >{{userName}}</span>
                     <span class=date>{{commentRegisterTime}}</span>
                 </p>
-                <p class =comment_area id=translate_area>
-                    {{commentContent}}
-                </p>
+                <p class =comment_area id=translate_area>{{commentContent}}</p>
             </div>
             <div class="btn">
                 {{#isReplyAble}}
-                    <button type=button class=replyBtn>답글</button>
+                    <button type=button class='replyBtn' >답글</button>
                 {{else}}
                 {{/isReplyAble}}
 
                 {{#isSameUser}}
-                    <button type=button id = edit_comment>수정</button>
-                    <button type=button id = delete_comment>삭제</button>
+                    <button type=button id = 'edit_comment' >수정</button>
+                    <button type=button id = 'delete_comment' >삭제</button>
                 {{else}}
                 {{/isSameUser}}
             </div>
             {{#isReplyAble}}
-            <div style ='padding: 5px 1px 3px 30px;' class='replyContainer' id='reply_container{{commentID}}' >
+            <div class='replyContainer' id='reply_container{{commentID}}' style ='padding: 5px 1px 3px 30px;' >
             </div>
+            <div id ='reply_input_container{{commentID}}' style ='padding: 5px 1px 3px 30px;'></div>
             {{else}}
             {{/isReplyAble}}
         </div>
+        <div>
+
+        </div>
     </div>
     {{/comments}}
+</script>
+<!--답글 List 템플릿-->
+<script id="replyList-template" type="text/x-handlebars-template">
+    {{#replies}}
+    <div class ='commentContainer' id='comment{{commentID}}' >
+        <div>
+            <p class=user>
+                <span class=name data-id={{userID}} >{{userName}}</span>
+                <span class=date>{{commentRegisterTime}}</span>
+            </p>
+            <p class =comment_area id=translate_area>{{commentContent}}</p>
+        </div>
+        <div class=btn>
+            {{#isReplyAble}}
+            <button type=button class='replyBtn' >답글</button>
+            {{else}}
+            {{/isReplyAble}}
+            {{#isSameUser}}
+            <button type=button id ='edit_comment' >수정</button>
+            <button type=button id ='delete_comment' >삭제</button>
+            {{else}}
+            {{/isSameUser}}
+        </div>
+    </div>
+    {{/replies}}
+    <div></div>
+</script>
+<!--댓글 답글 input form 템플릿-->
+<script id="commentInputForm-template" type="text/x-handlebars-template">
+    {{#attribute}}
+    <br>
+    <div style='width: 100%' class=commentHtml>
+        {{{tag}}}
+        <textarea style='width: 1100px' id=commentText placeholder ='{{type}}을 입력하세요' name=commentTxt ></textarea>
+        <div>
+            <button {{{buttonSelector}}} >{{buttonName}}</button>
+            {{#isReply}}
+            <button class=btn_close_cmt_input >취소</button>
+            {{else}}
+            {{/isReply}}
+        </div>
+    </div>
+    {{/attribute}}
+</script>
+<!--댓글 수정 템플릿-->
+<script id="editCommentForm-template" type="text/x-handlebars-template">
+    {{#attribute}}
+    <br>
+    <div style='width: 100%' class=commentHtml>
+        <textarea style='width: 1100px' id='commentText' placeholder ='댓글을 입력하세요' name=commentTxt >{{oldText}}</textarea>
+        <div>
+            <button id=btn_edit_comment_complete >수정하기</button>
+        </div>
+    </div>
+    {{/attribute}}
 </script>
 
 <div id="tabcontent">
