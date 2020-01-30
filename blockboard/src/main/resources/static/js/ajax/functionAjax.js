@@ -18,20 +18,13 @@ function getFunctionList(companyID, successFunction) {
 
 //TODO
 function updateNewFunctionInfoUI(data) {
-    console.log("success" + data);
-    var containerObj = $('#fuctionListContainer');
-    containerObj.html("현재 사용중인 기능 : ");
-    $.each(data, function (key, value) {
-        console.log(value.functionName + " : " + value.companyID);
-        if (value.companyID == 0) {
-            containerObj.append("<span id = functionAble" + value.functionID + " style=display:none value=off>" + value.functionName + "</span>");
-        } else {
-            containerObj.append("<span id = functionAble" + value.functionID + " value=on>" + value.functionName + " </span>");
-        }
-
-    });
-    alert("기능이 변경되었습니다.");
+    var source = $('#functionList-template').html();
+    var template = Handlebars.compile(source);
+    var functions = {functions: data};
+    var itemList = template(functions);
+    $('#fuctionListContainer').html(itemList);
     $('#postcontent').html("");
+    alert("기능이 변경되었습니다.");
 }
 
 
@@ -40,7 +33,6 @@ function getFunctionCheckList(data) {
     var containerObj = $('#config_container');
     containerObj.html("");
     $.each(data, function (key, value) {
-        console.log(value.functionInfoData);
         if (value.companyID == 0) {
             containerObj.append("<div><span>" + value.functionName + "</span> <label><input type=checkbox name=function value=" +
                 value.functionID + ">현재상태 OFF</label></div>");

@@ -18,6 +18,7 @@
     <script type="text/javascript" src="./jquery.cookie.js"></script>
     <script type="text/javascript" src="/js/jquery.tmpl.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
+    <script src="/static/js/util/handlebarsHelper.js"></script>
     <script src="/static/js/event/boardEvent.js"></script>
     <script src="/static/js/util/jquery.tmpl.js"></script>
     <script src="/static/js/event/postsEvent.js"></script>
@@ -39,7 +40,7 @@
 <!--게시판 하위에 관리자일 경우 추가되는 버튼 (기능변경, 게시판추가)-->
 
 <div id="fuctionListContainer">
-    현재 사용중인 기능 :
+    <h5>현재 사용중인 기능 </h5>
     <c:forEach items="${functionInfoList}" var="functionList" varStatus="status">
         <c:if test="${functionList.companyID == 1}">
             <span id=functionAble${functionList.functionID} value=on> ${functionList.functionName} </span>
@@ -51,6 +52,16 @@
 
     </c:forEach>
 </div>
+<script id="functionList-template" type="text/x-handlebars-template">
+    <h5>현재 사용중인 기능</h5>
+    {{#functions}}
+        {{#isAbleFunction}}
+            <span id = 'functionAble{{functionID}}' style='display:none;' value='off'>{{functionName}}</span>
+        {{else}}
+            <span id = 'functionAble{{functionID}}' value='on'>{{functionName}}</span>
+        {{/isAbleFunction}}
+    {{/functions}}
+</script>
 <c:if test="${isadmin}">
     <br>
     <a id='addFuncBtn' onclick="javascript:changeFunction(this)" style="cursor:pointer">기능 변경</a>
