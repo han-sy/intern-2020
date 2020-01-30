@@ -56,7 +56,7 @@ public class CommentService {
         return commentMapper.selectRepliesByCommentID(commentReferencedID);
     }
 
-    public void writeReplyWithUserInfo(String userID, String commentContent, int boardID, int companyID, int postID,int commentReferencedID) {
+    public void writeReplyWithUserInfo(String userID, int companyID, int postID, int boardID, String commentContent,int commentReferencedID,String commentReferencedUserID) {
         CommentDTO reply = new CommentDTO();
         reply.setUserID(userID);
         reply.setCommentContent(commentContent);
@@ -65,6 +65,9 @@ public class CommentService {
         reply.setPostID(postID);
         reply.setUserName(userMapper.selectUserNameByUserID(userID));
         reply.setCommentReferencedID(commentReferencedID);
+        reply.setCommentReferencedUserID(commentReferencedUserID);
+        reply.setCommentReferencedUserName(userMapper.selectUserNameByUserID(commentReferencedUserID));
+        log.info("!!!",reply.toString());
         int result = commentMapper.insertNewReplyByCommentInfo(reply);
 
     }

@@ -15,33 +15,43 @@
                 comments.company_id as companyID,
                 comments.comment_content as commentContent,
                 comments.comment_register_time as commentRegisterTime,
-                comments.comment_referenced_id as commentReferencedID
-        FROM Comments comments , Users users
-        where comments.user_id = users.user_id
-        AND comments.post_id = #{postID}
+                comments.comment_referenced_id as commentReferencedID,
+                referenced_user.user_id as commentReferencedUserID,
+                referenced_user.user_name as commentReferencedUserName
+        FROM Comments comments
+        LEFT OUTER JOIN Users users
+        ON comments.user_id = users.user_id
+        LEFT OUTER JOIN Users referenced_user
+        ON comments.comment_referenced_user_id = referenced_user.user_id
+        WHERE comments.post_id = #{postID}
         AND comments.comment_referenced_id is null;
     </select>
     <select id="selectRepliesByCommentID" parameterType="int" resultType="com.board.project.blockboard.dto.CommentDTO">
         SELECT  comments.comment_id as commentID,
-        comments.board_id as boardID,
-        comments.post_id as postID,
-        comments.user_id as userID,
-        users.user_name as userName,
-        comments.company_id as companyID,
-        comments.comment_content as commentContent,
-        comments.comment_register_time as commentRegisterTime,
-        comments.comment_referenced_id as commentReferencedID
-        FROM Comments comments , Users users
-        where comments.user_id = users.user_id
-        AND comments.comment_referenced_id = ${commentReferencedID};
+                comments.board_id as boardID,
+                comments.post_id as postID,
+                comments.user_id as userID,
+                users.user_name as userName,
+                comments.company_id as companyID,
+                comments.comment_content as commentContent,
+                comments.comment_register_time as commentRegisterTime,
+                comments.comment_referenced_id as commentReferencedID,
+                referenced_user.user_id as commentReferencedUserID,
+                referenced_user.user_name as commentReferencedUserName
+        FROM Comments comments
+        LEFT OUTER JOIN Users users
+        ON comments.user_id = users.user_id
+        LEFT OUTER JOIN Users referenced_user
+        ON comments.comment_referenced_user_id = referenced_user.user_id
+        WHERE comments.comment_referenced_id = #{commentReferencedID};
     </select>
     <insert id="insertNewCommentByCommentInfo" parameterType="hashmap" >
         INSERT INTO Comments(board_id,post_id,user_id,company_id,comment_content,comment_referenced_id)
         VALUES (#{boardID},#{postID},#{userID},#{companyID},#{commentContent},null);
     </insert>
     <insert id="insertNewReplyByCommentInfo" parameterType="hashmap" >
-        INSERT INTO Comments(board_id,post_id,user_id,company_id,comment_content,comment_referenced_id)
-        VALUES (#{boardID},#{postID},#{userID},#{companyID},#{commentContent},#{commentReferencedID});
+        INSERT INTO Comments(board_id,post_id,user_id,company_id,comment_content,comment_referenced_id,comment_referenced_user_id)
+        VALUES (#{boardID},#{postID},#{userID},#{companyID},#{commentContent},#{commentReferencedID},#{commentReferencedUserID});
     </insert>
 
     <delete id="deleteCommentByCommentID" parameterType="int">

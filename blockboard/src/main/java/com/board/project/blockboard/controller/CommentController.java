@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -68,11 +69,15 @@ public class CommentController {
      * @param request
      */
     @PostMapping("/{postid}/comments/{commentid}")
-    public void writeReply(@RequestParam("postID") int postID,@RequestParam("boardID") int boardID,@RequestParam("commentReferencedID") int commentReferencedID,@RequestParam("commentContent") String commentContent, HttpServletRequest request) {
+    public void writeReply(@RequestParam("postID") int postID,
+                           @RequestParam("boardID") int boardID,
+                           @RequestParam("commentContent") String commentContent,
+                           @RequestParam("commentReferencedID") int commentReferencedID,
+                           @RequestParam("commentReferencedUserID") String commentReferencedUserID,
+                           HttpServletRequest request) {
         String userID = jwtService.getUserId();
         int companyID = jwtService.getCompanyId();
-        log.info("!!!!"+postID+","+boardID+","+commentReferencedID+":"+commentContent);
-        commentService.writeReplyWithUserInfo(userID,commentContent,boardID,companyID,postID,commentReferencedID);
+        commentService.writeReplyWithUserInfo(userID,companyID,postID,boardID,commentContent,commentReferencedID,commentReferencedUserID);
     }
 
     /**
