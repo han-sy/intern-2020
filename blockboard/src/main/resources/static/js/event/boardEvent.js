@@ -125,15 +125,14 @@ function clickConfigClose() {
 
 // 탭 메뉴 클릭 이벤트 - 해당 게시판의 게시글 불러옴
 $(document).on("click", ".tabmenu", function clickTabEvent() {
-  console.log("!!!!");
   var boardID = $(this).attr('data-tab');
-  console.log(boardID);
   $('li').css('background-color', 'white');
   $('li').removeClass("active_tab");
   $(this).css('background-color', 'lightgreen');
   $(this).addClass("active_tab");
   postClear();
   editorClear();
+  console.log("클릭한 boardID = " + boardID);
   if(boardID > 0) {
     $(function () {
       getPostsAfterTabClick(boardID);

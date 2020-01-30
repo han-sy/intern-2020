@@ -126,6 +126,7 @@ function searchPost(option, keyword) {
 }
 
 function getTempPosts() {
+    console.log("getTempPosts 호출");
     $.ajax({
         type: 'GET',
         url: "/boards/-1/posts/temp",
@@ -133,12 +134,14 @@ function getTempPosts() {
             errorFunction(xhr);
         },
         success: function (data) {
+            console.log(JSON.stringify(data));
             loadPostList(data);
         }
     })
 }
 
 function getTempPost(postID) {
+    console.log("getTempPost 호출");
     var postContentObj = $('#postcontent');
     postContentObj.html("");
     $.ajax({

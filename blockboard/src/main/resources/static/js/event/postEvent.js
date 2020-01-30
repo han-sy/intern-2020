@@ -106,7 +106,6 @@ function postFunction() {
       insertTempPost(boardID, postID, postTitle, postContent, false);
     }
     editorClear();
-    removeTempData();
     refreshPostList();
   }
 }
@@ -196,8 +195,8 @@ function off_autosave() {
 // 임시저장 게시물 클릭 이벤트
 function clickTempPostEvent(evt) {
   var postID = evt.getAttribute("data-post");
-  getTempPost(postID);
   editorAreaCreate("insert");
+  getTempPost(postID);
   var btn_cancel = $('#btn_cancel');
   btn_cancel.html("삭제");
   btn_cancel.attr('onclick', 'javascript:clickDeleteTempPost()');
