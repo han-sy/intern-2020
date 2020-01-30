@@ -127,6 +127,43 @@ SELECT p.post_id,p.user_id, u.user_name,p.board_id,p.company_id,p.post_title,p.p
         WHERE p.user_id = u.user_id and p.board_id=1
         ORDER BY p.post_id DESC;
 
+SELECT  comments.comment_id as commentID,
+                comments.board_id as boardID,
+                comments.post_id as postID,
+                comments.user_id as userID,
+                users.user_name as userName,
+                comments.company_id as companyID,
+                comments.comment_content as commentContent,
+                comments.comment_register_time as commentRegisterTime,
+                comments.comment_referenced_id as commentReferencedID,
+                referenced_user.user_id as commentReferencedUserID,
+                referenced_user.user_name as commentReferencedUserName
+        FROM Comments comments
+        LEFT OUTER JOIN Users users
+        ON comments.user_id = users.user_id
+        LEFT OUTER JOIN Users referenced_user
+        ON comments.comment_referenced_user_id = referenced_user.user_id
+        WHERE comments.post_id = 1
+        AND comments.comment_referenced_id is null;
+        
+SELECT  comments.comment_id as commentID,
+                comments.board_id as boardID,
+                comments.post_id as postID,
+                comments.user_id as userID,
+                users.user_name as userName,
+                comments.company_id as companyID,
+                comments.comment_content as commentContent,
+                comments.comment_register_time as commentRegisterTime,
+                comments.comment_referenced_id as commentReferencedID,
+                referenced_user.user_id as commentReferencedUserID,
+                referenced_user.user_name as commentReferencedUserName
+        FROM Comments comments
+        LEFT OUTER JOIN Users users
+        ON comments.user_id = users.user_id
+        LEFT OUTER JOIN Users referenced_user
+        ON comments.comment_referenced_user_id = referenced_user.user_id
+        WHERE comments.comment_referenced_id = 1;
+
 
 SELECT  comments.comment_id as commentID,
                 comments.board_id as boardID,
@@ -140,4 +177,4 @@ SELECT  comments.comment_id as commentID,
         FROM Comments comments , Users users
         where comments.user_id = users.user_id
         AND comments.post_id = 1
-        AND comments.comment_referenced_id is not null;
+        AND comments.comment_referenced_id is null;
