@@ -69,7 +69,7 @@
     <a id='addBoardBtn' onclick="javascript:clickchangeBoardBtn(this)" style="cursor:pointer">게시판 이름변경</a>
     <a id='addBoardBtn' onclick="javascript:clickDeleteBoardBtn(this)" style="cursor:pointer">게시판 삭제</a>
 </c:if>
-<a href="logout">로그아웃</a>
+<a href="<c:url value='/logout' />">로그아웃</a>
 <div id="config_container">
     <!--게시판 추가버튼 누를때 -->
 </div>
