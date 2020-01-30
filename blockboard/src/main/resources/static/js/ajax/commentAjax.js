@@ -134,12 +134,17 @@ function getReplyList(boardID, postID, commentID, successFunction) {
     });
 }
 
-//댓글 추가
-function insertReply(boardID, postID, commentText, commentReferencedID) {
+//답글 추가
+function insertReply(boardID, postID, commentContent, commentReferencedID,commentReferencedUserID) {
     $.ajax({
         type: 'POST',
         url: "/boards/" + boardID + "/posts/" + postID + "/comments/" + commentReferencedID,
-        data: {boardID: boardID, postID: postID, commentContent: commentText, commentReferencedID: commentReferencedID},
+        data: {
+            boardID:boardID,
+            postID:postID,
+            commentContent:commentContent,
+            commentReferencedID:commentReferencedID,
+            commentReferencedUserID:commentReferencedUserID},
         error: function () {  //통신 실패시
             alert('통신실패!');
         },

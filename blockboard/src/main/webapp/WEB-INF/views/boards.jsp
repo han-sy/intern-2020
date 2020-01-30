@@ -171,7 +171,7 @@
                     <span class=name data-id={{userID}} >{{userName}}</span>
                     <span class=date>{{commentRegisterTime}}</span>
                 </p>
-                <p class =comment_area id=translate_area>{{commentContent}}</p>
+                <p class =comment_area id=translate_area>{{{commentContent}}}</p>
             </div>
             <div class="btn">
                 {{#isReplyAble}}
@@ -207,7 +207,7 @@
                 <span class=name data-id={{userID}} >{{userName}}</span>
                 <span class=date>{{commentRegisterTime}}</span>
             </p>
-            <p class =comment_area id=translate_area>{{commentContent}}</p>
+            <p class =comment_area id=translate_area><strong class =nametag data-id={{commentReferencedUserID}} style="cursor:pointer" >{{commentReferencedUserName}}</strong> {{{commentContent}}}</p>
         </div>
         <div class=btn>
             {{#isReplyAble}}
