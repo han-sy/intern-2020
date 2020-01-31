@@ -23,6 +23,9 @@
         <a id="current_user_id">${userID}</a>
         <a id="current_user_name">${userName}</a>
     </div>
+    <div class="navbar-header">
+
+    </div>
     <div id="left-sidebar">
     </div>
     <div id="content">
@@ -341,6 +344,9 @@
     </div>
 </div>
 
+<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="/webjars/bootstrap/3.3.2/dist/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
 <script src="/static/js/event/boardEvent.js"></script>
 <script src="/static/js/event/postEvent.js"></script>
@@ -354,9 +360,7 @@
 <script src="/static/ckeditor/ckeditor.js"></script>
 <script src="/static/ckeditor/adapters/jquery.js"></script>
 <script src="/static/js/util/handlebarsHelper.js"></script>
-<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
-<script src="/webjars/bootstrap/3.3.2/dist/js/bootstrap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+
 </body>
 
 </html>
