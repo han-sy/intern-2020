@@ -12,9 +12,9 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>BLOCK BOARD</title>
-    <link rel="stylesheet" href="/webjars/bootstrap/4.4.1/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/webjars/bootstrap/3.3.2/dist/css/bootstrap.min.css">
     <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
-    <script src="/webjars/bootstrap/4.4.1/dist/js/bootstrap.min.js"></script>
+    <script src="/webjars/bootstrap/3.3.2/dist/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
     <link rel="stylesheet" type="text/css" href="/static/css/boardstyle.css">
     <script src="/static/js/util/jquery.tmpl.js"></script>
@@ -37,7 +37,8 @@
     <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
