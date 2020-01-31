@@ -37,6 +37,8 @@ public class UserController {
      */
     @PostMapping("/login")
     public String loginCheck(@ModelAttribute UserDTO requestUser, HttpServletResponse response) {
+        log.info("userID = " + requestUser.getUserID());
+        log.info("userPwd = " + requestUser.getUserPassword());
         boolean isValid = userService.loginCheck(requestUser, response);
         if(isValid)
             return "redirect:/boards/contents";
