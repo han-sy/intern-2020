@@ -30,7 +30,7 @@ public class JwtService {
 
     public <T> String create(String key, T data, String subject) {
         String issure = "BlockBoard";
-        Date exDate = new Date(System.currentTimeMillis() + (60000 * 10)); // 토큰 만료 시간 10분
+        Date exDate = new Date(System.currentTimeMillis() + (60000 * 60 * 24)); // 토큰 만료 시간 10분
         String jwt = Jwts.builder()
                 .setHeaderParam("typ","JWT")
                 .setHeaderParam("regDate", System.currentTimeMillis())

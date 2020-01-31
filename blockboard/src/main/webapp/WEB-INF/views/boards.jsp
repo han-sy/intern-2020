@@ -12,17 +12,14 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>BLOCK BOARD</title>
-    <link rel="stylesheet" href="/webjars/bootstrap/3.3.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/webjars/bootstrap/4.4.1/dist/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="/static/css/boardstyle.css">
 </head>
 
 <body>
-<div id="wrapper">
-    <div id="header">
+<div class="container-fluid row-cols-1">
+    <div class="row">
         <a class="navbar-brand" value= ${companyID}>${companyName} 게시판</a>
-
-    </div>
-    <div class="navbar-header">
         <a id="current_user_id">${userID}</a>
         <a id="current_user_name">${userName}</a>
         <div id="fuctionListContainer">
@@ -41,11 +38,11 @@
         <script id="functionList-template" type="text/x-handlebars-template">
             <h5>현재 사용중인 기능</h5>
             {{#functions}}
-            {{#isAbleFunction}}
-            <span id='functionAble{{functionID}}' style='display:none;' value='off'>{{functionName}}</span>
-            {{else}}
-            <span id='functionAble{{functionID}}' value='on'>{{functionName}}</span>
-            {{/isAbleFunction}}
+                {{#isAbleFunction}}
+                    <span id='functionAble{{functionID}}' style='display:none;' value='off'>{{functionName}}</span>
+                {{else}}
+                    <span id='functionAble{{functionID}}' value='on'>{{functionName}}</span>
+                {{/isAbleFunction}}
             {{/functions}}
         </script>
         <c:if test="${isadmin}">
@@ -57,10 +54,8 @@
         </c:if>
         <a href="<c:url value='/logout' />">로그아웃</a>
     </div>
-    <div class="container">
-
-    </div>
-    <div id="left-sidebar">
+    <div class="row">
+    <div class="col-2">
         <ul class="tab" id="tab_id">
             <c:forEach items="${boardList}" var="boardList" varStatus="status">
                 <li data-tab="${boardList.boardID}" class='tabmenu' id="default">
@@ -77,7 +72,7 @@
             <li data-tab="-1" class=tabmenu id=default> 임시보관함</li>
         </script>
     </div>
-    <div id="content">
+    <div class="col">
         <div id="config_container">
             <!--게시판 추가버튼 누를때 -->
         </div>
@@ -135,13 +130,9 @@
             <a id='saveFuncBtn' onclick=javascript:clickSaveFunctionChange(this) style=cursor:pointer>저장하기</a>
             <button class='functionClose' type='button' onclick=javascript:clickConfigClose(this)>닫기</button>
         </script>
-
-        <div id="container">
-
-        </div>
-
-
+        <!--게시글 작성 폼-->
         <div id="writecontent" style="display:none">
+            <!--게시글 작성 시 게시판 선택 폼-->
             <div id="boardlistcontent">
                 <h2> 게시판 선택 </h2>
                 <select id="boardIDinEditor">
@@ -152,7 +143,7 @@
                     </c:forEach>
                 </select>
             </div>
-            <!--에디터 부분-->
+            <!--에디터 폼-->
             <div id="editorcontent">
                 <h2>게시글제목</h2>
                 <input type="text" id="post_title"/>
@@ -284,45 +275,29 @@
             {{/attribute}}
         </script>
 
-        <div id="tabcontent">
-            <table width="90%" cellpadding="0" cellspacing="0" border="0">
-                <thead>
-                <tr height="5">
-                    <td width="5"></td>
-                </tr>
-                <tr>
-                    <td width='379'>제목</td>
-                    <td width='73'>작성자</td>
-                    <td width='164'>작성일</td>
-                </tr>
-                <tr height="25" align="center">
-                </tr>
-                <tr height="1" bgcolor="#D2D2D2">
-                    <td colspan="6"></td>
-                </tr>
-
-                <tr height="1" bgcolor="#82B5DF">
-                    <td colspan="6" width="752"></td>
-                </tr>
+        <div id="tabcontent" class="container-fluid">
+            <table class="table table-active table-bordered table-hover" cellpadding="0" cellspacing="0" border="0">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">제목</th>
+                        <th scope="col">작성자</th>
+                        <th scope="col">작성일</th>
+                    </tr>
                 </thead>
                 <tbody id="postlist"></tbody>
                 <script id="posts-template" type="text/x-handlebars-template">
                     {{#posts}}
-                    {{#isTemp}}
-                    <tr height="30" class="postclick" data-post={{postID}}
-                        onclick="javascript:clickTempPostEvent(this)"
-                        onmouseover="javascript:changeTrColor(this)">
-                        <td width="379">{{postTitle}}</td>
+                        {{#isTemp}}
+                        <tr class="postclick" data-post={{postID}} onclick="javascript:clickTempPostEvent(this)">
+                            <td scope="row">{{postTitle}}</td>
                         {{else}}
-                    <tr height="30" class="postclick" data-post={{postID}}
-                        onclick="javascript:clickTrEvent(this)"
-                        onmouseover="javascript:changeTrColor(this)">
-                        <td width="379">{{postTitle}}</td>
+                        <tr class="postclick" data-post={{postID}} onclick="javascript:clickTrEvent(this)">
+                            <td scope="row">{{postTitle}}</td>
                         {{/isTemp}}
-                        <td width="73">{{userName}}</td>
-                        <td width="164">{{postRegisterTime}}</td>
-                        <td style="visibility:hidden">{{postID}}</td>
-                        <td style="visibility:hidden">{{boardID}}</td>
+                        <td>{{userName}}</td>
+                        <td>{{postRegisterTime}}</td>
+                        <a style="visibility:hidden">{{postID}}</a>
+                        <a style="visibility:hidden">{{boardID}}</a>
                     </tr>
                     {{/posts}}
                 </script>
@@ -344,10 +319,11 @@
             <button id="search" onclick="javascript:search(this)">조회</button>
         </div>
     </div>
+    </div>
 </div>
 
 <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
-<script src="/webjars/bootstrap/3.3.2/dist/js/bootstrap.min.js"></script>
+<script src="/webjars/bootstrap/4.4.1/dist/js/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
 <script src="/static/js/event/boardEvent.js"></script>

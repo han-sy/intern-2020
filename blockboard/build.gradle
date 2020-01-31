@@ -43,7 +43,7 @@ dependencies {
 	compile "com.google.code.gson:gson"
 	testCompile group: 'junit', name: 'junit', version: '4.12'
 	compile "io.jsonwebtoken:jjwt:0.6.0"
-	compile 'org.webjars.bower:bootstrap:3.3.2'
+	compile 'org.webjars.bower:bootstrap:4.4.1'
 }
 
 test {
