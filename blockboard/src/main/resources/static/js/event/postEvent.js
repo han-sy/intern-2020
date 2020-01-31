@@ -11,7 +11,6 @@ function editorAreaCreate(method) {
   var writecontent = $('#writecontent');
   var btn_write = $('#btn_write');
   var btn_cancel = $('#btn_cancel');
-
   writecontent.css("display", "");
   btn_write.css("display", "none");
   btn_cancel.html("작성취소");
