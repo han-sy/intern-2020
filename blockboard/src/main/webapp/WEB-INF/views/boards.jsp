@@ -44,20 +44,21 @@
                     style="cursor:pointer" data-toggle="modal" data-target="#addBoardModal">게시판 추가</a>
                 </li>
                 <li class="nav-item active">
-                    <a class="nav-link" id='changeBoardsNameBtn' onclick="javascript:clickchangeBoardBtn(this)"
-                       style="cursor:pointer">게시판 이름변경</a>
+                    <a class="nav-link" id='changeBoardsNameBtn' data-toggle="modal" data-target="#changeBoardNameModal"
+                       onclick="javascript:clickchangeBoardBtn(this)" style="cursor:pointer">게시판 이름변경</a>
                 </li>
                 <li class="nav-item active">
-                    <a class="nav-link" id='deleteBoardsBtn' onclick="javascript:clickDeleteBoardBtn(this)"
+                    <a class="nav-link" id='deleteBoardsBtn' data-toggle="modal" data-target='#deleteBoardModal'
+                       onclick="javascript:clickDeleteBoardBtn(this)"
                        style="cursor:pointer">게시판 삭제</a>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle active" href="#" id="dropdown03" data-toggle="dropdown"
                        aria-haspopup="true" aria-expanded="false">사용중인 기능</a>
                     <div class="dropdown-menu" id="fuctionListContainer" aria-labelledby="dropdown03">
-                        <a class="dropdown-item text-success" id='changeFuncBtn'
-                           onclick="javascript:changeFunction(this)"
-                           style="cursor:pointer"><strong>기능 변경</strong></a>
+                        <a class="dropdown-item text-success" id='changeFuncBtn' data-toggle="modal"
+                           data-target="#changeFunctionModal"
+                           onclick="javascript:changeFunction(this)" style="cursor:pointer"><strong>기능 변경</strong></a>
                         <hr>
                         <c:forEach items="${functionInfoList}" var="functionList" varStatus="status">
                             <c:if test="${functionList.companyID == 1}">
@@ -115,29 +116,49 @@
             </script>
         </div>
         <div class="col">
-            <div id="config_container">
-                <!--게시판 추가버튼 누를때 -->
-            </div>
             <!-- 게시판 추가 Modal -->
             <div class="modal" id="addBoardModal" tabindex="-1" role="dialog">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title">게시판 추가</h5>
+                            <h5 class="modal-title text-success">게시판 추가</h5>
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body-addboard">
                             <p style="padding: 15px 1px 5px 10px;">
-                                <a>입력    </a>
-                                <input type="text" name="게시판 이름" id="input_board_name" class="addBoard" placeholder="게시판 이름">
+                                <a>입력 </a>
+                                <input type="text" name="게시판 이름" id="input_board_name" class="addBoard"
+                                       placeholder="게시판 이름">
                             </p>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" id='addFuncBtn' class="btn btn-primary"
+                            <button type="button" id='addFuncBtn' class="btn btn-success"
                                     onclick=javascript:clickSaveaddedBoard(this) data-dismiss="modal">Save changes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 게시판 삭제 Modal -->
+            <div class="modal" id="deleteBoardModal" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title text-success">삭제할 게시판을 선택하시오.</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body-deleteBoard">
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" id='deleteBoardBtn' class="btn btn-success"
+                                    onclick=javascript:clickSaveDelteBoard(this) data-dismiss="modal">Save changes
                             </button>
                         </div>
                     </div>
@@ -145,57 +166,89 @@
             </div>
             <!--게시판 삭제 템플릿-->
             <script id="deleteboards-template" type="text/x-handlebars-template">
-                <h5>삭제할 게시판을 선택하시오.</h5>
                 {{#boards}}
                 <div>
                     <span>{{boardName}}</span>
                     <input type='checkbox' name='boardDelete' value={{boardID}}/>
                 </div>
                 {{/boards}}
-                <a id='deleteBoardBtn' onclick=javascript:clickSaveDelteBoard(this) style=cursor:pointer>삭제하기</a>
-                <button class='functionClose' type='button' onclick=javascript:clickConfigClose(this)>닫기</button>
             </script>
+            <!-- 게시판 이름변경 Modal -->
+            <div class="modal" id="changeBoardNameModal" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title text-success">게시판 이름 변경</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body-changeBoardName">
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" id='changeNameBtn' class="btn btn-success"
+                                    onclick=javascript:clickSaveChangeBoard(this) data-dismiss="modal">Save changes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!--게시판 이름변경 템플릿-->
             <script id="changeBoardName-template" type="text/x-handlebars-template">
-                <h5>게시판 이름 변경.</h5>
                 {{#boards}}
-                <div class='boardInfo' id='board{{boardID}}'>
+                <div class='boardInfo' id='board{{boardID}}' style="padding: 15px 1px 5px 10px;">
+                    <span class='deleteBoard' data-board='board{{boardID}}'> {{boardName}} </span>
+                    <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
                     <input type='text' name='boardname' data-boardid={{boardID}} data-oldname={{boardName}}
                            value={{boardName}}>
-                    <span class='deleteBoard' data-board='board{{boardID}}'> 기존 게시판 이름 : {{boardName}} </span>
                 </div>
                 {{/boards}}
-                <br>
-                <a id='changeBoardNameBtn' onclick=javascript:clickSaveChangeBoard(this) style=cursor:pointer>변경하기</a>
-                <button class='functionClose' type='button' onclick=javascript:clickConfigClose(this)>닫기</button>
             </script>
+            <!-- 기능변경 Modal -->
+            <div class="modal" id="changeFunctionModal" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title text-success">기능 변경</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body-changeFunctions">
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" id='changeFunction' class="btn btn-success"
+                                    onclick=javascript:clickSaveFunctionChange(this) data-dismiss="modal">Save changes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!--기능변경 템플릿-->
             <script id="changeFunctionInfo-template" type="text/x-handlebars-template">
-                <h5>기능 변경</h5>
                 {{#functions}}
                 {{#isAbleFunction}}
-                <div class="btn-group" data-toggle="buttons">
+                <div class="btn-group-toggle" data-toggle="buttons" style="padding: 3px 1px 1px 10px;">
                     <label class="btn btn-default _function-switch">
                         <span>{{functionName}}</span>
-                        <input type='checkbox' name='function' value={{functionID}}>
+                        <input class='function_checkbox' type='checkbox' name='function' value={{functionID}}>
                         <span class='_switch'>OFF</span>
                     </label>
                 </div>
                 {{else}}
-                <div class="btn-group" data-toggle="buttons">
-
-                    <label class="btn btn-success active _function-switch">
+                <div class="btn-group-toggle" data-toggle="buttons" style="padding: 3px 1px 1px 10px;">
+                    <label class="btn btn-success _function-switch">
                         <span>{{functionName}}</span>
-                        <input type='checkbox' name='function' value={{functionID}} checked>
+                        <input class='function_checkbox' type='checkbox' name='function' value={{functionID}} checked>
                         <span class='_switch'>ON</span>
                     </label>
                 </div>
                 {{/isAbleFunction}}
-                <br>
-                <br>
                 {{/functions}}
-                <a id='saveFuncBtn' onclick=javascript:clickSaveFunctionChange(this) style=cursor:pointer>저장하기</a>
-                <button class='functionClose' type='button' onclick=javascript:clickConfigClose(this)>닫기</button>
             </script>
             <!--게시글 작성 폼-->
             <div id="writecontent" style="display:none">

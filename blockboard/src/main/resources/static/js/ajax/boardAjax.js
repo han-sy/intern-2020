@@ -37,7 +37,7 @@ function getBoardListToDelete(data) {
     var template = Handlebars.compile(source);
     var boardList = {boards: data};
     var itemList = template(boardList);
-    $('#config_container').html(itemList);
+    $('.modal-body-deleteBoard').html(itemList);
 }
 
 //이름변경을 위한 UI
@@ -46,7 +46,7 @@ function getBoardListToChangeName(data) {
     var template = Handlebars.compile(source);
     var boardList = {boards: data};
     var itemList = template(boardList);
-    $('#config_container').html(itemList);
+    $('.modal-body-changeBoardName').html(itemList);
 }
 
 

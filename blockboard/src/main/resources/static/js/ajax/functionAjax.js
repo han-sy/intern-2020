@@ -32,7 +32,7 @@ function getFunctionCheckList(data) {
     var template = Handlebars.compile(source);
     var functions = {functions: data};
     var itemList = template(functions);
-    $('#config_container').html(itemList);
+    $('.modal-body-changeFunctions').html(itemList);
 }
 
 //기능변경후 새로운 사용중인기능목록 불러오기
