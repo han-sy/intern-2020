@@ -110,8 +110,7 @@
         <h5>게시판 이름 변경.</h5>
         {{#boards}}
         <div class='boardInfo' id='board{{boardID}}'>
-            <input type='text' name='boardname' data-boardid={{boardID}} data-oldname={{boardName}}
-                   value={{boardName}}>
+            <input type='text' name='boardname' data-boardid={{boardID}} data-oldname={{boardName}} value={{boardName}}>
             <span class='deleteBoard' data-board='board{{boardID}}'> 기존 게시판 이름 : {{boardName}} </span>
         </div>
         {{/boards}}
@@ -141,6 +140,8 @@
             </label>
         </div>
         {{/isAbleFunction}}
+        <br>
+        <br>
         {{/functions}}
         <a id='saveFuncBtn' onclick=javascript:clickSaveFunctionChange(this) style=cursor:pointer>저장하기</a>
         <button class='functionClose' type='button' onclick=javascript:clickConfigClose(this)>닫기</button>
@@ -165,204 +166,202 @@
         <li data-tab="-1" class=tabmenu id=default> 임시보관함</li>
     </script>
 
-</div>
-<!--에디터 부분-->
-<div id="editorcontent">
-    <h2>게시글제목</h2>
-    <input type="text" id="post_title"/>
-    <textarea id="editor"></textarea>
-    <button id="btn_post" onclick="javascript:postFunction()">저장</button>
-    <button id="btn_cancel" onclick="javascript:writeCancel()">작성취소</button>
-    <button id="btn_temp" onclick="javascript:tempsaveFunction()">임시저장</button>
-    <div id="editorcontent-hidden">
+    <div id="writecontent" style="display:none">
+        <div id="boardlistcontent">
+            <h2> 게시판 선택 </h2>
+            <select id="boardIDinEditor">
+                <c:forEach items="${boardList}" var="boardList" varStatus="status">
+                    <option data-tab="${boardList.boardID}" class='tabmenu' id="default">
+                        <c:out value="${boardList.boardName}"/>
+                    </option>
+                </c:forEach>
+            </select>
+        </div>
+        <!--에디터 부분-->
+        <div id="editorcontent">
+            <h2>게시글제목</h2>
+            <input type="text" id="post_title"/>
+            <textarea id="editor"></textarea>
+            <button id="btn_post" onclick="javascript:postFunction()">저장</button>
+            <button id="btn_cancel" onclick="javascript:writeCancel()">작성취소</button>
+            <button id="btn_temp" onclick="javascript:tempsaveFunction()">임시저장</button>
+            <div id="editorcontent-hidden">
+            </div>
+            <script id="postid-template" type="text/x-handlebars-template">
+                <a id="editor_postID" style="visibility:hidden">{{postID}}</a>
+            </script>
+        </div>
     </div>
-    <script id="postid-template" type="text/x-handlebars-template">
-        <a id="editor_postID" style="visibility:hidden">{{postID}}</a>
-    </script>
-</div>
-</div>
 
-<div id="postcontent"></div>
-<!--게시물 내용 템플릿-->
-<script id="postcontent-template" type="text/x-handlebars-template">
-    {{#post}}
-    <h2>{{postTitle}}</h2>
-    <h5>작성자 : {{userName}}</h5>
-    <h5>작성시간 : {{postRegisterTime}}</h5>
-    <a>{{{postContent}}}</a>
-    <a id="postID" style="visibility: hidden;">{{postID}}</a>
-    <br>
-    <button id="btn_updatePost" style="visibility:hidden" onclick="javascript:postUpdateFunction()">수정</button>
-    <button id="btn_deletePost" style="visibility:hidden" onclick="javascript:postDeleteFunction()">삭제</button>
-    {{/post}}
-</script>
-<!--댓글리스트 템플릿-->
-<script id="commentList-template" type="text/x-handlebars-template">
-    {{#comments}}
-    <hr>
-    <div class='referenceCommentContainer' data-id='{{commentID}}'>
+    <div id="postcontent"></div>
+    <!--게시물 내용 템플릿-->
+    <script id="postcontent-template" type="text/x-handlebars-template">
+        {{#post}}
+        <h2>{{postTitle}}</h2>
+        <h5>작성자 : {{userName}}</h5>
+        <h5>작성시간 : {{postRegisterTime}}</h5>
+        <a>{{{postContent}}}</a>
+        <a id="postID" style="visibility: hidden;">{{postID}}</a>
+        <br>
+        <button id="btn_updatePost" style="visibility:hidden" onclick="javascript:postUpdateFunction()">수정</button>
+        <button id="btn_deletePost" style="visibility:hidden" onclick="javascript:postDeleteFunction()">삭제</button>
+        {{/post}}
+    </script>
+    <!--댓글리스트 템플릿-->
+    <script id="commentList-template" type="text/x-handlebars-template">
+        {{#comments}}
+        <hr>
+        <div class='referenceCommentContainer' data-id='{{commentID}}'>
+            <div class='commentContainer' id='comment{{commentID}}'>
+                <div>
+                    <p class=user>
+                        <span class=name data-id={{userID}}>{{userName}}</span>
+                        <span class=date>{{commentRegisterTime}}</span>
+                    </p>
+                    <p class=comment_area id=translate_area>{{{commentContent}}}</p>
+                </div>
+                <div class="btn">
+                    {{#isReplyAble}}
+                    <button type=button class='replyBtn'>답글</button>
+                    {{else}}
+                    {{/isReplyAble}}
+
+                    {{#isSameUser}}
+                    <button type=button id='edit_comment'>수정</button>
+                    <button type=button id='delete_comment'>삭제</button>
+                    {{else}}
+                    {{/isSameUser}}
+                </div>
+                {{#isReplyAble}}
+                <div class='replyContainer' id='reply_container{{commentID}}' style='padding: 5px 1px 3px 30px;'>
+                </div>
+                <div id='reply_input_container{{commentID}}' style='padding: 5px 1px 3px 30px;'></div>
+                {{else}}
+                {{/isReplyAble}}
+            </div>
+            <div>
+
+            </div>
+        </div>
+        {{/comments}}
+    </script>
+    <!--답글 List 템플릿-->
+    <script id="replyList-template" type="text/x-handlebars-template">
+        {{#replies}}
         <div class='commentContainer' id='comment{{commentID}}'>
             <div>
                 <p class=user>
                     <span class=name data-id={{userID}}>{{userName}}</span>
                     <span class=date>{{commentRegisterTime}}</span>
                 </p>
-                <p class=comment_area id=translate_area>{{{commentContent}}}</p>
+                <p class=comment_area id=translate_area><strong class=nametag data-id={{commentReferencedUserID}}
+                                                                style="cursor:pointer">{{commentReferencedUserName}}</strong>
+                    {{{commentContent}}}</p>
             </div>
-            <div class="btn">
+            <div class=btn>
                 {{#isReplyAble}}
                 <button type=button class='replyBtn'>답글</button>
                 {{else}}
                 {{/isReplyAble}}
-
                 {{#isSameUser}}
                 <button type=button id='edit_comment'>수정</button>
                 <button type=button id='delete_comment'>삭제</button>
                 {{else}}
                 {{/isSameUser}}
             </div>
-            {{#isReplyAble}}
-            <div class='replyContainer' id='reply_container{{commentID}}' style='padding: 5px 1px 3px 30px;'>
+        </div>
+        {{/replies}}
+        <div></div>
+    </script>
+    <!--댓글 답글 input form 템플릿-->
+    <script id="commentInputForm-template" type="text/x-handlebars-template">
+        {{#attribute}}
+        <br>
+        <div style='width: 100%' class=commentHtml>
+            {{{tag}}}
+            <textarea style='width: 1100px' id=commentText placeholder='{{type}}을 입력하세요' name=commentTxt></textarea>
+            <div>
+                <button {{{buttonSelector}}}>{{buttonName}}</button>
+                {{#isReply}}
+                <button class=btn_close_cmt_input>취소</button>
+                {{else}}
+                {{/isReply}}
             </div>
-            <div id='reply_input_container{{commentID}}' style='padding: 5px 1px 3px 30px;'></div>
-            {{else}}
-            {{/isReplyAble}}
         </div>
-        <div>
-
-        </div>
-    </div>
-    {{/comments}}
-</script>
-<!--답글 List 템플릿-->
-<script id="replyList-template" type="text/x-handlebars-template">
-    {{#replies}}
-    <div class='commentContainer' id='comment{{commentID}}'>
-        <div>
-            <p class=user>
-                <span class=name data-id={{userID}}>{{userName}}</span>
-                <span class=date>{{commentRegisterTime}}</span>
-            </p>
-            <p class=comment_area id=translate_area><strong class=nametag data-id={{commentReferencedUserID}}
-                                                            style="cursor:pointer">{{commentReferencedUserName}}</strong>
-                {{{commentContent}}}
-            </p>
-        </div>
-        <div class=btn>
-            {{#isReplyAble}}
-            <button type=button class='replyBtn'>답글</button>
-            {{else}}
-            {{/isReplyAble}}
-            {{#isSameUser}}
-            <button type=button id='edit_comment'>수정</button>
-            <button type=button id='delete_comment'>삭제</button>
-            {{else}}
-            {{/isSameUser}}
-        </div>
-    </div>
-    {{/replies}}
-    <div></div>
-</script>
-<!--댓글 답글 input form 템플릿-->
-<script id="commentInputForm-template" type="text/x-handlebars-template">
-    {{#attribute}}
-    <br>
-    <div style='width: 100%' class=commentHtml>
-        {{{tag}}}
-        <textarea style='width: 1100px' id=commentText placeholder='{{type}}을 입력하세요' name=commentTxt></textarea>
-        <div>
-            <button {{{buttonSelector}}}>{{buttonName}}</button>
-            {{#isReply}}
-            <button class=btn_close_cmt_input>취소</button>
-            {{else}}
-            {{/isReply}}
-        </div>
-    </div>
-    {{/attribute}}
-</script>
-<!--댓글 수정 템플릿-->
-<script id="editCommentForm-template" type="text/x-handlebars-template">
-    {{#attribute}}
-    <br>
-    <div style='width: 100%' class=commentHtml>
+        {{/attribute}}
+    </script>
+    <!--댓글 수정 템플릿-->
+    <script id="editCommentForm-template" type="text/x-handlebars-template">
+        {{#attribute}}
+        <br>
+        <div style='width: 100%' class=commentHtml>
             <textarea style='width: 1100px' id='commentText' placeholder='댓글을 입력하세요'
                       name=commentTxt>{{oldText}}</textarea>
-        <div>
-            <button id=btn_edit_comment_complete>수정하기</button>
+            <div>
+                <button id=btn_edit_comment_complete>수정하기</button>
+            </div>
         </div>
-    </div>
-    {{/attribute}}
-</script>
+        {{/attribute}}
+    </script>
 
-<div id="tabcontent">
-    <table width="90%" cellpadding="0" cellspacing="0" border="0">
-        <thead>
-        <tr height="5">
-            <td width="5"></td>
-        </tr>
-        <tr>
-            <td width='379'>제목</td>
-            <td width='73'>작성자</td>
-            <td width='164'>작성일</td>
-        </tr>
-        <tr height="25" align="center">
-        </tr>
-        <tr height="1" bgcolor="#D2D2D2">
-            <td colspan="6"></td>
-        </tr>
-
-        <tr height="1" bgcolor="#82B5DF">
-            <td colspan="6" width="752"></td>
-        </tr>
-        </thead>
-        <tbody id="postlist"></tbody>
-        <script id="posts-template" type="text/x-handlebars-template">
-            {{#posts}}
-            {{#isTemp}}
-            <tr height="30" class="postclick" data-post={{postID}} onclick="javascript:clickTempPostEvent(this)"
-                onmouseover="javascript:changeTrColor(this)">
-                <td width="379">{{postTitle}}</td>
-                {{else}}
-            <tr height="30" class="postclick" data-post={{postID}} onclick="javascript:clickTrEvent(this)"
-                onmouseover="javascript:changeTrColor(this)">
-                <td width="379">{{postTitle}}</td>
-                {{/isTemp}}
-                <td width="73">{{userName}}</td>
-                <td width="164">{{postRegisterTime}}</td>
-                <td style="visibility:hidden">{{postID}}</td>
-                <td style="visibility:hidden">{{boardID}}</td>
+    <div id="tabcontent">
+        <table width="90%" cellpadding="0" cellspacing="0" border="0">
+            <thead>
+            <tr height="5">
+                <td width="5"></td>
             </tr>
-            {{/posts}}
-        </script>
-        <!--게시글 목록 -->
+            <tr>
+                <td width='379'>제목</td>
+                <td width='73'>작성자</td>
+                <td width='164'>작성일</td>
+            </tr>
+            <tr height="25" align="center">
+            </tr>
+            <tr height="1" bgcolor="#D2D2D2">
+                <td colspan="6"></td>
+            </tr>
 
-    </table>
-</div>
-<div>
-    <button id="btn_write">글쓰기</button>
-</div>
-<div id="searchcontent">
-    <select id="search_option" style="width:100px;font-size:15px;">
-        <option value=0>제목</option>
-        <option value=1>작성자</option>
-        <option value=2>내용</option>
-        <option value=3>제목+내용</option>
-    </select>
-    <input id="search_keyword" type="text"/>
-    <button id="search" onclick="javascript:search(this)">조회</button>
-</div>
-</div>
-<div id="searchcontent">
-    <select id="search_option" style="width:100px;font-size:15px;">
-        <option value=0>제목</option>
-        <option value=1>작성자</option>
-        <option value=2>내용</option>
-        <option value=3>제목+내용</option>
-    </select>
-    <input id="search_keyword" type="text"/>
-    <button id="search" onclick="javascript:search(this)">조회</button>
-</div>
+            <tr height="1" bgcolor="#82B5DF">
+                <td colspan="6" width="752"></td>
+            </tr>
+            </thead>
+            <tbody id="postlist"></tbody>
+            <script id="posts-template" type="text/x-handlebars-template">
+                {{#posts}}
+                {{#isTemp}}
+                <tr height="30" class="postclick" data-post={{postID}} onclick="javascript:clickTempPostEvent(this)"
+                    onmouseover="javascript:changeTrColor(this)">
+                    <td width="379">{{postTitle}}</td>
+                    {{else}}
+                <tr height="30" class="postclick" data-post={{postID}} onclick="javascript:clickTrEvent(this)"
+                    onmouseover="javascript:changeTrColor(this)">
+                    <td width="379">{{postTitle}}</td>
+                    {{/isTemp}}
+                    <td width="73">{{userName}}</td>
+                    <td width="164">{{postRegisterTime}}</td>
+                    <td style="visibility:hidden">{{postID}}</td>
+                    <td style="visibility:hidden">{{boardID}}</td>
+                </tr>
+                {{/posts}}
+            </script>
+            <!--게시글 목록 -->
 
+        </table>
+    </div>
+    <div>
+        <button id="btn_write">글쓰기</button>
+    </div>
+    <div id="searchcontent">
+        <select id="search_option" style="width:100px;font-size:15px;">
+            <option value=0>제목</option>
+            <option value=1>작성자</option>
+            <option value=2>내용</option>
+            <option value=3>제목+내용</option>
+        </select>
+        <input id="search_keyword" type="text"/>
+        <button id="search" onclick="javascript:search(this)">조회</button>
+    </div>
+</div>
 </body>
 
 </html>
