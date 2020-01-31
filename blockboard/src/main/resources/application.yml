@@ -17,6 +17,8 @@ spring:
   resource:
     static-locations : classpath:/static/
     add-mappings : true
+  mustache:
+    cache: false
 
 mybatis:
   type-aliases-package: com.board.project.blockboard.mapper

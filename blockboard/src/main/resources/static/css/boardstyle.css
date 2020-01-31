@@ -49,3 +49,26 @@
     padding: 14px 16px;
     font-size: 17px;
 }
+
+<!-- 여기부터 다른거 -->
+#header {
+    grid-area: header;
+    background-color: #dddddd;
+}
+
+#left-sidebar {
+    background-color: #aafed6;
+    grid-area: lsidebar;
+}
+
+#content {
+    background-color: #eeeeee;
+    grid-area: content;
+    position: relative;
+}
+
+#wrapper {
+    display: grid;
+    grid-template-columns: 200px auto;
+    grid-template-areas: 'header header ' 'lsidebar content '  'footer footer ';
+}
