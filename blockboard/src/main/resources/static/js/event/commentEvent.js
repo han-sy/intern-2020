@@ -61,7 +61,9 @@ $(document).on('click', '.replyBtn', function () {
     var referenceUserName = $(this).closest(".commentContainer").find(".name").html();
     var referenceUserID = $(this).closest(".commentContainer").find(".name").attr("data-id");
     var inputID = referenceCommentContainer.find("#reply_input_container" + referenceCommentContainer.attr("data-id")).attr("id");
-    getCommentInputHtml("답글", "입력", "To <strong class =tag style ='cursor:pointer;' data-id=" + referenceUserID + " >" + referenceUserName + "</strong>", "#" + inputID, "class =btn_openReply");
+    getCommentInputHtml("답글", "입력",
+        "To <strong class =tag style ='cursor:pointer;' data-id=" + referenceUserID + " >" + referenceUserName + "</strong>",
+        "#" + inputID, "class ='btn btn-success btn_openReply'");
 })
 
 //답글 입력 버튼

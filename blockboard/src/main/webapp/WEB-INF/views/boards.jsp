@@ -94,7 +94,11 @@
         <a class="nav-link text-white" style="nav-right: auto" href="<c:url value='/logout' />">로그아웃</a>
     </div>
 </nav>
+<div class="row">
+    <br>
+</div>
 <div class="container-fluid row-cols-1">
+
     <div class="row bg-success text-white">
     </div>
     <div class="row">
@@ -110,12 +114,13 @@
             <!--게시판 목록 템플릿-->
             <script id="boards-template" type="text/x-handlebars-template">
                 {{#boards}}
-                <li data-tab={{boardID}} class=tabmenu id=default> {{boardName}}</li>
+                <li data-tab={{boardID}} class=tabmenu id=default style="cursor:pointer"> {{boardName}}</li>
                 {{/boards}}
-                <li data-tab="-1" class=tabmenu id=default> 임시보관함</li>
+                <li data-tab="-1" class=tabmenu id=default style="cursor:pointer"> 임시보관함</li>
             </script>
         </div>
         <div class="col">
+
             <!-- 게시판 추가 Modal -->
             <div class="modal" id="addBoardModal" tabindex="-1" role="dialog">
                 <div class="modal-dialog" role="document">
@@ -387,7 +392,7 @@
                     <textarea class="form-control" id=commentText placeholder='{{type}}을 입력하세요'
                               name=commentTxt></textarea>
                     <div align="right">
-                        <button class="btn btn-success" {{{buttonSelector}}}>{{buttonName}}</button>
+                        <button {{{buttonSelector}}}>{{buttonName}}</button>
                         {{#isReply}}
                         <button class="btn_close_cmt_input btn btn-success">취소</button>
                         {{else}}
