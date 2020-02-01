@@ -21,8 +21,9 @@ Handlebars.registerHelper('isReplyAble', function(options) {
 
 //같은 사용자인지 체크
 Handlebars.registerHelper('isSameUser', function(options) {
-    console.log(this.userID+","+$("#current_user_id").text());
-    if (this.userID = $("#current_user_id").text()) {
+    var currentUserID = $("#current_user_info").attr("data-id");
+    console.log(this.userID+","+currentUserID);
+    if (this.userID == currentUserID) {
         return options.fn(this); //true
     }
     return options.inverse(this);//false

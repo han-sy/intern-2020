@@ -110,6 +110,7 @@ function getBoardList(successFunction) {
     });
 }
 
+//TODO handlebar 적용하기
 //게시물 클릭후 게시물 데이터 받아오기
 function getPostDataAfterPostClick(postID, boardID) {
   var postContentObj = $('#postcontent');
