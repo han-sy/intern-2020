@@ -30,7 +30,7 @@ function clickSaveDelteBoard() {
 
     $("input[name=boardDelete]").each(function () {
         var checkboxObj = $(this);
-        if (checkboxObj.is(":checked")) {
+        if (checkboxObj.is(":checked")) { //삭제할때 체크 이렇게 불러옴
             var boardData = new Object();
             boardData.boardID = checkboxObj.val();
             console.log("boardID:" + boardData.boardID);
@@ -113,13 +113,22 @@ function clickConfigClose() {
     $('#config_container').html("");
 }
 
+$(document).on("mouseenter", ".tabmenu", function(){
+    $(this).css('background-color', 'WhiteSmoke');
+});
+$(document).on("mouseleave", ".tabmenu", function(){
+        $(this).css('background-color', 'white');
+});
+
 // 탭 메뉴 클릭 이벤트 - 해당 게시판의 게시글 불러옴
 $(document).on("click", ".tabmenu", function clickTabEvent() {
   var boardID = $(this).attr('data-tab');
-  $('.tabmenu').css('background-color', 'white');
+  $('.tabmenu').css('color', 'black');
+  $('.tabmenu').removeClass("font-weight-bold");
   $('.tabmenu').removeClass("active_tab");
-  $(this).css('background-color', 'lightgreen');
+  $(this).css('color', '#40A745');//success색
   $(this).addClass("active_tab");
+  $(this).addClass("font-weight-bold");
   postClear();
   editorClear();
   console.log("클릭한 boardID = " + boardID);
@@ -143,3 +152,22 @@ function getActiveBoardID() {
   });
   return boardID;
 }
+//기능변경 on/off버튼 텍스트 바꾸기
+$(document).on('click', '._function-switch', function () {
+    var switchText = $(this).find("._switch");
+    var checkBox = $(this).find(".function_checkbox");
+    console.log(switchText.html()=="ON");
+    if(checkBox.prop("checked")){
+        $(this).removeClass('btn-success');
+        $(this).addClass('btn-default');
+        switchText.html("OFF");
+        checkBox.removeAttr("checked");
+    }
+    else{
+        $(this).removeClass('btn-default');
+        $(this).addClass('btn-success');
+        switchText.html("ON");
+        checkBox.prop("checked",true);
+    }
+    $(this).removeClass("active");
+});

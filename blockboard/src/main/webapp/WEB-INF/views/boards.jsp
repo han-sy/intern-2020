@@ -26,7 +26,7 @@
 <body>
 
 <nav class="navbar navbar-expand navbar-dark bg-success">
-    <a class="navbar-brand" href="#" value= ${companyID}>${companyName}</a>
+    <a class="navbar-brand" href="JavaScript:window.location.reload()" value= ${companyID}>${companyName}</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample02"
             aria-controls="navbarsExample02" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -73,7 +73,8 @@
                     </div>
                     <!--현재 기능 사용 여부 현황 템플릿-->
                     <script id="functionList-template" type="text/x-handlebars-template">
-                        <a class="dropdown-item text-success" id='changeFuncBtn'
+                        <a class="dropdown-item text-success" id='changeFuncBtn' data-toggle="modal"
+                           data-target="#changeFunctionModal"
                            onclick="javascript:changeFunction(this)"
                            style="cursor:pointer"><strong>기능 변경</strong></a>
                         <hr>
@@ -105,11 +106,11 @@
         <div class="col-2">
             <ul class="tab" id="tab_id">
                 <c:forEach items="${boardList}" var="boardList" varStatus="status">
-                    <li data-tab="${boardList.boardID}" class='tabmenu' id="default">
+                    <li data-tab="${boardList.boardID}" class='tabmenu' id="default" style="cursor:pointer">
                         <c:out value="${boardList.boardName}"/>
                     </li>
                 </c:forEach>
-                <li data-tab="-1" class=tabmenu id=default> 임시보관함</li>
+                <li data-tab="-1" class=tabmenu id=default style="cursor:pointer"> 임시보관함</li>
             </ul>
             <!--게시판 목록 템플릿-->
             <script id="boards-template" type="text/x-handlebars-template">
@@ -172,9 +173,10 @@
             <!--게시판 삭제 템플릿-->
             <script id="deleteboards-template" type="text/x-handlebars-template">
                 {{#boards}}
-                <div>
-                    <span>{{boardName}}</span>
-                    <input type='checkbox' name='boardDelete' value={{boardID}}/>
+
+                <div class="checkbox checkbox-inline checkbox-success" style="padding: 15px 1px 10px 30px;" >
+                    <input class ="custom-control-input" type='checkbox' name='boardDelete' id="checkDelBoard{{boardID}}" value={{boardID}} />
+                    <label class="custom-control-label" for="checkDelBoard{{boardID}}" >{{boardName}}</label>
                 </div>
                 {{/boards}}
             </script>
@@ -206,7 +208,7 @@
                 <div class='boardInfo' id='board{{boardID}}' style="padding: 15px 1px 5px 10px;">
                     <span class='deleteBoard' data-board='board{{boardID}}'> {{boardName}} </span>
                     <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
-                    <input type='text' name='boardname' data-boardid={{boardID}} data-oldname={{boardName}}
+                    <input class ="form-control" type='text' name='boardname' data-boardid={{boardID}} data-oldname={{boardName}}
                            value={{boardName}}>
                 </div>
                 {{/boards}}

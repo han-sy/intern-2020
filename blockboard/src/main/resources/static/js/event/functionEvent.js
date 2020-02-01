@@ -5,7 +5,7 @@
 
 //"기능변경" 버튼 클릭시
 function changeFunction() {
-    var companyID = $('#serviceTitle').attr("value");
+    var companyID = $('.navbar-brand').attr("value");
     console.log("companyID : " + companyID);
     $(function () {
         getFunctionList(companyID, getFunctionCheckList);
@@ -36,7 +36,6 @@ function clickSaveFunctionChange() {
             getNewFunctionInfo(companyID, jsonData);//새로운 기능목록 불러와 기능목록 변경
         });
     }
-    $('#config_container').html("");
 
 }
 
