@@ -174,7 +174,7 @@
             <script id="deleteboards-template" type="text/x-handlebars-template">
                 {{#boards}}
 
-                <div class="checkbox checkbox-inline checkbox-success" style="padding: 15px 1px 10px 30px;" >
+                <div class="custom-control custom-checkbox checkbox-success" style="padding: 15px 1px 10px 30px;" >
                     <input class ="custom-control-input" type='checkbox' name='boardDelete' id="checkDelBoard{{boardID}}" value={{boardID}} />
                     <label class="custom-control-label" for="checkDelBoard{{boardID}}" >{{boardName}}</label>
                 </div>
