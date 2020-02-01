@@ -3,11 +3,10 @@
  * @file commentEvent.js
  */
 //댓글 추가버튼 누를때
-$(document).on('click', '#btn_openComment', function () {
+$(document).on('click', '.btn_openComment', function () {
     var postID = $("#postID").html();
     var boardID = getCurrentBoardID();
     var commentText = $(this).closest(".commentHtml").find("#commentText").val().replace(/\n/g,"<br>");//엔터 적용 위해
-    alert(commentText);
     if (commentText == "") {
         alert("내용을 입력하세요.");
         return;
@@ -23,9 +22,8 @@ $(document).on('click', '#delete_comment', function () {
     var postID = $("#postID").html();
     var boardID = getCurrentBoardID();
 
-    var deleteDivID = $(this).parents("div").parents("div").attr("id");
+    var deleteDivID = $(this).closest(".commentContainer").attr("id");
     var commentID = deleteDivID.substring(7);
-
     $(function () {
         deleteCommentByCommentID(postID, boardID, commentID);
     });
@@ -35,9 +33,8 @@ $(document).on('click', '#delete_comment', function () {
 $(document).on('click', '#edit_comment', function () {
     var postID = $("#postID").html();
     var boardID = getCurrentBoardID();
-    var editDivID = $(this).parents("div").parents("div").attr("id");
+    var editDivID = $(this).closest(".commentContainer").attr("id");
     var commentID = editDivID.substring(7);
-
     $(function () {
         EditCommentByCommentID(postID, boardID, commentID);
     });
@@ -64,7 +61,9 @@ $(document).on('click', '.replyBtn', function () {
     var inputID = referenceCommentContainer.find("#reply_input_container" + referenceCommentContainer.attr("data-id")).attr("id");
     getCommentInputHtml("답글", "입력",
         "To <strong class =tag style ='cursor:pointer;' data-id=" + referenceUserID + " >" + referenceUserName + "</strong>",
-        "#" + inputID, "class ='btn btn-success btn_openReply'");
+        "#" + inputID, "btn_openReply");
+    var offset = $("#"+inputID).offset().top - $(window).height() / 2;
+    $(window).scrollTop(offset);
 })
 
 //답글 입력 버튼
@@ -74,7 +73,6 @@ $(document).on('click', '.btn_openReply', function () {
     var commentText = $(this).closest(".commentHtml").find("#commentText").val().replace(/\n/g,"<br>");
     var commentReferencedID = $(this).closest(".referenceCommentContainer").attr("data-id");
     var commentReferencedUserID = $(this).closest(".commentHtml").find(".tag").attr("data-id");
-    //alert("@@@"+commentReferencedUserID);
     //alert("commentText ("+commentReferencedID+"): "+ commentText);
     if (commentText == "") {
         alert("내용을 입력하세요.");

@@ -18,7 +18,7 @@ function updateCommentListUI(data) {
 //댓글 inputform 받아오기
 //TODO handlebar 적용
 function getCommentInputHtml(type, buttonName, tag, className, buttonSelector) {
-    data ={type : type, buttonName:buttonName, tag:tag, buttonSelector:buttonSelector};
+    data ={type : type, className,buttonName:buttonName, tag:tag, buttonSelector:buttonSelector};
     var source = $('#commentInputForm-template').html();
     var template = Handlebars.compile(source);
     var attribute = {attribute: data};
@@ -29,7 +29,7 @@ function getCommentInputHtml(type, buttonName, tag, className, buttonSelector) {
 //댓글 컨텐츠 모두 불러오기
 function getCommentAllContents(data) {
     updateCommentListUI(data);
-    getCommentInputHtml("댓글", "입력", "", ".comment_input_container", "id=btn_openComment");
+    getCommentInputHtml("댓글", "입력", "", ".comment_input_container", "btn_openComment");
 }
 
 //댓글리스트 받아오기
@@ -136,6 +136,7 @@ function getReplyList(boardID, postID, commentID, successFunction) {
 
 //답글 추가
 function insertReply(boardID, postID, commentContent, commentReferencedID,commentReferencedUserID) {
+    //alert(commentReferencedUserID);
     $.ajax({
         type: 'POST',
         url: "/boards/" + boardID + "/posts/" + postID + "/comments/" + commentReferencedID,
