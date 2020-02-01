@@ -40,7 +40,7 @@
 
             <c:if test="${isadmin}">
                 <li class="nav-item active">
-                    <a class="nav-link" id='addBoardBtn' "
+                    <a class="nav-link" id='addBoardBtn'
                     style="cursor:pointer" data-toggle="modal" data-target="#addBoardModal">게시판 추가</a>
                 </li>
                 <li class="nav-item active">
@@ -267,12 +267,18 @@
                     <div class="col-2 d-flex">
                         <select class="form-control-sm" id="boardIDinEditor">
                             <c:forEach items="${boardList}" var="boardList" varStatus="status">
-                                <option data-tab="${boardList.boardID}" class='tabmenu' id="default">
+                                <option data-tab="${boardList.boardID}" id="default">
                                     <c:out value="${boardList.boardName}"/>
                                 </option>
                             </c:forEach>
                         </select>
                     </div>
+                    <!--게시글 작성 시 게시판 목록 템플릿-->
+                    <script id="writecontent-boards-template" type="text/x-handlebars-template">
+                        {{#boards}}
+                            <option data-tab={{boardID}} class=tabmenu id=default>{{boardName}}</option>
+                        {{/boards}}
+                    </script>
                 </div>
                 <!--에디터 폼-->
                 <div class="form-group row">

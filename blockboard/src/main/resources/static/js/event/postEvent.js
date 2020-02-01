@@ -7,17 +7,12 @@ var autosave = null;
 // 에디터 div 생성
 function editorAreaCreate(method) {
   editorClear();
-  var post_button = $('#btn_post');
-  var writecontent = $('#writecontent');
-  var btn_write = $('#btn_write');
-  var btn_cancel = $('#btn_cancel');
-  writecontent.css("display", "");
-  btn_write.css("display", "none");
-  btn_cancel.html("작성취소");
-  post_button.html("저장");
-  btn_cancel.attr('onclick', 'javascript:writeCancel()');
-  post_button.attr('onclick', 'javascript:postFunction()');
-
+  $('#editorcontent-hidden').html("");
+  $('#post_title').val("");
+  $('#writecontent').css("display", "none");
+  $('#btn_write').css("display", "");
+  $('#btn_deletePost').attr('style', 'visibility:hidden');
+  $('#btn_updatePost').attr('style', 'visibility:hidden');
   // textarea에 CKEditor 적용
   $('#editor').ckeditor();
 
@@ -36,12 +31,16 @@ function editorClear() {
     CKEDITOR.instances.editor.setData("");
     CKEDITOR.instances.editor.destroy();
   }
-  $('#editorcontent-hidden').html("");
-  $('#post_title').val("");
-  $('#writecontent').css("display", "none");
-  $('#btn_write').css("display", "");
-  $('#btn_deletePost').attr('style', 'visibility:hidden');
-  $('#btn_updatePost').attr('style', 'visibility:hidden');
+  var post_button = $('#btn_post');
+  var writecontent = $('#writecontent');
+  var btn_write = $('#btn_write');
+  var btn_cancel = $('#btn_cancel');
+  writecontent.css("display", "");
+  btn_write.css("display", "none");
+  btn_cancel.html("작성취소");
+  post_button.html("저장");
+  btn_cancel.attr('onclick', 'javascript:writeCancel()');
+  post_button.attr('onclick', 'javascript:postFunction()');
   off_autosave();
 }
 
@@ -179,6 +178,19 @@ function addPostIdToEditor(postID) {
   var IDitem = { postID: postID };
   var itemList = template(IDitem);
   $('#editorcontent-hidden').html(itemList);
+}
+
+// 수정 버튼 클릭시 해당 게시판 선택 되어있게
+function selecedBoardID(boardID) {
+  var options = $('boardIDinEditor').children();
+  $.each(options, function(index, item) {
+    console.log("index = " + index);
+    console.log("item = " + item);
+    var data = item.attr('data-tab'); // option의 boardID
+    if(data == boardID) {
+      item.attr("selected", "selected");
+    }
+  });
 }
 
 function on_autosave() {

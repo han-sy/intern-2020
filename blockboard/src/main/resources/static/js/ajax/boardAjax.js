@@ -10,6 +10,11 @@ function updateTab(data) {
     var board = {boards: data};
     var itemList = template(board);
     $('#tab_id').html(itemList);
+
+    source = $('#writecontent-boards-template').html();
+    template = Handlebars.compile(source);
+    itemList = template(board);
+    $('#boardIDinEditor').html(itemList);
 }
 
 //게시글 내용

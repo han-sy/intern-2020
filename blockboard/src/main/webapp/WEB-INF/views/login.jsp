@@ -14,6 +14,7 @@
 <body>
 <div class="login-page">
     <div class="form">
+        <h1 class="display-1" style="color:#76b852">BLOCK BOARD</h1>
         <form action="/login" method="POST" class="login-form">
             <input type="text" name="userID" placeholder="username"/>
             <input type="password" name="userPassword" placeholder="password"/>

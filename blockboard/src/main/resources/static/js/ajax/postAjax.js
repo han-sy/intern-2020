@@ -58,6 +58,7 @@ function loadPost(boardID, postID) {
         },
         success: function (data) {
             addPostIdToEditor(postID);
+            selecedBoardID(boardID);
             post_title.val(data.postTitle);
             editor.val(data.postContent);
         }
