@@ -79,7 +79,7 @@ function deleteCommentByCommentID(postID, boardID, commentID) {
 //댓글수정모드
 //TODO handlebar 적용
 function EditCommentByCommentID(postID, boardID, commentID) {
-    var oldText = $('#comment' + commentID).children().children("#translate_area").html();
+    var oldText = $('#comment' + commentID).find(".comment_content").html().replace(/<br>/g,"\n");
     data = {oldText:oldText};
     var source = $('#editCommentForm-template').html();
     var template = Handlebars.compile(source);

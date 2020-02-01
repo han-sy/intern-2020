@@ -90,7 +90,7 @@
 
             </li>--%>
         </ul>
-        <a class="nav-link text-white" style="nav-right: auto"  data-id =${userID} >${userName}</a>
+        <a class="nav-link text-white" id ="current_user_info" style="nav-right: auto"  data-id =${userID} >${userName}</a>
         <a class="nav-link text-white" style="nav-right: auto" href="<c:url value='/logout' />">로그아웃</a>
     </div>
 </nav>
@@ -327,7 +327,7 @@
                                 <span class=name data-id={{userID}}>{{userName}}</span>
                                 <span class=date>{{commentRegisterTime}}</span>
                             </p>
-                            <p class=comment_area id=translate_area>{{{commentContent}}}</p>
+                            <span class="comment_area comment_content" id=translate_area>{{{commentContent}}}</span>
                         </div>
                         <div class="btn">
                             {{#isReplyAble}}
@@ -364,10 +364,9 @@
                             <span class=name data-id={{userID}}>{{userName}}</span>
                             <span class=date>{{commentRegisterTime}}</span>
                         </p>
-                        <p class=comment_area id=translate_area><strong class=nametag
-                                                                        data-id={{commentReferencedUserID}}
-                                                                        style="cursor:pointer">{{commentReferencedUserName}}</strong>
-                            {{{commentContent}}}</p>
+                        <div class=comment_area id=translate_area>
+                            <strong class=nametag data-id={{commentReferencedUserID}} style="cursor:pointer">{{commentReferencedUserName}}</strong>
+                            <span class="comment_content">{{{commentContent}}}</span></div>
                     </div>
                     <div class=btn>
                         {{#isReplyAble}}
@@ -382,6 +381,7 @@
                     </div>
                 </div>
                 {{/replies}}
+                <hr>
                 <div></div>
             </script>
             <!--댓글 답글 input form 템플릿-->
@@ -408,7 +408,7 @@
                 <br>
                 <div style='width: 100%' class=commentHtml>
                 <textarea style='width: 1100px' id='commentText' placeholder='댓글을 입력하세요'
-                          name=commentTxt>{{oldText}}</textarea>
+                          name=commentTxt>{{{oldText}}}</textarea>
                     <div>
                         <button id=btn_edit_comment_complete class="btn btn-success">수정하기</button>
                     </div>

@@ -6,7 +6,8 @@
 $(document).on('click', '#btn_openComment', function () {
     var postID = $("#postID").html();
     var boardID = getCurrentBoardID();
-    var commentText = $(this).closest(".commentHtml").find("#commentText").val();
+    var commentText = $(this).closest(".commentHtml").find("#commentText").val().replace(/\n/g,"<br>");//엔터 적용 위해
+    alert(commentText);
     if (commentText == "") {
         alert("내용을 입력하세요.");
         return;
@@ -45,7 +46,7 @@ $(document).on('click', '#edit_comment', function () {
 //댓글수정후 수정하기 버튼 눌렀을때
 $(document).on('click', '#btn_edit_comment_complete', function () {
     commentDiv = $(this).parents("div").parents("div");
-    var newComment = commentDiv.children('#commentText').val();
+    var newComment = commentDiv.children('#commentText').val().replace(/\n/g,"<br>");
     var commentID = commentDiv.parents("div").attr("id").substring(7);
     var postID = $("#postID").html();
     var boardID = getCurrentBoardID();
@@ -70,7 +71,7 @@ $(document).on('click', '.replyBtn', function () {
 $(document).on('click', '.btn_openReply', function () {
     var postID = $("#postID").html();
     var boardID = getCurrentBoardID();
-    var commentText = $(this).closest(".commentHtml").find("#commentText").val();
+    var commentText = $(this).closest(".commentHtml").find("#commentText").val().replace(/\n/g,"<br>");
     var commentReferencedID = $(this).closest(".referenceCommentContainer").attr("data-id");
     var commentReferencedUserID = $(this).closest(".commentHtml").find(".tag").attr("data-id");
     //alert("@@@"+commentReferencedUserID);
