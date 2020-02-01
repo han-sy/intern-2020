@@ -87,6 +87,7 @@ $(document).on('click', '.btn_openReply', function () {
 //답글 취소버튼
 $(document).on('click', '.btn_close_cmt_input', function () {
     var referenceCommentContainer = $(this).closest(".referenceCommentContainer");
-    var replyInputContainer = $(this).closest(".replyContainer");
+    console.log($(this).closest(".replyContainer").html());
+    var replyInputContainer = $("#reply_input_container"+referenceCommentContainer.attr("data-id"));
     replyInputContainer.html("");
 })

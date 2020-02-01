@@ -34,9 +34,7 @@
 
     <div class="collapse navbar-collapse" id="navbarsExample02">
         <ul class="navbar-nav mr-auto " style="nav-right: auto">
-            <li class="nav-item active" style="width: 100px">
-                <a class="nav-link"> <span class="sr-only">(current)</span></a>
-            </li>
+
 
             <c:if test="${isadmin}">
                 <li class="nav-item active">
@@ -59,7 +57,7 @@
                         <a class="dropdown-item text-success" id='changeFuncBtn' data-toggle="modal"
                            data-target="#changeFunctionModal"
                            onclick="javascript:changeFunction(this)" style="cursor:pointer"><strong>기능 변경</strong></a>
-                        <hr>
+                        <div class="dropdown-divider"></div>
                         <c:forEach items="${functionInfoList}" var="functionList" varStatus="status">
                             <c:if test="${functionList.companyID == 1}">
                                 <a class="dropdown-item" id=functionAble${functionList.functionID}
@@ -92,6 +90,7 @@
 
             </li>--%>
         </ul>
+        <a class="nav-link text-white" style="nav-right: auto"  data-id =${userID} >${userName}</a>
         <a class="nav-link text-white" style="nav-right: auto" href="<c:url value='/logout' />">로그아웃</a>
     </div>
 </nav>
@@ -332,7 +331,7 @@
                         </div>
                         <div class="btn">
                             {{#isReplyAble}}
-                            <button type=button class='replyBtn'>답글</button>
+                            <button type=button class='btn btn-success replyBtn'>답글</button>
                             {{else}}
                             {{/isReplyAble}}
 
