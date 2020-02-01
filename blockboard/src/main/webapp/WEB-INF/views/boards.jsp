@@ -323,8 +323,8 @@
                 <div class='referenceCommentContainer bg-light' data-id='{{commentID}}'>
 
                     <div class="row ">
-                        <div class="col-1"></div>
-                        <div class='commentContainer ' id='comment{{commentID}}' >
+                        <div></div>
+                        <div class='commentContainer ' id='comment{{commentID}}'  style="padding-left: 50px" >
                             <div class="user"><h5><strong class=name data-id={{userID}}>{{userName}}</strong></h5></div>
                             <div>
                                 <div>
