@@ -43,14 +43,19 @@ function clickSaveFunctionChange() {
 //기능변경 on/off버튼 텍스트 바꾸기
 $(document).on('click', '._function-switch', function () {
     var switchText = $(this).find("._switch");
-    if(switchText.html()=="ON"){
+    var checkBox = $(this).find(".function_checkbox");
+    console.log(switchText.html()=="ON");
+    if(checkBox.prop("checked")){
         $(this).removeClass('btn-success');
         $(this).addClass('btn-default');
         switchText.html("OFF");
+        checkBox.removeAttr("checked");
     }
     else{
         $(this).removeClass('btn-default');
         $(this).addClass('btn-success');
         switchText.html("ON");
+        checkBox.prop("checked",true);
     }
+    $(this).removeClass("active");
 });

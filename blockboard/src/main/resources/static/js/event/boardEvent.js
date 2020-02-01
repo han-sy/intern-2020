@@ -2,16 +2,6 @@
  * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
  * @file boardEvent.js
  */
-// 게시판 추가버튼 클릭시
-//TODO Handlebar 적용
-function clickaddBoardBtn() {
-    var containerObj = $('#config_container');
-    containerObj.html("<input type='text' name='게시판 이름' id = 'input_board_name' class='addBoard' placeholder='게시판 이름'>");
-    containerObj.append("<br>");
-    containerObj.append(" <a id ='addFuncBtn' onclick = javascript:clickSaveaddedBoard(this) style=cursor:pointer>저장하기</a>" +
-        "<button class = 'functionClose' type='button' onclick=javascript:clickConfigClose(this)>닫기</button>");
-    console.log("111");
-}
 
 //게시판 저장하기 버튼
 function clickSaveaddedBoard() {
@@ -126,8 +116,8 @@ function clickConfigClose() {
 // 탭 메뉴 클릭 이벤트 - 해당 게시판의 게시글 불러옴
 $(document).on("click", ".tabmenu", function clickTabEvent() {
   var boardID = $(this).attr('data-tab');
-  $('li').css('background-color', 'white');
-  $('li').removeClass("active_tab");
+  $('.tabmenu').css('background-color', 'white');
+  $('.tabmenu').removeClass("active_tab");
   $(this).css('background-color', 'lightgreen');
   $(this).addClass("active_tab");
   postClear();
