@@ -34,34 +34,7 @@ public class BoardController {
     @Autowired
     private BoardService boardService;
     @Autowired
-    private UserService userService;
-    @Autowired
-    private FunctionService functionService;
-    @Autowired
     private JwtService jwtService;
-    /**
-     * 메인 화면
-     * @param request
-     * @param model
-     * @return
-     */
-    @GetMapping("/contents")
-    public String getMainContent(HttpServletRequest request, Model model){  // 일일이 예외처리 안해서 Exception으로 수정 (동욱)
-        String userID = jwtService.getUserId();
-        int companyID = jwtService.getCompanyId();
-
-        List<BoardDTO> boardList = boardService.getBoardListByCompanyID(companyID);
-
-        model.addAttribute("boardList",boardList); //게시판 목록
-        model.addAttribute("companyName",boardService.getCompanyNameByUserID(userID));//회사이름
-        model.addAttribute("isadmin",boardService.checkAdmin(userID));
-        model.addAttribute("companyID",companyID);
-        model.addAttribute("userID",userID);
-        model.addAttribute("userName",userService.getUserNameByUserID(userID));
-        model.addAttribute("functionInfoList",functionService.getfunctionInfoListByCompanyID(companyID));
-
-        return "boards";
-    }
 
     /**
      * 게시물 조회

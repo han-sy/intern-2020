@@ -41,7 +41,7 @@ public class UserController {
         log.info("userPwd = " + requestUser.getUserPassword());
         boolean isValid = userService.loginCheck(requestUser, response);
         if(isValid)
-            return "redirect:/boards/contents";
+            return "redirect:/main";
         else
             return "redirect:/login";
     }
@@ -72,7 +72,7 @@ public class UserController {
         String token = cookieUtils.getCookie(request,HEADER_NAME);
 
         if(jwtService.isUsable(token))
-            return "redirect:/boards/contents";
+            return "redirect:/main";
         else
             return "login";
     }
