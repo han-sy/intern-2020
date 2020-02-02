@@ -52,6 +52,11 @@ $(document).on('click', '#btn_edit_comment_complete', function () {
     });
 })
 
+//댓글달기 버튼
+$(document).on('click', '.commentBtn', function () {
+    var offset = $(".comment_input_container").offset().top - $(window).height() / 2;
+    $(window).scrollTop(offset);
+})
 
 //답글달기 버튼
 $(document).on('click', '.replyBtn', function () {
