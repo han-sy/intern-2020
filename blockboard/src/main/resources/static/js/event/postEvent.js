@@ -101,10 +101,10 @@ function postFunction() {
     }
     // 임시 or 자동 저장된 글을 한번 더 '저장' 버튼을 누를 때
     else {
-      editorClear();
       insertTempPost(boardID, postID, postTitle, postContent, false);
       getTempPosts();
     }
+    editorClear();
   }
 }
 

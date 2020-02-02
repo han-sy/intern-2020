@@ -4,7 +4,7 @@
  */
 
 
-function insertPost(postID, boardID, postTitle, postContent, isTemp) {
+function insertPost(boardID, postTitle, postContent) {
     $.ajax({
         type: 'POST',
         url: "/boards/" + boardID + "/posts",
