@@ -52,7 +52,7 @@ function loadPost(boardID, postID) {
     var editor = $('#editor');
     $.ajax({
         type: 'GET',
-        url: "/boards/" + boardID + "/posts/" + postID + "/editor",
+        url: "/boards/" + boardID + "/posts/" + postID,
         async: false,
         error: function (xhr) {
             errorFunction(xhr);

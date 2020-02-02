@@ -21,4 +21,5 @@ public interface PostMapper {
     List<PostDTO> search(String option, String keyword);
     PostDTO selectRecentTempPost(Map<String, Object> map);
     List<PostDTO> selectTempPosts(Map<String, Object> map);
+    List<PostDTO> selectPostByBoardID(int boardID);
 }
