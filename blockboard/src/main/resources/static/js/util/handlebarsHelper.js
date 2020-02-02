@@ -11,6 +11,14 @@ Handlebars.registerHelper('isAbleFunction', function(options) {
     return options.inverse(this);// ON
 });
 
+//댓글기능 on인지 체크
+Handlebars.registerHelper('isCommentAble', function(options) {
+    if ($('#functionAble1').attr("value") == "on") {
+        return options.fn(this); //true
+    }
+    return options.inverse(this);//false
+});
+
 //답글기능 on인지 체크
 Handlebars.registerHelper('isReplyAble', function(options) {
     if ($('#functionAble2').attr("value") == "on") {
