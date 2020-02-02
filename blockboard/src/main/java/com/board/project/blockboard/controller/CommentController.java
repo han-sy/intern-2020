@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("/boards/{boardid}/posts")
+@RequestMapping("/boards/{boardid}/posts/{postid}/comments")
 public class CommentController {
     @Autowired
     private CommentService commentService;
@@ -35,18 +35,11 @@ public class CommentController {
      * @param request
      * @return
      */
-    @GetMapping("/{postid}/comments")
+    @GetMapping("")
     public List<CommentDTO> getCommentsByPost(@PathVariable("postid") int postID, HttpServletRequest request) {
         List<CommentDTO> commentList = commentService.getCommentListByPostID(postID);
         return commentList;
     }
-    @GetMapping("/{postid}/comments/{commentid}")
-    public List<CommentDTO> getReplysByComment(@PathVariable("postid") int postID,@PathVariable("commentid") int commentReferencedID, HttpServletRequest request) {
-        List<CommentDTO> replyList = commentService.getReplyListByCommentID(commentReferencedID);
-        return replyList;
-    }
-
-
     /**
      * 댓글 추가
      * @param postID
@@ -54,32 +47,12 @@ public class CommentController {
      * @param commentContent
      * @param request
      */
-    @PostMapping("/{postid}/comments")
+    @PostMapping("")
     public void writeComment(@RequestParam("postID") int postID,@RequestParam("boardID") int boardID,@RequestParam("commentContent") String commentContent, HttpServletRequest request) {
         String userID = jwtService.getUserId();
         int companyID = jwtService.getCompanyId();
         log.info("!!!!"+postID+","+boardID+":"+commentContent);
         commentService.writeCommentWithUserInfo(userID,commentContent,boardID,companyID,postID);
-    }
-
-    /**
-     * 답글 추가
-     * @param postID
-     * @param boardID
-     * @param commentReferencedID 참조하는 댓글 id
-     * @param commentContent  답글내용
-     * @param request
-     */
-    @PostMapping("/{postid}/comments/{commentid}")
-    public void writeReply(@RequestParam("postID") int postID,
-                           @RequestParam("boardID") int boardID,
-                           @RequestParam("commentContent") String commentContent,
-                           @RequestParam("commentReferencedID") int commentReferencedID,
-                           @RequestParam("commentReferencedUserID") String commentReferencedUserID,
-                           HttpServletRequest request) {
-        String userID = jwtService.getUserId();
-        int companyID = jwtService.getCompanyId();
-        commentService.writeReplyWithUserInfo(userID,companyID,postID,boardID,commentContent,commentReferencedID,commentReferencedUserID);
     }
 
     /**
@@ -89,7 +62,7 @@ public class CommentController {
      * @param boardID
      * @param request
      */
-    @DeleteMapping("/{postid}/comments/{commentid}")
+    @DeleteMapping("/{commentid}")
     public void deleteComment(@PathVariable("commentid") int commentID,@PathVariable("postid") int postID,@PathVariable("boardid") int boardID, HttpServletRequest request) {
         commentService.deleteComment(commentID);
     }
@@ -102,7 +75,7 @@ public class CommentController {
      * @param newComment 변경된 새로운 내용
      * @param request
      */
-    @PutMapping("/{postid}/comments/{commentid}")
+    @PutMapping("/{commentid}")
     public void editComment(@PathVariable("commentid") int commentID,@PathVariable("postid") int postID,@PathVariable("boardid") int boardID,@RequestParam("newComment") String newComment, HttpServletRequest request) {
         commentService.updateComment(commentID,newComment);
     }

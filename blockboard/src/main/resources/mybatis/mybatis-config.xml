@@ -12,5 +12,6 @@
         <mapper resource="PostMapper.xml"/>
         <mapper resource="FunctionMapper.xml"/>
         <mapper resource="CommentMapper.xml"/>
+        <mapper resource="ReplyMapper.xml"/>
     </mappers>
 </configuration>
