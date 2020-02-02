@@ -34,9 +34,7 @@
 
     <div class="collapse navbar-collapse" id="navbarsExample02">
         <ul class="navbar-nav mr-auto " style="nav-right: auto">
-            <li class="nav-item active" style="width: 100px">
-                <a class="nav-link"> <span class="sr-only">(current)</span></a>
-            </li>
+
 
             <c:if test="${isadmin}">
                 <li class="nav-item active">
@@ -59,7 +57,7 @@
                         <a class="dropdown-item text-success" id='changeFuncBtn' data-toggle="modal"
                            data-target="#changeFunctionModal"
                            onclick="javascript:changeFunction(this)" style="cursor:pointer"><strong>기능 변경</strong></a>
-                        <hr>
+                        <div class="dropdown-divider"></div>
                         <c:forEach items="${functionInfoList}" var="functionList" varStatus="status">
                             <c:if test="${functionList.companyID == 1}">
                                 <a class="dropdown-item" id=functionAble${functionList.functionID}
@@ -92,6 +90,7 @@
 
             </li>--%>
         </ul>
+        <a class="nav-link text-white" id ="current_user_info" style="nav-right: auto"  data-id =${userID} >${userName}</a>
         <a class="nav-link text-white" style="nav-right: auto" href="<c:url value='/logout' />">로그아웃</a>
     </div>
 </nav>
@@ -120,7 +119,7 @@
                 <li data-tab="-1" class=tabmenu id=default style="cursor:pointer"> 임시보관함</li>
             </script>
         </div>
-        <div class="col">
+        <div class="border-left border-success col">
 
             <!-- 게시판 추가 Modal -->
             <div class="modal" id="addBoardModal" tabindex="-1" role="dialog">
@@ -322,32 +321,52 @@
                         onclick="javascript:postDeleteFunction()">삭제
                 </button>
                 {{/post}}
+                {{#isCommentAble}}
+                <div class= comment_section>
+                    <br><br>
+                    <div ="row">
+                        <span class="col-1">
+                            <strong class="c">댓글 </strong>
+                        (<span id=commentCount></span>)
+                        </span>
+                        <a class=' commentBtn text-success font-weight-bold text-button' style="cursor: pointer;">댓글 달기</a>
+                    </div>
+                    <div class = comment_list_container></div>
+                    <div class = comment_input_container></div>
+                {{else}}
+                {{/isCommentAble}}
             </script>
             <!--댓글리스트 템플릿-->
             <script id="commentList-template" type="text/x-handlebars-template">
                 {{#comments}}
                 <hr>
-                <div class='referenceCommentContainer' data-id='{{commentID}}'>
-                    <div class='commentContainer' id='comment{{commentID}}'>
-                        <div>
-                            <p class=user>
-                                <span class=name data-id={{userID}}>{{userName}}</span>
-                                <span class=date>{{commentRegisterTime}}</span>
-                            </p>
-                            <p class=comment_area id=translate_area>{{{commentContent}}}</p>
-                        </div>
-                        <div class="btn">
-                            {{#isReplyAble}}
-                            <button type=button class='replyBtn'>답글</button>
-                            {{else}}
-                            {{/isReplyAble}}
+                <div class='referenceCommentContainer ' data-id='{{commentID}}'>
 
-                            {{#isSameUser}}
-                            <button type=button class="btn btn-success" id='edit_comment'>수정</button>
-                            <button type=button class="btn btn-success" id='delete_comment'>삭제</button>
-                            {{else}}
-                            {{/isSameUser}}
+                    <div class="row border-left-comment">
+                        <div></div>
+                        <div class='commentContainer ' id='comment{{commentID}}'  style="padding-left: 50px" >
+                            <div class="user"><h5><strong class=name data-id={{userID}}>{{userName}}</strong></h5></div>
+                            <div>
+                                <div>
+                                    <div class="comment_area comment_content" id=translate_area>{{{commentContent}}}</div>
+                                    <br>
+                                    <div class="date text-muted">{{commentRegisterTime}}</div>
+                                </div>
+                                <div class="btn">
+                                    {{#isReplyAble}}
+                                    <a class='text-success text-button text-button font-weight-bold replyBtn'  style="cursor: pointer;">답글</a>
+                                    {{else}}
+                                    {{/isReplyAble}}
+
+                                    {{#isSameUser}}
+                                    <a class="text-success text-button text-button font-weight-bold" id='edit_comment' style="cursor: pointer;">수정</a>
+                                    <a class="text-success text-button text-button font-weight-bold" id='delete_comment' style="cursor: pointer;">삭제</a>
+                                    {{else}}
+                                    {{/isSameUser}}
+                                </div>
+                            </div>
                         </div>
+                    </div>
                         {{#isReplyAble}}
                         <div class='replyContainer' id='reply_container{{commentID}}'
                              style='padding: 5px 1px 3px 30px;'>
@@ -355,7 +374,6 @@
                         <div id='reply_input_container{{commentID}}' style='padding: 5px 1px 3px 30px;'></div>
                         {{else}}
                         {{/isReplyAble}}
-                    </div>
                     <div>
 
                     </div>
@@ -365,27 +383,30 @@
             <!--답글 List 템플릿-->
             <script id="replyList-template" type="text/x-handlebars-template">
                 {{#replies}}
-                <div class='commentContainer' id='comment{{commentID}}'>
-                    <div>
-                        <p class=user>
-                            <span class=name data-id={{userID}}>{{userName}}</span>
-                            <span class=date>{{commentRegisterTime}}</span>
-                        </p>
-                        <p class=comment_area id=translate_area><strong class=nametag
-                                                                        data-id={{commentReferencedUserID}}
-                                                                        style="cursor:pointer">{{commentReferencedUserName}}</strong>
-                            {{{commentContent}}}</p>
-                    </div>
-                    <div class=btn>
-                        {{#isReplyAble}}
-                        <button type=button class='btn btn-success replyBtn'>답글</button>
-                        {{else}}
-                        {{/isReplyAble}}
-                        {{#isSameUser}}
-                        <button type=button class="btn btn-success" id='edit_comment'>수정</button>
-                        <button type=button class="btn btn-success" id='delete_comment'>삭제</button>
-                        {{else}}
-                        {{/isSameUser}}
+                <hr>
+                <div class='row ' >
+                    <div class="col-1"></div>
+                    <div class='commentContainer ' id='comment{{commentID}}'>
+                        <div class="user"><h5><strong class=name data-id={{userID}}>{{userName}}</strong></h5></div>
+                        <div>
+                            <div class="comment_area row" id=translate_area>
+                                <div class="col-4"><strong class="nametag text-primary" data-id={{commentReferencedUserID}} style="cursor:pointer" >{{commentReferencedUserName}}</strong></div>
+                                <div class="comment_content col-8">{{{commentContent}}}</div>
+                            </div>
+                            <br>
+                            <div class="date text-muted">{{commentRegisterTime}}</div>
+                        </div>
+                        <div class=btn>
+                            {{#isReplyAble}}
+                            <a class='text-success text-button font-weight-bold replyBtn' style="cursor: pointer;" >답글</a>
+                            {{else}}
+                            {{/isReplyAble}}
+                            {{#isSameUser}}
+                            <a class="text-success text-button font-weight-bold" id='edit_comment' style="cursor: pointer;">수정</a>
+                            <a class="text-success text-button font-weight-bold" id='delete_comment' style="cursor: pointer;">삭제</a>
+                            {{else}}
+                            {{/isSameUser}}
+                        </div>
                     </div>
                 </div>
                 {{/replies}}
@@ -400,10 +421,11 @@
                     <textarea class="form-control" id=commentText placeholder='{{type}}을 입력하세요'
                               name=commentTxt></textarea>
                     <div align="right">
-                        <button {{{buttonSelector}}}>{{buttonName}}</button>
                         {{#isReply}}
-                        <button class="btn_close_cmt_input btn btn-success">취소</button>
+                        <a class ="text-success text-button font-weight-bold {{{buttonSelector}}}" style="cursor: pointer;" >{{buttonName}}</a>
+                        <a class="btn_close_cmt_input text-success text-button font-weight-bold" style="cursor: pointer;" >취소</a>
                         {{else}}
+                        <a class ="text-success text-button font-weight-bold {{{buttonSelector}}}" style="cursor: pointer;" >{{buttonName}}</a>
                         {{/isReply}}
                     </div>
                 </div>
@@ -415,9 +437,9 @@
                 <br>
                 <div style='width: 100%' class=commentHtml>
                 <textarea style='width: 1100px' id='commentText' placeholder='댓글을 입력하세요'
-                          name=commentTxt>{{oldText}}</textarea>
+                          name=commentTxt>{{{oldText}}}</textarea>
                     <div>
-                        <button id=btn_edit_comment_complete class="btn btn-success">수정하기</button>
+                        <a id=btn_edit_comment_complete class="text-success text-button font-weight-bold" style="cursor: pointer;">수정하기</a>
                     </div>
                 </div>
                 {{/attribute}}
