@@ -70,6 +70,7 @@ function updateTabByNewBoardListAfterAddBoard(boardName) {
     });
 }
 
+
 //게시판 삭제후 탭업데이트
 function updateTabByNewBoardListAfterDeleteBoard(jsonData) {
     $.ajax({
@@ -149,7 +150,8 @@ function getPostDataAfterPostClick(postID, boardID) {
       if (commentAbleObj.attr("value") == "on") {
 
         $(function () {
-          getCommentList(boardID, postID, getCommentAllContents); //삭제이후 tab에 게시판목록 업데이트 //CommentAjax.js 에 있음
+            getCommentList(boardID, postID, getCommentAllContents); //삭제이후 tab에 게시판목록 업데이트 //CommentAjax.js 에 있음
+            updateCommentsCount(boardID,postID);
         });
       }
     }

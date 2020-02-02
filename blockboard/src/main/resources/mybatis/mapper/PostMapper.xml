@@ -48,7 +48,7 @@
             post_content as postContent,
             post_register_time as postRegisterTime
         FROM Post
-        WHERE post_id=${postID};
+        WHERE post_id=#{postID};
     </select>
 
     <update id="updatePost" parameterType="com.board.project.blockboard.dto.PostDTO">

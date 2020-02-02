@@ -19,8 +19,7 @@ public interface CommentMapper {
     void deleteCommentByCommentID(int commentID);
     void deleteCommentsByPostID(int postID);
     void updateComment(Map<String, Object> commentAttribute);
+    void deleteCommentByCommentReferencedID(int commentID);
 
-    List<CommentDTO> selectRepliesByCommentID(int commentReferencedID);
-
-    int insertNewReplyByCommentInfo(CommentDTO reply);
+    int getCommentCountByPostID(int postID);
 }

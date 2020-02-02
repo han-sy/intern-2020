@@ -14,6 +14,18 @@ function updateCommentListUI(data) {
         getAllReplyList(data);
     }
 }
+function updateCommentsCount(boardID,postID){
+    $.ajax({
+        type: 'GET',
+        url: "/boards/"+boardID+"/posts/"+postID+"/comments/counts",
+        error: function () {  //통신 실패시
+            alert('통신실패!');
+        },
+        success: function (data) {    //들어오는 data는 boardDTOlist
+            $("#commentCount").html(data);
+        }
+    });
+}
 
 //댓글 inputform 받아오기
 //TODO handlebar 적용
@@ -58,6 +70,7 @@ function insertComment(boardID, postID, commentText) {
         success: function (data) {
             getCommentList(boardID, postID, updateCommentListUI);//성공하면 댓글목록 갱신
             $('#commentText').val("");
+            updateCommentsCount(boardID,postID);
         }
     });
 }
@@ -72,13 +85,14 @@ function deleteCommentByCommentID(postID, boardID, commentID) {
         },
         success: function (data) {
             getCommentList(boardID, postID, updateCommentListUI);//성공하면 댓글목록 갱신
+            updateCommentsCount(boardID,postID);
         }
     });
 }
 
 //댓글수정모드
 //TODO handlebar 적용
-function EditCommentByCommentID(postID, boardID, commentID) {
+function editCommentByCommentID(postID, boardID, commentID) {
     var oldText = $('#comment' + commentID).find(".comment_content").html().replace(/<br>/g,"\n");
     data = {oldText:oldText};
     var source = $('#editCommentForm-template').html();
@@ -152,6 +166,7 @@ function insertReply(boardID, postID, commentContent, commentReferencedID,commen
         success: function (data) {
             getReplyList(boardID, postID, commentReferencedID, getReplyListUI);//성공하면 댓글목록 갱신
             $('#reply_input_container' + commentReferencedID).html("");
+            updateCommentsCount(boardID,postID);
         }
     });
 }

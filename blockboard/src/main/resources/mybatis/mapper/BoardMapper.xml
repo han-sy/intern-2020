@@ -7,102 +7,110 @@
 
 <mapper namespace="com.board.project.blockboard.mapper.BoardMapper">
     <select id="selectCompanyNameByUserID" parameterType="string" resultType="string">
-        SELECT company.company_name as companyName
-        FROM Company company, Users user
-        WHERE company.company_id=user.company_id and user.user_id = #{userID};
+        SELECT company.company_name AS companyName
+        FROM   company company,
+               users users
+        WHERE  company.company_id = users.company_id
+               AND users.user_id = #{userID};
     </select>
     <select id="selectCompanyIDByUserID" parameterType="string" resultType="int">
-        SELECT company.company_id as companyID
-        FROM Company company, Users user
-        WHERE company.company_id=user.company_id
-        AND user.user_id = #{userID};
+        SELECT company.company_id AS companyID
+        FROM   company company,
+               users users
+        WHERE  company.company_id = users.company_id
+               AND users.user_id = #{userID};
     </select>
     <select id="selectBoardsByCompanyID" parameterType="int" resultType="com.board.project.blockboard.dto.BoardDTO">
-        SELECT  board_id as boardID,
-                company_id as companyID,
-                board_name as boardName
-        FROM Board
-        WHERE company_id=#{companyID};
+        SELECT board_id   AS boardID,
+               company_id AS companyID,
+               board_name AS boardName
+        FROM   board
+        WHERE  company_id = #{companyID};
     </select>
     <select id="selectBoardByBoardName" parameterType="string" resultType="com.board.project.blockboard.dto.BoardDTO">
-        SELECT  board_id as boardID,
-                company_id as companyID,
-                board_name as boardName
-        FROM Board
-        WHERE board_name=#{boardName};
+        SELECT board_id   AS boardID,
+               company_id AS companyID,
+               board_name AS boardName
+        FROM   board
+        WHERE  board_name = #{boardName};
     </select>
 
     <!--추후에 디비 수정후 쿼리 변경해야됨-->
     <select id="selectPostByBoardID" parameterType="int" resultType="com.board.project.blockboard.dto.PostDTO">
-        SELECT  post.post_id as postID,
-                post.user_id as userID,
-                user.user_name as userName,
-                post.board_id as boardID,
-                post.company_id as companyID,
-                post.post_title as postTitle,
-                post.post_content as postContent,
-                post.post_register_time as postRegisterTime,
-                post.is_temp as isTemp
-        FROM Post post, Users user
-        WHERE post.user_id = user.user_id
-        AND post.board_id=#{boardID}
-        AND post.is_temp = false
-        ORDER BY post.post_id DESC;
+        SELECT post.post_id            AS postID,
+               post.user_id            AS userID,
+               USER.user_name          AS userName,
+               post.board_id           AS boardID,
+               post.company_id         AS companyID,
+               post.post_title         AS postTitle,
+               post.post_content       AS postContent,
+               post.post_register_time AS postRegisterTime,
+               post.is_temp            AS isTemp
+        FROM   post post,
+               users USER
+        WHERE  post.user_id = USER.user_id
+               AND post.board_id = #{boardID}
+               AND post.is_temp = false
+        ORDER  BY post.post_id DESC;
     </select>
 
     <!--게시글 id로 게시글반환-->
     <select id="selectPostByPostID" parameterType="int" resultType="com.board.project.blockboard.dto.PostDTO">
-        SELECT  post.post_id as postID,
-                post.user_id as userID,
-                user.user_name as userName,
-                post.board_id as boardID,
-                post.company_id as companyID,
-                post.post_title as postTitle,
-                post.post_content as postContent,
-                post.post_register_time as postRegisterTime
-        FROM Post post, Users user
-        WHERE post.user_id = user.user_id
-        AND post.post_id=#{postID}
+        SELECT post.post_id            AS postID,
+               post.user_id            AS userID,
+               USER.user_name          AS userName,
+               post.board_id           AS boardID,
+               post.company_id         AS companyID,
+               post.post_title         AS postTitle,
+               post.post_content       AS postContent,
+               post.post_register_time AS postRegisterTime
+        FROM   post post,
+               users USER
+        WHERE  post.user_id = USER.user_id
+               AND post.post_id = #{postID}
     </select>
 
     <!--userid로 회원 타입 반환-->
     <select id="selectUserTypeByUserID" parameterType="string" resultType="string">
-        SELECT user_type as userType
-        FROM Users
-        WHERE user_id = #{userID};
+        SELECT user_type AS userType
+        FROM   users
+        WHERE  user_id = #{userID};
     </select>
 
 
     <insert id="insertBoard" parameterType="com.board.project.blockboard.dto.BoardDTO">
-        INSERT INTO Board(company_id, board_name)
-        VALUES(#{companyID},#{boardName});
+        INSERT INTO board
+                    (company_id,
+                     board_name)
+        VALUES      ( #{companyID},
+                      #{boardName});
     </insert>
 
     <!--게시글 작성 시 선택한 게시판 ID 반환-->
     <select id="selectBoardIDByComIDAndBoardName" parameterType="hashMap" resultType="int">
-        SELECT board_id as boardID
-        FROM Board
-        WHERE company_id=#{companyID}
-        AND board_name=#{boardName};
+        SELECT board_id AS boardID
+        FROM   board
+        WHERE  company_id = #{companyID}
+               AND board_name = #{boardName};
     </select>
     <update id = "updateBoardName" parameterType="hashmap">
-        UPDATE Board
-        SET board_name =#{boardName}
-        WHERE board_id=#{boardID};
+        UPDATE board
+        SET    board_name = #{boardName}
+        WHERE  board_id = #{boardID};
     </update>
 
     <delete id="deleteAllPostInBoard" parameterType="int">
-        DELETE FROM Post
-        WHERE board_id = #{boardID};
+        DELETE FROM post 
+        WHERE  board_id = #{boardID}; 
     </delete>
 
     <delete id="deleteBoard" parameterType="int">
-        DELETE FROM Board
-        WHERE board_id = #{boardID};
+        DELETE FROM post
+        WHERE  board_id = #{boardID};
     </delete>
     <delete id="deleteAllCommentInBoard" parameterType="int">
-        DELETE FROM Comments
-        WHERE board_id = #{boardID};
+        DELETE FROM comments
+        WHERE  board_id = #{boardID};
     </delete>
 
 </mapper>
