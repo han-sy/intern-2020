@@ -1,11 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
+<!--
+ * @author Woohyeok Jun <woohyeok.jun@worksmobile.com>
+ * @file PostMapper.xml
+-->
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.board.project.blockboard.mapper.PostMapper">
     <insert id="insertPost" parameterType="com.board.project.blockboard.dto.PostDTO">
-        INSERT INTO Post(user_id, board_id, company_id, post_title, post_content)
-        VALUES (#{userID}, #{boardID}, #{companyID}, #{postTitle}, #{postContent});
+        INSERT INTO post (
+            <if test='postID != 0'>
+                post_id,
+            </if>
+            user_id,
+            board_id,
+            company_id,
+            post_title,
+            post_content,
+            is_temp )
+        VALUES (
+            <if test='postID != 0'>
+                #{postID},
+            </if>
+            #{userID},
+            #{boardID},
+            #{companyID},
+            #{postTitle},
+            #{postContent},
+            #{isTemp} )
+        ON DUPLICATE KEY UPDATE
+            board_id=#{boardID},
+            post_title=#{postTitle},
+            post_content=#{postContent},
+            is_temp=#{isTemp};
     </insert>
 
     <delete id="deletePostByPostID" parameterType="int">
@@ -22,7 +48,7 @@
             post_content as postContent,
             post_register_time as postRegisterTime
         FROM Post
-        WHERE post_id=${postID};
+        WHERE post_id=#{postID};
     </select>
 
     <update id="updatePost" parameterType="com.board.project.blockboard.dto.PostDTO">
@@ -49,6 +75,47 @@
         ORDER BY postRegisterTime DESC;
     </select>
 
+    <select id="selectRecentTempPost" parameterType="hashMap" resultType="com.board.project.blockboard.dto.PostDTO">
+        SELECT post_id as postID,
+            user_id as userID,
+            board_id as boardID,
+            company_id as companyID,
+            post_title as postTitle,
+            post_content as postContent,
+            post_register_time as postRegisterTime,
+            is_temp as isTemp
+        FROM
+            Post
+        WHERE
+            user_id=#{userID} AND
+            company_id=#{companyID} AND
+            is_temp = true
+        ORDER BY
+            postRegisterTime DESC
+        LIMIT
+            1;
+    </select>
+
+    <select id="selectTempPosts" parameterType="hashMap" resultType="com.board.project.blockboard.dto.PostDTO">
+        SELECT post.post_id as postID,
+            post.user_id as userID,
+            post.board_id as boardID,
+            post.company_id as companyID,
+            post.post_title as postTitle,
+            post.post_content as postContent,
+            post.post_register_time as postRegisterTime,
+            post.is_temp as isTemp,
+            users.user_name as userName
+        FROM
+            Post post, Users users
+        WHERE
+            post.user_id=#{userID} AND
+            post.user_id=users.user_id AND
+            post.company_id=#{companyID} AND
+            post.is_temp = true
+        ORDER BY
+            postRegisterTime DESC;
+    </select>
     <sql id="searchoption">
         <choose>
             <!-- 검색옵션이 제목+내용 일 경우 -->

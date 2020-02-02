@@ -1,8 +1,15 @@
+/**
+ * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
+ * @file    UserController.java
+ */
 package com.board.project.blockboard.controller;
 
+import com.board.project.blockboard.common.util.CookieUtils;
 import com.board.project.blockboard.dto.UserDTO;
 import com.board.project.blockboard.service.JwtService;
 import com.board.project.blockboard.service.UserService;
+import java.util.HashMap;
+import java.util.Map;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Slf4j
 @Controller
@@ -29,11 +37,13 @@ public class UserController {
      */
     @PostMapping("/login")
     public String loginCheck(@ModelAttribute UserDTO requestUser, HttpServletResponse response) {
+        log.info("userID = " + requestUser.getUserID());
+        log.info("userPwd = " + requestUser.getUserPassword());
         boolean isValid = userService.loginCheck(requestUser, response);
         if(isValid)
-            return "redirect:/boards/contents";
+            return "redirect:/main";
         else
-            return "redirect:/";
+            return "redirect:/login";
     }
 
     /**
@@ -43,10 +53,10 @@ public class UserController {
      */
     @GetMapping("/logout")
     public String logout(HttpServletResponse response) {
-        Cookie c = new Cookie("Authorization", null);
+        Cookie c = new Cookie(HEADER_NAME, null);
         c.setMaxAge(0);
         response.addCookie(c);
-        return "redirect:/";
+        return "redirect:/login";
     }
 
     /**
@@ -55,20 +65,24 @@ public class UserController {
      * @return              server가 만들어 준 쿠키가 있다면 -> /boards redirect
      *                      없다면 -> 로그인 화면 띄운다.
      */
-    @GetMapping("/")
+    @GetMapping("/login")
     public String login(HttpServletRequest request) {
         // 이미 JWT 토큰을 가지고 있으면 로그인 생략 후 메인화면으로 이동
-        Cookie[] getCookie = request.getCookies();
-        if (getCookie != null) {
-            for (Cookie c : getCookie) {
-                if (c.getName().equals(HEADER_NAME)) {
-                    if (jwtService.isUsable(c.getValue()))
-                        return "redirect:/boards/contents";
-                    else
-                        return "login";
-                }
-            }
-        }
-    return "login";
+        CookieUtils cookieUtils = new CookieUtils();
+        String token = cookieUtils.getCookie(request,HEADER_NAME);
+
+        if(jwtService.isUsable(token))
+            return "redirect:/main";
+        else
+            return "login";
+    }
+
+    @GetMapping("/info")
+    @ResponseBody
+    public Map<String, Object> info() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("userID", jwtService.getUserId());
+        map.put("companyID", jwtService.getCompanyId());
+        return map;
     }
 }

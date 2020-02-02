@@ -5,116 +5,118 @@
 
 //새로운 탭 내용으로 교체
 function updateTab(data) {
-  $('#tab_id').html("");
-  $.template("tabListTmpl", "<li data-tab=${boardID} class=tabmenu id=default> ${boardName} </li>");
-  $.tmpl("tabListTmpl", data).appendTo("#tab_id");
+    var source = $('#boards-template').html();
+    var template = Handlebars.compile(source);
+    var board = {boards: data};
+    var itemList = template(board);
+    $('#tab_id').html(itemList);
+
+    source = $('#writecontent-boards-template').html();
+    template = Handlebars.compile(source);
+    itemList = template(board);
+    $('#boardIDinEditor').html(itemList);
 }
+
 //게시글 내용
 function loadPostContent(data) {
-  var postContentHtml = "";
-  postContentHtml += "<h2>" + data.postTitle + "</h2>";
-  postContentHtml += "<h5>작성자 : " + data.userName + "</h4>";
-  postContentHtml += "<h5>작성시간 : " + data.postRegisterTime + "</h4>";
-  postContentHtml += "<a>" + data.postContent + "</a>";
-  postContentHtml += "<a id=postID style=visibility:hidden>" + data.postID + "</a>";
-  $('#postcontent').html(postContentHtml);
+    var source = $('#postcontent-template').html();
+    var template = Handlebars.compile(source);
+    var post = {post: data};
+    var item = template(post);
+    $('#postcontent').html(item);
 }
+
 //게시글 목록
 function loadPostList(data) {
-  $('#postlist').html("");
-  var postContentHtml = "<tr height='30' class = 'postclick' data-post = ${postID}" +
-    " onclick='javascript:clickTrEvent(this)' onmouseover = 'javascript:changeTrColor(this)' >" +
-    "<td width='379'>${postTitle}</td>" +
-    "<td width='73'>${userName}</td>" +
-    "<td width='164'>${postRegisterTime}</td></tr>" +
-    "<td style='visibility:hidden'>${postID}</td>";
-  $.template("postListTmpl", postContentHtml);
-  $.tmpl("postListTmpl", data).appendTo("#postlist");
+    var source = $('#posts-template').html();
+    var template = Handlebars.compile(source);
+    var post = {posts: data};
+    var itemList = template(post);
+    $('#postlist').html(itemList);
+
 }
 
 //삭제를 위한 UI
 function getBoardListToDelete(data) {
-
-  $('#config_container').html("삭제할 게시판을 선택하시오");
-  $.template("deleteListTmpl", "<div><span>${boardName}</span><input type=checkbox name=boardDelete value=${boardID}></div>")
-  $.tmpl("deleteListTmpl", data).appendTo("#config_container");
-  $('#config_container').append(" <a id ='addFuncBtn' onclick = javascript:clickSaveDelteBoard(this) style=cursor:pointer>삭제하기</a>" +
-    "<button class = 'functionClose' type='button' onclick=javascript:clickConfigClose(this)>닫기</button>");
+    var source = $('#deleteboards-template').html();
+    var template = Handlebars.compile(source);
+    var boardList = {boards: data};
+    var itemList = template(boardList);
+    $('.modal-body-deleteBoard').html(itemList);
 }
 
 //이름변경을 위한 UI
 function getBoardListToChangeName(data) {
-  var containerObj = $('#config_container')
-  containerObj.html("");
-  $.each(data, function (key, value) {
-    containerObj.append("<div class=boardInfo id=board" + value.boardID + "><input type=text name =boardname data-boardid=" + value.boardID + " data-oldname=" + value.boardName + " value=" + value.boardName + " >" +
-      " <span class =deleteBoard data-board =board" + value.boardID + " > 기존 게시판 이름 : " + value.boardName + "</span></div>");
-  });
-  containerObj.append(" <br><a id ='addFuncBtn' onclick = javascript:clickSaveChangeBoard(this) style=cursor:pointer>변경하기</a>" +
-    "<button class = 'functionClose' type='button' onclick=javascript:clickConfigClose(this)>닫기</button>");
+    var source = $('#changeBoardName-template').html();
+    var template = Handlebars.compile(source);
+    var boardList = {boards: data};
+    var itemList = template(boardList);
+    $('.modal-body-changeBoardName').html(itemList);
 }
 
 
 //탭 업데이트 새로운 게시판 목록으로
 function updateTabByNewBoardListAfterAddBoard(boardName) {
-  $.ajax({
-    type: 'POST',
-    url: "/boards",
-    data: { boardName: boardName },
-    error: function () {  //통신 실패시
-      alert('통신실패!');
-    },
-    success: function (data) {    //들어오는 data는 boardDTOlist
-      getBoardList(updateTab);//새로운 탭 내용으로 교체
-    }
-  });
+    $.ajax({
+        type: 'POST',
+        url: "/boards",
+        data: {boardName: boardName},
+        error: function () {  //통신 실패시
+            alert('통신실패!');
+        },
+        success: function (data) {    //들어오는 data는 boardDTOlist
+            getBoardList(updateTab);//새로운 탭 내용으로 교체
+        }
+    });
 }
+
 
 //게시판 삭제후 탭업데이트
 function updateTabByNewBoardListAfterDeleteBoard(jsonData) {
-  $.ajax({
-    type: 'DELETE',
-    url: "/boards",
-    data: { deleteList: jsonData },
-    error: function () {  //통신 실패시
-      alert('통신실패!');
-    },
-    success: function () {
-      getBoardList(updateTab);//새로운 탭 내용으로 교체
-    }
-  });
-  $('#config_container').html("");
+    $.ajax({
+        type: 'DELETE',
+        url: "/boards",
+        data: {deleteList: jsonData},
+        error: function () {  //통신 실패시
+            alert('통신실패!');
+        },
+        success: function () {
+            getBoardList(updateTab);//새로운 탭 내용으로 교체
+        }
+    });
+    $('#config_container').html("");
 }
 
 //게시판 이름변경후 탭업데이트
 function updateTabByNewBoardListAfterUpdateBoardName(jsonData) {
-  $.ajax({
-    type: 'PUT',
-    url: "/boards",
-    data: { newTitles: jsonData },
-    error: function (error) {  //통신 실패시
-      alert(error);
-    },
-    success: function () {
-      getBoardList(updateTab);//새로운 탭 내용으로 교체
-    }
-  });
+    $.ajax({
+        type: 'PUT',
+        url: "/boards",
+        data: {newTitles: jsonData},
+        error: function (error) {  //통신 실패시
+            alert(error);
+        },
+        success: function () {
+            getBoardList(updateTab);//새로운 탭 내용으로 교체
+        }
+    });
 }
 
 //리스트 받아오기
- function getBoardList(successFunction) {
-   $.ajax({
-     type: 'GET',
-     url: '/boards',
-     error: function () {  //통신 실패시
-       alert('통신실패!');
-     },
-     success: function (data) {
-       successFunction(data);
-     }
-   });
- }
+function getBoardList(successFunction) {
+    $.ajax({
+        type: 'GET',
+        url: '/boards',
+        error: function () {  //통신 실패시
+            alert('통신실패!');
+        },
+        success: function (data) {
+            successFunction(data);
+        }
+    });
+}
 
+//TODO handlebar 적용하기
 //게시물 클릭후 게시물 데이터 받아오기
 function getPostDataAfterPostClick(postID, boardID) {
   var postContentObj = $('#postcontent');
@@ -123,7 +125,7 @@ function getPostDataAfterPostClick(postID, boardID) {
     type: 'GET',
     url: "/boards/" + boardID + "/posts/" + postID,
     error: function (error) {  //통신 실패시
-      alert('통신실패!'+error);
+      alert('통신실패!' + error);
     },
     success: function (data) {
       $('#writecontent').hide();
@@ -134,23 +136,22 @@ function getPostDataAfterPostClick(postID, boardID) {
 
       // 작성글의 userID와 현재 로그인한 userID가 같으면 삭제버튼 표시
       var commentAbleObj = $('#functionAble1');
+      var btn_deletePost = $('#btn_deletePost');
+      var btn_updatePost = $('#btn_updatePost');
       if (data.canDelete == true) {
-        postContentObj.append(
-          "</br><button id=btn_updatePost>수정</button>" +
-          "</br><button id=btn_deletePost>삭제</button><br>"
-        );
+        btn_deletePost.attr('style', 'visibility:visible');
+        btn_updatePost.attr('style', 'visibility:visible');
+      } else {
+        btn_deletePost.attr('style', 'visibility:hidden');
+        btn_updatePost.attr('style', 'visibility:hidden');
       }
       var postContentHtml = "";
 
       if (commentAbleObj.attr("value") == "on") {
 
         $(function () {
-          postContentObj.append("<br><br><div class= comment_section <div><span><strong>댓글</strong></span> <span id=commentCount></span></div>");
-          postContentHtml += "<div class = comment_list_container></div>";
-          postContentHtml += "<div class = comment_input_container></div>";
-          postContentObj.append(postContentHtml);
-
-          getCommentList(boardID, postID,getCommentAllContents); //삭제이후 tab에 게시판목록 업데이트 //CommentAjax.js 에 있음
+            getCommentList(boardID, postID, getCommentAllContents); //삭제이후 tab에 게시판목록 업데이트 //CommentAjax.js 에 있음
+            updateCommentsCount(boardID,postID);
         });
       }
     }
@@ -160,15 +161,19 @@ function getPostDataAfterPostClick(postID, boardID) {
 
 //탭클릭후 게시판 목록 불러오기
 function getPostsAfterTabClick(boardID) {
-  $.ajax({
-    type: 'GET',
-    url: '/boards/' + boardID + "/posts",
-    error: function () {  //통신 실패시
-      alert('통신실패!');
-    },
-    success: function (data) {
-      loadPostList(data);
-    }
-  });
+  if(boardID == -1) {
+    getTempPosts();
+  } else {
+    $.ajax({
+      type: 'GET',
+      url: '/boards/' + boardID + "/posts",
+      error: function () {  //통신 실패시
+        alert('통신실패!');
+      },
+      success: function (data) {
+        loadPostList(data);
+      }
+    });
+  }
 }
 

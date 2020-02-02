@@ -1,26 +1,27 @@
+<!--
+* @author Woohyeok Jun <woohyeok.jun@worksmobile.com>
+* @file login.jsp
+-->
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-           pageEncoding="UTF-8"%>
+         pageEncoding="UTF-8" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
-   <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
-   <title>로그인 화면</title>
-
-   <!-- css 파일 나중에 넣기 -->
-
+    <meta http-equiv="Content-Type" content="text/html; charset=EUC-KR">
+    <link rel="stylesheet" type="text/css" href="/static/css/loginstyle.css">
 </head>
-
 <body>
-   </div>
-   <div id="wrap-login">
-   <form action="/login" method="POST" style="width: 470px;">
-        <h2>로그인</h2>
-        <input type="text" name="userID" id="userID" class="w3-input" placeholder="아이디"><br>
-        <input type="password" name="userPassword" id="userPassword" class="w3-input" placeholder="비밀번호"><br>
-        <input type="submit" value="로그인"><br>
+<div class="login-page">
+    <div class="form">
+        <h1 class="display-1" style="color:#76b852">BLOCK BOARD</h1>
+        <form action="/login" method="POST" class="login-form">
+            <input type="text" name="userID" placeholder="username"/>
+            <input type="password" name="userPassword" placeholder="password"/>
+            <button type="submit">login</button>
+        </form>
     </div>
+</div>
 </body>
 
 </html>

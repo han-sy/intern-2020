@@ -1,3 +1,8 @@
+/**
+ * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
+ * @author 	Dongwook Kim <dongwook.kim1211@worksmobile.com>
+ * @file    BlockboardApplication.java
+ */
 package com.board.project.blockboard;
 
 import org.springframework.boot.SpringApplication;
