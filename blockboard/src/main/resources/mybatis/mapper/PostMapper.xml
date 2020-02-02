@@ -119,7 +119,7 @@
     <sql id="searchoption">
         <choose>
             <!-- 검색옵션이 제목+내용 일 경우 -->
-            <when test="option == 'mix'">
+            <when test="option == 'titleAndContent'">
                 AND (post.post_title LIKE '%${keyword}%' OR post.post_content LIKE '%${keyword}%')
             </when>
             <when test="option == 'user_name'">

@@ -103,25 +103,8 @@ public class PostController {
      * @return searchList 검색한 결과들이 담긴
      */
     @GetMapping("/search")
-    public List<PostDTO> searchPost(@RequestParam("option") int option, @RequestParam("keyword") String keyword) {
-        String optionName = "";
-        switch (option) {
-            case 0:
-                optionName = "post_title";
-                break;
-            case 1:
-                optionName = "user_name";
-                break;
-            case 2:
-                optionName = "post_content";
-                break;
-            case 3:
-                optionName = "mix";
-                break;
-            default:
-                // 추후에 Exception 구현하기
-        }
-        return postService.searchPost(optionName, keyword);
+    public List<PostDTO> searchPost(@RequestParam("option") String option, @RequestParam("keyword") String keyword) {
+        return postService.searchPost(option, keyword);
     }
 
     /**
