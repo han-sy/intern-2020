@@ -24,9 +24,12 @@ $(document).on('click', '#delete_comment', function () {
 
     var deleteDivID = $(this).closest(".commentContainer").attr("id");
     var commentID = deleteDivID.substring(7);
-    $(function () {
-        deleteCommentByCommentID(postID, boardID, commentID);
-    });
+    var askSave = confirm("선택한 댓글 or 답글을 정말 삭제하시겠습니까?");
+    if (askSave) {
+        $(function () {
+            deleteCommentByCommentID(postID, boardID, commentID);
+        });
+    }
 })
 
 //수정 버튼 눌렀을때
@@ -36,7 +39,7 @@ $(document).on('click', '#edit_comment', function () {
     var editDivID = $(this).closest(".commentContainer").attr("id");
     var commentID = editDivID.substring(7);
     $(function () {
-        EditCommentByCommentID(postID, boardID, commentID);
+        editCommentByCommentID(postID, boardID, commentID);
     });
 })
 
@@ -47,9 +50,12 @@ $(document).on('click', '#btn_edit_comment_complete', function () {
     var commentID = commentDiv.parents("div").attr("id").substring(7);
     var postID = $("#postID").html();
     var boardID = getCurrentBoardID();
-    $(function () {
-        editComment(postID, boardID, commentID, newComment);
-    });
+    var askSave = confirm("댓글을 수정 하시겠습니까?");
+    if (askSave) {
+        $(function () {
+            editComment(postID, boardID, commentID, newComment);
+        });
+    }
 })
 
 //댓글달기 버튼

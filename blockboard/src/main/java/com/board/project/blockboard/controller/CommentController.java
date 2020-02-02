@@ -32,23 +32,26 @@ public class CommentController {
     /**
      * postID 일치하는 댓글 목록 리턴 ( 대댓글은 반환하지 않는다.)
      * @param postID
-     * @param request
      * @return
      */
     @GetMapping("")
-    public List<CommentDTO> getCommentsByPost(@PathVariable("postid") int postID, HttpServletRequest request) {
+    public List<CommentDTO> getCommentsByPost(@PathVariable("postid") int postID) {
         List<CommentDTO> commentList = commentService.getCommentListByPostID(postID);
         return commentList;
+    }
+    @GetMapping("/counts")
+    public int getCommentsCountSByPostID(@PathVariable("postid") int postID){
+        int commentCount = commentService.getCommentCountByPostID(postID);
+        return commentCount;
     }
     /**
      * 댓글 추가
      * @param postID
      * @param boardID
      * @param commentContent
-     * @param request
      */
     @PostMapping("")
-    public void writeComment(@RequestParam("postID") int postID,@RequestParam("boardID") int boardID,@RequestParam("commentContent") String commentContent, HttpServletRequest request) {
+    public void writeComment(@RequestParam("postID") int postID,@RequestParam("boardID") int boardID,@RequestParam("commentContent") String commentContent) {
         String userID = jwtService.getUserId();
         int companyID = jwtService.getCompanyId();
         log.info("!!!!"+postID+","+boardID+":"+commentContent);
@@ -60,10 +63,9 @@ public class CommentController {
      * @param commentID
      * @param postID
      * @param boardID
-     * @param request
      */
     @DeleteMapping("/{commentid}")
-    public void deleteComment(@PathVariable("commentid") int commentID,@PathVariable("postid") int postID,@PathVariable("boardid") int boardID, HttpServletRequest request) {
+    public void deleteComment(@PathVariable("commentid") int commentID,@PathVariable("postid") int postID,@PathVariable("boardid") int boardID) {
         commentService.deleteComment(commentID);
     }
 
@@ -73,10 +75,9 @@ public class CommentController {
      * @param postID
      * @param boardID
      * @param newComment 변경된 새로운 내용
-     * @param request
      */
     @PutMapping("/{commentid}")
-    public void editComment(@PathVariable("commentid") int commentID,@PathVariable("postid") int postID,@PathVariable("boardid") int boardID,@RequestParam("newComment") String newComment, HttpServletRequest request) {
+    public void editComment(@PathVariable("commentid") int commentID,@PathVariable("postid") int postID,@PathVariable("boardid") int boardID,@RequestParam("newComment") String newComment) {
         commentService.updateComment(commentID,newComment);
     }
 }

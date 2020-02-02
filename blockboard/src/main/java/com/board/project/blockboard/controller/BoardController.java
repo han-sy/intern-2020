@@ -39,12 +39,11 @@ public class BoardController {
     /**
      * 게시물 조회
      * @param postID
-     * @param request
      * @return PostDTO + 유저일치여부 로 구성된 map
      */
     @GetMapping(value = "/{boardid}/posts/{postid}")
     @ResponseBody
-    public Map<String,Object> getPostByPostID(@PathVariable("postid") int postID, HttpServletRequest request) {
+    public Map<String,Object> getPostByPostID(@PathVariable("postid") int postID) {
         String userID = jwtService.getUserId();
         int companyID = jwtService.getCompanyId();
 
@@ -55,12 +54,11 @@ public class BoardController {
 
     /**
      * 게시판 목록 가져오기
-     * @param request
      * @return 게시판 목록
      */
     @GetMapping(value = "")
     @ResponseBody
-    public List<BoardDTO> getBoardList(HttpServletRequest request) {
+    public List<BoardDTO> getBoardList() {
         int companyID = jwtService.getCompanyId();
 
         //게시판 목록
@@ -71,11 +69,10 @@ public class BoardController {
     /**
      * 게시판 추가
      * @param newBoardName 새로입력받은 보드이름
-     * @param request
      */
     @PostMapping(value = "")
     @ResponseBody
-    public void insertNewBoard(@RequestParam("boardName") String newBoardName, HttpServletRequest request){
+    public void insertNewBoard(@RequestParam("boardName") String newBoardName){
         int companyID = jwtService.getCompanyId();
         //게시판 삽입
         boardService.insertNewBoard(newBoardName, companyID);
@@ -84,11 +81,10 @@ public class BoardController {
     /**
      * 게시판 이름 변경 변경된 리스트를 받아와서 수정한다.
      * @param newTItleList 이름이 변경된 리스트
-     * @param request
      */
     @PutMapping(value = "")
     @ResponseBody
-    public void  changeNewBoardName(@RequestParam("newTitles") String newTItleList, HttpServletRequest request) {
+    public void  changeNewBoardName(@RequestParam("newTitles") String newTItleList) {
         int companyID = jwtService.getCompanyId();
         boardService.updateChangedName(newTItleList,companyID);
     }
@@ -96,11 +92,10 @@ public class BoardController {
     /**
      * 게시판 삭제
      * @param deleteBoards 삭제리스트
-     * @param request
      */
     @DeleteMapping(value = "")
     @ResponseBody
-    public void deleteBoardbyBoardID(@RequestParam("deleteList") String deleteBoards, HttpServletRequest request) {
+    public void deleteBoardbyBoardID(@RequestParam("deleteList") String deleteBoards) {
         int companyID = jwtService.getCompanyId();
 
         log.info("deleteBoards : "+deleteBoards);

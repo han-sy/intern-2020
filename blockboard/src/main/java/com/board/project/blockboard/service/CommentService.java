@@ -42,6 +42,7 @@ public class CommentService {
     }
 
     public void deleteComment(int commentID) {
+        commentMapper.deleteCommentByCommentReferencedID(commentID);
         commentMapper.deleteCommentByCommentID(commentID);
     }
 
@@ -53,4 +54,7 @@ public class CommentService {
     }
 
 
+    public int getCommentCountByPostID(int postID) {
+        return commentMapper.getCommentCountByPostID(postID);
+    }
 }

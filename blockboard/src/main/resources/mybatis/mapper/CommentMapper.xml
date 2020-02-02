@@ -27,6 +27,11 @@
         WHERE  comments.post_id = #{postID}
                AND comments.comment_referenced_id IS NULL;
     </select>
+    <select id="getCommentCountByPostID" parameterType="int" resultType="int">
+        SELECT Count(comment_id)
+        FROM   comments
+        WHERE  post_id = #{postID};
+    </select>
     <insert id="insertNewCommentByCommentInfo" parameterType="hashmap" >
         INSERT INTO comments
                     (board_id,
@@ -42,6 +47,10 @@
                       #{commentContent},
                       NULL);
     </insert>
+    <delete id="deleteCommentByCommentReferencedID" parameterType="int">
+        DELETE FROM comments
+        WHERE  comment_referenced_id = #{commentID};
+    </delete>
     <delete id="deleteCommentByCommentID" parameterType="int">
         DELETE FROM comments
         WHERE  comment_id = #{commentID};
