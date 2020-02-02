@@ -97,20 +97,22 @@
     </select>
 
     <select id="selectTempPosts" parameterType="hashMap" resultType="com.board.project.blockboard.dto.PostDTO">
-        SELECT post_id as postID,
-            user_id as userID,
-            board_id as boardID,
-            company_id as companyID,
-            post_title as postTitle,
-            post_content as postContent,
-            post_register_time as postRegisterTime,
-            is_temp as isTemp
+        SELECT post.post_id as postID,
+            post.user_id as userID,
+            post.board_id as boardID,
+            post.company_id as companyID,
+            post.post_title as postTitle,
+            post.post_content as postContent,
+            post.post_register_time as postRegisterTime,
+            post.is_temp as isTemp,
+            users.user_name as userName
         FROM
-            Post
+            Post post, Users users
         WHERE
-            user_id=#{userID} AND
-            company_id=#{companyID} AND
-            is_temp = true
+            post.user_id=#{userID} AND
+            post.user_id=users.user_id AND
+            post.company_id=#{companyID} AND
+            post.is_temp = true
         ORDER BY
             postRegisterTime DESC;
     </select>

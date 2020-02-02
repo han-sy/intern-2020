@@ -9,8 +9,8 @@ function editorAreaCreate(method) {
   editorClear();
   $('#editorcontent-hidden').html("");
   $('#post_title').val("");
-  $('#writecontent').css("display", "none");
-  $('#btn_write').css("display", "");
+  $('#writecontent').css("display", "");
+  $('#btn_write').css("display", "none");
   $('#btn_deletePost').attr('style', 'visibility:hidden');
   $('#btn_updatePost').attr('style', 'visibility:hidden');
   // textarea에 CKEditor 적용
@@ -35,12 +35,12 @@ function editorClear() {
   var writecontent = $('#writecontent');
   var btn_write = $('#btn_write');
   var btn_cancel = $('#btn_cancel');
-  writecontent.css("display", "");
-  btn_write.css("display", "none");
+  btn_write.css("display", "");
   btn_cancel.html("작성취소");
   post_button.html("저장");
   btn_cancel.attr('onclick', 'javascript:writeCancel()');
   post_button.attr('onclick', 'javascript:postFunction()');
+  writecontent.css("display", "none");
   off_autosave();
 }
 
@@ -60,9 +60,8 @@ function getCurrentBoardID() {
   var boardID = 0;
 
   $.each(tabs, function () {
-    var color = $(this).css('background-color');
-    if (color == "rgb(144, 238, 144)") {
-      boardID = $(this).attr('data-tab');
+    if($(this).hasClass("active_tab")) {
+      boardID = $(this).attr("data-tab");
     }
   });
 
@@ -72,6 +71,7 @@ function getCurrentBoardID() {
 // '글쓰기' 버튼 이벤트
 $(document).on("click", "#btn_write", function () {
   editorAreaCreate("insert");
+  initBoardIdOptionInEditor();
 });
 
 // '임시저장' 이벤트 함수
@@ -103,8 +103,6 @@ function postFunction() {
     else {
       insertTempPost(boardID, postID, postTitle, postContent, false);
     }
-    editorClear();
-    refreshPostList();
   }
 }
 
@@ -131,7 +129,6 @@ function postUpdate() {
   var postTitle = $('#post_title').val();
   var postContent = CKEDITOR.instances.editor.getData();
   var boardID = $('#boardIDinEditor option:selected').attr('data-tab');
-  editorClear();
   updatePost(boardID, postID, postTitle, postContent);
 }
 
@@ -180,16 +177,21 @@ function addPostIdToEditor(postID) {
   $('#editorcontent-hidden').html(itemList);
 }
 
-// 수정 버튼 클릭시 해당 게시판 선택 되어있게
-function selecedBoardID(boardID) {
-  var options = $('boardIDinEditor').children();
-  $.each(options, function(index, item) {
-    console.log("index = " + index);
-    console.log("item = " + item);
-    var data = item.attr('data-tab'); // option의 boardID
-    if(data == boardID) {
-      item.attr("selected", "selected");
+// 작성, 수정 버튼 클릭시 해당 게시판 선택 되어있게
+function initBoardIdOptionInEditor() {
+  var options = $('#boardIDinEditor').children();
+  var current_selected_tab = getCurrentBoardID(); // 현재 선택된 tab id(=boardID)
+  console.log("현재 탭 = " + current_selected_tab);
+  $(options).each(function(index, item) {
+    var data = $(item).attr('data-tab'); // option의 boardID
+    if(data == current_selected_tab) {
+      console.log("option data-tab = " + data + " set selected");
+      $(item).prop("selected", true);
+    } else {
+      console.log("option data-tab = " + data + " set not selected");
+      $(item).prop("selected", false);
     }
+
   });
 }
 

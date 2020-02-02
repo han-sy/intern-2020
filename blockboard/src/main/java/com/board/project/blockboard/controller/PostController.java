@@ -145,6 +145,7 @@ public class PostController {
         Map<String, Object> param = new HashMap<>();
         param.put("userID", jwtService.getUserId());
         param.put("companyID", jwtService.getCompanyId());
+        param.put("userName", jwtService.getUserName());
         return postService.getTempPosts(param);
     }
 }

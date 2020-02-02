@@ -17,6 +17,8 @@ function insertPost(boardID, postTitle, postContent) {
             errorFunction(xhr);
         },
         success: function () {
+            alert("작성완료");
+            editorClear();
             refreshPostList();
         }
     });
@@ -58,7 +60,7 @@ function loadPost(boardID, postID) {
         },
         success: function (data) {
             addPostIdToEditor(postID);
-            selecedBoardID(boardID);
+            initBoardIdOptionInEditor();
             post_title.val(data.postTitle);
             editor.val(data.postContent);
         }
@@ -77,6 +79,8 @@ function updatePost(boardID, postID, postTitle, postContent) {
             errorFunction(xhr);
         },
         success: function () {
+            alert("수정완료");
+            editorClear();
             refreshPostList();
         }
     });
@@ -99,6 +103,7 @@ function deletePost(boardID, postID) {
 // 게시글 작성, 수정, 삭제 시 해당 게시판 refresh 하는 함수
 function refreshPostList() {
     var boardID = getCurrentBoardID();
+    console.log("refresh 합니다 = " + boardID);
     postClear();
     getPostsAfterTabClick(boardID);
 }
