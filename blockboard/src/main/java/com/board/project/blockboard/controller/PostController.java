@@ -13,15 +13,7 @@ import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -33,6 +25,23 @@ public class PostController {
     private BoardService boardService;
     @Autowired
     private JwtService jwtService;
+    /**
+     * 게시글 가져오기
+     * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+     * @param postID
+     * @return PostDTO + 유저일치여부 로 구성된 map
+     */
+    @GetMapping(value = "/{postid}")
+    @ResponseBody
+    public Map<String,Object> getPostByPostID(@PathVariable("postid") int postID) {
+        String userID = jwtService.getUserId();
+        int companyID = jwtService.getCompanyId();
+
+        //postData는 PostDTO + 유저 일치여부
+        Map<String, Object> postData  = boardService.getPostDataAboutSelected(postID,userID);
+        return postData;
+    }
+
     /**
      * 게시물 작성
      * @param boardid 게시물을 올릴 게시판 id
@@ -59,7 +68,7 @@ public class PostController {
      */
     @GetMapping("")
     public List<PostDTO> getPostListByBoardID(@PathVariable("boardid") int boardID) {
-        List<PostDTO> postList = boardService.getPostListByBoardID(boardID);
+        List<PostDTO> postList = postService.getPostListByBoardID(boardID);
         return postList;
     }
     /**
@@ -70,16 +79,6 @@ public class PostController {
     @DeleteMapping("/{postid}")
     public void deletePost(@PathVariable("postid") int postid) {
         postService.deletePost(postid);
-    }
-
-    /**
-     * 수정 화면 진입시, 현재 게시글을 에디터로 불러온다.
-     * @param postid 수정할 게시물 id
-     * @return 게시물 제목, 내용
-     */
-    @GetMapping("/{postid}/editor")
-    public PostDTO selectPostByPostID(@PathVariable("postid") int postid) {
-        return postService.selectPostByPostID(postid);
     }
 
     /**
@@ -103,25 +102,8 @@ public class PostController {
      * @return searchList 검색한 결과들이 담긴
      */
     @GetMapping("/search")
-    public List<PostDTO> searchPost(@RequestParam("option") int option, @RequestParam("keyword") String keyword) {
-        String optionName = "";
-        switch (option) {
-            case 0:
-                optionName = "post_title";
-                break;
-            case 1:
-                optionName = "user_name";
-                break;
-            case 2:
-                optionName = "post_content";
-                break;
-            case 3:
-                optionName = "mix";
-                break;
-            default:
-                // 추후에 Exception 구현하기
-        }
-        return postService.searchPost(optionName, keyword);
+    public List<PostDTO> searchPost(@RequestParam("option") String option, @RequestParam("keyword") String keyword) {
+        return postService.searchPost(option, keyword);
     }
 
     /**
@@ -145,6 +127,7 @@ public class PostController {
         Map<String, Object> param = new HashMap<>();
         param.put("userID", jwtService.getUserId());
         param.put("companyID", jwtService.getCompanyId());
+        param.put("userName", jwtService.getUserName());
         return postService.getTempPosts(param);
     }
 }

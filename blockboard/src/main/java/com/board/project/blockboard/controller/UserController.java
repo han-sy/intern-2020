@@ -68,8 +68,7 @@ public class UserController {
     @GetMapping("/login")
     public String login(HttpServletRequest request) {
         // 이미 JWT 토큰을 가지고 있으면 로그인 생략 후 메인화면으로 이동
-        CookieUtils cookieUtils = new CookieUtils();
-        String token = cookieUtils.getCookie(request,HEADER_NAME);
+        String token = CookieUtils.getCookie(request,HEADER_NAME);
 
         if(jwtService.isUsable(token))
             return "redirect:/main";

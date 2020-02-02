@@ -98,11 +98,11 @@ function changeTrColor(trObj) {
 
 // 게시글 목록에서 게시글 클릭시
 function clickTrEvent(trObj) {
-  var postID = trObj.getAttribute("data-post");
-  var boardID = getActiveBoardID();
-  $(function () {
-    getPostDataAfterPostClick(postID, boardID); //boardAjax.js 참고
-  });
+    var postID = trObj.getAttribute("data-post");
+    var boardID = getActiveBoardID();
+    $(function () {
+        getPostDataAfterPostClick(postID, boardID); //boardAjax.js 참고
+    });
 }
 
 //닫기 버튼 클릭
@@ -113,61 +113,63 @@ function clickConfigClose() {
     $('#config_container').html("");
 }
 
-$(document).on("mouseenter", ".tabmenu", function(){
+$(document).on("mouseenter", ".tabmenu", function () {
     $(this).css('background-color', 'WhiteSmoke');
 });
-$(document).on("mouseleave", ".tabmenu", function(){
-        $(this).css('background-color', 'white');
+$(document).on("mouseleave", ".tabmenu", function () {
+    $(this).css('background-color', 'white');
 });
 
 // 탭 메뉴 클릭 이벤트 - 해당 게시판의 게시글 불러옴
 $(document).on("click", ".tabmenu", function clickTabEvent() {
-  var boardID = $(this).attr('data-tab');
-  $('.tabmenu').css('color', 'black');
-  $('.tabmenu').removeClass("font-weight-bold");
-  $('.tabmenu').removeClass("active_tab");
-  $(this).css('color', '#40A745');//success색
-  $(this).addClass("active_tab");
-  $(this).addClass("font-weight-bold");
-  postClear();
-  editorClear();
-  console.log("클릭한 boardID = " + boardID);
-  if(boardID > 0) {
-    $(function () {
-      getPostsAfterTabClick(boardID);
-    });
-  }
-  else {
-    getTempPosts();
-  }
+    var boardID = $(this).attr('data-tab');
+    var btn_write = $('#btn_write');
+    $('.tabmenu').css('color', 'black');
+    $('.tabmenu').removeClass("font-weight-bold");
+    $('.tabmenu').removeClass("active_tab");
+    $(this).css('color', '#40A745');//success색
+    $(this).addClass("active_tab");
+    $(this).addClass("font-weight-bold");
+    postClear();
+    editorClear();
+    console.log("클릭한 boardID = " + boardID);
+    if (boardID > 0) {
+        $(function () {
+            btn_write.attr('style', 'visibility:visible');
+            getPostsAfterTabClick(boardID);
+        });
+    } else {
+        btn_write.attr('style', 'visibility:hidden');
+        getTempPosts();
+    }
 })
 
 // 현재 선택된 게시판 ID 찾기
 function getActiveBoardID() {
-  var boardID;
-  var tabs = $('#tab_id').children();
-  $.each(tabs, function () {
-    if(tabs.hasClass("active_tab") == true)
-      boardID = tabs.attr('data-tab');
-  });
-  return boardID;
+    var boardID;
+    var tabs = $('#tab_id').children();
+    $.each(tabs, function () {
+        if (tabs.hasClass("active_tab") == true)
+            boardID = tabs.attr('data-tab');
+    });
+    return boardID;
 }
+
 //기능변경 on/off버튼 텍스트 바꾸기
 $(document).on('click', '._function-switch', function () {
     var switchText = $(this).find("._switch");
     var checkBox = $(this).find(".function_checkbox");
-    console.log(switchText.html()=="ON");
-    if(checkBox.prop("checked")){
+    console.log(switchText.html() == "ON");
+    if (checkBox.prop("checked")) {
         $(this).removeClass('btn-success');
         $(this).addClass('btn-default');
         switchText.html("OFF");
         checkBox.removeAttr("checked");
-    }
-    else{
+    } else {
         $(this).removeClass('btn-default');
         $(this).addClass('btn-success');
         switchText.html("ON");
-        checkBox.prop("checked",true);
+        checkBox.prop("checked", true);
     }
     $(this).removeClass("active");
 });

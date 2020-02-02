@@ -3,9 +3,6 @@
  * @file boardAjax.js
  */
 
-
-
-
 //탭 업데이트 새로운 게시판 목록으로
 function updateTabByNewBoardListAfterAddBoard(boardName) {
     $.ajax({

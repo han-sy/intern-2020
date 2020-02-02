@@ -5,10 +5,7 @@
 package com.board.project.blockboard.controller;
 
 import com.board.project.blockboard.dto.BoardDTO;
-import com.board.project.blockboard.service.BoardService;
-import com.board.project.blockboard.service.FunctionService;
-import com.board.project.blockboard.service.JwtService;
-import com.board.project.blockboard.service.UserService;
+import com.board.project.blockboard.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,6 +24,8 @@ public class MainController {
   private UserService userService;
   @Autowired
   private FunctionService functionService;
+  @Autowired
+  private CompanyService companyService;
 
   @GetMapping("")
   public String home() {
@@ -48,8 +47,8 @@ public class MainController {
     List<BoardDTO> boardList = boardService.getBoardListByCompanyID(companyID);
 
     model.addAttribute("boardList",boardList); //게시판 목록
-    model.addAttribute("companyName",boardService.getCompanyNameByUserID(userID));//회사이름
-    model.addAttribute("isadmin",boardService.checkAdmin(userID));
+    model.addAttribute("companyName",companyService.getCompanyNameByUserID(userID));//회사이름
+    model.addAttribute("isadmin",userService.checkAdmin(userID));
     model.addAttribute("companyID",companyID);
     model.addAttribute("userID",userID);
     model.addAttribute("userName",userService.getUserNameByUserID(userID));

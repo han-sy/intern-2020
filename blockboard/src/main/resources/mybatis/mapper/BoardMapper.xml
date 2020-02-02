@@ -6,20 +6,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.board.project.blockboard.mapper.BoardMapper">
-    <select id="selectCompanyNameByUserID" parameterType="string" resultType="string">
-        SELECT company.company_name AS companyName
-        FROM   company company,
-               users users
-        WHERE  company.company_id = users.company_id
-               AND users.user_id = #{userID};
-    </select>
-    <select id="selectCompanyIDByUserID" parameterType="string" resultType="int">
-        SELECT company.company_id AS companyID
-        FROM   company company,
-               users users
-        WHERE  company.company_id = users.company_id
-               AND users.user_id = #{userID};
-    </select>
     <select id="selectBoardsByCompanyID" parameterType="int" resultType="com.board.project.blockboard.dto.BoardDTO">
         SELECT board_id   AS boardID,
                company_id AS companyID,
@@ -34,49 +20,6 @@
         FROM   board
         WHERE  board_name = #{boardName};
     </select>
-
-    <!--추후에 디비 수정후 쿼리 변경해야됨-->
-    <select id="selectPostByBoardID" parameterType="int" resultType="com.board.project.blockboard.dto.PostDTO">
-        SELECT post.post_id            AS postID,
-               post.user_id            AS userID,
-               USER.user_name          AS userName,
-               post.board_id           AS boardID,
-               post.company_id         AS companyID,
-               post.post_title         AS postTitle,
-               post.post_content       AS postContent,
-               post.post_register_time AS postRegisterTime,
-               post.is_temp            AS isTemp
-        FROM   post post,
-               users USER
-        WHERE  post.user_id = USER.user_id
-               AND post.board_id = #{boardID}
-               AND post.is_temp = false
-        ORDER  BY post.post_id DESC;
-    </select>
-
-    <!--게시글 id로 게시글반환-->
-    <select id="selectPostByPostID" parameterType="int" resultType="com.board.project.blockboard.dto.PostDTO">
-        SELECT post.post_id            AS postID,
-               post.user_id            AS userID,
-               USER.user_name          AS userName,
-               post.board_id           AS boardID,
-               post.company_id         AS companyID,
-               post.post_title         AS postTitle,
-               post.post_content       AS postContent,
-               post.post_register_time AS postRegisterTime
-        FROM   post post,
-               users USER
-        WHERE  post.user_id = USER.user_id
-               AND post.post_id = #{postID}
-    </select>
-
-    <!--userid로 회원 타입 반환-->
-    <select id="selectUserTypeByUserID" parameterType="string" resultType="string">
-        SELECT user_type AS userType
-        FROM   users
-        WHERE  user_id = #{userID};
-    </select>
-
 
     <insert id="insertBoard" parameterType="com.board.project.blockboard.dto.BoardDTO">
         INSERT INTO board

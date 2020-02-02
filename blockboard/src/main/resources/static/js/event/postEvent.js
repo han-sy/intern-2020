@@ -7,17 +7,12 @@ var autosave = null;
 // 에디터 div 생성
 function editorAreaCreate(method) {
   editorClear();
-  var post_button = $('#btn_post');
-  var writecontent = $('#writecontent');
-  var btn_write = $('#btn_write');
-  var btn_cancel = $('#btn_cancel');
-  writecontent.css("display", "");
-  btn_write.css("display", "none");
-  btn_cancel.html("작성취소");
-  post_button.html("저장");
-  btn_cancel.attr('onclick', 'javascript:writeCancel()');
-  post_button.attr('onclick', 'javascript:postFunction()');
-
+  $('#editorcontent-hidden').html("");
+  $('#post_title').val("");
+  $('#writecontent').css("display", "");
+  $('#btn_write').css("display", "none");
+  $('#btn_deletePost').attr('style', 'visibility:hidden');
+  $('#btn_updatePost').attr('style', 'visibility:hidden');
   // textarea에 CKEditor 적용
   $('#editor').ckeditor();
 
@@ -36,12 +31,16 @@ function editorClear() {
     CKEDITOR.instances.editor.setData("");
     CKEDITOR.instances.editor.destroy();
   }
-  $('#editorcontent-hidden').html("");
-  $('#post_title').val("");
-  $('#writecontent').css("display", "none");
-  $('#btn_write').css("display", "");
-  $('#btn_deletePost').attr('style', 'visibility:hidden');
-  $('#btn_updatePost').attr('style', 'visibility:hidden');
+  var post_button = $('#btn_post');
+  var writecontent = $('#writecontent');
+  var btn_write = $('#btn_write');
+  var btn_cancel = $('#btn_cancel');
+  btn_write.css("display", "");
+  btn_cancel.html("작성취소");
+  post_button.html("저장");
+  btn_cancel.attr('onclick', 'javascript:writeCancel()');
+  post_button.attr('onclick', 'javascript:postFunction()');
+  writecontent.css("display", "none");
   off_autosave();
 }
 
@@ -61,9 +60,8 @@ function getCurrentBoardID() {
   var boardID = 0;
 
   $.each(tabs, function () {
-    var color = $(this).css('background-color');
-    if (color == "rgb(144, 238, 144)") {
-      boardID = $(this).attr('data-tab');
+    if($(this).hasClass("active_tab")) {
+      boardID = $(this).attr("data-tab");
     }
   });
 
@@ -73,6 +71,7 @@ function getCurrentBoardID() {
 // '글쓰기' 버튼 이벤트
 $(document).on("click", "#btn_write", function () {
   editorAreaCreate("insert");
+  initBoardIdOptionInEditor(getCurrentBoardID());
 });
 
 // '임시저장' 이벤트 함수
@@ -103,9 +102,9 @@ function postFunction() {
     // 임시 or 자동 저장된 글을 한번 더 '저장' 버튼을 누를 때
     else {
       insertTempPost(boardID, postID, postTitle, postContent, false);
+      getTempPosts();
     }
     editorClear();
-    refreshPostList();
   }
 }
 
@@ -132,7 +131,6 @@ function postUpdate() {
   var postTitle = $('#post_title').val();
   var postContent = CKEDITOR.instances.editor.getData();
   var boardID = $('#boardIDinEditor option:selected').attr('data-tab');
-  editorClear();
   updatePost(boardID, postID, postTitle, postContent);
 }
 
@@ -181,6 +179,20 @@ function addPostIdToEditor(postID) {
   $('#editorcontent-hidden').html(itemList);
 }
 
+// 작성, 수정 버튼 클릭시 해당 게시판 선택 되어있게
+function initBoardIdOptionInEditor(currentBoardID) {
+  var options = $('#boardIDinEditor').children();
+  console.log("받은 currentBoardID = " + currentBoardID);
+  $(options).each(function(index, item) {
+    var data = $(item).attr('data-tab'); // option의 boardID
+    if(data == currentBoardID) {
+      $(item).prop("selected", true);
+    } else {
+      $(item).prop("selected", false);
+    }
+  });
+}
+
 function on_autosave() {
   autosave = setInterval(function () {
     tempsaveFunction()
@@ -194,12 +206,16 @@ function off_autosave() {
 // 임시저장 게시물 클릭 이벤트
 function clickTempPostEvent(evt) {
   var postID = evt.getAttribute("data-post");
+  postClear();
   editorAreaCreate("insert");
-  getTempPost(postID);
   var btn_cancel = $('#btn_cancel');
   btn_cancel.html("삭제");
   btn_cancel.attr('onclick', 'javascript:clickDeleteTempPost()');
   addPostIdToEditor(postID);
+  //getTempPost(postID);
+  setTimeout(function () {
+    getTempPost(postID);
+  }, 5);
 }
 
 // 임시저장 게시물 삭제 이벤트

@@ -33,12 +33,15 @@
     </button>
 
     <div class="collapse navbar-collapse" id="navbarsExample02">
-        <ul class="navbar-nav mr-auto " style="nav-right: auto">
+            <ul class="navbar-nav mr-auto " style="
+            <c:if test="${isadmin==false}">
+                    visibility:hidden;
+            </c:if>
+            nav-right: auto;">
 
 
-            <c:if test="${isadmin}">
                 <li class="nav-item active">
-                    <a class="nav-link" id='addBoardBtn' "
+                    <a class="nav-link" id='addBoardBtn'
                     style="cursor:pointer" data-toggle="modal" data-target="#addBoardModal">게시판 추가</a>
                 </li>
                 <li class="nav-item active">
@@ -85,11 +88,11 @@
                         {{/functions}}
                     </script>
                 </li>
-            </c:if>
+
             <%--<li class="nav-item active" style="float: right">
 
             </li>--%>
-        </ul>
+            </ul>
         <a class="nav-link text-white" id ="current_user_info" style="nav-right: auto"  data-id =${userID} >${userName}</a>
         <a class="nav-link text-white" style="nav-right: auto" href="<c:url value='/logout' />">로그아웃</a>
     </div>
@@ -266,12 +269,18 @@
                     <div class="col-2 d-flex">
                         <select class="form-control-sm" id="boardIDinEditor">
                             <c:forEach items="${boardList}" var="boardList" varStatus="status">
-                                <option data-tab="${boardList.boardID}" class='tabmenu' id="default">
+                                <option data-tab="${boardList.boardID}" id="default">
                                     <c:out value="${boardList.boardName}"/>
                                 </option>
                             </c:forEach>
                         </select>
                     </div>
+                    <!--게시글 작성 시 게시판 목록 템플릿-->
+                    <script id="writecontent-boards-template" type="text/x-handlebars-template">
+                        {{#boards}}
+                            <option data-tab={{boardID}} class=tabmenu id=default>{{boardName}}</option>
+                        {{/boards}}
+                    </script>
                 </div>
                 <!--에디터 폼-->
                 <div class="form-group row">
@@ -318,8 +327,8 @@
                 {{#isCommentAble}}
                 <div class= comment_section>
                     <br><br>
-                    <div ="row">
-                        <span class="col-1">
+                    <div class ="row">
+                        <span class="col-2">
                             <strong class="c">댓글 </strong>
                         (<span id=commentCount></span>)
                         </span>
@@ -342,7 +351,7 @@
                             <div class="user"><h5><strong class=name data-id={{userID}}>{{userName}}</strong></h5></div>
                             <div>
                                 <div>
-                                    <div class="comment_area comment_content" id=translate_area>{{{commentContent}}}</div>
+                                    <div class="comment_area comment_content" id=translate_area style="width: 100%;">{{{commentContent}}}</div>
                                     <br>
                                     <div class="date text-muted">{{commentRegisterTime}}</div>
                                 </div>
@@ -380,12 +389,12 @@
                 <hr>
                 <div class='row ' >
                     <div class="col-1"></div>
-                    <div class='commentContainer ' id='comment{{commentID}}'>
+                    <div class='commentContainer col-11' id='comment{{commentID}}'>
                         <div class="user"><h5><strong class=name data-id={{userID}}>{{userName}}</strong></h5></div>
                         <div>
-                            <div class="comment_area row" id=translate_area>
-                                <div class="col-4"><strong class="nametag text-primary" data-id={{commentReferencedUserID}} style="cursor:pointer" >{{commentReferencedUserName}}</strong></div>
-                                <div class="comment_content col-8">{{{commentContent}}}</div>
+                            <div class="comment_area row" id=translate_area ">
+                                <strong class="nametag text-primary " data-id={{commentReferencedUserID}} style="cursor:pointer;padding: 0px 0px 0px 15px" >{{commentReferencedUserName}}</strong>
+                                <div class="comment_content col-10" style="float:left;">{{{commentContent}}}</div>
                             </div>
                             <br>
                             <div class="date text-muted">{{commentRegisterTime}}</div>
@@ -473,10 +482,10 @@
                     <div class="form-group row">
                         <div class="col-sm-1">
                             <select id="search_option" class="form-control" style="width:100px;font-size:15px;">
-                                <option value=0>제목</option>
-                                <option value=1>작성자</option>
-                                <option value=2>내용</option>
-                                <option value=3>제목+내용</option>
+                                <option value="post_title">제목</option>
+                                <option value="user_name">작성자</option>
+                                <option value="post_content">내용</option>
+                                <option value="titleAndContent">제목+내용</option>
                             </select>
                         </div>
                         <div class="col-5">

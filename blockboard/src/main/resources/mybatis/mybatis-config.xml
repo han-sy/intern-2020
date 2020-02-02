@@ -13,5 +13,6 @@
         <mapper resource="FunctionMapper.xml"/>
         <mapper resource="CommentMapper.xml"/>
         <mapper resource="ReplyMapper.xml"/>
+        <mapper resource="CompanyMapper.xml"
     </mappers>
 </configuration>

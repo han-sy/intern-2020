@@ -10,7 +10,7 @@ import org.apache.commons.codec.binary.StringUtils;
 
 public class CookieUtils {
 
-  public String getCookie(HttpServletRequest request, String cookieName) {
+  public static String getCookie(HttpServletRequest request, String cookieName) {
     Cookie[] getCookie = request.getCookies();
     String token = null;
     if(getCookie != null) {
