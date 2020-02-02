@@ -51,4 +51,15 @@ public class UserService {
 
         return userMapper.selectUserNameByUserID(userID);
     }
+
+    /**
+     *
+     * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+     * @param userID
+     * @return
+     */
+    public boolean checkAdmin(String userID) {
+        String admin = userMapper.selectUserTypeByUserID(userID);
+        return admin.equals("관리자");
+    }
 }

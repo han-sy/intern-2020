@@ -16,4 +16,5 @@ public interface UserMapper {
     public UserDTO selectUserByID(String userID);
     public int selectCompanyIDByUserID(String userID);
     public String selectUserNameByUserID(String userID);
+    String selectUserTypeByUserID(String userID);
 }

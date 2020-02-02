@@ -52,4 +52,24 @@ public class PostService{
     public List<PostDTO> getTempPosts(Map<String,Object> param) {
         return postMapper.selectTempPosts(param);
     }
+
+    /**
+     * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+     * @param boardID
+     * @return
+     */
+    public List<PostDTO> getPostListByBoardID(int boardID) {
+        List<PostDTO> postlist = postMapper.selectPostByBoardID(boardID);
+        return postlist;
+    }
+
+    /**
+     * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+     * @param postID
+     * @return
+     */
+    public PostDTO getPostByPostID(int postID) {
+        PostDTO post = postMapper.selectPostByPostID(postID);
+        return post;
+    }
 }

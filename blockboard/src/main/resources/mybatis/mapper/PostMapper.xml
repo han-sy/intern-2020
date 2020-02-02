@@ -39,18 +39,6 @@
         WHERE post_id=#{postID};
     </delete>
 
-    <select id="selectPostByPostID" parameterType="int" resultType="com.board.project.blockboard.dto.PostDTO">
-        SELECT post_id as postID,
-            user_id as userID,
-            board_id as boardID,
-            company_id as companyID,
-            post_title as postTitle,
-            post_content as postContent,
-            post_register_time as postRegisterTime
-        FROM Post
-        WHERE post_id=#{postID};
-    </select>
-
     <update id="updatePost" parameterType="com.board.project.blockboard.dto.PostDTO">
         UPDATE Post
         SET post_title=#{postTitle}, post_content=#{postContent}, board_id=#{boardID}
@@ -131,4 +119,40 @@
             </otherwise>
         </choose>
     </sql>
+
+    <!--@author Dongwook Kim <dongwook.kim1211@worksmobile.com>-->
+    <select id="selectPostByBoardID" parameterType="int" resultType="com.board.project.blockboard.dto.PostDTO">
+        SELECT post.post_id            AS postID,
+               post.user_id            AS userID,
+               USER.user_name          AS userName,
+               post.board_id           AS boardID,
+               post.company_id         AS companyID,
+               post.post_title         AS postTitle,
+               post.post_content       AS postContent,
+               post.post_register_time AS postRegisterTime,
+               post.is_temp            AS isTemp
+        FROM   post post,
+               users USER
+        WHERE  post.user_id = USER.user_id
+               AND post.board_id = #{boardID}
+               AND post.is_temp = false
+        ORDER  BY post.post_id DESC;
+    </select>
+
+    <!--게시글 id로 게시글반환-->
+    <!--@author Dongwook Kim <dongwook.kim1211@worksmobile.com>-->
+    <select id="selectPostByPostID" parameterType="int" resultType="com.board.project.blockboard.dto.PostDTO">
+        SELECT post.post_id            AS postID,
+               post.user_id            AS userID,
+               USER.user_name          AS userName,
+               post.board_id           AS boardID,
+               post.company_id         AS companyID,
+               post.post_title         AS postTitle,
+               post.post_content       AS postContent,
+               post.post_register_time AS postRegisterTime
+        FROM   post post,
+               users USER
+        WHERE  post.user_id = USER.user_id
+               AND post.post_id = #{postID}
+    </select>
 </mapper>

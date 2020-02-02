@@ -35,23 +35,6 @@ public class BoardController {
     private BoardService boardService;
     @Autowired
     private JwtService jwtService;
-
-    /**
-     * 게시물 조회
-     * @param postID
-     * @return PostDTO + 유저일치여부 로 구성된 map
-     */
-    @GetMapping(value = "/{boardid}/posts/{postid}")
-    @ResponseBody
-    public Map<String,Object> getPostByPostID(@PathVariable("postid") int postID) {
-        String userID = jwtService.getUserId();
-        int companyID = jwtService.getCompanyId();
-
-        //postData는 PostDTO + 유저 일치여부
-        Map<String, Object> postData  = boardService.getPostDataAboutSelected(postID,userID);
-        return postData;
-    }
-
     /**
      * 게시판 목록 가져오기
      * @return 게시판 목록
