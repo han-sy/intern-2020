@@ -521,7 +521,9 @@
 <script src="/static/ckeditor/ckeditor.js"></script>
 <script src="/static/ckeditor/adapters/jquery.js"></script>
 <script src="/static/js/util/handlebarsHelper.js"></script>
-
+<script src="/static/js/updateUI/boardUI.js"></script>
+<script src="/static/js/updateUI/commentUI.js"></script>
+<script src="/static/js/updateUI/function.js"></script>
 </body>
 
 </html>

@@ -2,18 +2,6 @@
  * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
  * @file commentAjax.js
  */
-
-//댓글 출력
-function updateCommentListUI(data) {
-    var source = $('#commentList-template').html();
-    var template = Handlebars.compile(source);
-    var comments = {comments: data};
-    var itemList = template(comments);
-    $('.comment_list_container').html(itemList);
-    if ($('#functionAble2').attr("value") == "on") { //대댓글 기능 on 일때
-        getAllReplyList(data);
-    }
-}
 function updateCommentsCount(boardID,postID){
     $.ajax({
         type: 'GET',
@@ -25,23 +13,6 @@ function updateCommentsCount(boardID,postID){
             $("#commentCount").html(data);
         }
     });
-}
-
-//댓글 inputform 받아오기
-//TODO handlebar 적용
-function getCommentInputHtml(type, buttonName, tag, className, buttonSelector) {
-    data ={type : type, className,buttonName:buttonName, tag:tag, buttonSelector:buttonSelector};
-    var source = $('#commentInputForm-template').html();
-    var template = Handlebars.compile(source);
-    var attribute = {attribute: data};
-    var itemList = template(attribute);
-    $(className).html(itemList+"</div>");
-}
-
-//댓글 컨텐츠 모두 불러오기
-function getCommentAllContents(data) {
-    updateCommentListUI(data);
-    getCommentInputHtml("댓글", "입력", "", ".comment_input_container", "btn_openComment");
 }
 
 //댓글리스트 받아오기
@@ -90,17 +61,6 @@ function deleteCommentByCommentID(postID, boardID, commentID) {
     });
 }
 
-//댓글수정모드
-//TODO handlebar 적용
-function editCommentByCommentID(postID, boardID, commentID) {
-    var oldText = $('#comment' + commentID).find(".comment_content").html().replace(/<br>/g,"\n");
-    data = {oldText:oldText};
-    var source = $('#editCommentForm-template').html();
-    var template = Handlebars.compile(source);
-    var attribute = {attribute: data};
-    var itemList = template(attribute);
-    $('#comment' + commentID).html(itemList+"</div>");
-}
 
 //댓글 수정
 function editComment(postID, boardID, commentID, newComment) {
@@ -117,22 +77,7 @@ function editComment(postID, boardID, commentID, newComment) {
     });
 }
 
-//답글 ui 구성
-//TODO handlebar 적용
-function getReplyListUI(commentID, data) {
-    var source = $('#replyList-template').html();
-    var template = Handlebars.compile(source);
-    var replies = {replies: data};
-    var itemList = template(replies);
-    $("#reply_container" + commentID).html(itemList);
-}
 
-//답글전체 받아오기
-function getAllReplyList(data) {
-    $.each(data, function (key, value) {
-        getReplyList(value.boardID, value.postID, value.commentID, getReplyListUI);
-    });
-}
 
 //답글리스트 받아오기
 function getReplyList(boardID, postID, commentID, successFunction) {
