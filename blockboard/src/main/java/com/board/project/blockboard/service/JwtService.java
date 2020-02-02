@@ -25,8 +25,8 @@ import java.util.Map;
 @Slf4j
 @Service("jwtService")
 public class JwtService {
-    private static final String SALT = "blockboard"; // Secret Key
-    private static final String HEADER_NAME = "Authorization";
+    private final String SALT = "blockboard"; // Secret Key
+    private final String HEADER_NAME = "Authorization";
 
     public <T> String create(String key, T data, String subject) {
         String issure = "BlockBoard";
