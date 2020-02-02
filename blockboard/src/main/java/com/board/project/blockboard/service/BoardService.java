@@ -115,6 +115,7 @@ public class BoardService {
             postMapData.put("postContent", postData.getPostContent());
             postMapData.put("userName", postData.getUserName());
             postMapData.put("postRegisterTime", postData.getPostRegisterTime());
+            postMapData.put("boardID",postData.getBoardID());
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -4,7 +4,7 @@
  */
 
 
-function insertPost(boardID, postTitle, postContent) {
+function insertPost(postID, boardID, postTitle, postContent, isTemp) {
     $.ajax({
         type: 'POST',
         url: "/boards/" + boardID + "/posts",
@@ -17,8 +17,7 @@ function insertPost(boardID, postTitle, postContent) {
             errorFunction(xhr);
         },
         success: function () {
-            alert("작성완료");
-            editorClear();
+            alert("게시글 작성완료");
             refreshPostList();
         }
     });
@@ -60,7 +59,7 @@ function loadPost(boardID, postID) {
         },
         success: function (data) {
             addPostIdToEditor(postID);
-            initBoardIdOptionInEditor();
+            initBoardIdOptionInEditor(boardID);
             post_title.val(data.postTitle);
             editor.val(data.postContent);
         }
@@ -158,7 +157,7 @@ function getTempPost(postID) {
         },
         success: function (data) {
             $('#btn_write').show();
-            loadPost(0, postID);
+            loadPost(data.boardID, postID);
         }
     });
 }

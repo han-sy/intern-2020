@@ -71,7 +71,7 @@ function getCurrentBoardID() {
 // '글쓰기' 버튼 이벤트
 $(document).on("click", "#btn_write", function () {
   editorAreaCreate("insert");
-  initBoardIdOptionInEditor();
+  initBoardIdOptionInEditor(getCurrentBoardID());
 });
 
 // '임시저장' 이벤트 함수
@@ -101,7 +101,9 @@ function postFunction() {
     }
     // 임시 or 자동 저장된 글을 한번 더 '저장' 버튼을 누를 때
     else {
+      editorClear();
       insertTempPost(boardID, postID, postTitle, postContent, false);
+      getTempPosts();
     }
   }
 }
@@ -178,20 +180,16 @@ function addPostIdToEditor(postID) {
 }
 
 // 작성, 수정 버튼 클릭시 해당 게시판 선택 되어있게
-function initBoardIdOptionInEditor() {
+function initBoardIdOptionInEditor(currentBoardID) {
   var options = $('#boardIDinEditor').children();
-  var current_selected_tab = getCurrentBoardID(); // 현재 선택된 tab id(=boardID)
-  console.log("현재 탭 = " + current_selected_tab);
+  console.log("받은 currentBoardID = " + currentBoardID);
   $(options).each(function(index, item) {
     var data = $(item).attr('data-tab'); // option의 boardID
-    if(data == current_selected_tab) {
-      console.log("option data-tab = " + data + " set selected");
+    if(data == currentBoardID) {
       $(item).prop("selected", true);
     } else {
-      console.log("option data-tab = " + data + " set not selected");
       $(item).prop("selected", false);
     }
-
   });
 }
 
@@ -208,12 +206,16 @@ function off_autosave() {
 // 임시저장 게시물 클릭 이벤트
 function clickTempPostEvent(evt) {
   var postID = evt.getAttribute("data-post");
+  postClear();
   editorAreaCreate("insert");
-  getTempPost(postID);
   var btn_cancel = $('#btn_cancel');
   btn_cancel.html("삭제");
   btn_cancel.attr('onclick', 'javascript:clickDeleteTempPost()');
   addPostIdToEditor(postID);
+  //getTempPost(postID);
+  setTimeout(function () {
+    getTempPost(postID);
+  }, 5);
 }
 
 // 임시저장 게시물 삭제 이벤트

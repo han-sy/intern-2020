@@ -49,7 +49,6 @@ Handlebars.registerHelper('isReply', function(options) {
  * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
  */
 Handlebars.registerHelper('isTemp', function(option) {
-    console.log("이것의 값은 = " + this.isTemp);
     if(this.isTemp == true) {
         return option.fn(this);
     } else {
