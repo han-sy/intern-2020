@@ -479,10 +479,10 @@
                     <div class="form-group row">
                         <div class="col-sm-1">
                             <select id="search_option" class="form-control" style="width:100px;font-size:15px;">
-                                <option value=0>제목</option>
-                                <option value=1>작성자</option>
-                                <option value=2>내용</option>
-                                <option value=3>제목+내용</option>
+                                <option value="post_title">제목</option>
+                                <option value="user_name">작성자</option>
+                                <option value="post_content">내용</option>
+                                <option value="titleAndContent">제목+내용</option>
                             </select>
                         </div>
                         <div class="col-5">
