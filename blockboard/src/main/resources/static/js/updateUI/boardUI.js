@@ -10,6 +10,7 @@ function updateTab(data) {
     var itemList = template(board);
     $('#tab_id').html(itemList);
     updateboardListInEditor(board);
+    $("#tab_id").children().first().trigger('click');
 }
 
 //게시글 내용
