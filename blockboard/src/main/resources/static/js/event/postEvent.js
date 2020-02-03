@@ -29,7 +29,6 @@ function editorAreaCreate(method) {
 function editorClear() {
   if (CKEDITOR.instances.editor) {
     CKEDITOR.instances.editor.setData("");
-    CKEDITOR.instances.editor.destroy();
   }
   var post_button = $('#btn_post');
   var writecontent = $('#writecontent');
