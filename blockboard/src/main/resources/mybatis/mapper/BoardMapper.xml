@@ -48,7 +48,7 @@
     </delete>
 
     <delete id="deleteBoard" parameterType="int">
-        DELETE FROM post
+        DELETE FROM board
         WHERE  board_id = #{boardID};
     </delete>
     <delete id="deleteAllCommentInBoard" parameterType="int">
