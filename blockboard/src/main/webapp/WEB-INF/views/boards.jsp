@@ -504,7 +504,6 @@
         </div>
     </div>
 </div>
-
 <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
 <script src="/webjars/bootstrap/4.4.1/dist/js/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
@@ -524,6 +523,9 @@
 <script src="/static/js/updateUI/boardUI.js"></script>
 <script src="/static/js/updateUI/commentUI.js"></script>
 <script src="/static/js/updateUI/function.js"></script>
+<script>
+    $("#tab_id").children().first().trigger('click');
+</script>
 </body>
 
 </html>
