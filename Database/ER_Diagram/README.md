@@ -5,4 +5,4 @@
 
 > Physical Model
 
-![image](https://user-images.githubusercontent.com/36303777/73631552-a973c300-469c-11ea-8f85-60efbf279391.png)
+![image](https://user-images.githubusercontent.com/43199300/73637508-d5e30b80-46ab-11ea-8521-becaf9ff64cc.png)
