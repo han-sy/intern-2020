@@ -94,8 +94,6 @@ fabric.properties
 ### Java ###
 # Compiled class file
 *.class
-*.classpath
-*.project
 
 # Log file
 *.log
@@ -125,7 +123,6 @@ target/
 ### Gradle ###
 .gradle
 build/
-gradle/
 
 ### bin ###
 bin/
