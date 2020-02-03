@@ -31,7 +31,6 @@ public class PostService{
         postMapper.insertPost(post);
     }
     public void deletePost(int postID) {
-        commentMapper.deleteCommentsByPostID(postID);
         postMapper.deletePostByPostID(postID);
     }
     public PostDTO selectPostByPostID(int postID) {

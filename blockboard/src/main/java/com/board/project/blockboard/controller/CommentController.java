@@ -47,25 +47,22 @@ public class CommentController {
     /**
      * 댓글 추가
      * @param postID
-     * @param boardID
      * @param commentContent
      */
     @PostMapping("")
-    public void writeComment(@RequestParam("postID") int postID,@RequestParam("boardID") int boardID,@RequestParam("commentContent") String commentContent) {
+    public void writeComment(@RequestParam("postID") int postID,@RequestParam("commentContent") String commentContent) {
         String userID = jwtService.getUserId();
         int companyID = jwtService.getCompanyId();
-        log.info("!!!!"+postID+","+boardID+":"+commentContent);
-        commentService.writeCommentWithUserInfo(userID,commentContent,boardID,companyID,postID);
+        commentService.writeCommentWithUserInfo(userID,commentContent,companyID,postID);
     }
 
     /**
      * 댓글 삭제
      * @param commentID
      * @param postID
-     * @param boardID
      */
     @DeleteMapping("/{commentid}")
-    public void deleteComment(@PathVariable("commentid") int commentID,@PathVariable("postid") int postID,@PathVariable("boardid") int boardID) {
+    public void deleteComment(@PathVariable("commentid") int commentID,@PathVariable("postid") int postID) {
         commentService.deleteComment(commentID);
     }
 

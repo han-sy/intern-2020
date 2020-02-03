@@ -37,16 +37,14 @@ public class ReplyService {
      * @param userID
      * @param companyID
      * @param postID
-     * @param boardID
      * @param commentContent
      * @param commentReferencedID
      * @param commentReferencedUserID
      */
-    public void writeReplyWithUserInfo(String userID, int companyID, int postID, int boardID, String commentContent,int commentReferencedID,String commentReferencedUserID) {
+    public void writeReplyWithUserInfo(String userID, int companyID, int postID, String commentContent,int commentReferencedID,String commentReferencedUserID) {
         CommentDTO reply = new CommentDTO();
         reply.setUserID(userID);
         reply.setCommentContent(commentContent);
-        reply.setBoardID(boardID);
         reply.setCompanyID(companyID);
         reply.setPostID(postID);
         reply.setUserName(userMapper.selectUserNameByUserID(userID));

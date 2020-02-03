@@ -54,17 +54,11 @@ public class BoardService {
         boardMapper.updateBoardName(boardAttributes);
     }
 
-    public void deleteAllPostInBoard(int boardID) {
-        boardMapper.deleteAllPostInBoard(boardID);
-    }
 
     public void deleteBoard(int boardID) {
         boardMapper.deleteBoard(boardID);
     }
 
-    public void deleteAllCommentInBoard(int boardID) {
-        boardMapper.deleteAllCommentInBoard(boardID);
-    }
 
     public void deleteBoardsByDeleteBoardList(int companyID, String deleteBoardListJson) {
 
@@ -76,8 +70,6 @@ public class BoardService {
         for(int i=0;i<deleteBoardListMap.size();i++){ //삭제목록 조회
             //logger.info("boardIDInteger : "+deleteBoardListMap.get(i).get("boardID"));
             int boardIDInteger = Integer.parseInt(deleteBoardListMap.get(i).get("boardID"));
-            deleteAllCommentInBoard(boardIDInteger);
-            deleteAllPostInBoard(boardIDInteger);
             deleteBoard(boardIDInteger);
         }
     }

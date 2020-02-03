@@ -20,8 +20,6 @@ public interface BoardMapper {
     void insertBoard(BoardDTO newBoard);
     BoardDTO selectBoardByBoardName(String newBoardName);
     void updateBoardName(Map<String, Object> boardAttributes);
-    void deleteAllPostInBoard(int boardID);
     int deleteBoard(int boardID);
-    void deleteAllCommentInBoard(int boardID);
 }
 

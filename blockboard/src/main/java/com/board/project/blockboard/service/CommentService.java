@@ -28,12 +28,11 @@ public class CommentService {
         return commentMapper.selectCommentsByPostID(postID);
     }
 
-    public CommentDTO writeCommentWithUserInfo(String userID, String commentContent, int boardID, int companyID, int postID) {
+    public CommentDTO writeCommentWithUserInfo(String userID, String commentContent, int companyID, int postID) {
         CommentDTO comment = new CommentDTO();
         comment.setCommentContent(commentContent);
         comment.setUserName(userMapper.selectUserNameByUserID(userID));
         comment.setPostID(postID);
-        comment.setBoardID(boardID);
         comment.setUserID(userID);
         comment.setCompanyID(companyID);
         int result = commentMapper.insertNewCommentByCommentInfo(comment);

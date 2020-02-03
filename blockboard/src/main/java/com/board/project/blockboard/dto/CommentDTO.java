@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CommentDTO {
     private int commentID;
-    private int boardID;
     private int postID;
     private int companyID;
     private String userID;

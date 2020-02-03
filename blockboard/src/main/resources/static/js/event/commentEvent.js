@@ -70,6 +70,7 @@ $(document).on('click', '.replyBtn', function () {
     var referenceUserName = $(this).closest(".commentContainer").find(".name").html();
     var referenceUserID = $(this).closest(".commentContainer").find(".name").attr("data-id");
     var inputID = referenceCommentContainer.find("#reply_input_container" + referenceCommentContainer.attr("data-id")).attr("id");
+    console.log("답글 창 개수 : "+$())
     getCommentInputHtml("답글", "입력",
         "To <strong class =tag style ='cursor:pointer;' data-id=" + referenceUserID + " >" + referenceUserName + "</strong>",
         "#" + inputID, "btn_openReply");
