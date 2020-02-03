@@ -299,7 +299,7 @@
                     <div id="editorcontent-hidden">
                     </div>
                     <script id="postid-template" type="text/x-handlebars-template">
-                        <a id="editor_postID" style="visibility:hidden">{{postID}}</a>
+                        <a id="editor_postID" style="display:none">{{postID}}</a>
                     </script>
                 </div>
             </div>
