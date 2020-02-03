@@ -45,7 +45,7 @@
         WHERE post_id=#{postID};
     </update>
 
-    <select id="search" parameterType="string" resultType="com.board.project.blockboard.dto.PostDTO">
+    <select id="searchPost" parameterType="string" resultType="com.board.project.blockboard.dto.PostDTO">
         SELECT post.post_id as postID,
             post.user_id as userID,
             post.board_id as boardID,
@@ -59,7 +59,7 @@
             boards board,
             users users
         WHERE (users.user_id = post.user_id AND board.board_id = post.board_id)
-        <include refid="searchoption"></include>
+        <include refid="searchOption"/>
         ORDER BY postRegisterTime DESC;
     </select>
 
@@ -104,7 +104,8 @@
         ORDER BY
             postRegisterTime DESC;
     </select>
-    <sql id="searchoption">
+
+    <sql id="searchOption">
         <choose>
             <!-- 검색옵션이 제목+내용 일 경우 -->
             <when test="option == 'titleAndContent'">

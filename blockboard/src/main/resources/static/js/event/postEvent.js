@@ -92,16 +92,15 @@ function postUpdateFunction() {
   var post_button = $('#btn_post');
   post_button.html('수정하기'); // 게시글 올리기 버튼 텍스트 변경
   post_button.attr('onclick', 'javascript:postUpdate()');
-  setTimeout(function () {
-    loadPost(boardID, postID); // 에디터로 게시글 정보 불러옴.
-  }, 50);
+  loadPost(boardID, postID); // 에디터로 게시글 정보 불러옴.
 }
 
 // 게시글 조회 후 삭제 버튼 이벤트
 function postDeleteFunction() {
   var postID = $("#postID").html();
   var boardID = getCurrentBoardID();
-  deletePost(boardID, postID);
+  if(confirm("정말 삭제하시겠습니까? 삭제 후 복원되지 않습니다.") === true)
+    deletePost(boardID, postID);
 }
 
 // 게시글 검색 버튼 이벤트
