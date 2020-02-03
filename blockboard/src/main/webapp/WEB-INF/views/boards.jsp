@@ -523,7 +523,7 @@
 <script src="/static/js/util/handlebarsHelper.js"></script>
 <script src="/static/js/updateUI/boardUI.js"></script>
 <script src="/static/js/updateUI/commentUI.js"></script>
-<script src="/static/js/updateUI/function.js"></script>
+<script src="/static/js/updateUI/functionUI.js"></script>
 </body>
 
 </html>
