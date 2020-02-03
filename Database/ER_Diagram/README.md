@@ -1,8 +1,8 @@
 # ER Diagram
 > Logical Model
 
-![image](https://user-images.githubusercontent.com/36303777/72317399-7ca34000-36dc-11ea-8933-92f79af96a0a.png)
+![image](https://user-images.githubusercontent.com/36303777/73631673-08393c80-469d-11ea-9965-0c333a45ea00.png)
 
 > Physical Model
 
-![image](https://user-images.githubusercontent.com/36303777/72317369-64cbbc00-36dc-11ea-8079-636fa0b79e97.png)
+![image](https://user-images.githubusercontent.com/36303777/73631552-a973c300-469c-11ea-8f85-60efbf279391.png)
