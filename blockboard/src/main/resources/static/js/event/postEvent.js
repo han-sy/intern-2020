@@ -92,7 +92,9 @@ function postUpdateFunction() {
   var post_button = $('#btn_post');
   post_button.html('수정하기'); // 게시글 올리기 버튼 텍스트 변경
   post_button.attr('onclick', 'javascript:postUpdate()');
-  loadPost(boardID, postID); // 에디터로 게시글 정보 불러옴.
+  setTimeout(function () {
+    loadPost(boardID, postID); // 에디터로 게시글 정보 불러옴.
+  }, 50);
 }
 
 // 게시글 조회 후 삭제 버튼 이벤트

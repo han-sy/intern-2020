@@ -61,6 +61,7 @@ function loadPost(boardID, postID) {
             addPostIdToEditor(postID);
             initBoardIdOptionInEditor(boardID);
             post_title.val(data.postTitle);
+            setTimeout
             editor.val(data.postContent);
         }
     });
