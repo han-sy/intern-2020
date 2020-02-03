@@ -18,7 +18,7 @@ public interface PostMapper {
     void deletePostByPostID(int postID);
     PostDTO selectPostByPostID(int postID);
     void updatePost(PostDTO post);
-    List<PostDTO> search(String option, String keyword);
+    List<PostDTO> searchPost(String option, String keyword);
     PostDTO selectRecentTempPost(Map<String, Object> map);
     List<PostDTO> selectTempPosts(Map<String, Object> map);
     List<PostDTO> selectPostByBoardID(int boardID);

@@ -76,7 +76,7 @@ public class UserController {
             return "login";
     }
 
-    @GetMapping("/info")
+    @GetMapping("/userinfo")
     @ResponseBody
     public Map<String, Object> info() {
         Map<String, Object> map = new HashMap<>();

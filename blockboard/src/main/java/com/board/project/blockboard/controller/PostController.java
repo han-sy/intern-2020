@@ -119,7 +119,7 @@ public class PostController {
     }
 
     /**
-     * 임시 저장 게시물 가져올 때
+     * 임시 저장 게시물 가져올 때 (현재 로그인된 userID, companyID이 필요)
      * @return 임시 저장된 게시물 목록
      */
     @GetMapping("/temp")
@@ -127,7 +127,6 @@ public class PostController {
         Map<String, Object> param = new HashMap<>();
         param.put("userID", jwtService.getUserId());
         param.put("companyID", jwtService.getCompanyId());
-        param.put("userName", jwtService.getUserName());
         return postService.getTempPosts(param);
     }
 }

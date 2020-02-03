@@ -62,4 +62,10 @@ public class UserService {
         String admin = userMapper.selectUserTypeByUserID(userID);
         return admin.equals("관리자");
     }
+
+    public UserDTO getUserInfo(String userID) {
+        UserDTO result = userMapper.selectUserByID(userID);
+        result.setUserPassword(null);
+        return result;
+    }
 }

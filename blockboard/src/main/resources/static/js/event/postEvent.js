@@ -132,6 +132,21 @@ function off_autosave() {
   clearInterval(autosave);
 }
 
+// 임시저장 게시물 클릭 이벤트
+function clickTempPostEvent(evt) {
+  var postID = evt.getAttribute("data-post");
+  postClear();
+  editorAreaCreate("insert");
+  var btn_cancel = $('#btn_cancel');
+  btn_cancel.html("삭제");
+  btn_cancel.attr('onclick', 'javascript:clickDeleteTempPost()');
+  addPostIdToEditor(postID);
+  //getTempPost(postID);
+  setTimeout(function () {
+    getTempPost(postID);
+  }, 5);
+}
+
 // 임시저장 게시물 삭제 이벤트
 function clickDeleteTempPost() {
   var postID = $('#editor_postID').html();
