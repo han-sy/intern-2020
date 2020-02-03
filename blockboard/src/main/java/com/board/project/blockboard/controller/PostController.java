@@ -1,30 +1,19 @@
+/**
+ * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
+ * @file    PostController.java
+ */
 package com.board.project.blockboard.controller;
 
 import com.board.project.blockboard.dto.PostDTO;
 import com.board.project.blockboard.service.BoardService;
 import com.board.project.blockboard.service.JwtService;
 import com.board.project.blockboard.service.PostService;
-import java.io.UnsupportedEncodingException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
 import java.util.List;
-import javax.crypto.BadPaddingException;
-import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.NoSuchPaddingException;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.codec.DecoderException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
@@ -37,18 +26,34 @@ public class PostController {
     @Autowired
     private JwtService jwtService;
     /**
+     * 게시글 가져오기
+     * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+     * @param postID
+     * @return PostDTO + 유저일치여부 로 구성된 map
+     */
+    @GetMapping(value = "/{postid}")
+    @ResponseBody
+    public Map<String,Object> getPostByPostID(@PathVariable("postid") int postID) {
+        String userID = jwtService.getUserId();
+        int companyID = jwtService.getCompanyId();
+
+        //postData는 PostDTO + 유저 일치여부
+        Map<String, Object> postData  = boardService.getPostDataAboutSelected(postID,userID);
+        return postData;
+    }
+
+    /**
      * 게시물 작성
      * @param boardid 게시물을 올릴 게시판 id
      * @param receivePost 받은 게시물 정보
      * @return
      * @throws Exception
      */
-    @PostMapping("/")
-    @ResponseBody
+    @PostMapping("")
     public void insertPost(@PathVariable("boardid") int boardid, @ModelAttribute PostDTO receivePost) {
         String userID = jwtService.getUserId();
         int companyID = jwtService.getCompanyId();
-
+        log.info("받음 temp 변수 = " + receivePost.getIsTemp());
         receivePost.setUserID(userID);
         receivePost.setCompanyID(companyID);
         receivePost.setBoardID(boardid);
@@ -62,9 +67,8 @@ public class PostController {
      * @return
      */
     @GetMapping("")
-    @ResponseBody
-    public List<PostDTO> getPostListByBoardID(@PathVariable("boardid") int boardID) throws UnsupportedEncodingException, DecoderException, NoSuchPaddingException, InvalidAlgorithmParameterException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidKeyException {
-        List<PostDTO> postList = boardService.getPostListByBoardID(boardID);
+    public List<PostDTO> getPostListByBoardID(@PathVariable("boardid") int boardID) {
+        List<PostDTO> postList = postService.getPostListByBoardID(boardID);
         return postList;
     }
     /**
@@ -75,16 +79,6 @@ public class PostController {
     @DeleteMapping("/{postid}")
     public void deletePost(@PathVariable("postid") int postid) {
         postService.deletePost(postid);
-    }
-
-    /**
-     * 수정 화면 진입시, 현재 게시글을 에디터로 불러온다.
-     * @param postid 수정할 게시물 id
-     * @return 게시물 제목, 내용
-     */
-    @GetMapping("/{postid}/editor")
-    public PostDTO selectPostByPostID(@PathVariable("postid") int postid) {
-        return postService.selectPostByPostID(postid);
     }
 
     /**
@@ -109,19 +103,30 @@ public class PostController {
      */
     @GetMapping("/search")
     public List<PostDTO> searchPost(@RequestParam("option") String option, @RequestParam("keyword") String keyword) {
-        switch (option) {
-            case "제목":
-                option = "post_title";
-                break;
-            case "내용":
-                option = "post_content";
-                break;
-            case "작성자":
-                option = "user_name";
-                break;
-            default:
-                option = "mix";
-        }
         return postService.searchPost(option, keyword);
+    }
+
+    /**
+     * 가장 최근에 임시저장된 게시글 가져올 때
+     * @return 가장 최근에 임시저장된 게시물 객체
+     */
+    @GetMapping("/recent")
+    public PostDTO recentTempPost() {
+        Map<String, Object> param = new HashMap<>();
+        param.put("userID", jwtService.getUserId());
+        param.put("companyID", jwtService.getCompanyId());
+        return postService.selectRecentTemp(param);
+    }
+
+    /**
+     * 임시 저장 게시물 가져올 때 (현재 로그인된 userID, companyID이 필요)
+     * @return 임시 저장된 게시물 목록
+     */
+    @GetMapping("/temp")
+    public List<PostDTO> getTempPosts() {
+        Map<String, Object> param = new HashMap<>();
+        param.put("userID", jwtService.getUserId());
+        param.put("companyID", jwtService.getCompanyId());
+        return postService.getTempPosts(param);
     }
 }

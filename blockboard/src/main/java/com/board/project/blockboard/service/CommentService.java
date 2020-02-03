@@ -28,12 +28,11 @@ public class CommentService {
         return commentMapper.selectCommentsByPostID(postID);
     }
 
-    public CommentDTO writeCommentWithUserInfo(String userID, String commentContent, int boardID, int companyID, int postID) {
+    public CommentDTO writeCommentWithUserInfo(String userID, String commentContent, int companyID, int postID) {
         CommentDTO comment = new CommentDTO();
         comment.setCommentContent(commentContent);
         comment.setUserName(userMapper.selectUserNameByUserID(userID));
         comment.setPostID(postID);
-        comment.setBoardID(boardID);
         comment.setUserID(userID);
         comment.setCompanyID(companyID);
         int result = commentMapper.insertNewCommentByCommentInfo(comment);
@@ -42,6 +41,7 @@ public class CommentService {
     }
 
     public void deleteComment(int commentID) {
+        commentMapper.deleteCommentByCommentReferencedID(commentID);
         commentMapper.deleteCommentByCommentID(commentID);
     }
 
@@ -52,20 +52,8 @@ public class CommentService {
         commentMapper.updateComment(commentAttribute);
     }
 
-    public List<CommentDTO> getReplyListByCommentID(int commentReferencedID) {
-        return commentMapper.selectRepliesByCommentID(commentReferencedID);
-    }
 
-    public void writeReplyWithUserInfo(String userID, String commentContent, int boardID, int companyID, int postID,int commentReferencedID) {
-        CommentDTO reply = new CommentDTO();
-        reply.setUserID(userID);
-        reply.setCommentContent(commentContent);
-        reply.setBoardID(boardID);
-        reply.setCompanyID(companyID);
-        reply.setPostID(postID);
-        reply.setUserName(userMapper.selectUserNameByUserID(userID));
-        reply.setCommentReferencedID(commentReferencedID);
-        int result = commentMapper.insertNewReplyByCommentInfo(reply);
-
+    public int getCommentCountByPostID(int postID) {
+        return commentMapper.getCommentCountByPostID(postID);
     }
 }

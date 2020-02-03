@@ -7,6 +7,7 @@ package com.board.project.blockboard.service;
 import com.board.project.blockboard.dto.BoardDTO;
 import com.board.project.blockboard.dto.PostDTO;
 import com.board.project.blockboard.mapper.BoardMapper;
+import com.board.project.blockboard.mapper.UserMapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
@@ -24,11 +25,8 @@ import org.springframework.stereotype.Service;
 public class BoardService {
     @Autowired
     private BoardMapper boardMapper;
-
-
-    public String getCompanyNameByUserID(String userID) {
-        return boardMapper.selectCompanyNameByUserID(userID);
-    }
+    @Autowired
+    private PostService postService;
 
     public List<BoardDTO> getBoardListByCompanyID(int companyID) {
         //System.out.println("companyID (session): " + session.getAttribute("COMPANY"));
@@ -37,32 +35,12 @@ public class BoardService {
         return boardList;
     }
 
-    public List<PostDTO> getPostListByBoardID(int boardID) {
-        List<PostDTO> postlist = boardMapper.selectPostByBoardID(boardID);
-        return postlist;
-    }
-
-    public PostDTO getPostByPostID(int postID) {
-        PostDTO post = boardMapper.selectPostByPostID(postID);
-        return post;
-    }
-
-    public boolean checkAdmin(String userID) {
-        String admin = boardMapper.selectUserTypeByUserID(userID);
-        return admin.equals("관리자");
-    }
-
     public void insertNewBoard(String newBoardName,int companyID){
         BoardDTO newBoard = new BoardDTO();
         newBoard.setCompanyID(companyID);
         newBoard.setBoardName(newBoardName);
         log.info("newBoard : "+newBoard);
         boardMapper.insertBoard(newBoard);
-    }
-
-    public int getCompanyIDByUserID(String userID) {
-        log.info("boardMapper userid: "+ userID);
-        return boardMapper.selectCompanyIDByUserID(userID);
     }
     
     public BoardDTO getBoardByBoardName(String boardName) {
@@ -76,17 +54,11 @@ public class BoardService {
         boardMapper.updateBoardName(boardAttributes);
     }
 
-    public void deleteAllPostInBoard(int boardID) {
-        boardMapper.deleteAllPostInBoard(boardID);
-    }
 
     public void deleteBoard(int boardID) {
         boardMapper.deleteBoard(boardID);
     }
 
-    public void deleteAllCommentInBoard(int boardID) {
-        boardMapper.deleteAllCommentInBoard(boardID);
-    }
 
     public void deleteBoardsByDeleteBoardList(int companyID, String deleteBoardListJson) {
 
@@ -98,15 +70,13 @@ public class BoardService {
         for(int i=0;i<deleteBoardListMap.size();i++){ //삭제목록 조회
             //logger.info("boardIDInteger : "+deleteBoardListMap.get(i).get("boardID"));
             int boardIDInteger = Integer.parseInt(deleteBoardListMap.get(i).get("boardID"));
-            deleteAllCommentInBoard(boardIDInteger);
-            deleteAllPostInBoard(boardIDInteger);
             deleteBoard(boardIDInteger);
         }
     }
 
     public Map<String, Object> getPostDataAboutSelected(int postID, String userID) {
         Map<String, Object> postMapData = new HashMap<String, Object>();
-        PostDTO postData = getPostByPostID(postID);
+        PostDTO postData = postService.getPostByPostID(postID);
         try {
             // 현재 로그인한 유저와 게시글 작성자가 같을 경우에 'canDelete' 를 true로 전달
             postMapData.put("canDelete", StringUtils.equals(userID,postData.getUserID()) ? true : false);
@@ -115,6 +85,7 @@ public class BoardService {
             postMapData.put("postContent", postData.getPostContent());
             postMapData.put("userName", postData.getUserName());
             postMapData.put("postRegisterTime", postData.getPostRegisterTime());
+            postMapData.put("boardID",postData.getBoardID());
         } catch (Exception e) {
             e.printStackTrace();
         }

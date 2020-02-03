@@ -1,3 +1,7 @@
+/**
+ * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
+ * @file    JwtService.java
+ */
 package com.board.project.blockboard.service;
 
 import com.board.project.blockboard.common.exception.UnauthorizedException;
@@ -6,6 +10,7 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.binary.StringUtils;
 import org.springframework.stereotype.Service;
 import javax.servlet.http.Cookie;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -20,12 +25,12 @@ import java.util.Map;
 @Slf4j
 @Service("jwtService")
 public class JwtService {
-    private static final String SALT = "blockboard";
-    private static final String HEADER_NAME = "Authorization";
+    private final String SALT = "blockboard"; // Secret Key
+    private final String HEADER_NAME = "Authorization";
 
     public <T> String create(String key, T data, String subject) {
         String issure = "BlockBoard";
-        Date exDate = new Date(System.currentTimeMillis() + 60000); // 토큰 만료 시간 1분
+        Date exDate = new Date(System.currentTimeMillis() + (60000 * 60 * 24)); // 토큰 만료 시간 10분
         String jwt = Jwts.builder()
                 .setHeaderParam("typ","JWT")
                 .setHeaderParam("regDate", System.currentTimeMillis())
@@ -47,7 +52,7 @@ public class JwtService {
             if(log.isInfoEnabled()) {
                 e.printStackTrace();
             }else {
-                log.error("Making JWT Key Error ::: {}", e.getMessage());
+                log.error("Making JWT Key Error {}", e.getMessage());
             }
         }
         return key;
@@ -69,7 +74,7 @@ public class JwtService {
         Cookie[] getCookie = request.getCookies();
         String jwt = null;
         for(Cookie c : getCookie) {
-            if(c.getName().equals(HEADER_NAME))
+            if(StringUtils.equals(c.getName(),HEADER_NAME))
                 jwt = c.getValue();
         }
         Jws<Claims> claims = null;

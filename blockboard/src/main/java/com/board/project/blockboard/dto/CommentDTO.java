@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CommentDTO {
     private int commentID;
-    private int boardID;
     private int postID;
     private int companyID;
     private String userID;
@@ -19,4 +18,6 @@ public class CommentDTO {
     private String commentContent;
     private String commentRegisterTime;
     private int commentReferencedID;
+    private String commentReferencedUserID;
+    private String commentReferencedUserName;
 }

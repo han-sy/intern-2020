@@ -17,6 +17,11 @@ spring:
   resource:
     static-locations : classpath:/static/
     add-mappings : true
+  mustache:
+    cache: false
+  output:
+    ansi:
+      enabled: always
 
 mybatis:
   type-aliases-package: com.board.project.blockboard.mapper
@@ -32,6 +37,6 @@ server:
 # SQL Log 볼 때 사용하는 옵션
 #logging:
 #  level:
-#    jdbc.sqlonly: DEBUG
+#    jdbc.sqlonly: info
 #    org.springframework.web: DEBUG
-#    com.zaxxer.hikari.HikariDataSource: ERROR
+#    com.zaxxer.hikari.HikariDataSource: warn

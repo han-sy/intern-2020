@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+<!--
+ * @author Woohyeok Jun <woohyeok.jun@worksmobile.com>
+ * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+ * @file mybatis-config.xml
+-->
 <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
     <mappers>
@@ -7,5 +12,7 @@
         <mapper resource="PostMapper.xml"/>
         <mapper resource="FunctionMapper.xml"/>
         <mapper resource="CommentMapper.xml"/>
+        <mapper resource="ReplyMapper.xml"/>
+        <mapper resource="CompanyMapper.xml"
     </mappers>
 </configuration>

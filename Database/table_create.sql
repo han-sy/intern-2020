@@ -54,25 +54,26 @@ create table Post(
     post_title varchar(150) not null,
     post_content varchar(10000) character set utf8mb4 collate utf8mb4_unicode_ci not null,
     post_register_time timestamp not null,
-	foreign key(user_id) references Users(user_id),
-	foreign key(board_id) references Board(board_id),
-	foreign key(company_id) references Company(company_id),
+    is_temp boolean not null,
+	foreign key(user_id) references Users(user_id) ON DELETE CASCADE,
+	foreign key(board_id) references Board(board_id) ON DELETE CASCADE,
+	foreign key(company_id) references Company(company_id) ON DELETE CASCADE,
 	primary key(post_id)
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
 create table Comments(
 	comment_id int(9) not null AUTO_INCREMENT,
-    board_id int(9) not null,
 	post_id int(9) not null,
 	user_id varchar(20) not null,
 	company_id int(9) not null,
-	foreign key(post_id) references Post(post_id),
-	foreign key(user_id) references Users(user_id),
-	foreign key(company_id) references Company(company_id),
     comment_content varchar(4000) character set utf8mb4 collate utf8mb4_unicode_ci not null,
     comment_register_time timestamp not null,
     comment_referenced_id int(9),
-    primary key(comment_id,board_id)
+    comment_referenced_user_id varchar(20),
+	foreign key(post_id) references Post(post_id) ON DELETE CASCADE ,
+	foreign key(user_id) references Users(user_id) ON DELETE CASCADE,
+	foreign key(company_id) references Company(company_id) ON DELETE CASCADE,
+    primary key(comment_id)
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
 
@@ -80,7 +81,7 @@ alter table Board auto_increment=1;
 alter table Post auto_increment=1;
 alter table Comments auto_increment=1;
 
-insert into Company values(1,'wm');
+insert into Company values(1,'WORKS MOBILE');
 insert into Company values(2,'naver');
 insert into Board (company_id,board_name) values(1,"공지사항");
 insert into Board (company_id,board_name) values(2,"건의사항");
@@ -99,28 +100,23 @@ insert into BoardFunction values(5,'임시저장');
 insert into BoardFunction values(6,'스티커');
 insert into FunctionCheck values(1,1,null);
 insert into FunctionCheck values(2,4,null);
-insert into Post values(1,1,1,1,'첫게시글','첫내용',now());
-insert into Comments values(1,1,1,1,1,'첫 댓글',now(),null);
-insert into Comments values(2,1,1,1,1,'첫 답글',now(),1);
-INSERT INTO Comments(board_id,post_id,user_id,company_id,comment_content,comment_referenced_id)
-        VALUES (
-            1,
-            1,
-            1,
-            1,
-            'hihi',
-            null);
+
+insert into Post values(1,1,1,1,'첫게시글','첫내용',now(),false);
+insert into Comments values(1,1,1,1,'첫 댓글',now(),null,null);
+insert into Comments values(2,1,1,1,'첫 답글',now(),1,1);
+
 Select * from Comments;
 Select * from Post;
 select * from Users;
 select * from FunctionCheck;
 select * from Board;
 
-insert into Post values (2,1,1,1,'두번째 게시글','두번째 게시글내용',now());
-insert into Post values (3,2,1,1,'건의사항 게시판 첫글','공지사항이네',now());
-insert into Post values (4,2,1,1,'공지사항 게시판 ','ㅎㅎㅎㅎ테스트',now());
-insert into Post values (5,1,5,1,'자유1','1111',now());
-insert into Post values (6,1,5,1,'자유2','22222',now());
+
+insert into Post values (2,1,1,1,'두번째 게시글','두번째 게시글내용',now(),false);
+insert into Post values (3,2,1,1,'건의사항 게시판 첫글','공지사항이네',now(),false);
+insert into Post values (4,2,1,1,'공지사항 게시판 ','ㅎㅎㅎㅎ테스트',now(),false);
+insert into Post values (5,1,5,1,'자유1','1111',now(),false);
+insert into Post values (6,1,5,1,'자유2','22222',now(),false);
 
 Select boardfunction.function_id,ifnull(functioncheck.company_id,0), boardfunction.function_name, functioncheck.function_data
 FROM BoardFunction boardfunction LEFT OUTER JOIN FunctionCheck functioncheck
@@ -132,6 +128,9 @@ SELECT p.post_id,p.user_id, u.user_name,p.board_id,p.company_id,p.post_title,p.p
         FROM Post p , Users u
         WHERE p.user_id = u.user_id and p.board_id=1
         ORDER BY p.post_id DESC;
+select count(comment_id) 
+from Comments
+where post_id =1;
 
 
 SELECT  comments.comment_id as commentID,
@@ -142,8 +141,44 @@ SELECT  comments.comment_id as commentID,
                 comments.company_id as companyID,
                 comments.comment_content as commentContent,
                 comments.comment_register_time as commentRegisterTime,
+                comments.comment_referenced_id as commentReferencedID,
+                referenced_user.user_id as commentReferencedUserID,
+                referenced_user.user_name as commentReferencedUserName
+        FROM Comments comments
+        LEFT OUTER JOIN Users users
+        ON comments.user_id = users.user_id
+        LEFT OUTER JOIN Users referenced_user
+        ON comments.comment_referenced_user_id = referenced_user.user_id
+        WHERE comments.post_id = 1
+        AND comments.comment_referenced_id is null;
+        
+SELECT  comments.comment_id as commentID,
+                comments.post_id as postID,
+                comments.user_id as userID,
+                users.user_name as userName,
+                comments.company_id as companyID,
+                comments.comment_content as commentContent,
+                comments.comment_register_time as commentRegisterTime,
+                comments.comment_referenced_id as commentReferencedID,
+                referenced_user.user_id as commentReferencedUserID,
+                referenced_user.user_name as commentReferencedUserName
+        FROM Comments comments
+        LEFT OUTER JOIN Users users
+        ON comments.user_id = users.user_id
+        LEFT OUTER JOIN Users referenced_user
+        ON comments.comment_referenced_user_id = referenced_user.user_id
+        WHERE comments.comment_referenced_id = 1;
+
+
+SELECT  comments.comment_id as commentID,
+                comments.post_id as postID,
+                comments.user_id as userID,
+                users.user_name as userName,
+                comments.company_id as companyID,
+                comments.comment_content as commentContent,
+                comments.comment_register_time as commentRegisterTime,
                 comments.comment_referenced_id as commentReferencedID
         FROM Comments comments , Users users
         where comments.user_id = users.user_id
         AND comments.post_id = 1
-        AND comments.comment_referenced_id is not null;
+        AND comments.comment_referenced_id is null;

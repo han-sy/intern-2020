@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
- * @file CommentMapper.xml
+ * @file ReplyMapper.xml
 -->
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.board.project.blockboard.mapper.CommentMapper">
-    <select id="selectCommentsByPostID" parameterType="int" resultType="com.board.project.blockboard.dto.CommentDTO">
+<mapper namespace="com.board.project.blockboard.mapper.ReplyMapper">
+    <select id="selectRepliesByCommentID" parameterType="int" resultType="com.board.project.blockboard.dto.CommentDTO">
         SELECT comments.comment_id            AS commentID,
                comments.post_id               AS postID,
                comments.user_id               AS userID,
@@ -23,42 +23,22 @@
                LEFT OUTER JOIN users referenced_user
                             ON comments.comment_referenced_user_id =
                                referenced_user.user_id
-        WHERE  comments.post_id = #{postID}
-               AND comments.comment_referenced_id IS NULL;
+        WHERE  comments.comment_referenced_id = #{commentReferencedID};
     </select>
-    <select id="getCommentCountByPostID" parameterType="int" resultType="int">
-        SELECT Count(comment_id)
-        FROM   comments
-        WHERE  post_id = #{postID};
-    </select>
-    <insert id="insertNewCommentByCommentInfo" parameterType="hashmap" >
+
+    <insert id="insertNewReplyByCommentInfo" parameterType="hashmap" >
         INSERT INTO comments
                     (post_id,
                      user_id,
                      company_id,
                      comment_content,
-                     comment_referenced_id)
+                     comment_referenced_id,
+                     comment_referenced_user_id)
         VALUES      ( #{postID},
                       #{userID},
                       #{companyID},
                       #{commentContent},
-                      NULL);
+                      #{commentReferencedID},
+                      #{commentReferencedUserID});
     </insert>
-    <delete id="deleteCommentByCommentReferencedID" parameterType="int">
-        DELETE FROM comments
-        WHERE  comment_referenced_id = #{commentID};
-    </delete>
-    <delete id="deleteCommentByCommentID" parameterType="int">
-        DELETE FROM comments
-        WHERE  comment_id = #{commentID};
-    </delete>
-    <delete id="deleteCommentsByPostID" parameterType="int">
-        DELETE FROM comments
-        WHERE  post_id = #{postID};
-    </delete>
-    <update id="updateComment" parameterType="hashmap">
-        UPDATE comments 
-        SET    comment_content = #{newComment} 
-        WHERE  comment_id = #{commentID}; 
-    </update>
 </mapper>

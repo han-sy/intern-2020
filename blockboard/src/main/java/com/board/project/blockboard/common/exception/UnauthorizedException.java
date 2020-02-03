@@ -1,3 +1,7 @@
+/**
+ * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
+ * @file    UnauthorizedException.java
+ */
 package com.board.project.blockboard.common.exception;
 
 public class UnauthorizedException extends RuntimeException {
