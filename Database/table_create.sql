@@ -55,15 +55,14 @@ create table Post(
     post_content varchar(10000) character set utf8mb4 collate utf8mb4_unicode_ci not null,
     post_register_time timestamp not null,
     is_temp boolean not null,
-	foreign key(user_id) references Users(user_id),
-	foreign key(board_id) references Board(board_id),
-	foreign key(company_id) references Company(company_id),
+	foreign key(user_id) references Users(user_id) ON DELETE CASCADE,
+	foreign key(board_id) references Board(board_id) ON DELETE CASCADE,
+	foreign key(company_id) references Company(company_id) ON DELETE CASCADE,
 	primary key(post_id)
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
 create table Comments(
 	comment_id int(9) not null AUTO_INCREMENT,
-    board_id int(9) not null,
 	post_id int(9) not null,
 	user_id varchar(20) not null,
 	company_id int(9) not null,
@@ -71,10 +70,10 @@ create table Comments(
     comment_register_time timestamp not null,
     comment_referenced_id int(9),
     comment_referenced_user_id varchar(20),
-	foreign key(post_id) references Post(post_id),
-	foreign key(user_id) references Users(user_id),
-	foreign key(company_id) references Company(company_id),
-    primary key(comment_id,board_id)
+	foreign key(post_id) references Post(post_id) ON DELETE CASCADE ,
+	foreign key(user_id) references Users(user_id) ON DELETE CASCADE,
+	foreign key(company_id) references Company(company_id) ON DELETE CASCADE,
+    primary key(comment_id)
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
 
@@ -82,7 +81,7 @@ alter table Board auto_increment=1;
 alter table Post auto_increment=1;
 alter table Comments auto_increment=1;
 
-insert into Company values(1,'wm');
+insert into Company values(1,'WORKS MOBILE');
 insert into Company values(2,'naver');
 insert into Board (company_id,board_name) values(1,"공지사항");
 insert into Board (company_id,board_name) values(2,"건의사항");
@@ -103,14 +102,15 @@ insert into FunctionCheck values(1,1,null);
 insert into FunctionCheck values(2,4,null);
 
 insert into Post values(1,1,1,1,'첫게시글','첫내용',now(),false);
-insert into Comments values(1,1,1,1,1,'첫 댓글',now(),null,null);
-insert into Comments values(2,1,1,1,1,'첫 답글',now(),1,1);
+insert into Comments values(1,1,1,1,'첫 댓글',now(),null,null);
+insert into Comments values(2,1,1,1,'첫 답글',now(),1,1);
 
 Select * from Comments;
 Select * from Post;
 select * from Users;
 select * from FunctionCheck;
 select * from Board;
+
 
 insert into Post values (2,1,1,1,'두번째 게시글','두번째 게시글내용',now(),false);
 insert into Post values (3,2,1,1,'건의사항 게시판 첫글','공지사항이네',now(),false);
@@ -128,6 +128,10 @@ SELECT p.post_id,p.user_id, u.user_name,p.board_id,p.company_id,p.post_title,p.p
         FROM Post p , Users u
         WHERE p.user_id = u.user_id and p.board_id=1
         ORDER BY p.post_id DESC;
+select count(comment_id) 
+from Comments
+where post_id =1;
+
 
 SELECT  comments.comment_id as commentID,
                 comments.board_id as boardID,
@@ -149,7 +153,6 @@ SELECT  comments.comment_id as commentID,
         AND comments.comment_referenced_id is null;
         
 SELECT  comments.comment_id as commentID,
-                comments.board_id as boardID,
                 comments.post_id as postID,
                 comments.user_id as userID,
                 users.user_name as userName,
@@ -168,7 +171,6 @@ SELECT  comments.comment_id as commentID,
 
 
 SELECT  comments.comment_id as commentID,
-                comments.board_id as boardID,
                 comments.post_id as postID,
                 comments.user_id as userID,
                 users.user_name as userName,
