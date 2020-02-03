@@ -107,12 +107,6 @@
     <div class="row">
         <div class="col-2">
             <ul class="tab" id="tab_id">
-                <c:forEach items="${boardList}" var="boardList" varStatus="status">
-                    <li data-tab="${boardList.boardID}" class='tabmenu' id="default" style="cursor:pointer">
-                        <c:out value="${boardList.boardName}"/>
-                    </li>
-                </c:forEach>
-                <li data-tab="-1" class=tabmenu id=default style="cursor:pointer"> 임시보관함</li>
             </ul>
             <!--게시판 목록 템플릿-->
             <script id="boards-template" type="text/x-handlebars-template">
@@ -268,11 +262,6 @@
                     </div>
                     <div class="col-2 d-flex">
                         <select class="form-control-sm" id="boardIDinEditor">
-                            <c:forEach items="${boardList}" var="boardList" varStatus="status">
-                                <option data-tab="${boardList.boardID}" id="default">
-                                    <c:out value="${boardList.boardName}"/>
-                                </option>
-                            </c:forEach>
                         </select>
                     </div>
                     <!--게시글 작성 시 게시판 목록 템플릿-->
@@ -524,9 +513,7 @@
 <script src="/static/js/updateUI/commentUI.js"></script>
 <script src="/static/js/updateUI/functionUI.js"></script>
 <script src="/static/js/updateUI/postUI.js"></script>
-<script>
-    $("#tab_id").children().first().trigger('click');
-</script>
+<script src="/static/js/util/windowLoad.js"></script>
 </body>
 
 </html>

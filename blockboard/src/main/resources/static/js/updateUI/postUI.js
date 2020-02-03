@@ -88,3 +88,10 @@ function initBoardIdOptionInEditor(currentBoardID) {
         }
     });
 }
+
+function updateboardListInEditor(board){
+    source = $('#writecontent-boards-template').html();
+    template = Handlebars.compile(source);
+    itemList = template(board);
+    $('#boardIDinEditor').html(itemList);
+}

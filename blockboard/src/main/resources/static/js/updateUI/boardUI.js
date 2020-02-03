@@ -9,6 +9,7 @@ function updateTab(data) {
     var board = {boards: data};
     var itemList = template(board);
     $('#tab_id').html(itemList);
+    updateboardListInEditor(board);
 }
 
 //게시글 내용
