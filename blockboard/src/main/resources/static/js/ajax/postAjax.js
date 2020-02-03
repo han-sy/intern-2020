@@ -61,8 +61,10 @@ function loadPost(boardID, postID) {
             addPostIdToEditor(postID);
             initBoardIdOptionInEditor(boardID);
             post_title.val(data.postTitle);
-            setTimeout
-            editor.val(data.postContent);
+            setTimeout(function() {
+                editor.val(data.postContent);
+            },50);
+
         }
     });
 }
