@@ -12,18 +12,18 @@
                 user_name as userName,
                 user_password as userPassword,
                 user_type as userType
-        FROM Users
+        FROM users
         WHERE user_id=#{userID};
     </select>
 
     <select id="selectCompanyIDByUserID" parameterType="string" resultType="int">
         SELECT company_id
-        FROM Users users
+        FROM users users
         WHERE users.user_id = #{userID};
     </select>
     <select id="selectUserNameByUserID" parameterType="string" resultType="string">
         SELECT user_name as userName
-        FROM Users
+        FROM users
         WHERE user_id = #{userID};
     </select>
 

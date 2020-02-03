@@ -10,19 +10,19 @@
         SELECT board_id   AS boardID,
                company_id AS companyID,
                board_name AS boardName
-        FROM   board
+        FROM   boards
         WHERE  company_id = #{companyID};
     </select>
     <select id="selectBoardByBoardName" parameterType="string" resultType="com.board.project.blockboard.dto.BoardDTO">
         SELECT board_id   AS boardID,
                company_id AS companyID,
                board_name AS boardName
-        FROM   board
+        FROM   boards
         WHERE  board_name = #{boardName};
     </select>
 
     <insert id="insertBoard" parameterType="com.board.project.blockboard.dto.BoardDTO">
-        INSERT INTO board
+        INSERT INTO boards
                     (company_id,
                      board_name)
         VALUES      ( #{companyID},
@@ -32,18 +32,18 @@
     <!--게시글 작성 시 선택한 게시판 ID 반환-->
     <select id="selectBoardIDByComIDAndBoardName" parameterType="hashMap" resultType="int">
         SELECT board_id AS boardID
-        FROM   board
+        FROM   boards
         WHERE  company_id = #{companyID}
                AND board_name = #{boardName};
     </select>
     <update id = "updateBoardName" parameterType="hashmap">
-        UPDATE board
+        UPDATE boards
         SET    board_name = #{boardName}
         WHERE  board_id = #{boardID};
     </update>
 
     <delete id="deleteBoard" parameterType="int">
-        DELETE FROM board
+        DELETE FROM boards
         WHERE  board_id = #{boardID};
     </delete>
 
