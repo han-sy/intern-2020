@@ -439,7 +439,7 @@
                 {{#attribute}}
                 <br>
                 <div style='width: 100%' class=commentHtml>
-                <textarea style='width: 1100px' id='commentText' placeholder='댓글을 입력하세요'
+                <textarea style='width: 100%' id='commentText' placeholder='댓글을 입력하세요'
                           name=commentTxt>{{{oldText}}}</textarea>
                     <div>
                         <a id=btn_edit_comment_complete class="text-success text-button font-weight-bold" style="cursor: pointer;">수정하기</a>
