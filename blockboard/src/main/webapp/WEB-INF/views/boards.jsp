@@ -592,6 +592,7 @@
 <script src="/static/js/updateUI/functionUI.js"></script>
 <script src="/static/js/updateUI/postUI.js"></script>
 <script src="/static/js/util/windowLoad.js"></script>
+<script src="/static/js/util/constant.js>"></script>
 </body>
 
 </html>

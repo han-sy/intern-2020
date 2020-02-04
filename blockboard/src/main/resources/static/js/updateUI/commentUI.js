@@ -30,6 +30,7 @@ function getCommentInputHtml(type, buttonName, tag, className, buttonSelector) {
   $(className).html(itemList + "</div>");
 }
 
+//TODO 댓글과 답글을 분리해도 될것같다.
 //댓글 컨텐츠 모두 불러오기
 function getCommentAllContents(data) {
   updateCommentListUI(data);

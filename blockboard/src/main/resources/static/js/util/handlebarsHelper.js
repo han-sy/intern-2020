@@ -1,6 +1,6 @@
 /**
  * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
- * @file handlebars.Helper.js
+ * @file handlebarsHelper.js
  */
 //기능 사용여부 체크 하는 헬퍼함수
 Handlebars.registerHelper('isAbleFunction', function (options) {
