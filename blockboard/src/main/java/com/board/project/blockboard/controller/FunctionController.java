@@ -30,11 +30,10 @@ public class FunctionController {
   /**
    * 기존 기능 on/off 정보
    *
-   * @param request
    * @return 리스트 반환
    */
   @GetMapping(value = "/{companyid}")
-  public List<FunctionDTO> getFunctionInfo(HttpServletRequest request) {
+  public List<FunctionDTO> getFunctionInfo() {
     int companyID = jwtService.getCompanyId();
     List<FunctionDTO> functionInfoList = functionService.getfunctionInfoListByCompanyID(companyID);
     return functionInfoList;
@@ -42,13 +41,9 @@ public class FunctionController {
 
   /**
    * 기능 on/off 정보 업데이트
-   *
-   * @param functionInfoData
-   * @param request
    */
   @PostMapping(value = "/{companyid}")
-  public void insertNewFunctionData(@RequestParam("functionInfoData") String functionInfoData,
-      HttpServletRequest request) {
+  public void insertNewFunctionData(@RequestParam("functionInfoData") String functionInfoData) {
     int companyID = jwtService.getCompanyId();
     functionService.updateNewFunctionsInfo(companyID, functionInfoData);
   }

@@ -60,8 +60,6 @@ public class PostService {
 
   /**
    * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
-   * @param boardID
-   * @return
    */
   public List<PostDTO> getPostListByBoardID(int boardID) {
     List<PostDTO> postlist = postMapper.selectPostByBoardID(boardID);
@@ -70,8 +68,7 @@ public class PostService {
 
   /**
    * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
-   * @param postID
-   * @return
+   *
    */
   public PostDTO getPostByPostID(int postID) {
     PostDTO post = postMapper.selectPostByPostID(postID);
