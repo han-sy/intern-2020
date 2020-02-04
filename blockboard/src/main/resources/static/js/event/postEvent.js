@@ -70,18 +70,15 @@ function checkEmpty() {
     return false;
   }
   // 서버에 나중에 적용하기
-  if (isValidLength(postTitle, 100)) {
-    alert("게시글 제목 길이 통과하였습니다.");
-  } else {
+  if (!isValidLength(postTitle, 100)) {
     alert("게시글 제목 길이를 초과하였습니다.");
     return false;
   }
-  if (isValidLength(postContent, 100)) {
-    alert("게시글 내용 길이를 통과하였습니다.");
-    return true;
-  } else {
+  if (!isValidLength(postContent, 100)) {
     alert("게시글 내용 길이를 초과하였습니다.");
     return false;
+  } else {
+    return true;
   }
 }
 

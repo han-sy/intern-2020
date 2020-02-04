@@ -17,6 +17,8 @@ function getContextPath() {
 function errorFunction(xhr) {
   if (xhr.status == 401) { // Token 만료 에러
     returnToLoginPage();
+  } else if(xhr.status == 400) {
+    alert("입력 글자수 제한을 초과하였습니다.");
   }
 }
 

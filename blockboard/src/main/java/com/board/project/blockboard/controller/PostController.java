@@ -4,14 +4,18 @@
  */
 package com.board.project.blockboard.controller;
 
+import com.board.project.blockboard.common.exception.LengthValidException;
+import com.board.project.blockboard.common.util.LengthCheckUtils;
 import com.board.project.blockboard.dto.PostDTO;
 import com.board.project.blockboard.service.BoardService;
 import com.board.project.blockboard.service.JwtService;
 import com.board.project.blockboard.service.PostService;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -38,6 +42,8 @@ public class PostController {
   private JwtService jwtService;
 
   private final String[] searchOptions = {"title", "writer", "content", "titleAndContent"};
+  private final int POST_TITLE_LENGTH_LIMIT = 100;
+  private final int POST_CONTENT_LENGTH_LIMIT = 300;
 
   /**
    * 게시글 가져오기
@@ -65,14 +71,17 @@ public class PostController {
    */
   @PostMapping("")
   public void insertPost(@PathVariable("boardid") int boardid,
-      @ModelAttribute PostDTO receivePost) {
-    String userID = jwtService.getUserId();
-    int companyID = jwtService.getCompanyId();
-    log.info("받음 temp 변수 = " + receivePost.getIsTemp());
-    receivePost.setUserID(userID);
-    receivePost.setCompanyID(companyID);
-    receivePost.setBoardID(boardid);
-    postService.insertPost(receivePost);
+      @ModelAttribute PostDTO receivePost, HttpServletResponse response) throws IOException {
+    if (LengthCheckUtils.isValid(receivePost)) {
+      String userID = jwtService.getUserId();
+      int companyID = jwtService.getCompanyId();
+      receivePost.setUserID(userID);
+      receivePost.setCompanyID(companyID);
+      receivePost.setBoardID(boardid);
+      postService.insertPost(receivePost);
+    } else {
+      response.sendError(LengthValidException.ERROR_CODE);
+    }
   }
 
   /**
@@ -107,10 +116,14 @@ public class PostController {
    */
   @PutMapping("/{postid}")
   public void updatePost(@PathVariable("boardid") int boardid, @PathVariable("postid") int postid,
-      @ModelAttribute PostDTO requestPost) {
-    requestPost.setPostID(postid);
-    requestPost.setBoardID(boardid);
-    postService.updatePost(requestPost);
+      @ModelAttribute PostDTO requestPost, HttpServletResponse response) throws IOException {
+    if(LengthCheckUtils.isValid(requestPost)) {
+      requestPost.setPostID(postid);
+      requestPost.setBoardID(boardid);
+      postService.updatePost(requestPost);
+    } else {
+      response.sendError(LengthValidException.ERROR_CODE);
+    }
   }
 
   /**
