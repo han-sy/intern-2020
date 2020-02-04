@@ -111,17 +111,22 @@
 
   <sql id="searchOption">
     <choose>
+      <!-- 검색옵션이 제목 일 경우 -->
+      <when test="option == 'title'">
+        AND (post.post_title LIKE CONCAT('%', #{keyword}, '%'))
+      </when>
+      <!-- 검색옵션이 작성자 일 경우 -->
+      <when test="option == 'writer'">
+        AND (users.user_name LIKE CONCAT('%', #{keyword}, '%'))
+      </when>
+      <!-- 검색옵션이 내용 일 경우 -->
+      <when test="option == 'content'">
+        AND (post.post_content LIKE CONCAT('%', #{keyword},'%'))
+      </when>
       <!-- 검색옵션이 제목+내용 일 경우 -->
       <when test="option == 'titleAndContent'">
-        AND (post.post_title LIKE '%${keyword}%' OR post.post_content LIKE '%${keyword}%')
+        AND (post.post_title LIKE CONCAT('%', #{keyword},'%') OR post.post_content LIKE CONCAT('%', #{keyword},'%'))
       </when>
-      <when test="option == 'user_name'">
-        AND (users.user_name LIKE '%${keyword}%')
-      </when>
-      <!-- 아닐 경우 -->
-      <otherwise>
-        AND (post.${option} LIKE '%${keyword}%')
-      </otherwise>
     </choose>
   </sql>
 

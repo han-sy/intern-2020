@@ -8,6 +8,7 @@ import com.board.project.blockboard.dto.PostDTO;
 import com.board.project.blockboard.service.BoardService;
 import com.board.project.blockboard.service.JwtService;
 import com.board.project.blockboard.service.PostService;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +36,8 @@ public class PostController {
   private BoardService boardService;
   @Autowired
   private JwtService jwtService;
+
+  private final String[] searchOptions = {"title", "writer", "content", "titleAndContent"};
 
   /**
    * 게시글 가져오기
@@ -119,7 +122,13 @@ public class PostController {
   @GetMapping("/search")
   public List<PostDTO> searchPost(@RequestParam("option") String option,
       @RequestParam("keyword") String keyword) {
-    return postService.searchPost(option, keyword);
+    // option의 유효성 검사
+    if (Arrays.asList(searchOptions).contains(option)) {
+      log.info("option valid");
+      return postService.searchPost(option, keyword);
+    } else {
+      return null;
+    }
   }
 
   /**
