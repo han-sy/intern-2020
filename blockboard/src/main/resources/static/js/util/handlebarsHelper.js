@@ -4,7 +4,7 @@
  */
 //기능 사용여부 체크 하는 헬퍼함수
 Handlebars.registerHelper('isAbleFunction', function (options) {
-  if (this.companyID == 0) {
+  if (!(this.functionOn)) {
     return options.fn(this); //OFF else 실행행
   }
   return options.inverse(this);// ON

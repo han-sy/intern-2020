@@ -44,20 +44,7 @@ public class FunctionService {
 
   public List<FunctionDTO> getfunctionInfoListByCompanyID(int companyID) {
     List<FunctionDTO> functionInfoList = getFunctionInfoByCompanyID(companyID);
-    List functionInfoDataList = new ArrayList<Object>();
-    try {
-      for (int i = 0; i < functionInfoList.size(); i++) {
-        Map<String, Object> functionInfoData = new HashMap<String, Object>();
-        functionInfoData.put("functionID", functionInfoList.get(i).getFunctionID());
-        functionInfoData.put("companyID", functionInfoList.get(i).getCompanyID());
-        functionInfoData.put("functionName", functionInfoList.get(i).getFunctionName());
-        functionInfoData.put("functionData", functionInfoList.get(i).getFunctionData());
-        functionInfoDataList.add(functionInfoData);
-      }
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-    return functionInfoDataList;
+    return functionInfoList;
   }
 
   /**
@@ -73,11 +60,11 @@ public class FunctionService {
 
     try {
       for (int i = 0; i < functionInfoList.size(); i++) {
-        if (functionInfoList.get(i).getCompanyID() > 0 && functionListMap.get(i)
+        if (functionInfoList.get(i).isFunctionOn() && functionListMap.get(i)
             .get("functionCheck").equals("OFF")) {//on->off
           //insert문
           changeFunctionOnToOff(functionInfoList.get(i).getFunctionID(), companyID);
-        } else if (functionInfoList.get(i).getCompanyID() == 0 && functionListMap.get(i)
+        } else if (!functionInfoList.get(i).isFunctionOn() && functionListMap.get(i)
             .get("functionCheck").equals("ON")) {//off->on
           //delete문
           changeFunctionOffToOn(functionInfoList.get(i).getFunctionID(), companyID);
