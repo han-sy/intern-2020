@@ -204,8 +204,8 @@
                 <div class='boardInfo' id='board{{boardID}}' style="padding: 15px 1px 5px 10px;">
                     <span class='deleteBoard' data-board='board{{boardID}}'> {{boardName}} </span>
                     <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
-                    <input class ="form-control" type='text' name='boardname' data-boardid={{boardID}} data-oldname={{boardName}}
-                           value={{boardName}}>
+                    <input class ="form-control" type='text' name='boardname' data-boardid={{boardID}} data-oldname="{{boardName}}"
+                           value="{{boardName}}" >
                 </div>
                 {{/boards}}
             </script>
