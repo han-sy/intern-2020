@@ -55,8 +55,6 @@ public class UserService {
   /**
    *
    * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
-   * @param userID
-   * @return
    */
   public boolean checkAdmin(String userID) {
     String admin = userMapper.selectUserTypeByUserID(userID);
