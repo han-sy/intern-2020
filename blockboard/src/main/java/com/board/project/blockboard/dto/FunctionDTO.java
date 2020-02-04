@@ -10,8 +10,9 @@ import org.apache.ibatis.type.Alias;
 @Alias("FunctionDTO")
 @Data
 public class FunctionDTO {
-    int functionID;
-    int companyID;
-    String functionName;
-    String functionData;
+
+  int functionID;
+  int companyID;
+  String functionName;
+  String functionData;
 }

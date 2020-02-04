@@ -1,6 +1,6 @@
 /**
- * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
- * @file    JwtInterceptor.java
+ * @author Woohyeok Jun <woohyeok.jun@worksmobile.com>
+ * @file JwtInterceptor.java
  */
 package com.board.project.blockboard.common.interceptor;
 
@@ -17,31 +17,33 @@ import org.springframework.web.servlet.HandlerInterceptor;
 @Slf4j
 @Component
 public class JwtInterceptor implements HandlerInterceptor {
-    private static final String HEADER_AUTH = "Authorization";
 
-    @Autowired
-    private JwtService jwtService;
+  private static final String HEADER_AUTH = "Authorization";
 
-    @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object object) throws Exception {
-        String token = CookieUtils.getCookie(request, HEADER_AUTH);
+  @Autowired
+  private JwtService jwtService;
 
-        // JWT Token 만료 검사
-        if (token != null && jwtService.isUsable(token)) {
-            return true;
+  @Override
+  public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object object)
+      throws Exception {
+    String token = CookieUtils.getCookie(request, HEADER_AUTH);
+
+    // JWT Token 만료 검사
+    if (token != null && jwtService.isUsable(token)) {
+      return true;
+    } else {
+        if (isAjaxRequest(request)) {
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
         } else {
-            if(isAjaxRequest(request)) {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
-            }
-            else
-                response.sendRedirect(request.getContextPath() + "/login");
-            return false;
+            response.sendRedirect(request.getContextPath() + "/login");
         }
+      return false;
     }
+  }
 
-    private boolean isAjaxRequest(HttpServletRequest request) {
-        String ajaxHeader = "x-requested-with";
-        return StringUtils.equals("XMLHttpRequest", request.getHeader(ajaxHeader));
-    }
+  private boolean isAjaxRequest(HttpServletRequest request) {
+    String ajaxHeader = "x-requested-with";
+    return StringUtils.equals("XMLHttpRequest", request.getHeader(ajaxHeader));
+  }
 }

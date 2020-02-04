@@ -3,10 +3,12 @@
  * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
  * @file CommentMapper.xml
 -->
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.board.project.blockboard.mapper.CommentMapper">
-    <select id="selectCommentsByPostID" parameterType="int" resultType="com.board.project.blockboard.dto.CommentDTO">
+  <select id="selectCommentsByPostID" parameterType="int"
+    resultType="com.board.project.blockboard.dto.CommentDTO">
         SELECT comments.comment_id            AS commentID,
                comments.post_id               AS postID,
                comments.user_id               AS userID,
@@ -26,12 +28,12 @@
         WHERE  comments.post_id = #{postID}
                AND comments.comment_referenced_id IS NULL;
     </select>
-    <select id="getCommentCountByPostID" parameterType="int" resultType="int">
+  <select id="getCommentCountByPostID" parameterType="int" resultType="int">
         SELECT Count(comment_id)
         FROM   comments
         WHERE  post_id = #{postID};
     </select>
-    <insert id="insertNewCommentByCommentInfo" parameterType="hashmap" >
+  <insert id="insertNewCommentByCommentInfo" parameterType="hashmap">
         INSERT INTO comments
                     (post_id,
                      user_id,
@@ -44,19 +46,19 @@
                       #{commentContent},
                       NULL);
     </insert>
-    <delete id="deleteCommentByCommentReferencedID" parameterType="int">
+  <delete id="deleteCommentByCommentReferencedID" parameterType="int">
         DELETE FROM comments
         WHERE  comment_referenced_id = #{commentID};
     </delete>
-    <delete id="deleteCommentByCommentID" parameterType="int">
+  <delete id="deleteCommentByCommentID" parameterType="int">
         DELETE FROM comments
         WHERE  comment_id = #{commentID};
     </delete>
-    <delete id="deleteCommentsByPostID" parameterType="int">
+  <delete id="deleteCommentsByPostID" parameterType="int">
         DELETE FROM comments
         WHERE  post_id = #{postID};
     </delete>
-    <update id="updateComment" parameterType="hashmap">
+  <update id="updateComment" parameterType="hashmap">
         UPDATE comments 
         SET    comment_content = #{newComment} 
         WHERE  comment_id = #{commentID}; 

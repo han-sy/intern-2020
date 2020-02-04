@@ -3,11 +3,13 @@
  * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
  * @file FunctionMapper.xml
 -->
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.board.project.blockboard.mapper.FunctionMapper">
 
-    <select id="selectFunctionCheckByCompanyID" parameterType="int" resultType="com.board.project.blockboard.dto.FunctionDTO">
+  <select id="selectFunctionCheckByCompanyID" parameterType="int"
+    resultType="com.board.project.blockboard.dto.FunctionDTO">
         SELECT function.function_id           AS functionID,
                Ifnull(functioncheck.company_id, 0) AS companyID,
                function.function_name         AS functionName,
@@ -18,14 +20,14 @@
                                AND functioncheck.company_id = #{companyID};
     </select>
 
-    <insert id="insertFunctionCheckData" parameterType="hashmap">
+  <insert id="insertFunctionCheckData" parameterType="hashmap">
         INSERT INTO functions_check
         VALUES     ( #{companyID},
                      #{functionID},
                      NULL);
     </insert>
 
-    <delete id="deleteFunctionCheckData" parameterType="hashmap">
+  <delete id="deleteFunctionCheckData" parameterType="hashmap">
         DELETE FROM functions_check
         WHERE  company_id = #{companyID} 
                AND function_id = #{functionID}; 

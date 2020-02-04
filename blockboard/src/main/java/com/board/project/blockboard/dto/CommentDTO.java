@@ -10,14 +10,15 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class CommentDTO {
-    private int commentID;
-    private int postID;
-    private int companyID;
-    private String userID;
-    private String userName;
-    private String commentContent;
-    private String commentRegisterTime;
-    private int commentReferencedID;
-    private String commentReferencedUserID;
-    private String commentReferencedUserName;
+
+  private int commentID;
+  private int postID;
+  private int companyID;
+  private String userID;
+  private String userName;
+  private String commentContent;
+  private String commentRegisterTime;
+  private int commentReferencedID;
+  private String commentReferencedUserID;
+  private String commentReferencedUserName;
 }

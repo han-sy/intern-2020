@@ -5,21 +5,23 @@
 package com.board.project.blockboard.mapper;
 
 import com.board.project.blockboard.dto.BoardDTO;
-import com.board.project.blockboard.dto.PostDTO;
-
-import org.apache.ibatis.annotations.Mapper;
-import org.springframework.stereotype.Repository;
-
 import java.util.List;
 import java.util.Map;
+import org.apache.ibatis.annotations.Mapper;
+import org.springframework.stereotype.Repository;
 
 @Repository
 @Mapper
 public interface BoardMapper {
-    List<BoardDTO> selectBoardsByCompanyID(int companyID);
-    void insertBoard(BoardDTO newBoard);
-    BoardDTO selectBoardByBoardName(String newBoardName);
-    void updateBoardName(Map<String, Object> boardAttributes);
-    int deleteBoard(int boardID);
+
+  List<BoardDTO> selectBoardsByCompanyID(int companyID);
+
+  void insertBoard(BoardDTO newBoard);
+
+  BoardDTO selectBoardByBoardName(String newBoardName);
+
+  void updateBoardName(Map<String, Object> boardAttributes);
+
+  int deleteBoard(int boardID);
 }
 

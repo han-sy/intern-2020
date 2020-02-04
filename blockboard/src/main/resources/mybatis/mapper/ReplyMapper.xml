@@ -3,10 +3,12 @@
  * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
  * @file ReplyMapper.xml
 -->
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.board.project.blockboard.mapper.ReplyMapper">
-    <select id="selectRepliesByCommentID" parameterType="int" resultType="com.board.project.blockboard.dto.CommentDTO">
+  <select id="selectRepliesByCommentID" parameterType="int"
+    resultType="com.board.project.blockboard.dto.CommentDTO">
         SELECT comments.comment_id            AS commentID,
                comments.post_id               AS postID,
                comments.user_id               AS userID,
@@ -26,7 +28,7 @@
         WHERE  comments.comment_referenced_id = #{commentReferencedID};
     </select>
 
-    <insert id="insertNewReplyByCommentInfo" parameterType="hashmap" >
+  <insert id="insertNewReplyByCommentInfo" parameterType="hashmap">
         INSERT INTO comments
                     (post_id,
                      user_id,

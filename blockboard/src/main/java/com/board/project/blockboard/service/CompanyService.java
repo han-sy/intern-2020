@@ -12,15 +12,16 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 public class CompanyService {
-    @Autowired
-    CompanyMapper companyMapper;
 
-    public String getCompanyNameByUserID(String userID) {
-        return companyMapper.selectCompanyNameByUserID(userID);
-    }
+  @Autowired
+  CompanyMapper companyMapper;
 
-    public int getCompanyIDByUserID(String userID) {
-        log.info("boardMapper userid: "+ userID);
-        return companyMapper.selectCompanyIDByUserID(userID);
-    }
+  public String getCompanyNameByUserID(String userID) {
+    return companyMapper.selectCompanyNameByUserID(userID);
+  }
+
+  public int getCompanyIDByUserID(String userID) {
+    log.info("boardMapper userid: " + userID);
+    return companyMapper.selectCompanyIDByUserID(userID);
+  }
 }

@@ -6,14 +6,15 @@ package com.board.project.blockboard.mapper;
 
 
 import com.board.project.blockboard.dto.CommentDTO;
+import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 @Repository
 @Mapper
 public interface ReplyMapper {
-    List<CommentDTO> selectRepliesByCommentID(int commentReferencedID);
-    int insertNewReplyByCommentInfo(CommentDTO reply);
+
+  List<CommentDTO> selectRepliesByCommentID(int commentReferencedID);
+
+  int insertNewReplyByCommentInfo(CommentDTO reply);
 }

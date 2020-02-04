@@ -5,63 +5,62 @@
 
 //탭 업데이트 새로운 게시판 목록으로
 function updateTabByNewBoardListAfterAddBoard(boardName) {
-    $.ajax({
-        type: 'POST',
-        url: "/boards",
-        data: {boardName: boardName},
-        error: function () {  //통신 실패시
-            alert('통신실패!');
-        },
-        success: function (data) {    //들어오는 data는 boardDTOlist
-            getBoardList(updateTab);//새로운 탭 내용으로 교체
-        }
-    });
+  $.ajax({
+    type: 'POST',
+    url: "/boards",
+    data: {boardName: boardName},
+    error: function () {  //통신 실패시
+      alert('통신실패!');
+    },
+    success: function (data) {    //들어오는 data는 boardDTOlist
+      getBoardList(updateTab);//새로운 탭 내용으로 교체
+    }
+  });
 }
-
 
 //게시판 삭제후 탭업데이트
 function updateTabByNewBoardListAfterDeleteBoard(jsonData) {
-    $.ajax({
-        type: 'DELETE',
-        url: "/boards",
-        data: {deleteList: jsonData},
-        error: function () {  //통신 실패시
-            alert('통신실패!');
-        },
-        success: function () {
-            getBoardList(updateTab);//새로운 탭 내용으로 교체
-        }
-    });
-    $('#config_container').html("");
+  $.ajax({
+    type: 'DELETE',
+    url: "/boards",
+    data: {deleteList: jsonData},
+    error: function () {  //통신 실패시
+      alert('통신실패!');
+    },
+    success: function () {
+      getBoardList(updateTab);//새로운 탭 내용으로 교체
+    }
+  });
+  $('#config_container').html("");
 }
 
 //게시판 이름변경후 탭업데이트
 function updateTabByNewBoardListAfterUpdateBoardName(jsonData) {
-    $.ajax({
-        type: 'PUT',
-        url: "/boards",
-        data: {newTitles: jsonData},
-        error: function (error) {  //통신 실패시
-            alert(error);
-        },
-        success: function () {
-            getBoardList(updateTab);//새로운 탭 내용으로 교체
-        }
-    });
+  $.ajax({
+    type: 'PUT',
+    url: "/boards",
+    data: {newTitles: jsonData},
+    error: function (error) {  //통신 실패시
+      alert(error);
+    },
+    success: function () {
+      getBoardList(updateTab);//새로운 탭 내용으로 교체
+    }
+  });
 }
 
 //리스트 받아오기
 function getBoardList(successFunction) {
-    $.ajax({
-        type: 'GET',
-        url: '/boards',
-        error: function () {  //통신 실패시
-            alert('통신실패!');
-        },
-        success: function (data) {
-            successFunction(data);
-        }
-    });
+  $.ajax({
+    type: 'GET',
+    url: '/boards',
+    error: function () {  //통신 실패시
+      alert('통신실패!');
+    },
+    success: function (data) {
+      successFunction(data);
+    }
+  });
 }
 
 //TODO handlebar 적용하기
@@ -98,18 +97,17 @@ function getPostDataAfterPostClick(postID, boardID) {
       if (commentAbleObj.attr("value") == "on") {
 
         $(function () {
-            getCommentList(boardID, postID, getCommentAllContents); //삭제이후 tab에 게시판목록 업데이트 //CommentAjax.js 에 있음
-            updateCommentsCount(boardID,postID);
+          getCommentList(boardID, postID, getCommentAllContents); //삭제이후 tab에 게시판목록 업데이트 //CommentAjax.js 에 있음
+          updateCommentsCount(boardID, postID);
         });
       }
     }
   });
 }
 
-
 //탭클릭후 게시판 목록 불러오기
 function getPostsAfterTabClick(boardID) {
-  if(boardID == -1) {
+  if (boardID == -1) {
     getTempPosts();
   } else {
     $.ajax({

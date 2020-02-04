@@ -18,42 +18,43 @@ import org.springframework.stereotype.Service;
 @Service
 public class CommentService {
 
-    @Autowired
-    private CommentMapper commentMapper;
-    @Autowired
-    private UserMapper userMapper;
+  @Autowired
+  private CommentMapper commentMapper;
+  @Autowired
+  private UserMapper userMapper;
 
 
-    public List<CommentDTO> getCommentListByPostID(int postID) {
-        return commentMapper.selectCommentsByPostID(postID);
-    }
+  public List<CommentDTO> getCommentListByPostID(int postID) {
+    return commentMapper.selectCommentsByPostID(postID);
+  }
 
-    public CommentDTO writeCommentWithUserInfo(String userID, String commentContent, int companyID, int postID) {
-        CommentDTO comment = new CommentDTO();
-        comment.setCommentContent(commentContent);
-        comment.setUserName(userMapper.selectUserNameByUserID(userID));
-        comment.setPostID(postID);
-        comment.setUserID(userID);
-        comment.setCompanyID(companyID);
-        int result = commentMapper.insertNewCommentByCommentInfo(comment);
+  public CommentDTO writeCommentWithUserInfo(String userID, String commentContent, int companyID,
+      int postID) {
+    CommentDTO comment = new CommentDTO();
+    comment.setCommentContent(commentContent);
+    comment.setUserName(userMapper.selectUserNameByUserID(userID));
+    comment.setPostID(postID);
+    comment.setUserID(userID);
+    comment.setCompanyID(companyID);
+    int result = commentMapper.insertNewCommentByCommentInfo(comment);
 
-        return result ==1? comment : null;
-    }
+    return result == 1 ? comment : null;
+  }
 
-    public void deleteComment(int commentID) {
-        commentMapper.deleteCommentByCommentReferencedID(commentID);
-        commentMapper.deleteCommentByCommentID(commentID);
-    }
+  public void deleteComment(int commentID) {
+    commentMapper.deleteCommentByCommentReferencedID(commentID);
+    commentMapper.deleteCommentByCommentID(commentID);
+  }
 
-    public void updateComment(int commentID, String newComment) {
-        Map<String, Object> commentAttribute = new HashMap<String, Object>();
-        commentAttribute.put("commentID",commentID);
-        commentAttribute.put("newComment",newComment);
-        commentMapper.updateComment(commentAttribute);
-    }
+  public void updateComment(int commentID, String newComment) {
+    Map<String, Object> commentAttribute = new HashMap<String, Object>();
+    commentAttribute.put("commentID", commentID);
+    commentAttribute.put("newComment", newComment);
+    commentMapper.updateComment(commentAttribute);
+  }
 
 
-    public int getCommentCountByPostID(int postID) {
-        return commentMapper.getCommentCountByPostID(postID);
-    }
+  public int getCommentCountByPostID(int postID) {
+    return commentMapper.getCommentCountByPostID(postID);
+  }
 }

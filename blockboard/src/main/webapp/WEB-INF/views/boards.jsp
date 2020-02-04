@@ -14,7 +14,8 @@
     <title>BLOCK BOARD</title>
     <link rel="stylesheet" href="/webjars/bootstrap/4.4.1/dist/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="/static/css/boardstyle.css">
-    <link href="https://fonts.googleapis.com/css?family=Noto+Sans+JP|Roboto&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans+JP|Roboto&display=swap"
+          rel="stylesheet">
     <style>
         body {
             font-family: "Roboto", sans-serif;
@@ -26,75 +27,86 @@
 <body>
 
 <nav class="navbar navbar-expand navbar-dark bg-success">
-    <a class="navbar-brand" href="JavaScript:window.location.reload()" value= ${companyID}>${companyName}</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExample02"
+    <a class="navbar-brand" href="JavaScript:window.location.reload()"
+       value= ${companyID}>${companyName}</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarsExample02"
             aria-controls="navbarsExample02" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
 
     <div class="collapse navbar-collapse" id="navbarsExample02">
-            <ul class="navbar-nav mr-auto " style="
-            <c:if test="${isadmin==false}">
-                    visibility:hidden;
-            </c:if>
-            nav-right: auto;">
+        <ul class="navbar-nav mr-auto " style="
+        <c:if test="${isadmin==false}">
+                visibility:hidden;
+        </c:if>
+                nav-right: auto;">
 
 
-                <li class="nav-item active">
-                    <a class="nav-link" id='addBoardBtn'
-                    style="cursor:pointer" data-toggle="modal" data-target="#addBoardModal">게시판 추가</a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" id='changeBoardsNameBtn' data-toggle="modal" data-target="#changeBoardNameModal"
-                       onclick="javascript:clickchangeBoardBtn(this)" style="cursor:pointer">게시판 이름변경</a>
-                </li>
-                <li class="nav-item active">
-                    <a class="nav-link" id='deleteBoardsBtn' data-toggle="modal" data-target='#deleteBoardModal'
-                       onclick="javascript:clickDeleteBoardBtn(this)"
-                       style="cursor:pointer">게시판 삭제</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle active" href="#" id="dropdown03" data-toggle="dropdown"
-                       aria-haspopup="true" aria-expanded="false">사용중인 기능</a>
-                    <div class="dropdown-menu" id="fuctionListContainer" aria-labelledby="dropdown03">
-                        <a class="dropdown-item text-success" id='changeFuncBtn' data-toggle="modal"
-                           data-target="#changeFunctionModal"
-                           onclick="javascript:changeFunction(this)" style="cursor:pointer"><strong>기능 변경</strong></a>
-                        <div class="dropdown-divider"></div>
-                        <c:forEach items="${functionInfoList}" var="functionList" varStatus="status">
-                            <c:if test="${functionList.companyID == 1}">
-                                <a class="dropdown-item" id=functionAble${functionList.functionID}
-                                   value=on> ${functionList.functionName} </a>
-                            </c:if>
-                            <c:if test="${functionList.companyID == 0}">
-                                <a class="dropdown-item d-none" id=functionAble${functionList.functionID}
-                                   value=off> ${functionList.functionName}</a>
-                            </c:if>
-                        </c:forEach>
-                    </div>
-                    <!--현재 기능 사용 여부 현황 템플릿-->
-                    <script id="functionList-template" type="text/x-handlebars-template">
-                        <a class="dropdown-item text-success" id='changeFuncBtn' data-toggle="modal"
-                           data-target="#changeFunctionModal"
-                           onclick="javascript:changeFunction(this)"
-                           style="cursor:pointer"><strong>기능 변경</strong></a>
-                        <hr>
-                        {{#functions}}
-                        {{#isAbleFunction}}
-                        <a class="dropdown-item d-none" id='functionAble{{functionID}}' value='off'>{{functionName}}</a>
-                        {{else}}
-                        <a class="dropdown-item" id='functionAble{{functionID}}' value='on'>{{functionName}}</a>
-                        {{/isAbleFunction}}
-                        {{/functions}}
-                    </script>
-                </li>
+            <li class="nav-item active">
+                <a class="nav-link" id='addBoardBtn'
+                   style="cursor:pointer" data-toggle="modal" data-target="#addBoardModal">게시판
+                    추가</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" id='changeBoardsNameBtn' data-toggle="modal"
+                   data-target="#changeBoardNameModal"
+                   onclick="javascript:clickchangeBoardBtn(this)" style="cursor:pointer">게시판
+                    이름변경</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link" id='deleteBoardsBtn' data-toggle="modal"
+                   data-target='#deleteBoardModal'
+                   onclick="javascript:clickDeleteBoardBtn(this)"
+                   style="cursor:pointer">게시판 삭제</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle active" href="#" id="dropdown03"
+                   data-toggle="dropdown"
+                   aria-haspopup="true" aria-expanded="false">사용중인 기능</a>
+                <div class="dropdown-menu" id="fuctionListContainer" aria-labelledby="dropdown03">
+                    <a class="dropdown-item text-success" id='changeFuncBtn' data-toggle="modal"
+                       data-target="#changeFunctionModal"
+                       onclick="javascript:changeFunction(this)" style="cursor:pointer"><strong>기능
+                        변경</strong></a>
+                    <div class="dropdown-divider"></div>
+                    <c:forEach items="${functionInfoList}" var="functionList" varStatus="status">
+                        <c:if test="${functionList.companyID == 1}">
+                            <a class="dropdown-item" id=functionAble${functionList.functionID}
+                               value=on> ${functionList.functionName} </a>
+                        </c:if>
+                        <c:if test="${functionList.companyID == 0}">
+                            <a class="dropdown-item d-none"
+                               id=functionAble${functionList.functionID}
+                               value=off> ${functionList.functionName}</a>
+                        </c:if>
+                    </c:forEach>
+                </div>
+                <!--현재 기능 사용 여부 현황 템플릿-->
+                <script id="functionList-template" type="text/x-handlebars-template">
+                    <a class="dropdown-item text-success" id='changeFuncBtn' data-toggle="modal"
+                       data-target="#changeFunctionModal"
+                       onclick="javascript:changeFunction(this)"
+                       style="cursor:pointer"><strong>기능 변경</strong></a>
+                    <hr>
+                    {{#functions}}
+                    {{#isAbleFunction}}
+                    <a class="dropdown-item d-none" id='functionAble{{functionID}}' value='off'>{{functionName}}</a>
+                    {{else}}
+                    <a class="dropdown-item" id='functionAble{{functionID}}' value='on'>{{functionName}}</a>
+                    {{/isAbleFunction}}
+                    {{/functions}}
+                </script>
+            </li>
 
             <%--<li class="nav-item active" style="float: right">
 
             </li>--%>
-            </ul>
-        <a class="nav-link text-white" id ="current_user_info" style="nav-right: auto"  data-id =${userID} >${userName}</a>
-        <a class="nav-link text-white" style="nav-right: auto" href="<c:url value='/logout' />">로그아웃</a>
+        </ul>
+        <a class="nav-link text-white" id="current_user_info" style="nav-right: auto"
+           data-id=${userID}>${userName}</a>
+        <a class="nav-link text-white" style="nav-right: auto"
+           href="<c:url value='/logout' />">로그아웃</a>
     </div>
 </nav>
 <div class="row">
@@ -111,7 +123,9 @@
             <!--게시판 목록 템플릿-->
             <script id="boards-template" type="text/x-handlebars-template">
                 {{#boards}}
-                <li data-tab={{boardID}} class=tabmenu id=default style="cursor:pointer"> {{boardName}}</li>
+                <li data-tab={{boardID}} class=tabmenu id=default style="cursor:pointer">
+                    {{boardName}}
+                </li>
                 {{/boards}}
                 <li data-tab="-1" class=tabmenu id=default style="cursor:pointer"> 임시보관함</li>
             </script>
@@ -124,21 +138,26 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title text-success">게시판 추가</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <button type="button" class="close" data-dismiss="modal"
+                                    aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
                         <div class="modal-body-addboard">
                             <p style="padding: 15px 1px 5px 10px;">
                                 <a>입력 </a>
-                                <input type="text" name="게시판 이름" id="input_board_name" class="addBoard"
+                                <input type="text" name="게시판 이름" id="input_board_name"
+                                       class="addBoard"
                                        placeholder="게시판 이름">
                             </p>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                Close
+                            </button>
                             <button type="button" id='addFuncBtn' class="btn btn-success"
-                                    onclick=javascript:clickSaveaddedBoard(this) data-dismiss="modal">Save changes
+                                    onclick=javascript:clickSaveaddedBoard(this)
+                                    data-dismiss="modal">Save changes
                             </button>
                         </div>
                     </div>
@@ -150,7 +169,8 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title text-success">삭제할 게시판을 선택하시오.</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <button type="button" class="close" data-dismiss="modal"
+                                    aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
@@ -158,9 +178,12 @@
 
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                Close
+                            </button>
                             <button type="button" id='deleteBoardBtn' class="btn btn-success"
-                                    onclick=javascript:clickSaveDelteBoard(this) data-dismiss="modal">Save changes
+                                    onclick=javascript:clickSaveDelteBoard(this)
+                                    data-dismiss="modal">Save changes
                             </button>
                         </div>
                     </div>
@@ -170,9 +193,12 @@
             <script id="deleteboards-template" type="text/x-handlebars-template">
                 {{#boards}}
 
-                <div class="custom-control custom-checkbox checkbox-success" style="padding: 15px 1px 10px 30px;" >
-                    <input class ="custom-control-input" type='checkbox' name='boardDelete' id="checkDelBoard{{boardID}}" value={{boardID}} />
-                    <label class="custom-control-label" for="checkDelBoard{{boardID}}" >{{boardName}}</label>
+                <div class="custom-control custom-checkbox checkbox-success"
+                     style="padding: 15px 1px 10px 30px;">
+                    <input class="custom-control-input" type='checkbox' name='boardDelete'
+                           id="checkDelBoard{{boardID}}" value={{boardID}}/>
+                    <label class="custom-control-label"
+                           for="checkDelBoard{{boardID}}">{{boardName}}</label>
                 </div>
                 {{/boards}}
             </script>
@@ -182,7 +208,8 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title text-success">게시판 이름 변경</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <button type="button" class="close" data-dismiss="modal"
+                                    aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
@@ -190,9 +217,12 @@
 
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                Close
+                            </button>
                             <button type="button" id='changeNameBtn' class="btn btn-success"
-                                    onclick=javascript:clickSaveChangeBoard(this) data-dismiss="modal">Save changes
+                                    onclick=javascript:clickSaveChangeBoard(this)
+                                    data-dismiss="modal">Save changes
                             </button>
                         </div>
                     </div>
@@ -204,8 +234,9 @@
                 <div class='boardInfo' id='board{{boardID}}' style="padding: 15px 1px 5px 10px;">
                     <span class='deleteBoard' data-board='board{{boardID}}'> {{boardName}} </span>
                     <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
-                    <input class ="form-control" type='text' name='boardname' data-boardid={{boardID}} data-oldname="{{boardName}}"
-                           value="{{boardName}}" >
+                    <input class="form-control" type='text' name='boardname'
+                           data-boardid={{boardID}} data-oldname="{{boardName}}"
+                           value="{{boardName}}">
                 </div>
                 {{/boards}}
             </script>
@@ -215,7 +246,8 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title text-success">기능 변경</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <button type="button" class="close" data-dismiss="modal"
+                                    aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
@@ -223,9 +255,12 @@
 
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                Close
+                            </button>
                             <button type="button" id='changeFunction' class="btn btn-success"
-                                    onclick=javascript:clickSaveFunctionChange(this) data-dismiss="modal">Save changes
+                                    onclick=javascript:clickSaveFunctionChange(this)
+                                    data-dismiss="modal">Save changes
                             </button>
                         </div>
                     </div>
@@ -235,18 +270,22 @@
             <script id="changeFunctionInfo-template" type="text/x-handlebars-template">
                 {{#functions}}
                 {{#isAbleFunction}}
-                <div class="btn-group-toggle" data-toggle="buttons" style="padding: 3px 1px 1px 10px;">
+                <div class="btn-group-toggle" data-toggle="buttons"
+                     style="padding: 3px 1px 1px 10px;">
                     <label class="btn btn-default _function-switch">
                         <span>{{functionName}}</span>
-                        <input class='function_checkbox' type='checkbox' name='function' value={{functionID}}>
+                        <input class='function_checkbox' type='checkbox' name='function'
+                               value={{functionID}}>
                         <span class='_switch'>OFF</span>
                     </label>
                 </div>
                 {{else}}
-                <div class="btn-group-toggle" data-toggle="buttons" style="padding: 3px 1px 1px 10px;">
+                <div class="btn-group-toggle" data-toggle="buttons"
+                     style="padding: 3px 1px 1px 10px;">
                     <label class="btn btn-success _function-switch">
                         <span>{{functionName}}</span>
-                        <input class='function_checkbox' type='checkbox' name='function' value={{functionID}} checked>
+                        <input class='function_checkbox' type='checkbox' name='function'
+                               value={{functionID}} checked>
                         <span class='_switch'>ON</span>
                     </label>
                 </div>
@@ -267,7 +306,7 @@
                     <!--게시글 작성 시 게시판 목록 템플릿-->
                     <script id="writecontent-boards-template" type="text/x-handlebars-template">
                         {{#boards}}
-                            <option data-tab={{boardID}} class=tabmenu id=default>{{boardName}}</option>
+                        <option data-tab={{boardID}} class=tabmenu id=default>{{boardName}}</option>
                         {{/boards}}
                     </script>
                 </div>
@@ -282,9 +321,15 @@
                 </div>
                 <div id="editorcontent" class="form-group">
                     <textarea id="editor"></textarea>
-                    <button id="btn_post" class="btn btn-success" onclick="javascript:postFunction()">저장</button>
-                    <button id="btn_cancel" class="btn btn-success" onclick="javascript:writeCancel()">작성취소</button>
-                    <button id="btn_temp" class="btn btn-success" onclick="javascript:tempsaveFunction()">임시저장</button>
+                    <button id="btn_post" class="btn btn-success"
+                            onclick="javascript:postFunction()">저장
+                    </button>
+                    <button id="btn_cancel" class="btn btn-success"
+                            onclick="javascript:writeCancel()">작성취소
+                    </button>
+                    <button id="btn_temp" class="btn btn-success"
+                            onclick="javascript:tempsaveFunction()">임시저장
+                    </button>
                     <div id="editorcontent-hidden">
                     </div>
                     <script id="postid-template" type="text/x-handlebars-template">
@@ -314,19 +359,20 @@
                 </button>
                 {{/post}}
                 {{#isCommentAble}}
-                <div class= comment_section>
+                <div class=comment_section>
                     <br><br>
-                    <div class ="row">
+                    <div class="row">
                         <span class="col-2">
                             <strong class="c">댓글 </strong>
                         (<span id=commentCount></span>)
                         </span>
-                        <a class=' commentBtn text-success font-weight-bold text-button' style="cursor: pointer;">댓글 달기</a>
+                        <a class=' commentBtn text-success font-weight-bold text-button'
+                           style="cursor: pointer;">댓글 달기</a>
                     </div>
-                    <div class = comment_list_container></div>
-                    <div class = comment_input_container></div>
-                {{else}}
-                {{/isCommentAble}}
+                    <div class=comment_list_container></div>
+                    <div class=comment_input_container></div>
+                    {{else}}
+                    {{/isCommentAble}}
             </script>
             <!--댓글리스트 템플릿-->
             <script id="commentList-template" type="text/x-handlebars-template">
@@ -336,36 +382,45 @@
 
                     <div class="row border-left-comment">
                         <div></div>
-                        <div class='commentContainer ' id='comment{{commentID}}'  style="padding-left: 50px" >
-                            <div class="user"><h5><strong class=name data-id={{userID}}>{{userName}}</strong></h5></div>
+                        <div class='commentContainer ' id='comment{{commentID}}'
+                             style="padding-left: 50px">
+                            <div class="user"><h5><strong class=name
+                                                          data-id={{userID}}>{{userName}}</strong>
+                            </h5></div>
                             <div>
                                 <div>
-                                    <div class="comment_area comment_content" id=translate_area style="width: 100%;">{{{commentContent}}}</div>
+                                    <div class="comment_area comment_content" id=translate_area
+                                         style="width: 100%;">{{{commentContent}}}
+                                    </div>
                                     <br>
                                     <div class="date text-muted">{{commentRegisterTime}}</div>
                                 </div>
                                 <div class="btn">
                                     {{#isReplyAble}}
-                                    <a class='text-success text-button text-button font-weight-bold replyBtn'  style="cursor: pointer;">답글</a>
+                                    <a class='text-success text-button text-button font-weight-bold replyBtn'
+                                       style="cursor: pointer;">답글</a>
                                     {{else}}
                                     {{/isReplyAble}}
 
                                     {{#isSameUser}}
-                                    <a class="text-success text-button text-button font-weight-bold" id='edit_comment' style="cursor: pointer;">수정</a>
-                                    <a class="text-success text-button text-button font-weight-bold" id='delete_comment' style="cursor: pointer;">삭제</a>
+                                    <a class="text-success text-button text-button font-weight-bold"
+                                       id='edit_comment' style="cursor: pointer;">수정</a>
+                                    <a class="text-success text-button text-button font-weight-bold"
+                                       id='delete_comment' style="cursor: pointer;">삭제</a>
                                     {{else}}
                                     {{/isSameUser}}
                                 </div>
                             </div>
                         </div>
                     </div>
-                        {{#isReplyAble}}
-                        <div class='replyContainer' id='reply_container{{commentID}}'
-                             style='padding: 5px 1px 3px 30px;'>
-                        </div>
-                        <div id='reply_input_container{{commentID}}' style='padding: 5px 1px 3px 30px;'></div>
-                        {{else}}
-                        {{/isReplyAble}}
+                    {{#isReplyAble}}
+                    <div class='replyContainer' id='reply_container{{commentID}}'
+                         style='padding: 5px 1px 3px 30px;'>
+                    </div>
+                    <div id='reply_input_container{{commentID}}'
+                         style='padding: 5px 1px 3px 30px;'></div>
+                    {{else}}
+                    {{/isReplyAble}}
                     <div>
 
                     </div>
@@ -380,23 +435,32 @@
                     <div class="col-1">
                     </div>
                     <div class='commentContainer col-11' id='comment{{commentID}}'>
-                        <div class="user"><h5><strong class=name data-id={{userID}}>{{userName}}</strong></h5></div>
+                        <div class="user"><h5><strong class=name
+                                                      data-id={{userID}}>{{userName}}</strong></h5>
+                        </div>
                         <div>
-                            <div class="comment_area row" id=translate_area" >
-                                <strong class="nametag text-primary " data-id={{commentReferencedUserID}} style="cursor:pointer;padding: 0px 0px 0px 15px" >{{commentReferencedUserName}}</strong>
-                                <div class="comment_content col-10" style="float:left;">{{{commentContent}}}</div>
+                            <div class="comment_area row" id=translate_area">
+                                <strong class="nametag text-primary "
+                                        data-id={{commentReferencedUserID}}
+                                        style="cursor:pointer;padding: 0px 0px 0px 15px">{{commentReferencedUserName}}</strong>
+                                <div class="comment_content col-10" style="float:left;">
+                                    {{{commentContent}}}
+                                </div>
                             </div>
                             <br>
                             <div class="date text-muted">{{commentRegisterTime}}</div>
                         </div>
                         <div class=btn>
                             {{#isReplyAble}}
-                            <a class='text-success text-button font-weight-bold replyBtn' style="cursor: pointer;" >답글</a>
+                            <a class='text-success text-button font-weight-bold replyBtn'
+                               style="cursor: pointer;">답글</a>
                             {{else}}
                             {{/isReplyAble}}
                             {{#isSameUser}}
-                            <a class="text-success text-button font-weight-bold" id='edit_comment' style="cursor: pointer;">수정</a>
-                            <a class="text-success text-button font-weight-bold" id='delete_comment' style="cursor: pointer;">삭제</a>
+                            <a class="text-success text-button font-weight-bold" id='edit_comment'
+                               style="cursor: pointer;">수정</a>
+                            <a class="text-success text-button font-weight-bold" id='delete_comment'
+                               style="cursor: pointer;">삭제</a>
                             {{else}}
                             {{/isSameUser}}
                         </div>
@@ -416,10 +480,13 @@
                               name=commentTxt></textarea>
                     <div align="right">
                         {{#isReply}}
-                        <a class ="text-success text-button font-weight-bold {{{buttonSelector}}}" style="cursor: pointer;" >{{buttonName}}</a>
-                        <a class="btn_close_cmt_input text-success text-button font-weight-bold" style="cursor: pointer;" >취소</a>
+                        <a class="text-success text-button font-weight-bold {{{buttonSelector}}}"
+                           style="cursor: pointer;">{{buttonName}}</a>
+                        <a class="btn_close_cmt_input text-success text-button font-weight-bold"
+                           style="cursor: pointer;">취소</a>
                         {{else}}
-                        <a class ="text-success text-button font-weight-bold {{{buttonSelector}}}" style="cursor: pointer;" >{{buttonName}}</a>
+                        <a class="text-success text-button font-weight-bold {{{buttonSelector}}}"
+                           style="cursor: pointer;">{{buttonName}}</a>
                         {{/isReply}}
                     </div>
                 </div>
@@ -430,10 +497,13 @@
                 {{#attribute}}
                 <br>
                 <div style='width: 100%' class=commentHtml>
-                <textarea class ="form-control" style='width: 100%' id='commentText' placeholder='댓글을 입력하세요'
+                <textarea class="form-control" style='width: 100%' id='commentText'
+                          placeholder='댓글을 입력하세요'
                           name=commentTxt>{{{oldText}}}</textarea>
                     <div>
-                        <a id=btn_edit_comment_complete class="text-success text-button font-weight-bold" style="cursor: pointer;">수정하기</a>
+                        <a id=btn_edit_comment_complete
+                           class="text-success text-button font-weight-bold"
+                           style="cursor: pointer;">수정하기</a>
                     </div>
                 </div>
                 {{/attribute}}
@@ -457,7 +527,8 @@
                             onclick="javascript:clickTempPostEvent(this)">
                             <td scope="row">{{postTitle}}</td>
                             {{else}}
-                        <tr class="postclick" data-post={{postID}} onclick="javascript:clickTrEvent(this)">
+                        <tr class="postclick" data-post={{postID}}
+                            onclick="javascript:clickTrEvent(this)">
                             <td scope="row">{{postTitle}}</td>
                             {{/isTemp}}
                             <td>{{userName}}</td>
@@ -472,7 +543,8 @@
                 <div id="searchcontent">
                     <div class="form-group row">
                         <div class="col-sm-1">
-                            <select id="search_option" class="form-control" style="width:100px;font-size:15px;">
+                            <select id="search_option" class="form-control"
+                                    style="width:100px;font-size:15px;">
                                 <option value="post_title">제목</option>
                                 <option value="user_name">작성자</option>
                                 <option value="post_content">내용</option>
@@ -480,13 +552,17 @@
                             </select>
                         </div>
                         <div class="col-5">
-                            <input id="search_keyword" class="form-control" placeholder="검색어를 입력하세요." type="text"/>
+                            <input id="search_keyword" class="form-control"
+                                   placeholder="검색어를 입력하세요." type="text"/>
                         </div>
                         <div class="col-3">
-                            <button id="search" class="btn btn-success" onclick="javascript:search(this)">조회</button>
+                            <button id="search" class="btn btn-success"
+                                    onclick="javascript:search(this)">조회
+                            </button>
                         </div>
                         <div class="col">
-                            <button id="btn_write" class="btn btn-success" style="float:right">글쓰기</button>
+                            <button id="btn_write" class="btn btn-success" style="float:right">글쓰기
+                            </button>
                         </div>
                     </div>
 

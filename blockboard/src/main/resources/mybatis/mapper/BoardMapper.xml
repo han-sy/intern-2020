@@ -3,17 +3,20 @@
  * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
  * @file BoardMapper.xml
 -->
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.board.project.blockboard.mapper.BoardMapper">
-    <select id="selectBoardsByCompanyID" parameterType="int" resultType="com.board.project.blockboard.dto.BoardDTO">
+  <select id="selectBoardsByCompanyID" parameterType="int"
+    resultType="com.board.project.blockboard.dto.BoardDTO">
         SELECT board_id   AS boardID,
                company_id AS companyID,
                board_name AS boardName
         FROM   boards
         WHERE  company_id = #{companyID};
     </select>
-    <select id="selectBoardByBoardName" parameterType="string" resultType="com.board.project.blockboard.dto.BoardDTO">
+  <select id="selectBoardByBoardName" parameterType="string"
+    resultType="com.board.project.blockboard.dto.BoardDTO">
         SELECT board_id   AS boardID,
                company_id AS companyID,
                board_name AS boardName
@@ -21,7 +24,7 @@
         WHERE  board_name = #{boardName};
     </select>
 
-    <insert id="insertBoard" parameterType="com.board.project.blockboard.dto.BoardDTO">
+  <insert id="insertBoard" parameterType="com.board.project.blockboard.dto.BoardDTO">
         INSERT INTO boards
                     (company_id,
                      board_name)
@@ -29,20 +32,20 @@
                       #{boardName});
     </insert>
 
-    <!--게시글 작성 시 선택한 게시판 ID 반환-->
-    <select id="selectBoardIDByComIDAndBoardName" parameterType="hashMap" resultType="int">
+  <!--게시글 작성 시 선택한 게시판 ID 반환-->
+  <select id="selectBoardIDByComIDAndBoardName" parameterType="hashMap" resultType="int">
         SELECT board_id AS boardID
         FROM   boards
         WHERE  company_id = #{companyID}
                AND board_name = #{boardName};
     </select>
-    <update id = "updateBoardName" parameterType="hashmap">
+  <update id="updateBoardName" parameterType="hashmap">
         UPDATE boards
         SET    board_name = #{boardName}
         WHERE  board_id = #{boardID};
     </update>
 
-    <delete id="deleteBoard" parameterType="int">
+  <delete id="deleteBoard" parameterType="int">
         DELETE FROM boards
         WHERE  board_id = #{boardID};
     </delete>

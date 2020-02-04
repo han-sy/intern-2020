@@ -10,7 +10,7 @@ function getCurrentBoardID() {
   var boardID = 0;
 
   $.each(tabs, function () {
-    if($(this).hasClass("active_tab")) {
+    if ($(this).hasClass("active_tab")) {
       boardID = $(this).attr("data-tab");
     }
   });
@@ -99,8 +99,9 @@ function postUpdateFunction() {
 function postDeleteFunction() {
   var postID = $("#postID").html();
   var boardID = getCurrentBoardID();
-  if(confirm("정말 삭제하시겠습니까? 삭제 후 복원되지 않습니다.") === true)
+  if (confirm("정말 삭제하시겠습니까? 삭제 후 복원되지 않습니다.") === true) {
     deletePost(boardID, postID);
+  }
 }
 
 // 게시글 검색 버튼 이벤트

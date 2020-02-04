@@ -3,67 +3,70 @@
  * @author Woohyeok Jun <woohyeok.jun@worksmobile.com>
  * @file PostMapper.xml
 -->
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.board.project.blockboard.mapper.PostMapper">
-    <insert id="insertPost" parameterType="com.board.project.blockboard.dto.PostDTO">
-        INSERT INTO posts (
-            <if test='postID != 0'>
-                post_id,
-            </if>
-            user_id,
-            board_id,
-            company_id,
-            post_title,
-            post_content,
-            is_temp )
-        VALUES (
-            <if test='postID != 0'>
-                #{postID},
-            </if>
-            #{userID},
-            #{boardID},
-            #{companyID},
-            #{postTitle},
-            #{postContent},
-            #{isTemp} )
-        ON DUPLICATE KEY UPDATE
-            board_id=#{boardID},
-            post_title=#{postTitle},
-            post_content=#{postContent},
-            is_temp=#{isTemp};
-    </insert>
+  <insert id="insertPost" parameterType="com.board.project.blockboard.dto.PostDTO">
+    INSERT INTO posts (
+    <if test='postID != 0'>
+      post_id,
+    </if>
+    user_id,
+    board_id,
+    company_id,
+    post_title,
+    post_content,
+    is_temp )
+    VALUES (
+    <if test='postID != 0'>
+      #{postID},
+    </if>
+    #{userID},
+    #{boardID},
+    #{companyID},
+    #{postTitle},
+    #{postContent},
+    #{isTemp} )
+    ON DUPLICATE KEY UPDATE
+    board_id=#{boardID},
+    post_title=#{postTitle},
+    post_content=#{postContent},
+    is_temp=#{isTemp};
+  </insert>
 
-    <delete id="deletePostByPostID" parameterType="int">
+  <delete id="deletePostByPostID" parameterType="int">
         DELETE FROM posts
         WHERE post_id=#{postID};
     </delete>
 
-    <update id="updatePost" parameterType="com.board.project.blockboard.dto.PostDTO">
+  <update id="updatePost" parameterType="com.board.project.blockboard.dto.PostDTO">
         UPDATE posts
         SET post_title=#{postTitle}, post_content=#{postContent}, board_id=#{boardID}
         WHERE post_id=#{postID};
     </update>
 
-    <select id="searchPost" parameterType="string" resultType="com.board.project.blockboard.dto.PostDTO">
-        SELECT post.post_id as postID,
-            post.user_id as userID,
-            post.board_id as boardID,
-            post.company_id as companyID,
-            post.post_title as postTitle,
-            post.post_content as postContent,
-            post.post_register_time as postRegisterTime,
-            board.board_name as boardName,
-            users.user_name as userName
-        FROM posts post,
-            boards board,
-            users users
-        WHERE (users.user_id = post.user_id AND board.board_id = post.board_id)
-        <include refid="searchOption"/>
-        ORDER BY postRegisterTime DESC;
-    </select>
+  <select id="searchPost" parameterType="string"
+    resultType="com.board.project.blockboard.dto.PostDTO">
+    SELECT post.post_id as postID,
+    post.user_id as userID,
+    post.board_id as boardID,
+    post.company_id as companyID,
+    post.post_title as postTitle,
+    post.post_content as postContent,
+    post.post_register_time as postRegisterTime,
+    board.board_name as boardName,
+    users.user_name as userName
+    FROM posts post,
+    boards board,
+    users users
+    WHERE (users.user_id = post.user_id AND board.board_id = post.board_id)
+    <include refid="searchOption"/>
+    ORDER BY postRegisterTime DESC;
+  </select>
 
-    <select id="selectRecentTempPost" parameterType="hashMap" resultType="com.board.project.blockboard.dto.PostDTO">
+  <select id="selectRecentTempPost" parameterType="hashMap"
+    resultType="com.board.project.blockboard.dto.PostDTO">
         SELECT post_id as postID,
             user_id as userID,
             board_id as boardID,
@@ -84,7 +87,8 @@
             1;
     </select>
 
-    <select id="selectTempPosts" parameterType="hashMap" resultType="com.board.project.blockboard.dto.PostDTO">
+  <select id="selectTempPosts" parameterType="hashMap"
+    resultType="com.board.project.blockboard.dto.PostDTO">
         SELECT post.post_id as postID,
             post.user_id as userID,
             post.board_id as boardID,
@@ -105,24 +109,25 @@
             postRegisterTime DESC;
     </select>
 
-    <sql id="searchOption">
-        <choose>
-            <!-- 검색옵션이 제목+내용 일 경우 -->
-            <when test="option == 'titleAndContent'">
-                AND (post.post_title LIKE '%${keyword}%' OR post.post_content LIKE '%${keyword}%')
-            </when>
-            <when test="option == 'user_name'">
-                AND (users.user_name LIKE '%${keyword}%')
-            </when>
-            <!-- 아닐 경우 -->
-            <otherwise>
-                AND (post.${option} LIKE '%${keyword}%')
-            </otherwise>
-        </choose>
-    </sql>
+  <sql id="searchOption">
+    <choose>
+      <!-- 검색옵션이 제목+내용 일 경우 -->
+      <when test="option == 'titleAndContent'">
+        AND (post.post_title LIKE '%${keyword}%' OR post.post_content LIKE '%${keyword}%')
+      </when>
+      <when test="option == 'user_name'">
+        AND (users.user_name LIKE '%${keyword}%')
+      </when>
+      <!-- 아닐 경우 -->
+      <otherwise>
+        AND (post.${option} LIKE '%${keyword}%')
+      </otherwise>
+    </choose>
+  </sql>
 
-    <!--@author Dongwook Kim <dongwook.kim1211@worksmobile.com>-->
-    <select id="selectPostByBoardID" parameterType="int" resultType="com.board.project.blockboard.dto.PostDTO">
+  <!--@author Dongwook Kim <dongwook.kim1211@worksmobile.com>-->
+  <select id="selectPostByBoardID" parameterType="int"
+    resultType="com.board.project.blockboard.dto.PostDTO">
         SELECT post.post_id            AS postID,
                post.user_id            AS userID,
                users.user_name          AS userName,
@@ -140,9 +145,10 @@
         ORDER  BY post.post_id DESC;
     </select>
 
-    <!--게시글 id로 게시글반환-->
-    <!--@author Dongwook Kim <dongwook.kim1211@worksmobile.com>-->
-    <select id="selectPostByPostID" parameterType="int" resultType="com.board.project.blockboard.dto.PostDTO">
+  <!--게시글 id로 게시글반환-->
+  <!--@author Dongwook Kim <dongwook.kim1211@worksmobile.com>-->
+  <select id="selectPostByPostID" parameterType="int"
+    resultType="com.board.project.blockboard.dto.PostDTO">
         SELECT post.post_id            AS postID,
                post.user_id            AS userID,
                users.user_name          AS userName,

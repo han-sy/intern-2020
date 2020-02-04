@@ -1,6 +1,6 @@
 /**
- * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
- * @file    UserDTO.java
+ * @author Woohyeok Jun <woohyeok.jun@worksmobile.com>
+ * @file UserDTO.java
  */
 package com.board.project.blockboard.dto;
 
@@ -10,9 +10,10 @@ import org.apache.ibatis.type.Alias;
 @Alias("UserDTO")
 @Data
 public class UserDTO {
-    private String userID;
-    private int companyID;
-    private String userName;
-    private String userPassword;
-    private String userType;
+
+  private String userID;
+  private int companyID;
+  private String userName;
+  private String userPassword;
+  private String userType;
 }

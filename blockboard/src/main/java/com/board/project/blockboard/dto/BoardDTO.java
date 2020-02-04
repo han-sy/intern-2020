@@ -12,7 +12,8 @@ import org.apache.ibatis.type.Alias;
 @Data
 @NoArgsConstructor
 public class BoardDTO {
-    private int BoardID;
-    private int companyID;
-    private String boardName;
+
+  private int BoardID;
+  private int companyID;
+  private String boardName;
 }

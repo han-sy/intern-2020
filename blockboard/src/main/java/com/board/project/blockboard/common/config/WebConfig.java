@@ -1,6 +1,6 @@
 /**
- * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
- * @file    WebConfig.java
+ * @author Woohyeok Jun <woohyeok.jun@worksmobile.com>
+ * @file WebConfig.java
  */
 package com.board.project.blockboard.common.config;
 
@@ -14,27 +14,27 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
-    private static final String[] INCLUDE_PATHS = {
-            "/boards",
-            "/boards/**"
-    };
-    private static final String[] EXCLUDE_PATHS = {
-            "/",
-            "/login"
-    };
-    @Autowired
-    private JwtInterceptor jwtInterceptor;
+  private static final String[] INCLUDE_PATHS = {
+      "/main/**",
+      "/main"
+  };
+  private static final String[] EXCLUDE_PATHS = {
+      "/",
+      "/login"
+  };
+  @Autowired
+  private JwtInterceptor jwtInterceptor;
 
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(jwtInterceptor)
-                .addPathPatterns(INCLUDE_PATHS)
-                .excludePathPatterns(EXCLUDE_PATHS);
-    }
+  @Override
+  public void addInterceptors(InterceptorRegistry registry) {
+    registry.addInterceptor(jwtInterceptor)
+        .addPathPatterns(INCLUDE_PATHS)
+        .excludePathPatterns(EXCLUDE_PATHS);
+  }
 
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**")
-                .allowedMethods("GET", "POST", "PUT", "DELETE");
-    }
+  @Override
+  public void addCorsMappings(CorsRegistry registry) {
+    registry.addMapping("/**")
+        .allowedMethods("GET", "POST", "PUT", "DELETE");
+  }
 }
