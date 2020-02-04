@@ -4,11 +4,9 @@
  */
 package com.board.project.blockboard.service;
 
+import com.board.project.blockboard.common.util.JsonParse;
 import com.board.project.blockboard.dto.FunctionDTO;
 import com.board.project.blockboard.mapper.FunctionMapper;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -70,13 +68,9 @@ public class FunctionService {
   public void updateNewFunctionsInfo(int companyID, String functionInfoData) {
     List<FunctionDTO> functionInfoList = getFunctionInfoByCompanyID(companyID); //기존데이터
     //ajax를 통해 넘어온 json 형식의 string을 map 타입으로 변경
-    Gson gson = new Gson();
-    Type type = new TypeToken<ArrayList<Map<String, String>>>() {
-    }.getType();
-    log.info("functionInfoData : " + functionInfoData);
-    ArrayList<Map<String, String>> functionListMap = gson
-        .fromJson(functionInfoData, type); //새로운 데이터
-    log.info("functionListMap : " + functionListMap);
+    ArrayList<Map<String, String>> functionListMap = JsonParse
+        .stringToMapArrayList(functionInfoData);
+
     try {
       for (int i = 0; i < functionInfoList.size(); i++) {
         if (functionInfoList.get(i).getCompanyID() > 0 && functionListMap.get(i)
