@@ -48,33 +48,35 @@
 
   <select id="searchPost" parameterType="string"
     resultType="com.board.project.blockboard.dto.PostDTO">
-    SELECT post.post_id as postID,
-    post.user_id as userID,
-    post.board_id as boardID,
-    post.company_id as companyID,
-    post.post_title as postTitle,
-    post.post_content as postContent,
-    post.post_register_time as postRegisterTime,
-    board.board_name as boardName,
-    users.user_name as userName
-    FROM posts post,
-    boards board,
-    users users
-    WHERE (users.user_id = post.user_id AND board.board_id = post.board_id)
+    SELECT post.post_id AS postID,
+    post.user_id AS userID,
+    post.board_id AS boardID,
+    post.company_id AS companyID,
+    post.post_title AS postTitle,
+    post.post_content AS postContent,
+    post.post_register_time AS postRegisterTime,
+    board.board_name AS boardName,
+    users.user_name AS userName
+    FROM posts post
+        JOIN boards board
+            ON post.board_id = board.board_id
+        JOIN users users
+            ON post.user_id = users.user_id
+    WHERE
     <include refid="searchOption"/>
     ORDER BY postRegisterTime DESC;
   </select>
 
   <select id="selectRecentTempPost" parameterType="hashMap"
     resultType="com.board.project.blockboard.dto.PostDTO">
-        SELECT post_id as postID,
-            user_id as userID,
-            board_id as boardID,
-            company_id as companyID,
-            post_title as postTitle,
-            post_content as postContent,
-            post_register_time as postRegisterTime,
-            is_temp as isTemp
+        SELECT post_id AS postID,
+            user_id AS userID,
+            board_id AS boardID,
+            company_id AS companyID,
+            post_title AS postTitle,
+            post_content AS postContent,
+            post_register_time AS postRegisterTime,
+            is_temp AS isTemp
         FROM
             posts
         WHERE
@@ -89,20 +91,20 @@
 
   <select id="selectTempPosts" parameterType="hashMap"
     resultType="com.board.project.blockboard.dto.PostDTO">
-        SELECT post.post_id as postID,
-            post.user_id as userID,
-            post.board_id as boardID,
-            post.company_id as companyID,
-            post.post_title as postTitle,
-            post.post_content as postContent,
-            post.post_register_time as postRegisterTime,
-            post.is_temp as isTemp,
-            users.user_name as userName
-        FROM
-            posts post, users users
+        SELECT post.post_id AS postID,
+            post.user_id AS userID,
+            post.board_id AS boardID,
+            post.company_id AS companyID,
+            post.post_title AS postTitle,
+            post.post_content AS postContent,
+            post.post_register_time AS postRegisterTime,
+            post.is_temp AS isTemp,
+            users.user_name AS userName
+        FROM   posts post
+               JOIN users users
+                ON post.user_id = users.user_id
         WHERE
             post.user_id=#{userID} AND
-            post.user_id=users.user_id AND
             post.company_id=#{companyID} AND
             post.is_temp = true
         ORDER BY
@@ -111,17 +113,22 @@
 
   <sql id="searchOption">
     <choose>
+      <!-- 검색옵션이 제목 일 경우 -->
+      <when test="option == 'title'">
+        (post.post_title LIKE CONCAT('%',#{keyword},'%'))
+      </when>
+      <!-- 검색옵션이 작성자 일 경우 -->
+      <when test="option == 'writer'">
+        (users.user_name LIKE CONCAT('%',#{keyword},'%'))
+      </when>
+      <!-- 검색옵션이 내용 일 경우 -->
+      <when test="option == 'content'">
+        (post.post_content LIKE CONCAT('%',#{keyword},'%'))
+      </when>
       <!-- 검색옵션이 제목+내용 일 경우 -->
       <when test="option == 'titleAndContent'">
-        AND (post.post_title LIKE '%${keyword}%' OR post.post_content LIKE '%${keyword}%')
+        (post.post_title LIKE CONCAT('%',#{keyword},'%') OR post.post_content LIKE CONCAT('%',#{keyword},'%'))
       </when>
-      <when test="option == 'user_name'">
-        AND (users.user_name LIKE '%${keyword}%')
-      </when>
-      <!-- 아닐 경우 -->
-      <otherwise>
-        AND (post.${option} LIKE '%${keyword}%')
-      </otherwise>
     </choose>
   </sql>
 
@@ -137,10 +144,10 @@
                post.post_content       AS postContent,
                post.post_register_time AS postRegisterTime,
                post.is_temp            AS isTemp
-        FROM   posts post,
-               users users
-        WHERE  post.user_id = users.user_id
-               AND post.board_id = #{boardID}
+        FROM   posts post
+               JOIN users users
+                ON post.user_id = users.user_id
+        WHERE  post.board_id = #{boardID}
                AND post.is_temp = false
         ORDER  BY post.post_id DESC;
     </select>
@@ -157,9 +164,9 @@
                post.post_title         AS postTitle,
                post.post_content       AS postContent,
                post.post_register_time AS postRegisterTime
-        FROM   posts post,
-               users users
-        WHERE  post.user_id = users.user_id
-               AND post.post_id = #{postID}
+        FROM   posts post
+               JOIN users users
+                ON post.user_id = users.user_id
+        WHERE  post.post_id = #{postID}
     </select>
 </mapper>

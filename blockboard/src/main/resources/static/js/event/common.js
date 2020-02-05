@@ -17,5 +17,13 @@ function getContextPath() {
 function errorFunction(xhr) {
   if (xhr.status == 401) { // Token 만료 에러
     returnToLoginPage();
+  } else if(xhr.status == 400) {
+    alert("잘못 된 요청입니다.");
   }
+}
+
+// 문자열 byte 계산 함수
+function getByteLength(s,b,i,c){
+  for(b=i=0;c=s.charCodeAt(i++);b+=c>>11?3:c>>7?2:1);
+  return b;
 }
