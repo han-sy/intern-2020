@@ -4,13 +4,11 @@
  */
 package com.board.project.blockboard.controller;
 
-import com.board.project.blockboard.common.exception.LengthValidException;
 import com.board.project.blockboard.common.util.LengthCheckUtils;
 import com.board.project.blockboard.dto.PostDTO;
 import com.board.project.blockboard.service.BoardService;
 import com.board.project.blockboard.service.JwtService;
 import com.board.project.blockboard.service.PostService;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -69,16 +67,14 @@ public class PostController {
    */
   @PostMapping("")
   public void insertPost(@PathVariable("boardid") int boardid,
-      @ModelAttribute PostDTO receivePost, HttpServletResponse response) throws IOException {
-    if (LengthCheckUtils.isValid(receivePost)) {
+      @ModelAttribute PostDTO receivePost, HttpServletResponse response) {
+    if (LengthCheckUtils.isValid(receivePost, response)) {
       String userID = jwtService.getUserId();
       int companyID = jwtService.getCompanyId();
       receivePost.setUserID(userID);
       receivePost.setCompanyID(companyID);
       receivePost.setBoardID(boardid);
       postService.insertPost(receivePost);
-    } else {
-      response.sendError(LengthValidException.ERROR_CODE);
     }
   }
 
@@ -114,13 +110,11 @@ public class PostController {
    */
   @PutMapping("/{postid}")
   public void updatePost(@PathVariable("boardid") int boardid, @PathVariable("postid") int postid,
-      @ModelAttribute PostDTO requestPost, HttpServletResponse response) throws IOException {
-    if(LengthCheckUtils.isValid(requestPost)) {
+      @ModelAttribute PostDTO requestPost, HttpServletResponse response)  {
+    if(LengthCheckUtils.isValid(requestPost, response)) {
       requestPost.setPostID(postid);
       requestPost.setBoardID(boardid);
       postService.updatePost(requestPost);
-    } else {
-      response.sendError(LengthValidException.ERROR_CODE);
     }
   }
 
