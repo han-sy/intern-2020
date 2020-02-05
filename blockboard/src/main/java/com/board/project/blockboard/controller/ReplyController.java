@@ -9,6 +9,7 @@ import com.board.project.blockboard.dto.CommentDTO;
 import com.board.project.blockboard.service.JwtService;
 import com.board.project.blockboard.service.ReplyService;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,8 +59,9 @@ public class ReplyController {
       @RequestParam("commentReferencedID") int commentReferencedID,
       @RequestParam("commentReferencedUserID") String commentReferencedUserID,
       HttpServletRequest request) {
-    String userID = jwtService.getUserId();
-    int companyID = jwtService.getCompanyId();
+    Map<String, Object> userInfo = jwtService.getBody();
+    String userID = userInfo.get("userID").toString();
+    int companyID = Integer.parseInt(userInfo.get("companyID").toString());
     replyService
         .writeReplyWithUserInfo(userID, companyID, postID, commentContent, commentReferencedID,
             commentReferencedUserID);

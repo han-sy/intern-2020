@@ -8,6 +8,7 @@ import com.board.project.blockboard.dto.FunctionDTO;
 import com.board.project.blockboard.service.FunctionService;
 import com.board.project.blockboard.service.JwtService;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,8 @@ public class FunctionController {
    */
   @GetMapping(value = "/{companyid}")
   public List<FunctionDTO> getFunctionInfo(HttpServletRequest request) {
-    int companyID = jwtService.getCompanyId();
+    Map<String, Object> userInfo = jwtService.getBody();
+    int companyID = Integer.parseInt(userInfo.get("companyID").toString());
     List<FunctionDTO> functionInfoList = functionService.getfunctionInfoListByCompanyID(companyID);
     return functionInfoList;
   }
@@ -49,7 +51,8 @@ public class FunctionController {
   @PostMapping(value = "/{companyid}")
   public void insertNewFunctionData(@RequestParam("functionInfoData") String functionInfoData,
       HttpServletRequest request) {
-    int companyID = jwtService.getCompanyId();
+    Map<String, Object> userInfo = jwtService.getBody();
+    int companyID = Integer.parseInt(userInfo.get("companyID").toString());
     functionService.updateNewFunctionsInfo(companyID, functionInfoData);
   }
 

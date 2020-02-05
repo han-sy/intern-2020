@@ -11,6 +11,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.servlet.http.Cookie;
@@ -26,7 +27,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 public class JwtService {
 
   private final String SALT = "blockboard"; // Secret Key
-  private final String HEADER_NAME = "Authorization";
+  private final static String HEADER_NAME = "Authorization";
 
   public <T> String create(String key, T data, String subject) {
     String issure = "BlockBoard";
@@ -69,15 +70,15 @@ public class JwtService {
     }
   }
 
-  public Map<String, Object> get(String key) {
+  public Map<String, Object> getBody() {
     HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder
         .currentRequestAttributes()).getRequest();
     Cookie[] getCookie = request.getCookies();
     String jwt = null;
     for (Cookie c : getCookie) {
-        if (StringUtils.equals(c.getName(), HEADER_NAME)) {
-            jwt = c.getValue();
-        }
+      if (StringUtils.equals(c.getName(), HEADER_NAME)) {
+        jwt = c.getValue();
+      }
     }
     Jws<Claims> claims = null;
     try {
@@ -88,23 +89,7 @@ public class JwtService {
       throw new UnauthorizedException();
     }
     @SuppressWarnings("unchecked")
-    Map<String, Object> value = (LinkedHashMap<String, Object>) claims.getBody().get(key);
+    Map<String, Object> value = (LinkedHashMap<String, Object>) claims.getBody().get(HEADER_NAME);
     return value;
-  }
-
-  public String getUserId() {
-    return this.get(HEADER_NAME).get("userID").toString();
-  }
-
-  public int getCompanyId() {
-    return Integer.parseInt(this.get(HEADER_NAME).get("companyID").toString());
-  }
-
-  public String getUserType() {
-    return this.get(HEADER_NAME).get("userType").toString();
-  }
-
-  public String getUserName() {
-    return this.get(HEADER_NAME).get("userName").toString();
   }
 }

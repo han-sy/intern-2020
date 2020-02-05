@@ -11,6 +11,7 @@ import com.board.project.blockboard.service.FunctionService;
 import com.board.project.blockboard.service.JwtService;
 import com.board.project.blockboard.service.UserService;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -47,8 +48,9 @@ public class MainController {
   @GetMapping("/main")
   public String getMainContent(HttpServletRequest request,
       Model model) {  // 일일이 예외처리 안해서 Exception으로 수정 (동욱)
-    String userID = jwtService.getUserId();
-    int companyID = jwtService.getCompanyId();
+    Map<String, Object> userInfo = jwtService.getBody();
+    String userID = userInfo.get("userID").toString();
+    int companyID = Integer.parseInt(userInfo.get("companyID").toString());
 
     List<BoardDTO> boardList = boardService.getBoardListByCompanyID(companyID);
 

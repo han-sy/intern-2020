@@ -8,6 +8,7 @@ import com.board.project.blockboard.dto.CommentDTO;
 import com.board.project.blockboard.service.CommentService;
 import com.board.project.blockboard.service.JwtService;
 import java.util.List;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -56,8 +57,9 @@ public class CommentController {
   @PostMapping("")
   public void writeComment(@RequestParam("postID") int postID,
       @RequestParam("commentContent") String commentContent) {
-    String userID = jwtService.getUserId();
-    int companyID = jwtService.getCompanyId();
+    Map<String, Object> userInfo = jwtService.getBody();
+    String userID = userInfo.get("userID").toString();
+    int companyID = Integer.parseInt(userInfo.get("companyID").toString());
     commentService.writeCommentWithUserInfo(userID, commentContent, companyID, postID);
   }
 

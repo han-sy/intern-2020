@@ -42,7 +42,6 @@ public class PostController {
   private JwtService jwtService;
 
   private final String[] searchOptions = {"title", "writer", "content", "titleAndContent"};
-
   /**
    * 게시글 가져오기
    * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
@@ -52,8 +51,9 @@ public class PostController {
   @GetMapping(value = "/{postid}")
   @ResponseBody
   public Map<String, Object> getPostByPostID(@PathVariable("postid") int postID) {
-    String userID = jwtService.getUserId();
-    int companyID = jwtService.getCompanyId();
+    Map<String, Object> userInfo = jwtService.getBody();
+    String userID = userInfo.get("userID").toString();
+    int companyID = Integer.parseInt(userInfo.get("companyID").toString());
 
     //postData는 PostDTO + 유저 일치여부
     Map<String, Object> postData = boardService.getPostDataAboutSelected(postID, userID);
@@ -70,9 +70,11 @@ public class PostController {
   @PostMapping("")
   public void insertPost(@PathVariable("boardid") int boardid,
       @ModelAttribute PostDTO receivePost, HttpServletResponse response) throws IOException {
+    Map<String, Object> userInfo = jwtService.getBody();
+
     if (LengthCheckUtils.isValid(receivePost)) {
-      String userID = jwtService.getUserId();
-      int companyID = jwtService.getCompanyId();
+      String userID = userInfo.get("userID").toString();
+      int companyID = Integer.parseInt(userInfo.get("companyID").toString());
       receivePost.setUserID(userID);
       receivePost.setCompanyID(companyID);
       receivePost.setBoardID(boardid);
@@ -148,10 +150,7 @@ public class PostController {
    */
   @GetMapping("/recent")
   public PostDTO recentTempPost() {
-    Map<String, Object> param = new HashMap<>();
-    param.put("userID", jwtService.getUserId());
-    param.put("companyID", jwtService.getCompanyId());
-    return postService.selectRecentTemp(param);
+    return postService.selectRecentTemp(jwtService.getBody());
   }
 
   /**
@@ -160,9 +159,6 @@ public class PostController {
    */
   @GetMapping("/temp")
   public List<PostDTO> getTempPosts() {
-    Map<String, Object> param = new HashMap<>();
-    param.put("userID", jwtService.getUserId());
-    param.put("companyID", jwtService.getCompanyId());
-    return postService.getTempPosts(param);
+    return postService.getTempPosts(jwtService.getBody());
   }
 }

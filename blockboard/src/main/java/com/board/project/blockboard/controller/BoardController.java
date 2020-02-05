@@ -9,6 +9,7 @@ import com.board.project.blockboard.dto.BoardDTO;
 import com.board.project.blockboard.service.BoardService;
 import com.board.project.blockboard.service.JwtService;
 import java.util.List;
+import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -39,7 +40,8 @@ public class BoardController {
   @GetMapping(value = "")
   @ResponseBody
   public List<BoardDTO> getBoardList() {
-    int companyID = jwtService.getCompanyId();
+    Map<String, Object> userInfo = jwtService.getBody();
+    int companyID = Integer.parseInt(userInfo.get("companyID").toString());
 
     //게시판 목록
     List<BoardDTO> boardList = boardService.getBoardListByCompanyID(companyID); // select로 받아오기
@@ -54,7 +56,8 @@ public class BoardController {
   @PostMapping(value = "")
   @ResponseBody
   public void insertNewBoard(@RequestParam("boardName") String newBoardName) {
-    int companyID = jwtService.getCompanyId();
+    Map<String, Object> userInfo = jwtService.getBody();
+    int companyID = Integer.parseInt(userInfo.get("companyID").toString());
     //게시판 삽입
     boardService.insertNewBoard(newBoardName, companyID);
   }
@@ -67,7 +70,8 @@ public class BoardController {
   @PutMapping(value = "")
   @ResponseBody
   public void changeNewBoardName(@RequestParam("newTitles") String newTItleList) {
-    int companyID = jwtService.getCompanyId();
+    Map<String, Object> userInfo = jwtService.getBody();
+    int companyID = Integer.parseInt(userInfo.get("companyID").toString());
     boardService.updateChangedName(newTItleList, companyID);
   }
 
@@ -79,7 +83,8 @@ public class BoardController {
   @DeleteMapping(value = "")
   @ResponseBody
   public void deleteBoardbyBoardID(@RequestParam("deleteList") String deleteBoards) {
-    int companyID = jwtService.getCompanyId();
+    Map<String, Object> userInfo = jwtService.getBody();
+    int companyID = Integer.parseInt(userInfo.get("companyID").toString());
 
     log.info("deleteBoards : " + deleteBoards);
     boardService.deleteBoardsByDeleteBoardList(companyID, deleteBoards); //기존데이터
