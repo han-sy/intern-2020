@@ -163,7 +163,8 @@
                post.company_id         AS companyID,
                post.post_title         AS postTitle,
                post.post_content       AS postContent,
-               post.post_register_time AS postRegisterTime
+               post.post_register_time AS postRegisterTime,
+               post.is_temp            AS isTemp
         FROM   posts post
                JOIN users users
                 ON post.user_id = users.user_id

@@ -160,7 +160,7 @@ function clickTempPostEvent(evt) {
 // 임시저장 게시물 삭제 이벤트
 function clickDeleteTempPost() {
   var postID = $('#editor_postID').html();
-  deletePost(-1, postID);
+  deleteTempPost(postID);
 }
 
 // length Check 이벤트

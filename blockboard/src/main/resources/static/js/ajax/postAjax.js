@@ -36,6 +36,8 @@ function insertTempPost(boardID, postID, temp_title, temp_content, is_temp) {
     },
     error: function (xhr) {
       errorFunction(xhr);
+      editorClear();
+      refreshPostList();
     },
     success: function () {
       $.getJSON("/boards/" + boardID + "/posts/recent", function (data) {
@@ -79,9 +81,10 @@ function updatePost(boardID, postID, postTitle, postContent) {
     },
     error: function (xhr) {
       errorFunction(xhr);
+      editorClear();
+      refreshPostList();
     },
     success: function () {
-      alert("수정완료");
       editorClear();
       refreshPostList();
     }
@@ -154,13 +157,29 @@ function getTempPost(postID) {
   postContentObj.html("");
   $.ajax({
     type: 'GET',
-    url: "/boards/0/posts/" + postID,
-    error: function (error) {  //통신 실패시
-      alert('통신실패!' + error);
+    url: "/boards/0/posts/temp/" + postID,
+    error: function (xhr) {  //통신 실패시
+      errorFunction(xhr);
+      editorClear();
+      refreshPostList();
     },
     success: function (data) {
       $('#btn_write').show();
       loadPost(data.boardID, postID);
+    }
+  });
+}
+
+function deleteTempPost(postID) {
+  $.ajax({
+    type: 'DELETE',
+    url: "/boards/0/posts/temp/" + postID,
+    error: function (xhr) {
+      errorFunction(xhr);
+    },
+    success: function () {
+      editorClear();
+      refreshPostList();
     }
   });
 }

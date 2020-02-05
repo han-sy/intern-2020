@@ -18,7 +18,9 @@ function errorFunction(xhr) {
   if (xhr.status == 401) { // Token 만료 에러
     returnToLoginPage();
   } else if(xhr.status == 400) {
-    alert("잘못 된 요청입니다.");
+    alert(JSON.parse(xhr.responseText).message);
+  } else if(xhr.status == 409) {
+    alert(JSON.parse(xhr.responseText).message);
   }
 }
 
