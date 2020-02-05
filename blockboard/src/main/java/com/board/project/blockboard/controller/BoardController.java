@@ -62,13 +62,13 @@ public class BoardController {
   /**
    * 게시판 이름 변경 변경된 리스트를 받아와서 수정한다.
    *
-   * @param newTItleList 이름이 변경된 리스트
+   * @param newTitleList 이름이 변경된 리스트
    */
   @PutMapping(value = "")
   @ResponseBody
-  public void changeNewBoardName(@RequestParam("newTitles") String newTItleList) {
+  public void changeNewBoardName(@RequestParam("newTitles") String newTitleList) {
     int companyID = jwtService.getCompanyId();
-    boardService.updateChangedName(newTItleList, companyID);
+    boardService.updateChangedName(newTitleList, companyID);
   }
 
   /**

@@ -21,9 +21,9 @@ function clickSaveFunctionChange() {
     var functionData = new Object();
     functionData.functionID = $(this).val();
     if ($(this).is(":checked")) {
-      functionData.functionCheck = "ON";
+      functionData.functionOn = true;
     } else {
-      functionData.functionCheck = "OFF";
+      functionData.functionOn = false;
     }
     functionDataList.push(functionData);
   });

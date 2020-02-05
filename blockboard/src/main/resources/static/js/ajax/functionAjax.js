@@ -18,6 +18,7 @@ function getFunctionList(companyID, successFunction) {
 
 //기능변경후 새로운 사용중인기능목록 불러오기
 function getNewFunctionInfo(companyID, jsonData) {
+  //alert(jsonData);
   $.ajax({
     type: 'POST',
     url: "/functions/" + companyID,
