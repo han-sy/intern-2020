@@ -53,8 +53,6 @@ public class UserService {
   }
 
   /**
-   * @param userID
-   * @return
    * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
    */
   public String getUserTypeByUserID(String userID) {

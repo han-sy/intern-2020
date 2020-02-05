@@ -64,13 +64,21 @@ function checkEmpty() {
   if (postTitle == "") {
     alert("게시글 제목을 입력해주세요.");
     return false;
+  }
+  if (postContent == "") {
+    alert("게시글 내용을 입력해주세요.");
+    return false;
+  }
+  // 서버에 나중에 적용하기
+  if (!isValidLength(postTitle, 150)) {
+    alert("게시글 제목 길이를 초과하였습니다.");
+    return false;
+  }
+  if (!isValidLength(postContent, 4000)) {
+    alert("게시글 내용 길이를 초과하였습니다.");
+    return false;
   } else {
-    if (postContent == "") {
-      alert("게시글 내용을 입력해주세요.");
-      return false;
-    } else {
-      return true;
-    }
+    return true;
   }
 }
 
@@ -153,4 +161,13 @@ function clickTempPostEvent(evt) {
 function clickDeleteTempPost() {
   var postID = $('#editor_postID').html();
   deletePost(-1, postID);
+}
+
+// length Check 이벤트
+function isValidLength(str, limit) {
+  if (getByteLength(str) <= limit) {
+    return true;
+  } else {
+    return false;
+  }
 }

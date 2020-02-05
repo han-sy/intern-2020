@@ -197,7 +197,7 @@
                 <div class="custom-control custom-checkbox checkbox-success"
                      style="padding: 15px 1px 10px 30px;">
                     <input class="custom-control-input" type='checkbox' name='boardDelete'
-                           id="checkDelBoard{{boardID}}" value={{boardID}}/>
+                           id="checkDelBoard{{boardID}}" value='{{boardID}}'/>
                     <label class="custom-control-label"
                            for="checkDelBoard{{boardID}}">{{boardName}}</label>
                 </div>
@@ -546,9 +546,9 @@
                         <div class="col-sm-1">
                             <select id="search_option" class="form-control"
                                     style="width:100px;font-size:15px;">
-                                <option value="post_title">제목</option>
-                                <option value="user_name">작성자</option>
-                                <option value="post_content">내용</option>
+                                <option value="title">제목</option>
+                                <option value="writer">작성자</option>
+                                <option value="content">내용</option>
                                 <option value="titleAndContent">제목+내용</option>
                             </select>
                         </div>
