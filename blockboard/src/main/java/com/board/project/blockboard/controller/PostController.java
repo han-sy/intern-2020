@@ -42,8 +42,6 @@ public class PostController {
   private JwtService jwtService;
 
   private final String[] searchOptions = {"title", "writer", "content", "titleAndContent"};
-  private final int POST_TITLE_LENGTH_LIMIT = 100;
-  private final int POST_CONTENT_LENGTH_LIMIT = 300;
 
   /**
    * 게시글 가져오기
