@@ -70,11 +70,11 @@ function checkEmpty() {
     return false;
   }
   // 서버에 나중에 적용하기
-  if (!isValidLength(postTitle, 100)) {
+  if (!isValidLength(postTitle, 150)) {
     alert("게시글 제목 길이를 초과하였습니다.");
     return false;
   }
-  if (!isValidLength(postContent, 100)) {
+  if (!isValidLength(postContent, 4000)) {
     alert("게시글 내용 길이를 초과하였습니다.");
     return false;
   } else {

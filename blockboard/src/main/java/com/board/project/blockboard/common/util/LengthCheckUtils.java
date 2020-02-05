@@ -6,9 +6,9 @@ import com.board.project.blockboard.dto.PostDTO;
 
 public class LengthCheckUtils {
 
-  static final int POST_TITLE_LIMIT_LENGTH = 100;   // 게시글 제목 글자수 제한
-  static final int POST_CONTENT_LIMIT_LENGTH = 300; // 게시글 내용 글자수 제한
-  static final int COMMENT_LIMIT_LENGTH = 100;      // 댓글 내용 글자수 제한
+  static final int POST_TITLE_LIMIT_LENGTH = 150;   // 게시글 제목 글자수 제한
+  static final int POST_CONTENT_LIMIT_LENGTH = 4000; // 게시글 내용 글자수 제한
+  static final int COMMENT_LIMIT_LENGTH = 4000;      // 댓글 내용 글자수 제한
 
   public static Boolean isValid(PostDTO post) {
     try {
