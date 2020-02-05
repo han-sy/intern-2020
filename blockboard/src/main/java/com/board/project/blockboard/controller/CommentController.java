@@ -31,9 +31,6 @@ public class CommentController {
 
   /**
    * postID 일치하는 댓글 목록 리턴 ( 대댓글은 반환하지 않는다.)
-   *
-   * @param postID
-   * @return
    */
   @GetMapping("")
   public List<CommentDTO> getCommentsByPost(@PathVariable("postid") int postID) {
@@ -49,9 +46,6 @@ public class CommentController {
 
   /**
    * 댓글 추가
-   *
-   * @param postID
-   * @param commentContent
    */
   @PostMapping("")
   public void writeComment(@RequestParam("postID") int postID,
@@ -63,9 +57,6 @@ public class CommentController {
 
   /**
    * 댓글 삭제
-   *
-   * @param commentID
-   * @param postID
    */
   @DeleteMapping("/{commentid}")
   public void deleteComment(@PathVariable("commentid") int commentID,
@@ -76,9 +67,6 @@ public class CommentController {
   /**
    * 댓글 수정하기
    *
-   * @param commentID
-   * @param postID
-   * @param boardID
    * @param newComment 변경된 새로운 내용
    */
   @PutMapping("/{commentid}")
