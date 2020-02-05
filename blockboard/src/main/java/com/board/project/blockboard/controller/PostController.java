@@ -4,6 +4,7 @@
  */
 package com.board.project.blockboard.controller;
 
+import com.board.project.blockboard.common.util.LengthCheckUtils;
 import com.board.project.blockboard.dto.PostDTO;
 import com.board.project.blockboard.service.BoardService;
 import com.board.project.blockboard.service.JwtService;
@@ -12,6 +13,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -65,14 +67,15 @@ public class PostController {
    */
   @PostMapping("")
   public void insertPost(@PathVariable("boardid") int boardid,
-      @ModelAttribute PostDTO receivePost) {
-    String userID = jwtService.getUserId();
-    int companyID = jwtService.getCompanyId();
-    log.info("받음 temp 변수 = " + receivePost.getIsTemp());
-    receivePost.setUserID(userID);
-    receivePost.setCompanyID(companyID);
-    receivePost.setBoardID(boardid);
-    postService.insertPost(receivePost);
+      @ModelAttribute PostDTO receivePost, HttpServletResponse response) {
+    if (LengthCheckUtils.isValid(receivePost, response)) {
+      String userID = jwtService.getUserId();
+      int companyID = jwtService.getCompanyId();
+      receivePost.setUserID(userID);
+      receivePost.setCompanyID(companyID);
+      receivePost.setBoardID(boardid);
+      postService.insertPost(receivePost);
+    }
   }
 
   /**
@@ -107,10 +110,12 @@ public class PostController {
    */
   @PutMapping("/{postid}")
   public void updatePost(@PathVariable("boardid") int boardid, @PathVariable("postid") int postid,
-      @ModelAttribute PostDTO requestPost) {
-    requestPost.setPostID(postid);
-    requestPost.setBoardID(boardid);
-    postService.updatePost(requestPost);
+      @ModelAttribute PostDTO requestPost, HttpServletResponse response)  {
+    if(LengthCheckUtils.isValid(requestPost, response)) {
+      requestPost.setPostID(postid);
+      requestPost.setBoardID(boardid);
+      postService.updatePost(requestPost);
+    }
   }
 
   /**
