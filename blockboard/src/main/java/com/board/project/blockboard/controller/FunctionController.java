@@ -42,8 +42,6 @@ public class FunctionController {
 
   /**
    * 기능 on/off 정보 업데이트
-   *
-   * @param functionInfoData
    */
   @PostMapping(value = "/{companyid}")
   public void insertNewFunctionData(@RequestParam("functionInfoData") String functionInfoData) {

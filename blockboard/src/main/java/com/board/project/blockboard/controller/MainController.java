@@ -39,9 +39,6 @@ public class MainController {
   /**
    * 메인 화면
    *
-   * @param request
-   * @param model
-   * @return
    * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
    */
   @GetMapping("/main")

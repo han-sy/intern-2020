@@ -39,7 +39,6 @@ public class PostController {
   /**
    * 게시글 가져오기
    * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
-   * @param postID
    * @return PostDTO + 유저일치여부 로 구성된 map
    */
   @GetMapping(value = "/{postid}")
@@ -57,8 +56,6 @@ public class PostController {
    * 게시물 작성
    * @param boardid 게시물을 올릴 게시판 id
    * @param receivePost 받은 게시물 정보
-   * @return
-   * @throws Exception
    */
   @PostMapping("")
   public void insertPost(@PathVariable("boardid") int boardid,
