@@ -67,6 +67,7 @@ function getBoardList(successFunction) {
 //게시물 클릭후 게시물 데이터 받아오기
 function getPostDataAfterPostClick(postID, boardID) {
   var postContentObj = $('#postcontent');
+  var userID = $('#current_user_info').attr('data-id');
   postContentObj.html("");
   $.ajax({
     type: 'GET',
@@ -85,10 +86,12 @@ function getPostDataAfterPostClick(postID, boardID) {
       var commentAbleObj = $('#functionAble1');
       var btn_deletePost = $('#btn_deletePost');
       var btn_updatePost = $('#btn_updatePost');
-      if (data.canDelete == true) {
+      if (data.userID == userID) {
+        console.log("수정 삭제 표시");
         btn_deletePost.attr('style', 'visibility:visible');
         btn_updatePost.attr('style', 'visibility:visible');
       } else {
+        console.log("수정 삭제 미표시");
         btn_deletePost.attr('style', 'visibility:hidden');
         btn_updatePost.attr('style', 'visibility:hidden');
       }
