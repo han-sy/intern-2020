@@ -27,7 +27,7 @@ public class LengthCheckUtils {
 
   public static Boolean isValid(CommentDTO comment) {
     try {
-      if (!(comment.getCommentContent().getBytes().length <= COMMENT_LIMIT_LENGTH)) {
+      if (comment.getCommentContent().getBytes().length > COMMENT_LIMIT_LENGTH) {
         throw new LengthValidException("댓글 글자수를 초과하였습니다.");
       }
     } catch (LengthValidException e) {
