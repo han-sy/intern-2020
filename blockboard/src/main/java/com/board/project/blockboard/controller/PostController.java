@@ -9,7 +9,7 @@ import com.board.project.blockboard.dto.PostDTO;
 import com.board.project.blockboard.service.BoardService;
 import com.board.project.blockboard.service.JwtService;
 import com.board.project.blockboard.service.PostService;
-import java.util.Arrays;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +39,7 @@ public class PostController {
   @Autowired
   private JwtService jwtService;
 
-  private final String[] searchOptions = {"title", "writer", "content", "titleAndContent"};
+  public enum searchOptions {title, writer, content, titleAndContent}
 
   /**
    * 게시글 가져오기
@@ -126,12 +126,13 @@ public class PostController {
    */
   @GetMapping("/search")
   public List<PostDTO> searchPost(@RequestParam("option") String option,
-      @RequestParam("keyword") String keyword) {
+      @RequestParam("keyword") String keyword, HttpServletResponse response) throws IOException {
     // option의 유효성 검사
-    if (Arrays.asList(searchOptions).contains(option)) {
-      log.info("option valid");
+    try {
+      searchOptions searchOption = searchOptions.valueOf(option);
       return postService.searchPost(option, keyword);
-    } else {
+    } catch (IllegalArgumentException e) {
+      response.sendError(HttpServletResponse.SC_BAD_REQUEST);
       return null;
     }
   }
