@@ -316,7 +316,7 @@
                         <label class="font-weight-light">게시글 제목</label>
                     </div>
                     <div class="col-6">
-                        <input type="text" class="form-control" id="post_title" maxlength="300"/>
+                        <input type="text" class="form-control" id="post_title"/>
                     </div>
                 </div>
                 <div id="editorcontent" class="form-group">
