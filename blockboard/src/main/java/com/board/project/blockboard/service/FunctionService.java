@@ -4,10 +4,11 @@
  */
 package com.board.project.blockboard.service;
 
+import com.board.project.blockboard.common.constant.ConstantData;
+import com.board.project.blockboard.common.util.CompareData;
 import com.board.project.blockboard.common.util.JsonParse;
 import com.board.project.blockboard.dto.FunctionDTO;
 import com.board.project.blockboard.mapper.FunctionMapper;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,20 +45,7 @@ public class FunctionService {
 
   public List<FunctionDTO> getfunctionInfoListByCompanyID(int companyID) {
     List<FunctionDTO> functionInfoList = getFunctionInfoByCompanyID(companyID);
-    List functionInfoDataList = new ArrayList<Object>();
-    try {
-      for (int i = 0; i < functionInfoList.size(); i++) {
-        Map<String, Object> functionInfoData = new HashMap<String, Object>();
-        functionInfoData.put("functionID", functionInfoList.get(i).getFunctionID());
-        functionInfoData.put("companyID", functionInfoList.get(i).getCompanyID());
-        functionInfoData.put("functionName", functionInfoList.get(i).getFunctionName());
-        functionInfoData.put("functionData", functionInfoList.get(i).getFunctionData());
-        functionInfoDataList.add(functionInfoData);
-      }
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-    return functionInfoDataList;
+    return functionInfoList;
   }
 
   /**
@@ -66,26 +54,25 @@ public class FunctionService {
    *                         /js/functionEvent.js 에 있는 clickSaveFunctionChange()에서 json 생성
    */
   public void updateNewFunctionsInfo(int companyID, String functionInfoData) {
-    List<FunctionDTO> functionInfoList = getFunctionInfoByCompanyID(companyID); //기존데이터
+    List<FunctionDTO> functionOldList = getFunctionInfoByCompanyID(companyID); //기존데이터
     //ajax를 통해 넘어온 json 형식의 string을 map 타입으로 변경
-    ArrayList<Map<String, String>> functionListMap = JsonParse
-        .stringToMapArrayList(functionInfoData);
+    List<FunctionDTO> functionNewList = JsonParse.jsonToFunctionDTOList(functionInfoData);
 
     try {
-      for (int i = 0; i < functionInfoList.size(); i++) {
-        if (functionInfoList.get(i).getCompanyID() > 0 && functionListMap.get(i)
-            .get("functionCheck").equals("OFF")) {//on->off
-          //insert문
-          changeFunctionOnToOff(functionInfoList.get(i).getFunctionID(), companyID);
-        } else if (functionInfoList.get(i).getCompanyID() == 0 && functionListMap.get(i)
-            .get("functionCheck").equals("ON")) {//off->on
-          //delete문
-          changeFunctionOffToOn(functionInfoList.get(i).getFunctionID(), companyID);
+      for (FunctionDTO oldFunction : functionOldList) {
+        int sameIndex = functionOldList.indexOf(oldFunction);
+        FunctionDTO newFunction = functionNewList.get(sameIndex);
+        int changeInfo = CompareData.compareFunctionOnOff(oldFunction,newFunction);
+
+        if (changeInfo== ConstantData.OFF_TO_ON)
+          changeFunctionOffToOn(newFunction.getFunctionID(), companyID);//delete문
+        else if (changeInfo ==ConstantData.ON_TO_OFF) {
+          changeFunctionOnToOff(newFunction.getFunctionID(), companyID);//insert문
         }
       }
     } catch (Exception e) {
       e.printStackTrace();
     }
-
   }
+
 }

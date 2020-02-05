@@ -4,6 +4,7 @@
  */
 package com.board.project.blockboard.controller;
 
+import com.board.project.blockboard.common.util.JsonParse;
 import com.board.project.blockboard.dto.FunctionDTO;
 import com.board.project.blockboard.service.FunctionService;
 import com.board.project.blockboard.service.JwtService;
@@ -45,6 +46,8 @@ public class FunctionController {
   @PostMapping(value = "/{companyid}")
   public void insertNewFunctionData(@RequestParam("functionInfoData") String functionInfoData) {
     int companyID = jwtService.getCompanyId();
+    List<FunctionDTO> functionDTOList = JsonParse.jsonToFunctionDTOList(functionInfoData);
+
     functionService.updateNewFunctionsInfo(companyID, functionInfoData);
   }
 

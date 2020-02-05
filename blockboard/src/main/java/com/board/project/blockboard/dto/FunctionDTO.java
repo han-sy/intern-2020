@@ -12,7 +12,7 @@ import org.apache.ibatis.type.Alias;
 public class FunctionDTO {
 
   int functionID;
-  int companyID;
+  boolean functionOn;
   String functionName;
   String functionData;
 }

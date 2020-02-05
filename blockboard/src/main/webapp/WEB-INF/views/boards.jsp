@@ -71,11 +71,11 @@
                         변경</strong></a>
                     <div class="dropdown-divider"></div>
                     <c:forEach items="${functionInfoList}" var="functionList" varStatus="status">
-                        <c:if test="${functionList.companyID == 1}">
+                        <c:if test="${functionList.functionOn}">
                             <a class="dropdown-item" id=functionAble${functionList.functionID}
                                value=on> ${functionList.functionName} </a>
                         </c:if>
-                        <c:if test="${functionList.companyID == 0}">
+                        <c:if test="${!(functionList.functionOn)}">
                             <a class="dropdown-item d-none"
                                id=functionAble${functionList.functionID}
                                value=off> ${functionList.functionName}</a>
@@ -592,6 +592,7 @@
 <script src="/static/js/updateUI/functionUI.js"></script>
 <script src="/static/js/updateUI/postUI.js"></script>
 <script src="/static/js/util/windowLoad.js"></script>
+<script src="/static/js/util/constant.js>"></script>
 </body>
 
 </html>

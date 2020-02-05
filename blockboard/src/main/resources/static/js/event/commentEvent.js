@@ -24,7 +24,7 @@ $(document).on('click', '#delete_comment', function () {
   var boardID = getCurrentBoardID();
 
   var deleteDivID = $(this).closest(".commentContainer").attr("id");
-  var commentID = deleteDivID.substring(7);
+  var commentID = deleteDivID.substring(COMMENT_PREFIX.length);
   var askSave = confirm("선택한 댓글 or 답글을 정말 삭제하시겠습니까?");
   if (askSave) {
     $(function () {
@@ -38,7 +38,7 @@ $(document).on('click', '#edit_comment', function () {
   var postID = $("#postID").html();
   var boardID = getCurrentBoardID();
   var editDivID = $(this).closest(".commentContainer").attr("id");
-  var commentID = editDivID.substring(7);
+  var commentID = editDivID.substring(COMMENT_PREFIX.length);
   $(function () {
     editCommentByCommentID(postID, boardID, commentID);
   });
@@ -49,7 +49,7 @@ $(document).on('click', '#btn_edit_comment_complete', function () {
   commentDiv = $(this).parents("div").parents("div");
   var newComment = commentDiv.children('#commentText').val().replace(/\n/g,
       "<br>");
-  var commentID = commentDiv.parents("div").attr("id").substring(7);
+  var commentID = commentDiv.parents("div").attr("id").substring(COMMENT_PREFIX.length);
   var postID = $("#postID").html();
   var boardID = getCurrentBoardID();
   var askSave = confirm("댓글을 수정 하시겠습니까?");

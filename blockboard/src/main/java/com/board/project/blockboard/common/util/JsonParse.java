@@ -1,25 +1,38 @@
-package com.board.project.blockboard.common.util;
 /**
  * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
  * @file JsonParse.java
  */
+package com.board.project.blockboard.common.util;
 
+
+import com.board.project.blockboard.dto.FunctionDTO;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class JsonParse {
 
   /**
-   * string 형태의 json을 ArrayList<Map<String,String>> 으로 변경Z
+   * string 형태의 json을 List<FunctionDTO> 로 변경
    */
-  public static ArrayList<Map<String, String>> stringToMapArrayList(String stringData) {
-    Gson gson = new Gson();
-    Type type = new TypeToken<ArrayList<Map<String, String>>>() {
-    }.getType();
-    ArrayList<Map<String, String>> resultListMap = gson.fromJson(stringData, type);
-    return resultListMap;
+  public static List<FunctionDTO> jsonToFunctionDTOList(String json) {
+    ObjectMapper mapper = new ObjectMapper();
+    List<FunctionDTO> functionDTOList =null;
+    try{
+      functionDTOList = Arrays.asList(mapper.readValue(json, FunctionDTO[].class));
+    }catch (IOException e){
+      e.printStackTrace();
+    }
+    return functionDTOList;
   }
+
+
 }
