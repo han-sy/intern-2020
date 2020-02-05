@@ -5,11 +5,14 @@
 package com.board.project.blockboard.controller;
 
 import com.board.project.blockboard.common.util.JsonParse;
+import com.board.project.blockboard.common.validation.AuthorityValidation;
 import com.board.project.blockboard.dto.FunctionDTO;
+import com.board.project.blockboard.dto.UserDTO;
 import com.board.project.blockboard.service.FunctionService;
 import com.board.project.blockboard.service.JwtService;
+import java.io.IOException;
 import java.util.List;
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +31,7 @@ public class FunctionController {
   @Autowired
   private JwtService jwtService;
 
+
   /**
    * 기존 기능 on/off 정보
    *
@@ -42,15 +46,16 @@ public class FunctionController {
 
   /**
    * 기능 on/off 정보 업데이트
-   *
-   * @param functionInfoData
    */
   @PostMapping(value = "/{companyid}")
-  public void insertNewFunctionData(@RequestParam("functionInfoData") String functionInfoData) {
-    int companyID = jwtService.getCompanyId();
-    List<FunctionDTO> functionDTOList = JsonParse.jsonToFunctionDTOList(functionInfoData);
+  public void insertNewFunctionData(@RequestParam("functionInfoData") String newfunctionInfoData,
+      @RequestParam("userData") String userJsonData, HttpServletResponse response)
+      throws IOException {
+    UserDTO userData = JsonParse.jsonToDTO(userJsonData,UserDTO.class);
+    if (AuthorityValidation.isAdmin(userData, response)) {
+      functionService.updateNewFunctionsInfo(userData.getCompanyID(), newfunctionInfoData);
+    }
 
-    functionService.updateNewFunctionsInfo(companyID, functionInfoData);
   }
 
 }

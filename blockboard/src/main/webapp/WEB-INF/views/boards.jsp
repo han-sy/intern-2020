@@ -22,13 +22,14 @@
             font-family: 'Noto Sans JP', sans-serif;
         }
     </style>
+    <script src="/static/js/util/data.js"></script>
 </head>
 
 <body>
 
 <nav class="navbar navbar-expand navbar-dark bg-success">
-    <a class="navbar-brand" href="JavaScript:window.location.reload()"
-       value= ${companyID}>${companyName}</a>
+    <a class="navbar-brand" id="companyInfo" href="JavaScript:window.location.reload()"
+       value="${companyID}">${companyName}</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse"
             data-target="#navbarsExample02"
             aria-controls="navbarsExample02" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,7 +38,7 @@
 
     <div class="collapse navbar-collapse" id="navbarsExample02">
         <ul class="navbar-nav mr-auto " style="
-        <c:if test="${isadmin==false}">
+        <c:if test="${userType!='관리자'}">
                 visibility:hidden;
         </c:if>
                 nav-right: auto;">
@@ -104,7 +105,7 @@
             </li>--%>
         </ul>
         <a class="nav-link text-white" id="current_user_info" style="nav-right: auto"
-           data-id=${userID}>${userName}</a>
+           data-id="${userID}" data-type="${userType}">${userName}</a>
         <a class="nav-link text-white" style="nav-right: auto"
            href="<c:url value='/logout' />">로그아웃</a>
     </div>
@@ -593,6 +594,7 @@
 <script src="/static/js/updateUI/postUI.js"></script>
 <script src="/static/js/util/windowLoad.js"></script>
 <script src="/static/js/util/constant.js>"></script>
+
 </body>
 
 </html>

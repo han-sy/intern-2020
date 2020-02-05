@@ -3,8 +3,9 @@
  * @file boardEvent.js
  */
 
-//게시판 저장하기 버튼
+//게시판 추가저장하기 버튼
 function clickSaveaddedBoard() {
+  var userData = new User();
   var boardName = $('#input_board_name').val();
   if (boardName == "") {
     alert("게시판 제목을 입력하세요.");
@@ -12,7 +13,7 @@ function clickSaveaddedBoard() {
   }
   console.log("boardName :" + boardName);
   $(function () {
-    updateTabByNewBoardListAfterAddBoard(boardName);
+    updateTabByNewBoardListAfterAddBoard(boardName,userData.getJsonString());
   });
   $('#config_container').html("");
 }
@@ -39,11 +40,12 @@ function clickSaveDelteBoard() {
     }
   });
 
+  var userData = new User();
   var jsonData = JSON.stringify(boardDataList);
   var askSave = confirm("선택한 게시판을 정말 삭제하시겠습니까? 게시물또한 모두 삭제됩니다.");
   if (askSave) {
     $(function () {
-      updateTabByNewBoardListAfterDeleteBoard(jsonData); //삭제이후 tab에 게시판목록 업데이트
+      updateTabByNewBoardListAfterDeleteBoard(jsonData,userData.getJsonString()); //삭제이후 tab에 게시판목록 업데이트
     });
   }
 }
@@ -76,11 +78,12 @@ function clickSaveChangeBoard() {
     }
   });
 
+  var userData = new User();
   var jsonData = JSON.stringify(boardDataList);
   var askSave = confirm("게시판 이름변경 내용을 저장하시겠습니까?");
   if (askSave) {
     $(function () {
-      updateTabByNewBoardListAfterUpdateBoardName(jsonData);
+      updateTabByNewBoardListAfterUpdateBoardName(jsonData,userData.getJsonString());
     });
   }
   $('#config_container').html("");

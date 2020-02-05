@@ -54,7 +54,7 @@ public class MainController {
 
     model.addAttribute("boardList", boardList); //게시판 목록
     model.addAttribute("companyName", companyService.getCompanyNameByUserID(userID));//회사이름
-    model.addAttribute("isadmin", userService.checkAdmin(userID));
+    model.addAttribute("userType", userService.getUserTypeByUserID(userID));
     model.addAttribute("companyID", companyID);
     model.addAttribute("userID", userID);
     model.addAttribute("userName", userService.getUserNameByUserID(userID));

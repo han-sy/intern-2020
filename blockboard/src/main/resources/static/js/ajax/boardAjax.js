@@ -4,13 +4,13 @@
  */
 
 //탭 업데이트 새로운 게시판 목록으로
-function updateTabByNewBoardListAfterAddBoard(boardName) {
+function updateTabByNewBoardListAfterAddBoard(boardName,userData) {
   $.ajax({
     type: 'POST',
     url: "/boards",
-    data: {boardName: boardName},
-    error: function () {  //통신 실패시
-      alert('통신실패!');
+    data: {boardName: boardName,userData:userData},
+    error: function (xhr) {  //통신 실패시
+      errorFunction(xhr);
     },
     success: function (data) {    //들어오는 data는 boardDTOlist
       getBoardList(updateTab);//새로운 탭 내용으로 교체
@@ -19,13 +19,13 @@ function updateTabByNewBoardListAfterAddBoard(boardName) {
 }
 
 //게시판 삭제후 탭업데이트
-function updateTabByNewBoardListAfterDeleteBoard(jsonData) {
+function updateTabByNewBoardListAfterDeleteBoard(jsonData,userData) {
   $.ajax({
     type: 'DELETE',
     url: "/boards",
-    data: {deleteList: jsonData},
-    error: function () {  //통신 실패시
-      alert('통신실패!');
+    data: {deleteList: jsonData,userData:userData},
+    error: function (xhr) {  //통신 실패시
+      errorFunction(xhr);
     },
     success: function () {
       getBoardList(updateTab);//새로운 탭 내용으로 교체
@@ -35,13 +35,13 @@ function updateTabByNewBoardListAfterDeleteBoard(jsonData) {
 }
 
 //게시판 이름변경후 탭업데이트
-function updateTabByNewBoardListAfterUpdateBoardName(jsonData) {
+function updateTabByNewBoardListAfterUpdateBoardName(jsonData,userData) {
   $.ajax({
     type: 'PUT',
     url: "/boards",
-    data: {newTitles: jsonData},
-    error: function (error) {  //통신 실패시
-      alert(error);
+    data: {newTitles: jsonData,userData:userData},
+    error: function (xhr) {  //통신 실패시
+      errorFunction(xhr);
     },
     success: function () {
       getBoardList(updateTab);//새로운 탭 내용으로 교체

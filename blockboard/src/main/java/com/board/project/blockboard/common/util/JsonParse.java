@@ -5,33 +5,47 @@
 package com.board.project.blockboard.common.util;
 
 
+import com.board.project.blockboard.dto.BoardDTO;
 import com.board.project.blockboard.dto.FunctionDTO;
+import com.board.project.blockboard.dto.UserDTO;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 public class JsonParse {
 
   /**
-   * string 형태의 json을 List<FunctionDTO> 로 변경
+   * 제네릭 리스트 만들기
+   * string 형태의 json을 List<DTO> 로 변경
    */
-  public static List<FunctionDTO> jsonToFunctionDTOList(String json) {
+  public static <T> List<T> jsonToDTOList(String json, Class<FunctionDTO[]> tClass) {
+    List<T> objectDTOList = null;
     ObjectMapper mapper = new ObjectMapper();
-    List<FunctionDTO> functionDTOList =null;
-    try{
-      functionDTOList = Arrays.asList(mapper.readValue(json, FunctionDTO[].class));
-    }catch (IOException e){
+    try {
+      objectDTOList = (List<T>) Arrays.asList(mapper.readValue(json, tClass));
+    } catch (IOException e) {
       e.printStackTrace();
     }
-    return functionDTOList;
+    return objectDTOList;
+  }
+
+  /**
+   * string 형태의 json을 DTO 로 변경
+   */
+  public static <T> T jsonToDTO(String json,Class<T> tClass) {
+    T validationDTO = null;
+    ObjectMapper mapper = new ObjectMapper();
+    try {
+      validationDTO = mapper.readValue(json, tClass);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return validationDTO;
   }
 
 

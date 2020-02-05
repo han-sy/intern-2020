@@ -16,7 +16,11 @@ public class WebConfig implements WebMvcConfigurer {
 
   private static final String[] INCLUDE_PATHS = {
       "/main/**",
-      "/main"
+      "/main",
+      "/boards/**",
+      "/functions/**",
+      "/functions",
+      "/boards"
   };
   private static final String[] EXCLUDE_PATHS = {
       "/",

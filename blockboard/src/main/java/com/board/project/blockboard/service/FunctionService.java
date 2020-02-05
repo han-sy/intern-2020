@@ -56,7 +56,7 @@ public class FunctionService {
   public void updateNewFunctionsInfo(int companyID, String functionInfoData) {
     List<FunctionDTO> functionOldList = getFunctionInfoByCompanyID(companyID); //기존데이터
     //ajax를 통해 넘어온 json 형식의 string을 map 타입으로 변경
-    List<FunctionDTO> functionNewList = JsonParse.jsonToFunctionDTOList(functionInfoData);
+    List<FunctionDTO> functionNewList = JsonParse.jsonToDTOList(functionInfoData,FunctionDTO[].class);
 
     try {
       for (FunctionDTO oldFunction : functionOldList) {

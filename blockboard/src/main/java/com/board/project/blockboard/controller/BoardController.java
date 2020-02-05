@@ -5,10 +5,14 @@
 package com.board.project.blockboard.controller;
 
 
+import com.board.project.blockboard.common.util.JsonParse;
+import com.board.project.blockboard.common.validation.AuthorityValidation;
 import com.board.project.blockboard.dto.BoardDTO;
+import com.board.project.blockboard.dto.UserDTO;
 import com.board.project.blockboard.service.BoardService;
 import com.board.project.blockboard.service.JwtService;
 import java.util.List;
+import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -53,10 +57,13 @@ public class BoardController {
    */
   @PostMapping(value = "")
   @ResponseBody
-  public void insertNewBoard(@RequestParam("boardName") String newBoardName) {
-    int companyID = jwtService.getCompanyId();
-    //게시판 삽입
-    boardService.insertNewBoard(newBoardName, companyID);
+  public void insertNewBoard(@RequestParam("boardName") String newBoardName,
+      @RequestParam("userData") String userJsonData, HttpServletResponse response) {
+    UserDTO userData = JsonParse.jsonToDTO(userJsonData,UserDTO.class);
+    if (AuthorityValidation.isAdmin(userData, response)) {
+      boardService.insertNewBoard(newBoardName, userData);
+    }
+
   }
 
   /**
@@ -66,9 +73,12 @@ public class BoardController {
    */
   @PutMapping(value = "")
   @ResponseBody
-  public void changeNewBoardName(@RequestParam("newTitles") String newTitleList) {
-    int companyID = jwtService.getCompanyId();
-    boardService.updateChangedName(newTitleList, companyID);
+  public void changeNewBoardName(@RequestParam("newTitles") String newTitleList,
+      @RequestParam("userData") String userJsonData, HttpServletResponse response) {
+    UserDTO userData = JsonParse.jsonToDTO(userJsonData,UserDTO.class);
+    if (AuthorityValidation.isAdmin(userData, response)) {
+      boardService.updateChangedName(newTitleList, userData.getCompanyID());
+    }
   }
 
   /**
@@ -78,11 +88,12 @@ public class BoardController {
    */
   @DeleteMapping(value = "")
   @ResponseBody
-  public void deleteBoardbyBoardID(@RequestParam("deleteList") String deleteBoards) {
-    int companyID = jwtService.getCompanyId();
-
-    log.info("deleteBoards : " + deleteBoards);
-    boardService.deleteBoardsByDeleteBoardList(companyID, deleteBoards); //기존데이터
+  public void deleteBoardbyBoardID(@RequestParam("deleteList") String deleteBoards,
+      @RequestParam("userData") String userJsonData, HttpServletResponse response) {
+    UserDTO userData = JsonParse.jsonToDTO(userJsonData,UserDTO.class);
+    if (AuthorityValidation.isAdmin(userData, response)) {
+      boardService.deleteBoardsByDeleteBoardList(deleteBoards); //기존데이터
+    }
   }
 
 }

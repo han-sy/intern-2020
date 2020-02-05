@@ -6,6 +6,7 @@ package com.board.project.blockboard.service;
 
 import com.board.project.blockboard.dto.BoardDTO;
 import com.board.project.blockboard.dto.PostDTO;
+import com.board.project.blockboard.dto.UserDTO;
 import com.board.project.blockboard.mapper.BoardMapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -35,9 +36,9 @@ public class BoardService {
     return boardList;
   }
 
-  public void insertNewBoard(String newBoardName, int companyID) {
+  public void insertNewBoard(String newBoardName, UserDTO userData) {
     BoardDTO newBoard = new BoardDTO();
-    newBoard.setCompanyID(companyID);
+    newBoard.setCompanyID(userData.getCompanyID());
     newBoard.setBoardName(newBoardName);
     log.info("newBoard : " + newBoard);
     boardMapper.insertBoard(newBoard);
@@ -60,7 +61,7 @@ public class BoardService {
   }
 
 
-  public void deleteBoardsByDeleteBoardList(int companyID, String deleteBoardListJson) {
+  public void deleteBoardsByDeleteBoardList(String deleteBoardListJson) {
 
     //ajax를 통해 넘어온 json 형식의 string을 map 타입으로 변경
     Gson gson = new Gson();

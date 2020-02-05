@@ -17,17 +17,17 @@ function getFunctionList(companyID, successFunction) {
 }
 
 //기능변경후 새로운 사용중인기능목록 불러오기
-function getNewFunctionInfo(companyID, jsonData) {
+function getNewFunctionInfo(jsonData,userData) {
   //alert(jsonData);
   $.ajax({
     type: 'POST',
-    url: "/functions/" + companyID,
-    data: {functionInfoData: jsonData},
-    error: function () {  //통신 실패시
-      alert('통신실패!' + error);
+    url: "/functions/" + userData.companyID,
+    data: {functionInfoData: jsonData,userData:userData},
+    error: function (error,msg) {  //통신 실패시
+      errorFunction(error);
     },
     success: function (data) {
-      getFunctionList(companyID, updateNewFunctionInfoUI);
+      getFunctionList(userData.companyID, updateNewFunctionInfoUI);
     }
   });
 }
