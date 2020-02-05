@@ -11,7 +11,6 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import javax.servlet.http.Cookie;
@@ -27,7 +26,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 public class JwtService {
 
   private final String SALT = "blockboard"; // Secret Key
-  private final static String HEADER_NAME = "Authorization";
+  private final String HEADER_NAME = "Authorization";
 
   public <T> String create(String key, T data, String subject) {
     String issure = "BlockBoard";

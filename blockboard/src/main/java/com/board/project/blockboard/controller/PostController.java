@@ -12,7 +12,6 @@ import com.board.project.blockboard.service.JwtService;
 import com.board.project.blockboard.service.PostService;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletResponse;
@@ -70,9 +69,8 @@ public class PostController {
   @PostMapping("")
   public void insertPost(@PathVariable("boardid") int boardid,
       @ModelAttribute PostDTO receivePost, HttpServletResponse response) throws IOException {
-    Map<String, Object> userInfo = jwtService.getBody();
-
     if (LengthCheckUtils.isValid(receivePost)) {
+      Map<String, Object> userInfo = jwtService.getBody();
       String userID = userInfo.get("userID").toString();
       int companyID = Integer.parseInt(userInfo.get("companyID").toString());
       receivePost.setUserID(userID);
