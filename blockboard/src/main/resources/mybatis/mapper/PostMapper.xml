@@ -147,22 +147,23 @@
   <!--@author Dongwook Kim <dongwook.kim1211@worksmobile.com>-->
   <select id="selectPostByBoardID" parameterType="int"
     resultType="com.board.project.blockboard.dto.PostDTO">
-        SELECT post.post_id            AS postID,
-               post.user_id            AS userID,
-               users.user_name          AS userName,
-               post.board_id           AS boardID,
-               post.company_id         AS companyID,
-               post.post_title         AS postTitle,
-               post.post_content       AS postContent,
-               post.post_register_time AS postRegisterTime,
+        SELECT post.post_id               AS postID,
+               post.user_id               AS userID,
+               users.user_name            AS userName,
+               post.board_id              AS boardID,
+               post.company_id            AS companyID,
+               post.post_title            AS postTitle,
+               post.post_content          AS postContent,
+               post.post_register_time    AS postRegisterTime,
                post.post_last_update_time AS postLastUpdateTime,
-               post.post_status        AS postStatus
+               post.post_status           AS postStatus
         FROM   posts post
                JOIN users users
-                ON post.user_id = users.user_id
+                 ON post.user_id = users.user_id
         WHERE  post.board_id = #{boardID}
-               AND json_extract(post.post_status, '$.isTemp') IS NULL
-        ORDER  BY post.post_id DESC;
+               AND Json_extract(post.post_status, '$.isTemp') IS NULL
+        ORDER  BY post.post_register_time DESC
+        LIMIT  0,10;
     </select>
 
   <!--게시글 id로 게시글반환-->
@@ -184,4 +185,10 @@
                 ON post.user_id = users.user_id
         WHERE  post.post_id = #{postID}
     </select>
+
+  <select id="selectPostCountByBoardID" resultType="int" parameterType="int">
+      SELECT Count(post_id)
+      FROM   posts
+      WHERE  board_id = #{boardID};
+  </select>
 </mapper>

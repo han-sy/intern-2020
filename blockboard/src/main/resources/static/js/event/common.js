@@ -7,7 +7,9 @@ function returnToLoginPage() {
   redirectLogout();
   alert("세션만료! 로그인 화면으로 돌아갑니다.");
 }
-
+/**
+ * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+ */
 function redirectLogout() {
   window.location.href = "/logout";
 }
@@ -31,7 +33,9 @@ function errorFunction(xhr) {
     redirectLogout();
   }
 }
-
+/**
+ * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+ */
 function getByteLength(size, maxLength, byte, i, ch) {
   var charLength;
   for (byte = i = 0; ch = size.charCodeAt(i++);
@@ -43,7 +47,9 @@ function getByteLength(size, maxLength, byte, i, ch) {
 
   return [byte, charLength - 2];
 }
-
+/**
+ * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+ */
 function bytesHandler(obj, selector, maxLength) {
   var text = $(obj).val();
   var textLength = getByteLength(text, maxLength);

@@ -71,4 +71,11 @@ public class PostService {
     PostDTO post = postMapper.selectPostByPostID(postID);
     return post;
   }
+  /**
+   * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+   */
+  public int getPostsCountByBoardID(int boardID){
+    int postCounts = postMapper.selectPostCountByBoardID(boardID);
+    return postCounts;
+  }
 }

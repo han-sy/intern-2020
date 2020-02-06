@@ -54,3 +54,29 @@ Handlebars.registerHelper('isTemp', function (option) {
     return option.inverse(this);
   }
 });
+
+Handlebars.registerHelper('isFirstPage', function (option) {
+  if (this.currentPage == this.startPage) {
+    return option.fn(this);
+  } else {
+    return option.inverse(this);
+  }
+});
+
+Handlebars.registerHelper('isLastPage', function (option) {
+  var lastPage = this.rangeCount;
+  if (this.currentPage >= this.rangeCount) {
+    return option.fn(this);
+  } else {
+    return option.inverse(this);
+  }
+});
+
+Handlebars.registerHelper('isLastPage', function (option) {
+  var lastPage = this.rangeCount;
+  if (this.currentPage >= this.rangeCount) {
+    return option.fn(this);
+  } else {
+    return option.inverse(this);
+  }
+});

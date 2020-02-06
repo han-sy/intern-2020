@@ -178,6 +178,7 @@ $(document).on("click", ".tabmenu", function clickTabEvent() {
     $(function () {
       btn_write.attr('style', 'visibility:visible');
       getPostsAfterTabClick(boardID);
+      getPageList(1,boardID,updatePageList)
     });
   } else {
     btn_write.attr('style', 'visibility:hidden');

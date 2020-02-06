@@ -11,11 +11,11 @@
   <select id="selectFunctionCheckByCompanyID" parameterType="int"
     resultType="com.board.project.blockboard.dto.FunctionDTO">
         SELECT FUNCTION.function_id                              AS functionID,
-               IF(Isnull(functioncheck.company_id), FALSE, TRUE) AS functionOn,
+               IF(ISNULL(functioncheck.company_id), FALSE, TRUE) AS functionOn,
                FUNCTION.function_name                            AS functionName,
                functioncheck.function_data                       AS functionData
         FROM   functions FUNCTION
-               left outer join functions_check functioncheck
+               LEFT OUTER JOIN functions_check functioncheck
                             ON FUNCTION.function_id = functioncheck.function_id
                                AND functioncheck.company_id = #{companyID};
     </select>

@@ -30,4 +30,6 @@ public interface PostMapper {
   List<PostDTO> selectTempPosts(UserDTO userDTO);
 
   List<PostDTO> selectPostByBoardID(int boardID);
+
+  int selectPostCountByBoardID(int boardID);
 }

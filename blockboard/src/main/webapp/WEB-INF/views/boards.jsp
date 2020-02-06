@@ -574,6 +574,32 @@
                     </div>
 
                 </div>
+                <div  class="pagination_container">
+                    <nav aria-label="Page navigation example" >
+                        <ul class="pagination" id="pagination_content">
+
+                        </ul>
+                    </nav>
+                </div>
+                <!--게시판 페이징 템픞릿-->
+                <script id="pageList-template" type="text/x-handlebars-template">
+                    {{#pagesInfo}}
+                    {{#isFirstPage}}
+                    {{else}}
+                    <li class="page-item page-btn"><a class="page-link" href="#">처음</a></li>
+                    {{/isFirstPage}}
+                    <li class="page-item"><a class="page-link" href="#">이전</a></li>
+                    {{#each pageList}}
+                    <li class="page-item"><a class="page-link" href="#">{{this}}</a></li>
+                    {{/each}}
+                    <li class="page-item"><a class="page-link" href="#">다음</a></li>
+                    {{#isLastPage}}
+                    {{else}}
+                    <li class="page-item"><a class="page-link" href="#">마지막</a></li>
+                    {{/isLastPage}}
+                    {{/pagesInfo}}
+                </script>
+
             </div>
         </div>
     </div>
@@ -587,17 +613,20 @@
 <script src="/static/js/event/postEvent.js"></script>
 <script src="/static/js/event/commentEvent.js"></script>
 <script src="/static/js/event/functionEvent.js"></script>
+<script src="/static/js/event/paginationEvent.js"></script>
 <script src="/static/js/event/common.js"></script>
 <script src="/static/js/ajax/functionAjax.js"></script>
 <script src="/static/js/ajax/commentAjax.js"></script>
 <script src="/static/js/ajax/postAjax.js"></script>
 <script src="/static/js/ajax/boardAjax.js"></script>
+<script src="/static/js/ajax/paginationAjax.js"></script>
 <script src="/static/ckeditor/ckeditor.js"></script>
 <script src="/static/ckeditor/adapters/jquery.js"></script>
 <script src="/static/js/util/handlebarsHelper.js"></script>
 <script src="/static/js/updateUI/boardUI.js"></script>
 <script src="/static/js/updateUI/commentUI.js"></script>
 <script src="/static/js/updateUI/functionUI.js"></script>
+<script src="/static/js/updateUI/paginationUI.js"></script>
 <script src="/static/js/updateUI/postUI.js"></script>
 <script src="/static/js/util/windowLoad.js"></script>
 
