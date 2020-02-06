@@ -18,7 +18,8 @@
     post_title,
     post_content,
     post_content_except_htmltag,
-    is_temp )
+    post_register_time,
+    post_status )
     VALUES (
     <if test='postID != 0'>
       #{postID},
@@ -29,13 +30,15 @@
     #{postTitle},
     #{postContent},
     #{postContentExceptHTMLTag},
-    #{isTemp} )
+    NOW(),
+    #{postStatus} )
     ON DUPLICATE KEY UPDATE
     board_id=#{boardID},
     post_title=#{postTitle},
     post_content=#{postContent},
     post_content_except_htmltag=#{postContentExceptHTMLTag},
-    is_temp=#{isTemp};
+    post_register_time=NOW(),
+    post_status=#{postStatus};
   </insert>
 
   <delete id="deletePostByPostID" parameterType="int">
@@ -45,7 +48,11 @@
 
   <update id="updatePost" parameterType="com.board.project.blockboard.dto.PostDTO">
         UPDATE posts
-        SET post_title=#{postTitle}, post_content=#{postContent}, post_content_except_htmltag=#{postContentExceptHTMLTag}, board_id=#{boardID}
+        SET post_title=#{postTitle},
+            post_content=#{postContent},
+            post_content_except_htmltag=#{postContentExceptHTMLTag},
+            post_last_update_time=NOW(),
+            board_id=#{boardID}
         WHERE post_id=#{postID};
     </update>
 
@@ -58,6 +65,7 @@
     post.post_title AS postTitle,
     post.post_content AS postContent,
     post.post_register_time AS postRegisterTime,
+    post.post_last_update_time AS postLastUpdateTime,
     board.board_name AS boardName,
     users.user_name AS userName
     FROM posts post
@@ -79,20 +87,20 @@
             post_title AS postTitle,
             post_content AS postContent,
             post_register_time AS postRegisterTime,
-            is_temp AS isTemp
+            post_status AS postStatus
         FROM
             posts
         WHERE
             user_id=#{userID} AND
             company_id=#{companyID} AND
-            is_temp = true
+            json_extract(post_status, '$.isTemp') = true
         ORDER BY
             postRegisterTime DESC
         LIMIT
             1;
     </select>
 
-  <select id="selectTempPosts" parameterType="hashMap"
+  <select id="selectTempPosts" parameterType="com.board.project.blockboard.dto.UserDTO"
     resultType="com.board.project.blockboard.dto.PostDTO">
         SELECT post.post_id AS postID,
             post.user_id AS userID,
@@ -101,7 +109,7 @@
             post.post_title AS postTitle,
             post.post_content AS postContent,
             post.post_register_time AS postRegisterTime,
-            post.is_temp AS isTemp,
+            post.post_last_update_time AS postLastUpdateTime,
             users.user_name AS userName
         FROM   posts post
                JOIN users users
@@ -109,7 +117,7 @@
         WHERE
             post.user_id=#{userID} AND
             post.company_id=#{companyID} AND
-            post.is_temp = true
+            json_extract(post.post_status, '$.isTemp') = true
         ORDER BY
             postRegisterTime DESC;
     </select>
@@ -146,12 +154,13 @@
                post.post_title         AS postTitle,
                post.post_content       AS postContent,
                post.post_register_time AS postRegisterTime,
-               post.is_temp            AS isTemp
+               post.post_last_update_time AS postLastUpdateTime,
+               post.post_status        AS postStatus
         FROM   posts post
                JOIN users users
                 ON post.user_id = users.user_id
         WHERE  post.board_id = #{boardID}
-               AND post.is_temp = false
+               AND json_extract(post.post_status, '$.isTemp') IS NULL
         ORDER  BY post.post_id DESC;
     </select>
 
@@ -161,13 +170,14 @@
     resultType="com.board.project.blockboard.dto.PostDTO">
         SELECT post.post_id            AS postID,
                post.user_id            AS userID,
-               users.user_name          AS userName,
+               users.user_name         AS userName,
                post.board_id           AS boardID,
                post.company_id         AS companyID,
                post.post_title         AS postTitle,
                post.post_content       AS postContent,
                post.post_register_time AS postRegisterTime,
-               post.is_temp            AS isTemp
+               post.post_last_update_time AS postLastUpdateTime,
+               post.post_status        AS postStatus
         FROM   posts post
                JOIN users users
                 ON post.user_id = users.user_id

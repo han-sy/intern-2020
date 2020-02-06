@@ -5,6 +5,7 @@
 package com.board.project.blockboard.service;
 
 import com.board.project.blockboard.dto.PostDTO;
+import com.board.project.blockboard.dto.UserDTO;
 import com.board.project.blockboard.mapper.PostMapper;
 import java.util.List;
 import java.util.Map;
@@ -43,8 +44,8 @@ public class PostService {
     return postMapper.selectRecentTempPost(param);
   }
 
-  public List<PostDTO> getTempPosts(Map<String, Object> param) {
-    return postMapper.selectTempPosts(param);
+  public List<PostDTO> getTempPosts(UserDTO userDTO) {
+    return postMapper.selectTempPosts(userDTO);
   }
 
   public PostDTO selectTempPost(int postID) {

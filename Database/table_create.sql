@@ -54,8 +54,9 @@ create table posts(
     post_title varchar(150) not null,
     post_content text character set utf8mb4 collate utf8mb4_unicode_ci not null,
 	post_content_except_htmltag varchar(10000) character set utf8mb4 collate utf8mb4_unicode_ci not null,
-    post_register_time timestamp not null,
-    is_temp boolean not null,
+    post_register_time datetime not null,
+    post_last_update_time datetime null,
+    post_status json null,
 	foreign key(user_id) references users(user_id) ON DELETE CASCADE,
 	foreign key(board_id) references boards(board_id) ON DELETE CASCADE,
 	foreign key(company_id) references companies(company_id) ON DELETE CASCADE,
@@ -104,14 +105,12 @@ insert into functions values(6,'스티커');
 insert into functions_check values(1,1,null);
 insert into functions_check values(2,4,null);
 
-insert into posts values(1,1,1,1,'첫게시글','<p>첫내용</p>', '첫내용', now(),false);
-insert into posts values (2,1,1,1,'두번째 게시글','<p>두번째 게시글내용</p>','두번째 게시글내용',now(),false);
-insert into posts values (3,2,1,1,'건의사항 게시판 첫글','<p>공지사항이네</p>', '공지사항이네',now(),false);
-insert into posts values (4,2,1,1,'공지사항 게시판 ','<p>ㅎㅎㅎㅎ테스트</p>','ㅎㅎㅎㅎ테스트',now(),false);
-insert into posts values (5,1,5,1,'자유1','<p>1111</p>','1111',now(),false);
-insert into posts values (6,1,5,1,'자유2','<p>22222</p>','22222',now(),false);
+insert into posts (user_id, board_id, company_id, post_title, post_content, post_content_except_htmltag, post_register_time) values(1,1,1,'첫게시글','<p>첫내용</p>', '첫내용', now());
+insert into posts (user_id, board_id, company_id, post_title, post_content, post_content_except_htmltag, post_register_time) values (1,1,1,'두번째 게시글','<p>두번째 게시글내용</p>','두번째 게시글내용',now());
+insert into posts (user_id, board_id, company_id, post_title, post_content, post_content_except_htmltag, post_register_time) values (2,1,1,'건의사항 게시판 첫글','<p>공지사항이네</p>', '공지사항이네',now());
+insert into posts (user_id, board_id, company_id, post_title, post_content, post_content_except_htmltag, post_register_time) values (2,1,1,'공지사항 게시판 ','<p>ㅎㅎㅎㅎ테스트</p>','ㅎㅎㅎㅎ테스트',now());
+insert into posts (user_id, board_id, company_id, post_title, post_content, post_content_except_htmltag, post_register_time) values (1,5,1,'자유1','<p>1111</p>','1111',now());
+insert into posts (user_id, board_id, company_id, post_title, post_content, post_content_except_htmltag, post_register_time) values (1,5,1,'자유2','<p>22222</p>','22222',now());
 
 insert into comments values(1,1,1,1,'첫 댓글',now(),null,null);
 insert into comments values(2,1,1,1,'첫 답글',now(),1,1);
-
-select * from posts;

@@ -8,6 +8,7 @@ import com.board.project.blockboard.common.util.HTMLTagUtils;
 import com.board.project.blockboard.common.util.LengthCheckUtils;
 import com.board.project.blockboard.common.validation.PostValidation;
 import com.board.project.blockboard.dto.PostDTO;
+import com.board.project.blockboard.dto.UserDTO;
 import com.board.project.blockboard.service.JwtService;
 import com.board.project.blockboard.service.PostService;
 import java.io.IOException;
@@ -48,7 +49,9 @@ public class PostController {
   @GetMapping(value = "/{postid}")
   public PostDTO getPostByPostID(@PathVariable("postid") int postID, HttpServletResponse response) {
     if (postValidation.isExistPost(postID, response)) {
-      return postService.selectPostByPostID(postID);
+      PostDTO post = postService.selectPostByPostID(postID);
+      log.info(post.toString());
+      return post;
     }
     return null;
   }
@@ -62,17 +65,13 @@ public class PostController {
   @PostMapping("")
   public void insertPost(@PathVariable("boardid") int boardid,
       @ModelAttribute PostDTO receivePost, HttpServletResponse response) {
+    log.info(receivePost.toString());
     if (LengthCheckUtils.isValid(receivePost, response)) {
-      String userID = jwtService.getUserId();
-      int companyID = jwtService.getCompanyId();
       int receivedPostID = receivePost.getPostID();
-
-      receivePost.setUserID(userID);
-      receivePost.setCompanyID(companyID);
       receivePost.setBoardID(boardid);
-      receivePost
-          .setPostContentExceptHTMLTag(HTMLTagUtils.HTMLtoString(receivePost.getPostContent()));
-      // '글쓰기' -> '저장' 버튼을 누른 경우에는 html 안에 postID가 존재하지 않아 바로 insert
+      receivePost.setPostContentExceptHTMLTag(HTMLTagUtils.HTMLtoString(receivePost.getPostContent()));
+
+      // '글쓰기' -> '저장'or'임시저장' 버튼을 누른 경우에는 html 안에 postID가 존재하지 않아 바로 insert
       if (receivedPostID == 0) {
         postService.insertPost(receivePost);
       } else {
@@ -121,13 +120,15 @@ public class PostController {
    */
   @PutMapping("/{postid}")
   public void updatePost(@PathVariable("boardid") int boardid, @PathVariable("postid") int postid,
-      @ModelAttribute PostDTO requestPost, HttpServletResponse response) {
+      @ModelAttribute PostDTO requestPost,HttpServletResponse response) {
+    log.info("수정 요청");
     if (LengthCheckUtils.isValid(requestPost, response)) {
       requestPost.setPostID(postid);
       requestPost.setBoardID(boardid);
       requestPost
           .setPostContentExceptHTMLTag(HTMLTagUtils.HTMLtoString(requestPost.getPostContent()));
       if (postValidation.isExistPost(requestPost.getPostID(), response)) {
+        log.info("수정 요청 중");
         postService.updatePost(requestPost);
       }
     }
@@ -148,7 +149,6 @@ public class PostController {
     }
     return null;
   }
-
   /**
    * 가장 최근에 임시저장된 게시글 가져올 때
    *
@@ -168,11 +168,8 @@ public class PostController {
    * @return 임시 저장된 게시물 목록
    */
   @GetMapping("/temp")
-  public List<PostDTO> getTempPosts() {
-    Map<String, Object> param = new HashMap<>();
-    param.put("userID", jwtService.getUserId());
-    param.put("companyID", jwtService.getCompanyId());
-    return postService.getTempPosts(param);
+  public List<PostDTO> getTempPosts(@ModelAttribute UserDTO requestUser) {
+    return postService.getTempPosts(requestUser);
   }
 
   /**

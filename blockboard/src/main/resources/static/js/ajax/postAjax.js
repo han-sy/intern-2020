@@ -5,13 +5,18 @@
 
 
 function insertPost(boardID, postTitle, postContent) {
+  var userData = new User();
+  console.log("userID = " + userData.getUserID());
+  console.log("companyID = " + userData.getCompanyID());
+  /*
   $.ajax({
     type: 'POST',
     url: "/boards/" + boardID + "/posts",
     data: {
       postTitle: postTitle,
       postContent: postContent,
-      isTemp: false
+      userID: userData.getUserID(),
+      companyID: userData.getCompanyID()
     },
     error: function (xhr) {
       errorFunction(xhr);
@@ -21,9 +26,14 @@ function insertPost(boardID, postTitle, postContent) {
       refreshPostList();
     }
   });
+
+   */
 }
 
 function insertTempPost(boardID, postID, temp_title, temp_content, is_temp) {
+  var userData = new User();
+  var userID = userData.getUserID();
+  var companyID = userData.getCompanyID();
   $.ajax({
     type: 'POST',
     url: "/boards/" + boardID + "/posts",
@@ -32,7 +42,9 @@ function insertTempPost(boardID, postID, temp_title, temp_content, is_temp) {
       postID: postID,
       postTitle: temp_title,
       postContent: temp_content,
-      isTemp: is_temp
+      postStatus: `{"isTemp":${is_temp}}`,
+      userID: userID,
+      companyID: companyID
     },
     error: function (xhr) {
       errorFunction(xhr);
@@ -40,9 +52,7 @@ function insertTempPost(boardID, postID, temp_title, temp_content, is_temp) {
       refreshPostList();
     },
     success: function () {
-      $.getJSON("/boards/" + boardID + "/posts/recent", function (data) {
-        addPostIdToEditor(data.postID);
-      });
+      addRecentTempPostIdToEditor(boardID, userID, companyID);
       if (is_temp) {
         alert("임시저장 되었습니다.");
       }
@@ -75,7 +85,7 @@ function updatePost(boardID, postID, postTitle, postContent) {
     url: "/boards/" + boardID + "/posts/" + postID,
     data: {
       postTitle: postTitle,
-      postContent: postContent
+      postContent: postContent,
     },
     error: function (xhr) {
       errorFunction(xhr);
@@ -134,10 +144,14 @@ function searchPost(option, keyword) {
 }
 
 function getTempPosts() {
-  console.log("getTempPosts 호출");
+  var userData = new User();
   $.ajax({
     type: 'GET',
     url: "/boards/-1/posts/temp",
+    data: {
+      userID: userData.getUserID(),
+      companyID: userData.getCompanyID()
+    },
     error: function (xhr) {
       errorFunction(xhr);
     },
@@ -178,4 +192,21 @@ function deleteTempPost(postID) {
       refreshPostList();
     }
   });
+}
+
+function addRecentTempPostIdToEditor(boardID, userID, companyID) {
+  $.ajax({
+    type: 'GET',
+    url: "/boards/" + boardID + "/posts/recent",
+    data: {
+      userID: userID,
+      companyID: companyID
+    },
+    error: function (xhr) {
+      errorFunction(xhr);
+    },
+    success: function (data) {
+      addPostIdToEditor(data.postID);
+    }
+  })
 }
