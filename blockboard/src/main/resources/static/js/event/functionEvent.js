@@ -14,9 +14,8 @@ function changeFunction() {
 
 //기능변경사항 저장하기 버튼
 function clickSaveFunctionChange() {
-  var companyID = $('#serviceTitle').attr("value");
+  var userData = new User();
   var functionDataList = new Array();
-
   $("input[name=function]").each(function () {
     var functionData = new Object();
     functionData.functionID = $(this).val();
@@ -29,11 +28,12 @@ function clickSaveFunctionChange() {
   });
 
   var jsonData = JSON.stringify(functionDataList);
+  var userjsonData = userData.getJsonString();
   //alert(jsonData);
   var askSave = confirm("기능변경 내용을 저장하시겠습니까?");
   if (askSave) {
     $(function () {
-      getNewFunctionInfo(companyID, jsonData);//새로운 기능목록 불러와 기능목록 변경
+      getNewFunctionInfo(jsonData,userjsonData);//새로운 기능목록 불러와 기능목록 변경
     });
   }
 

@@ -5,6 +5,7 @@
 package com.board.project.blockboard.service;
 
 import com.board.project.blockboard.common.exception.UnauthorizedException;
+import com.board.project.blockboard.dto.UserDTO;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -75,9 +76,9 @@ public class JwtService {
     Cookie[] getCookie = request.getCookies();
     String jwt = null;
     for (Cookie c : getCookie) {
-        if (StringUtils.equals(c.getName(), HEADER_NAME)) {
-            jwt = c.getValue();
-        }
+      if (StringUtils.equals(c.getName(), HEADER_NAME)) {
+        jwt = c.getValue();
+      }
     }
     Jws<Claims> claims = null;
     try {
@@ -106,5 +107,18 @@ public class JwtService {
 
   public String getUserName() {
     return this.get(HEADER_NAME).get("userName").toString();
+  }
+
+  /**
+   * @return UserDTO반환
+   * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+   */
+  public UserDTO getUserDTO() {
+    UserDTO userDTO = new UserDTO();
+    userDTO.setUserID(getUserId());
+    userDTO.setCompanyID(getCompanyId());
+    userDTO.setUserType(getUserType());
+    userDTO.setUserName(getUserName());
+    return userDTO;
   }
 }

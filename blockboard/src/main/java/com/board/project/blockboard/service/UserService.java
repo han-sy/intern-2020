@@ -53,12 +53,13 @@ public class UserService {
   }
 
   /**
-   *
+   * @param userID
+   * @return
    * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
    */
-  public boolean checkAdmin(String userID) {
-    String admin = userMapper.selectUserTypeByUserID(userID);
-    return admin.equals("관리자");
+  public String getUserTypeByUserID(String userID) {
+    String type = userMapper.selectUserTypeByUserID(userID);
+    return type;
   }
 
   public UserDTO getUserInfo(String userID) {

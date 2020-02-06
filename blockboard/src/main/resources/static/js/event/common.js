@@ -4,8 +4,12 @@
  */
 
 function returnToLoginPage() {
-  window.location.href = getContextPath();
+  redirectLogout();
   alert("세션만료! 로그인 화면으로 돌아갑니다.");
+}
+
+function redirectLogout() {
+  window.location.href = "/logout";
 }
 
 function getContextPath() {
@@ -21,6 +25,10 @@ function errorFunction(xhr) {
     alert(JSON.parse(xhr.responseText).message);
   } else if(xhr.status == 409) {
     alert(JSON.parse(xhr.responseText).message);
+  } else if (xhr.status == 403) {
+    var jsonResponse = JSON.parse(xhr.responseText);
+    alert(jsonResponse.message);
+    redirectLogout();
   }
 }
 
