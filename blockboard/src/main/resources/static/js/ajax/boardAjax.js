@@ -4,11 +4,11 @@
  */
 
 //탭 업데이트 새로운 게시판 목록으로
-function updateTabByNewBoardListAfterAddBoard(boardName,userData) {
+function updateTabByNewBoardListAfterAddBoard(boardName, userData) {
   $.ajax({
     type: 'POST',
     url: "/boards",
-    data: {boardName: boardName,userData:userData},
+    data: {boardName: boardName, userData: userData},
     error: function (xhr) {  //통신 실패시
       errorFunction(xhr);
     },
@@ -19,11 +19,11 @@ function updateTabByNewBoardListAfterAddBoard(boardName,userData) {
 }
 
 //게시판 삭제후 탭업데이트
-function updateTabByNewBoardListAfterDeleteBoard(jsonData,userData) {
+function updateTabByNewBoardListAfterDeleteBoard(jsonData, userData) {
   $.ajax({
     type: 'DELETE',
     url: "/boards",
-    data: {deleteList: jsonData,userData:userData},
+    data: {deleteList: jsonData, userData: userData},
     error: function (xhr) {  //통신 실패시
       errorFunction(xhr);
     },
@@ -35,11 +35,11 @@ function updateTabByNewBoardListAfterDeleteBoard(jsonData,userData) {
 }
 
 //게시판 이름변경후 탭업데이트
-function updateTabByNewBoardListAfterUpdateBoardName(jsonData,userData) {
+function updateTabByNewBoardListAfterUpdateBoardName(jsonData, userData) {
   $.ajax({
     type: 'PUT',
     url: "/boards",
-    data: {newTitles: jsonData,userData:userData},
+    data: {newTitles: jsonData, userData: userData},
     error: function (xhr) {  //통신 실패시
       errorFunction(xhr);
     },
@@ -98,11 +98,16 @@ function getPostDataAfterPostClick(postID, boardID) {
       var postContentHtml = "";
 
       if (commentAbleObj.attr("value") == "on") {
-
         $(function () {
           getCommentList(boardID, postID, getCommentAllContents); //삭제이후 tab에 게시판목록 업데이트 //CommentAjax.js 에 있음
           updateCommentsCount(boardID, postID);
         });
+      }
+      if (boardID == -2) { // 휴지통
+        btn_deletePost.html("완전 삭제");
+        btn_updatePost.html("복원");
+        btn_updatePost.attr('onclick', 'javascript:clickRestorePost()');
+        btn_deletePost.attr('onclick', 'javascript:clickCompleteDeletePost()');
       }
     }
   });
@@ -112,6 +117,8 @@ function getPostDataAfterPostClick(postID, boardID) {
 function getPostsAfterTabClick(boardID) {
   if (boardID == -1) {
     getTempPosts();
+  } else if (boardID == -2) {
+    getPostsInTrashBox();
   } else {
     $.ajax({
       type: 'GET',

@@ -4,9 +4,6 @@
  */
 package com.board.project.blockboard.dto;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import java.util.Map;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.type.Alias;
@@ -31,5 +28,4 @@ public class PostDTO {
   // postStatus 안의 Key List
   private Boolean isTemp;
   private Boolean isTrash;
-  private int originalBoardID;
 }

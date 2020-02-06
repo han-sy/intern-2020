@@ -109,8 +109,8 @@
             post.post_title AS postTitle,
             post.post_content AS postContent,
             post.post_register_time AS postRegisterTime,
-            post.post_last_update_time AS postLastUpdateTime,
-            users.user_name AS userName
+            users.user_name AS userName,
+            json_extract(post.post_status, '$.isTemp') AS isTemp
         FROM   posts post
                JOIN users users
                 ON post.user_id = users.user_id
@@ -121,6 +121,40 @@
         ORDER BY
             postRegisterTime DESC;
     </select>
+
+  <update id="temporaryDeletePost" parameterType="com.board.project.blockboard.dto.PostDTO">
+        UPDATE posts
+        SET post_status=#{postStatus}
+        WHERE post_id=#{postID};
+  </update>
+
+  <select id="selectPostsInTrashBox" parameterType="com.board.project.blockboard.dto.UserDTO"
+    resultType="com.board.project.blockboard.dto.PostDTO">
+        SELECT post.post_id AS postID,
+            post.user_id AS userID,
+            post.board_id AS boardID,
+            post.company_id AS companyID,
+            post.post_title AS postTitle,
+            post.post_content AS postContent,
+            post.post_register_time AS postRegisterTime,
+            users.user_name AS userName,
+            json_extract(post.post_status, '$.isTrash') AS isTrash
+        FROM   posts post
+               JOIN users users
+                ON post.user_id = users.user_id
+        WHERE
+            post.user_id=#{userID} AND
+            post.company_id=#{companyID} AND
+            json_extract(post.post_status, '$.isTrash') = true
+        ORDER BY
+            postRegisterTime DESC;
+    </select>
+
+  <update id="restorePost" parameterType="com.board.project.blockboard.dto.PostDTO">
+          UPDATE posts
+          SET post_status=#{postStatus}
+          WHERE post_id=#{postID};
+    </update>
 
   <sql id="searchOption">
     <choose>
@@ -160,7 +194,8 @@
                JOIN users users
                 ON post.user_id = users.user_id
         WHERE  post.board_id = #{boardID}
-               AND json_extract(post.post_status, '$.isTemp') IS NULL
+               AND (json_extract(post.post_status, '$.isTemp') = false
+               AND json_extract(post.post_status, '$.isTrash') = false)
         ORDER  BY post.post_id DESC;
     </select>
 

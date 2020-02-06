@@ -5,6 +5,7 @@
 package com.board.project.blockboard.controller;
 
 import com.board.project.blockboard.common.util.HTMLTagUtils;
+import com.board.project.blockboard.common.util.JsonParse;
 import com.board.project.blockboard.common.util.LengthCheckUtils;
 import com.board.project.blockboard.common.validation.PostValidation;
 import com.board.project.blockboard.dto.PostDTO;
@@ -50,6 +51,7 @@ public class PostController {
   public PostDTO getPostByPostID(@PathVariable("postid") int postID, HttpServletResponse response) {
     if (postValidation.isExistPost(postID, response)) {
       PostDTO post = postService.selectPostByPostID(postID);
+      JsonParse.statusJsonToPostDTO(post);
       log.info(post.toString());
       return post;
     }
@@ -73,11 +75,14 @@ public class PostController {
 
       // '글쓰기' -> '저장'or'임시저장' 버튼을 누른 경우에는 html 안에 postID가 존재하지 않아 바로 insert
       if (receivedPostID == 0) {
+        postService.setPostStatusIsTempAndIsTrash(receivePost, false, false);
         postService.insertPost(receivePost);
       } else {
         // [임시보관함]의 게시글에서 '저장'or'임시저장' 버튼을 눌렀는데 실제로 임시저장 되어있는 게시물이면 insert(update)
-        if (postValidation.isExistPost(receivedPostID, response) &&
-            postValidation.isTempSavedPost(receivedPostID, response)) {
+        PostDTO receivePostInDatabase = postService.getPostByPostID(receivedPostID);
+        if (postValidation.isExistPost(receivePostInDatabase, response) &&
+            postValidation.isTempSavedPost(receivePostInDatabase, response)) {
+          postService.setPostStatusIsTempAndIsTrash(receivePost, true, false);
           postService.insertPost(receivePost);
         }
       }
@@ -98,15 +103,31 @@ public class PostController {
   }
 
   /**
-   * 게시물 삭제
+   * 게시물 완전 삭제
    *
-   * @param postid 삭제할 게시물 id
+   * @param postID 삭제할 게시물 id
    * @return
    */
   @DeleteMapping("/{postid}")
-  public void deletePost(@PathVariable("postid") int postid, HttpServletResponse response) {
-    if (postValidation.isExistPost(postid, response)) {
-      postService.deletePost(postid);
+  public void deletePost(@PathVariable("postid") int postID, HttpServletResponse response) {
+    if (postValidation.isExistPost(postID, response)) {
+      postService.deletePost(postID);
+    }
+  }
+
+  /**
+   * 게시물 삭제 후 휴지통 이동
+   *
+   * @param boardID 휴디통으로 이동할 게시물의 게시판 id
+   * @param postID  휴지통으로 이동할 게시물 id
+   */
+  @PutMapping("/{postid}/trash")
+  public void deletePostTemporary(@PathVariable("boardid") int boardID,
+      @PathVariable("postid") int postID, HttpServletResponse response) {
+    PostDTO post = postService.selectPostByPostID(postID);
+    if (postValidation.isValidDelete(boardID, post, response)) {
+      postService.setPostStatusIsTempAndIsTrash(post, false, true);
+      postService.movePostToTrash(post);
     }
   }
 
@@ -179,8 +200,9 @@ public class PostController {
    */
   @GetMapping("/temp/{postid}")
   public PostDTO getTempPost(@PathVariable("postid") int postID, HttpServletResponse response) {
-    if (postValidation.isTempSavedPost(postID, response)) {
-      return postService.selectTempPost(postID);
+    PostDTO post = postService.selectTempPost(postID);
+    if (postValidation.isTempSavedPost(post, response)) {
+      return post;
     }
     return null;
   }
@@ -188,13 +210,39 @@ public class PostController {
   /**
    * 임시 저장 게시물 삭제할 때
    *
-   * @param postid 삭제할 게시물 id
+   * @param postID 삭제할 게시물 id
    * @return
    */
   @DeleteMapping("/temp/{postid}")
-  public void deleteTempPost(@PathVariable("postid") int postid, HttpServletResponse response) {
-    if (postValidation.isTempSavedPost(postid, response)) {
-      postService.deleteTempPost(postid);
+  public void deleteTempPost(@PathVariable("postid") int postID, HttpServletResponse response) {
+    if (postValidation.isExistPost(postID, response)) {
+      postService.deletePost(postID);
+    }
+  }
+
+  /**
+   * 휴지통의 게시물 목록을 불러온다.
+   *
+   * @param requestUser 해당 유저의 휴지통을 불러오기 위한 객체
+   * @return 해당 유저의 휴지통 목록
+   */
+  @GetMapping("/trash")
+  public List<PostDTO> getPostsInTrashBox(@ModelAttribute UserDTO requestUser) {
+    return postService.getPostsInTrashBox(requestUser);
+  }
+
+  /**
+   * 휴지통의 게시물을 복원한다.
+   *
+   * @param requestUser 해당 유저의 휴지통을 불러오기 위한 객체
+   * @return 해당 유저의 휴지통 목록
+   */
+  @PutMapping("/{postid}/restore")
+  public void restorePost(@PathVariable("postid") int postID, HttpServletResponse response) {
+    PostDTO post = postService.selectPostByPostID(postID);
+    if (postValidation.isExistPost(post, response) && postValidation.isInTrashBox(post, response)) {
+      postService.setPostStatusIsTempAndIsTrash(post, false, false);
+      postService.restorePost(post);
     }
   }
 }

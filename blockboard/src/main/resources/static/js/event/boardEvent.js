@@ -133,17 +133,20 @@ $(document).on("click", ".tabmenu", function clickTabEvent() {
   $(this).addClass("font-weight-bold");
   postClear();
   editorClear();
-  console.log("클릭한 boardID = " + boardID);
-  if (boardID > 0) {
+
+  if (boardID == -1) {
+    btn_write.attr('style', 'visibility:hidden');
+    getTempPosts();
+  } else if (boardID == -2) {
+    btn_write.attr('style', 'visibility:hidden');
+    getPostsInTrashBox();
+  } else {
     $(function () {
       btn_write.attr('style', 'visibility:visible');
       getPostsAfterTabClick(boardID);
     });
-  } else {
-    btn_write.attr('style', 'visibility:hidden');
-    getTempPosts();
   }
-})
+});
 
 // 현재 선택된 게시판 ID 찾기
 function getActiveBoardID() {
