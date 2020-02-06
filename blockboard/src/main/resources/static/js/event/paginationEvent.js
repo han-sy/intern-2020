@@ -10,9 +10,17 @@
  * 2. 전체 게시물 개수를 가져온다.
  * 3. ajax로 게시물 목록 요청한다.
  * */
+
 $(document).on('click', '.page-item', function () {
   console.log("!!!!!");
-  alert($(this).val());
+
+  $(".page-item").removeClass("active-page");
+  $(this).addClass("active-page");
+  var boardID = getCurrentBoardID();
+  var pageNum = $(this).find(".page-link").attr("data-page");
+  getPostListByPageNum(pageNum,boardID);
+  getPageList(pageNum,boardID,updatePageList);
+
 });
 
 

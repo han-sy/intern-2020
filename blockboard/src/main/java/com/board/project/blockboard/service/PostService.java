@@ -4,6 +4,8 @@
  */
 package com.board.project.blockboard.service;
 
+import com.board.project.blockboard.common.constant.ConstantData;
+import com.board.project.blockboard.dto.PaginationDTO;
 import com.board.project.blockboard.dto.PostDTO;
 import com.board.project.blockboard.dto.UserDTO;
 import com.board.project.blockboard.mapper.PostMapper;
@@ -59,8 +61,10 @@ public class PostService {
   /**
    * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
    */
-  public List<PostDTO> getPostListByBoardID(int boardID) {
-    List<PostDTO> postlist = postMapper.selectPostByBoardID(boardID);
+  public List<PostDTO> getPostListByBoardID(int boardID,int pageNumber) {
+    int pageCount = getPostsCountByBoardID(boardID);
+    PaginationDTO pageInfo = new PaginationDTO(pageCount,pageNumber,ConstantData.PAGE_SIZE,ConstantData.RANGE_SIZE);
+    List<PostDTO> postlist = postMapper.selectPostByBoardID(boardID,pageInfo.getStartIndex(), ConstantData.PAGE_SIZE);
     return postlist;
   }
 

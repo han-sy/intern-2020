@@ -29,7 +29,7 @@ public interface PostMapper {
 
   List<PostDTO> selectTempPosts(UserDTO userDTO);
 
-  List<PostDTO> selectPostByBoardID(int boardID);
+  List<PostDTO> selectPostByBoardID(int boardID,int startIndex,int pageSize);
 
   int selectPostCountByBoardID(int boardID);
 }

@@ -56,7 +56,7 @@ Handlebars.registerHelper('isTemp', function (option) {
 });
 
 Handlebars.registerHelper('isFirstPage', function (option) {
-  if (this.currentPage == this.startPage) {
+  if (this.currentPage == 1) {
     return option.fn(this);
   } else {
     return option.inverse(this);
@@ -64,17 +64,25 @@ Handlebars.registerHelper('isFirstPage', function (option) {
 });
 
 Handlebars.registerHelper('isLastPage', function (option) {
-  var lastPage = this.rangeCount;
-  if (this.currentPage >= this.rangeCount) {
+  var lastPage = this.pageCount;
+  if (this.currentPage >= this.pageCount) {
     return option.fn(this);
   } else {
     return option.inverse(this);
   }
 });
 
-Handlebars.registerHelper('isLastPage', function (option) {
+Handlebars.registerHelper('isFirstRange', function (option) {
+  var firstRange = 1;
+  if (this.currentRange == 1) {
+    return option.fn(this);
+  } else {
+    return option.inverse(this);
+  }
+});
+Handlebars.registerHelper('isLastRange', function (option) {
   var lastPage = this.rangeCount;
-  if (this.currentPage >= this.rangeCount) {
+  if (this.currentRange >= this.rangeCount) {
     return option.fn(this);
   } else {
     return option.inverse(this);

@@ -109,13 +109,13 @@ function getPostDataAfterPostClick(postID, boardID) {
 }
 
 //탭클릭후 게시판 목록 불러오기
-function getPostsAfterTabClick(boardID) {
+function getPostListByPageNum(pageNum,boardID) {
   if (boardID == -1) {
     getTempPosts();
   } else {
     $.ajax({
       type: 'GET',
-      url: '/boards/' + boardID + "/posts",
+      url: '/boards/' + boardID + "/posts/"+pageNum+"/postlist",
       error: function () {  //통신 실패시
         alert('통신실패!');
       },

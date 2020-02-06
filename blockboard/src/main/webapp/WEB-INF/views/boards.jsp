@@ -574,8 +574,8 @@
                     </div>
 
                 </div>
-                <div  class="pagination_container">
-                    <nav aria-label="Page navigation example" >
+                <div class="pagination_container">
+                    <nav aria-label="Page navigation example">
                         <ul class="pagination" id="pagination_content">
 
                         </ul>
@@ -586,21 +586,29 @@
                     {{#pagesInfo}}
                     {{#isFirstPage}}
                     {{else}}
-                    <li class="page-item page-btn"><a class="page-link" href="#">처음</a></li>
+                    <li class="page-item page-btn"><a class="page-link"
+                                                      style="cursor: pointer;" data-page="1">처음</a></li>
                     {{/isFirstPage}}
-                    <li class="page-item"><a class="page-link" href="#">이전</a></li>
+                    {{#isFirstRange}}
+                    {{else}}
+                    <li class="page-item"><a class="page-link" style="cursor: pointer;" data-page ='{{prevPage}}'>이전</a></li>
+                    {{/isFirstRange}}
                     {{#each pageList}}
-                    <li class="page-item"><a class="page-link" href="#">{{this}}</a></li>
+                    <li class="page-item"><a class="page-link" style="cursor: pointer;" data-page ='{{this}}'>{{this}}</a>
+                    </li>
                     {{/each}}
-                    <li class="page-item"><a class="page-link" href="#">다음</a></li>
+                    {{#isLastRange}}
+                    {{else}}
+                    <li class="page-item"><a class="page-link" style="cursor: pointer;" data-page ='{{nextPage}}'>다음</a></li>
+                    {{/isLastRange}}
                     {{#isLastPage}}
                     {{else}}
-                    <li class="page-item"><a class="page-link" href="#">마지막</a></li>
+                    <li class="page-item"><a class="page-link" style="cursor: pointer;" data-page ='{{pageCount}}'>마지막</a></li>
                     {{/isLastPage}}
                     {{/pagesInfo}}
                 </script>
 
-            </div>
+            </div
         </div>
     </div>
 </div>

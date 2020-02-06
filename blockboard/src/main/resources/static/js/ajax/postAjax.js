@@ -117,7 +117,7 @@ function deletePost(boardID, postID) {
 function refreshPostList() {
   var boardID = getCurrentBoardID();
   postClear();
-  getPostsAfterTabClick(boardID);
+  getPostListByPageNum(1,boardID);
 }
 
 function searchPost(option, keyword) {

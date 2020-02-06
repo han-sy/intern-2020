@@ -163,7 +163,7 @@
         WHERE  post.board_id = #{boardID}
                AND Json_extract(post.post_status, '$.isTemp') IS NULL
         ORDER  BY post.post_register_time DESC
-        LIMIT  0,10;
+        LIMIT  #{startIndex},#{pageSize};
     </select>
 
   <!--게시글 id로 게시글반환-->
