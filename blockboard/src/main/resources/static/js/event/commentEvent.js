@@ -2,6 +2,10 @@
  * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
  * @file commentEvent.js
  */
+const COMMENT_PREFIX = {
+  length: 10
+};
+
 //댓글 추가버튼 누를때
 $(document).on('click', '.btn_openComment', function () {
   var postID = $("#postID").html();
@@ -32,6 +36,7 @@ $(document).on('click', '#delete_comment', function () {
     });
   }
 })
+
 
 //수정 버튼 눌렀을때
 $(document).on('click', '#edit_comment', function () {

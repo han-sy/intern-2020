@@ -42,7 +42,7 @@
         <ul class="navbar-nav mr-auto ">
             <c:if test="${userType=='관리자'}">
                 <li class="nav-item active">
-                    <a class="nav-link" id='addBoardBtn'
+                    <a class="nav-link" id='add_board_btn'
                        style="cursor:pointer" data-toggle="modal" data-target="#addBoardModal">게시판
                         추가</a>
                 </li>
@@ -60,9 +60,9 @@
                 </li>
             </c:if>
             <li class="nav-item dropdown"
-            <c:if test="${userType!='관리자'}">
-                style = "visibility: hidden"
-            </c:if>
+                    <c:if test="${userType!='관리자'}">
+                        style = "visibility: hidden"
+                    </c:if>
             >
                 <a class="nav-link dropdown-toggle active" href="#" id="dropdown03"
                    data-toggle="dropdown"
@@ -154,14 +154,14 @@
                                 <input type="text" name="게시판 이름" id="input_board_name"
                                        class="addBoard"
                                        placeholder="게시판 이름">
+                                <span id="board_name_length"></span>
                             </p>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">
                                 Close
                             </button>
-                            <button type="button" id='addFuncBtn' class="btn btn-success"
-                                    onclick=javascript:clickSaveaddedBoard(this)
+                            <button type="button" id='add_board_save_btn' class="btn btn-success"
                                     data-dismiss="modal">Save changes
                             </button>
                         </div>
@@ -576,6 +576,7 @@
         </div>
     </div>
 </div>
+
 <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
 <script src="/webjars/bootstrap/4.4.1/dist/js/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
@@ -597,7 +598,7 @@
 <script src="/static/js/updateUI/functionUI.js"></script>
 <script src="/static/js/updateUI/postUI.js"></script>
 <script src="/static/js/util/windowLoad.js"></script>
-<script src="/static/js/util/constant.js>"></script>
+
 
 </body>
 

@@ -2,20 +2,55 @@
  * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
  * @file boardEvent.js
  */
+const KEYCODE = {
+  ENTER: 13
+};
+var MAX_LENGTH = {
+  BOARD_NAME: 150
+};
+$(function(){
+  $('#input_board_name').keyup(function(){
+    bytesHandler(this,"#board_name_length",MAX_LENGTH.BOARD_NAME);
+  });
+});
+$(document).on('keydown', '#input_board_name', function (event){
+  if(event.keyCode==KEYCODE.ENTER){
+    clickSaveAddedBoard();
+  }
+});
+$(document).on('click', '#add_board_save_btn', function (){
+  clickSaveAddedBoard();
+});
+
+//게시판 추가버튼 클릭
+$(document).on('click', '#add_board_btn', function () {
+  $('#input_board_name').val("");
+})
 
 //게시판 추가저장하기 버튼
-function clickSaveaddedBoard() {
+function clickSaveAddedBoard() {
   var userData = new User();
   var boardName = $('#input_board_name').val();
+  var boardName = boardName.trim();
   if (boardName == "") {
     alert("게시판 제목을 입력하세요.");
     return;
   }
+  var textLength = getByteLength(boardName,MAX_LENGTH.BOARD_NAME);
+  var byteLength = textLength[0];
+  var charLength = textLength[1];
+  if(byteLength>=MAX_LENGTH.BOARD_NAME){
+    alert("입력 글자수 초과입니다. 초과된 문자들은 삭제됩니다.");
+    $('#input_board_name').val(boardName.substr(0,charLength).trim());
+    return;
+  }
   console.log("boardName :" + boardName);
-  $(function () {
-    updateTabByNewBoardListAfterAddBoard(boardName,userData.getJsonString());
-  });
-  $('#config_container').html("");
+  var askSave = confirm("<"+boardName + ">게시판을 추가하시겠습니까?");
+  if (askSave) {
+    $(function () {
+      updateTabByNewBoardListAfterAddBoard(boardName,userData.getJsonString());
+    });
+  }
 }
 
 //게시판 삭제버튼 누를시
@@ -24,7 +59,7 @@ function clickDeleteBoardBtn() {
     getBoardList(getBoardListToDelete);
   });
 }
-
+1
 //게시판 삭제- 삭제하기버튼 누를시
 function clickSaveDelteBoard() {
   var boardDataList = new Array();

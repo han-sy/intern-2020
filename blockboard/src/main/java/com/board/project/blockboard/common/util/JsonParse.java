@@ -5,13 +5,9 @@
 package com.board.project.blockboard.common.util;
 
 
-import com.board.project.blockboard.dto.BoardDTO;
 import com.board.project.blockboard.dto.FunctionDTO;
-import com.board.project.blockboard.dto.UserDTO;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;

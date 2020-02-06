@@ -27,3 +27,36 @@ function errorFunction(xhr) {
     redirectLogout();
   }
 }
+
+function getByteLength(size,maxLength,byte,i,ch){
+  var charLength;
+  for(byte=i=0;ch=size.charCodeAt(i++);byte+=ch>>11?3:ch>>7?2:1){
+    if(byte<maxLength)
+      charLength=i;
+  }
+
+  return [byte,charLength-2];
+}
+
+
+function bytesHandler(obj,selector,maxLength){
+  var text = $(obj).val();
+  var textLength = getByteLength(text,maxLength);
+  var byteLength = textLength[0];
+  var charLength = textLength[1];
+  console.log(charLength+","+byteLength);
+  $(selector).text(byteLength+"/"+maxLength);
+  if(byteLength>maxLength){
+    $(selector).text("입력글자수 제한("+byteLength+"/"+maxLength+")");
+    $(selector).css('color','red');
+    alert("입력 글자수 초과입니다. 초과된 문자들은 삭제됩니다.");
+    $(obj).val(text.substr(0,charLength).trim());
+    $(selector).text("다시 입력하세요.");
+    $(selector).css('color','black');
+  }
+  else{
+    $(selector).text(byteLength+"/"+maxLength);
+    $(selector).css('color','black');
+  }
+  $(selector).focus();
+}
