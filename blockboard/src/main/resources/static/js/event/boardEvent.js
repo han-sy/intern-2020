@@ -101,6 +101,7 @@ function clickSaveChangeBoard() {
     var clickObj = $(this);
     var oldBoardName = clickObj.attr("data-oldname");
     var newBoardName = clickObj.val();
+    newBoardName = newBoardName.trim();
     if (newBoardName == "") {
       alert("기존" + oldBoardName + "게시판 제목이 비었습니다.");
       return;
