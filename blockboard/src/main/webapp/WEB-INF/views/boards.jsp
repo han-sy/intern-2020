@@ -37,41 +37,47 @@
     </button>
 
     <div class="collapse navbar-collapse" id="navbarsExample02">
-        <ul class="navbar-nav mr-auto " style="
-        <c:if test="${userType!='관리자'}">
-                visibility:hidden;
-        </c:if>
-                nav-right: auto;">
 
 
-            <li class="nav-item active">
-                <a class="nav-link" id='addBoardBtn'
-                   style="cursor:pointer" data-toggle="modal" data-target="#addBoardModal">게시판
-                    추가</a>
-            </li>
-            <li class="nav-item active">
-                <a class="nav-link" id='changeBoardsNameBtn' data-toggle="modal"
-                   data-target="#changeBoardNameModal"
-                   onclick="javascript:clickchangeBoardBtn(this)" style="cursor:pointer">게시판
-                    이름변경</a>
-            </li>
-            <li class="nav-item active">
-                <a class="nav-link" id='deleteBoardsBtn' data-toggle="modal"
-                   data-target='#deleteBoardModal'
-                   onclick="javascript:clickDeleteBoardBtn(this)"
-                   style="cursor:pointer">게시판 삭제</a>
-            </li>
-            <li class="nav-item dropdown">
+        <ul class="navbar-nav mr-auto ">
+            <c:if test="${userType=='관리자'}">
+                <li class="nav-item active">
+                    <a class="nav-link" id='addBoardBtn'
+                       style="cursor:pointer" data-toggle="modal" data-target="#addBoardModal">게시판
+                        추가</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" id='changeBoardsNameBtn' data-toggle="modal"
+                       data-target="#changeBoardNameModal"
+                       onclick="javascript:clickchangeBoardBtn(this)" style="cursor:pointer">게시판
+                        이름변경</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" id='deleteBoardsBtn' data-toggle="modal"
+                       data-target='#deleteBoardModal'
+                       onclick="javascript:clickDeleteBoardBtn(this)"
+                       style="cursor:pointer">게시판 삭제</a>
+                </li>
+            </c:if>
+            <li class="nav-item dropdown"
+            <c:if test="${userType!='관리자'}">
+                style = "visibility: hidden"
+            </c:if>
+            >
                 <a class="nav-link dropdown-toggle active" href="#" id="dropdown03"
                    data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">사용중인 기능</a>
-                <div class="dropdown-menu" id="fuctionListContainer" aria-labelledby="dropdown03">
-                    <a class="dropdown-item text-success" id='changeFuncBtn' data-toggle="modal"
-                       data-target="#changeFunctionModal"
-                       onclick="javascript:changeFunction(this)" style="cursor:pointer"><strong>기능
-                        변경</strong></a>
-                    <div class="dropdown-divider"></div>
-                    <c:forEach items="${functionInfoList}" var="functionList" varStatus="status">
+                <div class="dropdown-menu" id="fuctionListContainer"
+                     aria-labelledby="dropdown03">
+                    <c:if test="${userType=='관리자'}">
+                        <a class="dropdown-item text-success" id='changeFuncBtn' data-toggle="modal"
+                           data-target="#changeFunctionModal"
+                           onclick="javascript:changeFunction(this)" style="cursor:pointer"><strong>기능
+                            변경</strong></a>
+                        <div class="dropdown-divider"></div>
+                    </c:if>
+                    <c:forEach items="${functionInfoList}" var="functionList"
+                               varStatus="status">
                         <c:if test="${functionList.functionOn}">
                             <a class="dropdown-item" id=functionAble${functionList.functionID}
                                value=on> ${functionList.functionName} </a>
@@ -83,27 +89,25 @@
                         </c:if>
                     </c:forEach>
                 </div>
-                <!--현재 기능 사용 여부 현황 템플릿-->
-                <script id="functionList-template" type="text/x-handlebars-template">
-                    <a class="dropdown-item text-success" id='changeFuncBtn' data-toggle="modal"
-                       data-target="#changeFunctionModal"
-                       onclick="javascript:changeFunction(this)"
-                       style="cursor:pointer"><strong>기능 변경</strong></a>
-                    <hr>
-                    {{#functions}}
-                    {{#isAbleFunction}}
-                    <a class="dropdown-item d-none" id='functionAble{{functionID}}' value='off'>{{functionName}}</a>
-                    {{else}}
-                    <a class="dropdown-item" id='functionAble{{functionID}}' value='on'>{{functionName}}</a>
-                    {{/isAbleFunction}}
-                    {{/functions}}
-                </script>
+
             </li>
-
-            <%--<li class="nav-item active" style="float: right">
-
-            </li>--%>
         </ul>
+
+        <!--현재 기능 사용 여부 현황 템플릿-->
+        <script id="functionList-template" type="text/x-handlebars-template">
+            <a class="dropdown-item text-success" id='changeFuncBtn' data-toggle="modal"
+               data-target="#changeFunctionModal"
+               onclick="javascript:changeFunction(this)"
+               style="cursor:pointer"><strong>기능 변경</strong></a>
+            <hr>
+            {{#functions}}
+            {{#isAbleFunction}}
+            <a class="dropdown-item d-none" id='functionAble{{functionID}}' value='off'>{{functionName}}</a>
+            {{else}}
+            <a class="dropdown-item" id='functionAble{{functionID}}' value='on'>{{functionName}}</a>
+            {{/isAbleFunction}}
+            {{/functions}}
+        </script>
         <a class="nav-link text-white" id="current_user_info" style="nav-right: auto"
            data-id="${userID}" data-type="${userType}">${userName}</a>
         <a class="nav-link text-white" style="nav-right: auto"
@@ -197,7 +201,7 @@
                 <div class="custom-control custom-checkbox checkbox-success"
                      style="padding: 15px 1px 10px 30px;">
                     <input class="custom-control-input" type='checkbox' name='boardDelete'
-                           id="checkDelBoard{{boardID}}" value={{boardID}}/>
+                           id="checkDelBoard{{boardID}}" value='{{boardID}}'/>
                     <label class="custom-control-label"
                            for="checkDelBoard{{boardID}}">{{boardName}}</label>
                 </div>
