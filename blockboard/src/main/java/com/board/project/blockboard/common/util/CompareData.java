@@ -8,20 +8,19 @@ import com.board.project.blockboard.common.constant.ConstantData;
 import com.board.project.blockboard.dto.FunctionDTO;
 
 
-
 public class CompareData {
 
   /**
-   * functionDTO
-   * ON OFF 비교
+   * functionDTO ON OFF 비교
    */
-  public static int compareFunctionOnOff(FunctionDTO oldFunction, FunctionDTO newFunction){
-    if(!oldFunction.isFunctionOn() && newFunction.isFunctionOn())
+  public static int compareFunctionOnOff(FunctionDTO oldFunction, FunctionDTO newFunction) {
+    if (!oldFunction.isFunctionOn() && newFunction.isFunctionOn()) {
       return ConstantData.OFF_TO_ON;
-    else if(oldFunction.isFunctionOn() && !newFunction.isFunctionOn())
+    } else if (oldFunction.isFunctionOn() && !newFunction.isFunctionOn()) {
       return ConstantData.ON_TO_OFF;
-    else
+    } else {
       return ConstantData.NO_CHANGE;
+    }
   }
 
 }

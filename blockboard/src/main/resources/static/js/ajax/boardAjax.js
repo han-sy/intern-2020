@@ -4,11 +4,11 @@
  */
 
 //탭 업데이트 새로운 게시판 목록으로
-function updateTabByNewBoardListAfterAddBoard(boardName,userData) {
+function updateTabByNewBoardListAfterAddBoard(boardName, userData) {
   $.ajax({
     type: 'POST',
     url: "/boards",
-    data: {boardName: boardName,userData:userData},
+    data: {boardName: boardName, userData: userData},
     error: function (xhr) {  //통신 실패시
       errorFunction(xhr);
     },
@@ -19,11 +19,11 @@ function updateTabByNewBoardListAfterAddBoard(boardName,userData) {
 }
 
 //게시판 삭제후 탭업데이트
-function updateTabByNewBoardListAfterDeleteBoard(jsonData,userData) {
+function updateTabByNewBoardListAfterDeleteBoard(jsonData, userData) {
   $.ajax({
     type: 'DELETE',
     url: "/boards",
-    data: {deleteList: jsonData,userData:userData},
+    data: {deleteList: jsonData, userData: userData},
     error: function (xhr) {  //통신 실패시
       errorFunction(xhr);
     },
@@ -35,11 +35,11 @@ function updateTabByNewBoardListAfterDeleteBoard(jsonData,userData) {
 }
 
 //게시판 이름변경후 탭업데이트
-function updateTabByNewBoardListAfterUpdateBoardName(jsonData,userData) {
+function updateTabByNewBoardListAfterUpdateBoardName(jsonData, userData) {
   $.ajax({
     type: 'PUT',
     url: "/boards",
-    data: {newTitles: jsonData,userData:userData},
+    data: {newTitles: jsonData, userData: userData},
     error: function (xhr) {  //통신 실패시
       errorFunction(xhr);
     },
@@ -67,6 +67,7 @@ function getBoardList(successFunction) {
 //게시물 클릭후 게시물 데이터 받아오기
 function getPostDataAfterPostClick(postID, boardID) {
   var postContentObj = $('#postcontent');
+  var userID = $('#current_user_info').attr('data-id');
   postContentObj.html("");
   $.ajax({
     type: 'GET',
@@ -85,10 +86,12 @@ function getPostDataAfterPostClick(postID, boardID) {
       var commentAbleObj = $('#functionAble1');
       var btn_deletePost = $('#btn_deletePost');
       var btn_updatePost = $('#btn_updatePost');
-      if (data.canDelete == true) {
+      if (data.userID == userID) {
+        console.log("수정 삭제 표시");
         btn_deletePost.attr('style', 'visibility:visible');
         btn_updatePost.attr('style', 'visibility:visible');
       } else {
+        console.log("수정 삭제 미표시");
         btn_deletePost.attr('style', 'visibility:hidden');
         btn_updatePost.attr('style', 'visibility:hidden');
       }

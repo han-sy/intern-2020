@@ -33,8 +33,9 @@ public class UserController {
 
   /**
    * 로그인 검증
-   * @param requestUser   로그인을 요청한 User의 정보
-   * @param response      쿠키를 담은 객체
+   *
+   * @param requestUser 로그인을 요청한 User의 정보
+   * @param response    쿠키를 담은 객체
    * @return 로그인 메인화면으로 redirect
    */
   @PostMapping("/login")
@@ -42,16 +43,17 @@ public class UserController {
     log.info("userID = " + requestUser.getUserID());
     log.info("userPwd = " + requestUser.getUserPassword());
     boolean isValid = userService.loginCheck(requestUser, response);
-      if (isValid) {
-          return "redirect:/main";
-      } else {
-          return "redirect:/login";
-      }
+    if (isValid) {
+      return "redirect:/main";
+    } else {
+      return "redirect:/login";
+    }
   }
 
   /**
    * 로그아웃
-   * @param response      유효기간이 0인 쿠키를 담은 객체
+   *
+   * @param response 유효기간이 0인 쿠키를 담은 객체
    * @return 로그인 메인화면으로 redirect
    */
   @GetMapping("/logout")
@@ -64,20 +66,20 @@ public class UserController {
 
   /**
    * 로그인 메인 화면
-   * @param request       쿠키 조회하기 위한 객체
-   * @return server가 만들어 준 쿠키가 있다면 -> /boards redirect
-   *                      없다면 -> 로그인 화면 띄운다.
+   *
+   * @param request 쿠키 조회하기 위한 객체
+   * @return server가 만들어 준 쿠키가 있다면 -> /boards redirect 없다면 -> 로그인 화면 띄운다.
    */
   @GetMapping("/login")
   public String login(HttpServletRequest request) {
     // 이미 JWT 토큰을 가지고 있으면 로그인 생략 후 메인화면으로 이동
     String token = CookieUtils.getCookie(request, HEADER_NAME);
 
-      if (jwtService.isUsable(token)) {
-          return "redirect:/main";
-      } else {
-          return "login";
-      }
+    if (jwtService.isUsable(token)) {
+      return "redirect:/main";
+    } else {
+      return "login";
+    }
   }
 
   @GetMapping("/userinfo")

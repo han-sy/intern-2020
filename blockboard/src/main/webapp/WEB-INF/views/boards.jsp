@@ -363,6 +363,7 @@
                         onclick="javascript:postDeleteFunction()">삭제
                 </button>
                 {{/post}}
+
                 {{#isCommentAble}}
                 <div class=comment_section>
                     <br><br>
@@ -377,7 +378,8 @@
                     <div class=comment_list_container></div>
                     <div class=comment_input_container></div>
                     {{else}}
-                    {{/isCommentAble}}
+                </div>
+                {{/isCommentAble}}
             </script>
             <!--댓글리스트 템플릿-->
             <script id="commentList-template" type="text/x-handlebars-template">
@@ -550,9 +552,9 @@
                         <div class="col-sm-1">
                             <select id="search_option" class="form-control"
                                     style="width:100px;font-size:15px;">
-                                <option value="post_title">제목</option>
-                                <option value="user_name">작성자</option>
-                                <option value="post_content">내용</option>
+                                <option value="title">제목</option>
+                                <option value="writer">작성자</option>
+                                <option value="content">내용</option>
                                 <option value="titleAndContent">제목+내용</option>
                             </select>
                         </div>
@@ -598,7 +600,6 @@
 <script src="/static/js/updateUI/functionUI.js"></script>
 <script src="/static/js/updateUI/postUI.js"></script>
 <script src="/static/js/util/windowLoad.js"></script>
-
 
 </body>
 

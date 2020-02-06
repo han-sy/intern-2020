@@ -59,7 +59,7 @@ public class BoardController {
   @ResponseBody
   public void insertNewBoard(@RequestParam("boardName") String newBoardName,
       @RequestParam("userData") String userJsonData, HttpServletResponse response) {
-    UserDTO userData = JsonParse.jsonToDTO(userJsonData,UserDTO.class);
+    UserDTO userData = JsonParse.jsonToDTO(userJsonData, UserDTO.class);
     if (AuthorityValidation.isAdmin(userData, response)) {
       boardService.insertNewBoard(newBoardName, userData);
     }
@@ -69,13 +69,13 @@ public class BoardController {
   /**
    * 게시판 이름 변경 변경된 리스트를 받아와서 수정한다.
    *
-   * @param newTitleList 이름이 변경된 리스트
+   * @param newTitleList 이름이 변경된 리스트 실제로 기존값과 값이 달라진 경우만 리스트로 받아온다.
    */
   @PutMapping(value = "")
   @ResponseBody
   public void changeNewBoardName(@RequestParam("newTitles") String newTitleList,
       @RequestParam("userData") String userJsonData, HttpServletResponse response) {
-    UserDTO userData = JsonParse.jsonToDTO(userJsonData,UserDTO.class);
+    UserDTO userData = JsonParse.jsonToDTO(userJsonData, UserDTO.class);
     if (AuthorityValidation.isAdmin(userData, response)) {
       boardService.updateChangedName(newTitleList, userData.getCompanyID());
     }
@@ -84,13 +84,13 @@ public class BoardController {
   /**
    * 게시판 삭제
    *
-   * @param deleteBoards 삭제리스트
+   * @param deleteBoards 삭제리스트 (체크된 리스트)
    */
   @DeleteMapping(value = "")
   @ResponseBody
   public void deleteBoardbyBoardID(@RequestParam("deleteList") String deleteBoards,
       @RequestParam("userData") String userJsonData, HttpServletResponse response) {
-    UserDTO userData = JsonParse.jsonToDTO(userJsonData,UserDTO.class);
+    UserDTO userData = JsonParse.jsonToDTO(userJsonData, UserDTO.class);
     if (AuthorityValidation.isAdmin(userData, response)) {
       boardService.deleteBoardsByDeleteBoardList(deleteBoards); //기존데이터
     }

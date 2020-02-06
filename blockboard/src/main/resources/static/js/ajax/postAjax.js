@@ -5,13 +5,18 @@
 
 
 function insertPost(boardID, postTitle, postContent) {
+  var userData = new User();
+  console.log("userID = " + userData.getUserID());
+  console.log("companyID = " + userData.getCompanyID());
+  /*
   $.ajax({
     type: 'POST',
     url: "/boards/" + boardID + "/posts",
     data: {
       postTitle: postTitle,
       postContent: postContent,
-      isTemp: false
+      userID: userData.getUserID(),
+      companyID: userData.getCompanyID()
     },
     error: function (xhr) {
       errorFunction(xhr);
@@ -21,9 +26,14 @@ function insertPost(boardID, postTitle, postContent) {
       refreshPostList();
     }
   });
+
+   */
 }
 
 function insertTempPost(boardID, postID, temp_title, temp_content, is_temp) {
+  var userData = new User();
+  var userID = userData.getUserID();
+  var companyID = userData.getCompanyID();
   $.ajax({
     type: 'POST',
     url: "/boards/" + boardID + "/posts",
@@ -32,15 +42,17 @@ function insertTempPost(boardID, postID, temp_title, temp_content, is_temp) {
       postID: postID,
       postTitle: temp_title,
       postContent: temp_content,
-      isTemp: is_temp
+      postStatus: `{"isTemp":${is_temp}}`,
+      userID: userID,
+      companyID: companyID
     },
     error: function (xhr) {
       errorFunction(xhr);
+      editorClear();
+      refreshPostList();
     },
     success: function () {
-      $.getJSON("/boards/" + boardID + "/posts/recent", function (data) {
-        addPostIdToEditor(data.postID);
-      });
+      addRecentTempPostIdToEditor(boardID, userID, companyID);
       if (is_temp) {
         alert("임시저장 되었습니다.");
       }
@@ -62,9 +74,7 @@ function loadPost(boardID, postID) {
       addPostIdToEditor(postID);
       initBoardIdOptionInEditor(boardID);
       post_title.val(data.postTitle);
-      setTimeout(function () {
-        editor.val(data.postContent);
-      }, 10);
+      CKEDITOR.instances['editor'].setData(data.postContent);
     }
   });
 }
@@ -75,13 +85,14 @@ function updatePost(boardID, postID, postTitle, postContent) {
     url: "/boards/" + boardID + "/posts/" + postID,
     data: {
       postTitle: postTitle,
-      postContent: postContent
+      postContent: postContent,
     },
     error: function (xhr) {
       errorFunction(xhr);
+      editorClear();
+      refreshPostList();
     },
     success: function () {
-      alert("수정완료");
       editorClear();
       refreshPostList();
     }
@@ -105,7 +116,6 @@ function deletePost(boardID, postID) {
 // 게시글 작성, 수정, 삭제 시 해당 게시판 refresh 하는 함수
 function refreshPostList() {
   var boardID = getCurrentBoardID();
-  console.log("refresh 합니다 = " + boardID);
   postClear();
   getPostsAfterTabClick(boardID);
 }
@@ -134,10 +144,14 @@ function searchPost(option, keyword) {
 }
 
 function getTempPosts() {
-  console.log("getTempPosts 호출");
+  var userData = new User();
   $.ajax({
     type: 'GET',
     url: "/boards/-1/posts/temp",
+    data: {
+      userID: userData.getUserID(),
+      companyID: userData.getCompanyID()
+    },
     error: function (xhr) {
       errorFunction(xhr);
     },
@@ -149,18 +163,50 @@ function getTempPosts() {
 }
 
 function getTempPost(postID) {
-  console.log("getTempPost 호출");
   var postContentObj = $('#postcontent');
   postContentObj.html("");
   $.ajax({
     type: 'GET',
-    url: "/boards/0/posts/" + postID,
-    error: function (error) {  //통신 실패시
-      alert('통신실패!' + error);
+    url: "/boards/0/posts/temp/" + postID,
+    error: function (xhr) {  //통신 실패시
+      errorFunction(xhr);
+      editorClear();
+      refreshPostList();
     },
     success: function (data) {
       $('#btn_write').show();
       loadPost(data.boardID, postID);
     }
   });
+}
+
+function deleteTempPost(postID) {
+  $.ajax({
+    type: 'DELETE',
+    url: "/boards/0/posts/temp/" + postID,
+    error: function (xhr) {
+      errorFunction(xhr);
+    },
+    success: function () {
+      editorClear();
+      refreshPostList();
+    }
+  });
+}
+
+function addRecentTempPostIdToEditor(boardID, userID, companyID) {
+  $.ajax({
+    type: 'GET',
+    url: "/boards/" + boardID + "/posts/recent",
+    data: {
+      userID: userID,
+      companyID: companyID
+    },
+    error: function (xhr) {
+      errorFunction(xhr);
+    },
+    success: function (data) {
+      addPostIdToEditor(data.postID);
+    }
+  })
 }

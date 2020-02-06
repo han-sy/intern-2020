@@ -2,6 +2,8 @@
  * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
  * @file    postUI.js
  */
+var isCreated = false;
+
 // 에디터 div 생성
 function editorAreaCreate(method) {
   editorClear();
@@ -12,7 +14,10 @@ function editorAreaCreate(method) {
   $('#btn_deletePost').attr('style', 'visibility:hidden');
   $('#btn_updatePost').attr('style', 'visibility:hidden');
   // textarea에 CKEditor 적용
-  $('#editor').ckeditor();
+  if (!isCreated) {
+    isCreated = true;
+    CKEDITOR.replace('editor');
+  }
 
   // 게시글 작성시에만(수정 X) 자동저장 & 임시저장 기능 작동
   if (method == "insert") {
@@ -63,7 +68,6 @@ function addPostIdToEditor(postID) {
 // 작성, 수정 버튼 클릭시 해당 게시판 선택 되어있게
 function initBoardIdOptionInEditor(currentBoardID) {
   var options = $('#boardIDinEditor').children();
-  console.log("받은 currentBoardID = " + currentBoardID);
   $(options).each(function (index, item) {
     var data = $(item).attr('data-tab'); // option의 boardID
     if (data == currentBoardID) {

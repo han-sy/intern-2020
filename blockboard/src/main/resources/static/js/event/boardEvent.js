@@ -8,17 +8,17 @@ const KEYCODE = {
 var MAX_LENGTH = {
   BOARD_NAME: 150
 };
-$(function(){
-  $('#input_board_name').keyup(function(){
-    bytesHandler(this,"#board_name_length",MAX_LENGTH.BOARD_NAME);
+$(function () {
+  $('#input_board_name').keyup(function () {
+    bytesHandler(this, "#board_name_length", MAX_LENGTH.BOARD_NAME);
   });
 });
-$(document).on('keydown', '#input_board_name', function (event){
-  if(event.keyCode==KEYCODE.ENTER){
+$(document).on('keydown', '#input_board_name', function (event) {
+  if (event.keyCode == KEYCODE.ENTER) {
     clickSaveAddedBoard();
   }
 });
-$(document).on('click', '#add_board_save_btn', function (){
+$(document).on('click', '#add_board_save_btn', function () {
   clickSaveAddedBoard();
 });
 
@@ -36,19 +36,19 @@ function clickSaveAddedBoard() {
     alert("게시판 제목을 입력하세요.");
     return;
   }
-  var textLength = getByteLength(boardName,MAX_LENGTH.BOARD_NAME);
+  var textLength = getByteLength(boardName, MAX_LENGTH.BOARD_NAME);
   var byteLength = textLength[0];
   var charLength = textLength[1];
-  if(byteLength>=MAX_LENGTH.BOARD_NAME){
+  if (byteLength >= MAX_LENGTH.BOARD_NAME) {
     alert("입력 글자수 초과입니다. 초과된 문자들은 삭제됩니다.");
-    $('#input_board_name').val(boardName.substr(0,charLength).trim());
+    $('#input_board_name').val(boardName.substr(0, charLength).trim());
     return;
   }
   console.log("boardName :" + boardName);
-  var askSave = confirm("<"+boardName + ">게시판을 추가하시겠습니까?");
+  var askSave = confirm("<" + boardName + ">게시판을 추가하시겠습니까?");
   if (askSave) {
     $(function () {
-      updateTabByNewBoardListAfterAddBoard(boardName,userData.getJsonString());
+      updateTabByNewBoardListAfterAddBoard(boardName, userData.getJsonString());
     });
   }
 }
@@ -59,7 +59,9 @@ function clickDeleteBoardBtn() {
     getBoardList(getBoardListToDelete);
   });
 }
+
 1
+
 //게시판 삭제- 삭제하기버튼 누를시
 function clickSaveDelteBoard() {
   var boardDataList = new Array();
@@ -80,7 +82,8 @@ function clickSaveDelteBoard() {
   var askSave = confirm("선택한 게시판을 정말 삭제하시겠습니까? 게시물또한 모두 삭제됩니다.");
   if (askSave) {
     $(function () {
-      updateTabByNewBoardListAfterDeleteBoard(jsonData,userData.getJsonString()); //삭제이후 tab에 게시판목록 업데이트
+      updateTabByNewBoardListAfterDeleteBoard(jsonData,
+          userData.getJsonString()); //삭제이후 tab에 게시판목록 업데이트
     });
   }
 }
@@ -119,7 +122,8 @@ function clickSaveChangeBoard() {
   var askSave = confirm("게시판 이름변경 내용을 저장하시겠습니까?");
   if (askSave) {
     $(function () {
-      updateTabByNewBoardListAfterUpdateBoardName(jsonData,userData.getJsonString());
+      updateTabByNewBoardListAfterUpdateBoardName(jsonData,
+          userData.getJsonString());
     });
   }
   $('#config_container').html("");

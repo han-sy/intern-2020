@@ -38,7 +38,7 @@ public class JwtInterceptor implements HandlerInterceptor {
     if (token != null && jwtService.isUsable(token)) {
       String userDataJson = request.getParameter("userData");
       if (userDataJson != null) {
-        UserDTO userData = JsonParse.jsonToDTO(userDataJson,UserDTO.class);
+        UserDTO userData = JsonParse.jsonToDTO(userDataJson, UserDTO.class);
         if (validateAuthority.isValidateUserData(userData, jwtService.getUserDTO(), response)) {
           return true;
         }

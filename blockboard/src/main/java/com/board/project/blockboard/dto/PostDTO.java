@@ -5,7 +5,6 @@
 package com.board.project.blockboard.dto;
 
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.apache.ibatis.type.Alias;
 
@@ -22,7 +21,12 @@ public class PostDTO {
   private int companyID;
   private String postTitle;
   private String postContent;
+  private String postContentExceptHTMLTag;
   private String postRegisterTime;
-  @Getter
+  private String postLastUpdateTime;
+  private Object postStatus;
+  // postStatus 안의 Key List
   private Boolean isTemp;
+  private Boolean isTrash;
+  private int originalBoardID;
 }

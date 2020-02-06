@@ -24,9 +24,6 @@ public class ReplyService {
 
   /**
    * 댓글 id 를 통해 답글 리스트 get
-   *
-   * @param commentReferencedID
-   * @return
    */
   public List<CommentDTO> getReplyListByCommentID(int commentReferencedID) {
     return replyMapper.selectRepliesByCommentID(commentReferencedID);
@@ -34,13 +31,6 @@ public class ReplyService {
 
   /**
    * 답글 insert
-   *
-   * @param userID
-   * @param companyID
-   * @param postID
-   * @param commentContent
-   * @param commentReferencedID
-   * @param commentReferencedUserID
    */
   public void writeReplyWithUserInfo(String userID, int companyID, int postID,
       String commentContent, int commentReferencedID, String commentReferencedUserID) {
