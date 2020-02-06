@@ -17,6 +17,7 @@
     company_id,
     post_title,
     post_content,
+    post_content_except_htmltag,
     is_temp )
     VALUES (
     <if test='postID != 0'>
@@ -27,11 +28,13 @@
     #{companyID},
     #{postTitle},
     #{postContent},
+    #{postContentExceptHTMLTag},
     #{isTemp} )
     ON DUPLICATE KEY UPDATE
     board_id=#{boardID},
     post_title=#{postTitle},
     post_content=#{postContent},
+    post_content_except_htmltag=#{postContentExceptHTMLTag},
     is_temp=#{isTemp};
   </insert>
 
@@ -42,7 +45,7 @@
 
   <update id="updatePost" parameterType="com.board.project.blockboard.dto.PostDTO">
         UPDATE posts
-        SET post_title=#{postTitle}, post_content=#{postContent}, board_id=#{boardID}
+        SET post_title=#{postTitle}, post_content=#{postContent}, post_content_except_htmltag=#{postContentExceptHTMLTag}, board_id=#{boardID}
         WHERE post_id=#{postID};
     </update>
 
@@ -123,11 +126,11 @@
       </when>
       <!-- 검색옵션이 내용 일 경우 -->
       <when test="option == 'content'">
-        (post.post_content LIKE CONCAT('%',#{keyword},'%'))
+        (post.post_content_except_htmltag LIKE CONCAT('%',#{keyword},'%'))
       </when>
       <!-- 검색옵션이 제목+내용 일 경우 -->
       <when test="option == 'titleAndContent'">
-        (post.post_title LIKE CONCAT('%',#{keyword},'%') OR post.post_content LIKE CONCAT('%',#{keyword},'%'))
+        (post.post_title LIKE CONCAT('%',#{keyword},'%') OR post.post_content_except_htmltag LIKE CONCAT('%',#{keyword},'%'))
       </when>
     </choose>
   </sql>

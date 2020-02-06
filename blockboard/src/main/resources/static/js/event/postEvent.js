@@ -100,7 +100,9 @@ function postUpdateFunction() {
   var post_button = $('#btn_post');
   post_button.html('수정하기'); // 게시글 올리기 버튼 텍스트 변경
   post_button.attr('onclick', 'javascript:postUpdate()');
-  loadPost(boardID, postID); // 에디터로 게시글 정보 불러옴.
+  setTimeout(function() {
+    loadPost(boardID, postID)
+  },100); // 에디터로 게시글 정보 불러옴.
 }
 
 // 게시글 조회 후 삭제 버튼 이벤트
@@ -151,10 +153,7 @@ function clickTempPostEvent(evt) {
   btn_cancel.html("삭제");
   btn_cancel.attr('onclick', 'javascript:clickDeleteTempPost()');
   addPostIdToEditor(postID);
-  //getTempPost(postID);
-  setTimeout(function () {
-    getTempPost(postID);
-  }, 5);
+  getTempPost(postID);
 }
 
 // 임시저장 게시물 삭제 이벤트

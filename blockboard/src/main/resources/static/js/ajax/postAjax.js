@@ -64,9 +64,7 @@ function loadPost(boardID, postID) {
       addPostIdToEditor(postID);
       initBoardIdOptionInEditor(boardID);
       post_title.val(data.postTitle);
-      setTimeout(function () {
-        editor.val(data.postContent);
-      }, 10);
+      CKEDITOR.instances['editor'].setData(data.postContent);
     }
   });
 }
@@ -108,7 +106,6 @@ function deletePost(boardID, postID) {
 // 게시글 작성, 수정, 삭제 시 해당 게시판 refresh 하는 함수
 function refreshPostList() {
   var boardID = getCurrentBoardID();
-  console.log("refresh 합니다 = " + boardID);
   postClear();
   getPostsAfterTabClick(boardID);
 }
@@ -152,7 +149,6 @@ function getTempPosts() {
 }
 
 function getTempPost(postID) {
-  console.log("getTempPost 호출");
   var postContentObj = $('#postcontent');
   postContentObj.html("");
   $.ajax({

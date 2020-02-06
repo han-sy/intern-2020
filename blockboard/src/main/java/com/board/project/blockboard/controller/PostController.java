@@ -4,6 +4,7 @@
  */
 package com.board.project.blockboard.controller;
 
+import com.board.project.blockboard.common.util.HTMLTagUtils;
 import com.board.project.blockboard.common.util.LengthCheckUtils;
 import com.board.project.blockboard.common.validation.PostValidation;
 import com.board.project.blockboard.dto.PostDTO;
@@ -69,7 +70,8 @@ public class PostController {
       receivePost.setUserID(userID);
       receivePost.setCompanyID(companyID);
       receivePost.setBoardID(boardid);
-
+      receivePost
+          .setPostContentExceptHTMLTag(HTMLTagUtils.HTMLtoString(receivePost.getPostContent()));
       // '글쓰기' -> '저장' 버튼을 누른 경우에는 html 안에 postID가 존재하지 않아 바로 insert
       if (receivedPostID == 0) {
         postService.insertPost(receivePost);
@@ -121,9 +123,11 @@ public class PostController {
   public void updatePost(@PathVariable("boardid") int boardid, @PathVariable("postid") int postid,
       @ModelAttribute PostDTO requestPost, HttpServletResponse response) {
     if (LengthCheckUtils.isValid(requestPost, response)) {
+      requestPost.setPostID(postid);
+      requestPost.setBoardID(boardid);
+      requestPost
+          .setPostContentExceptHTMLTag(HTMLTagUtils.HTMLtoString(requestPost.getPostContent()));
       if (postValidation.isExistPost(requestPost.getPostID(), response)) {
-        requestPost.setPostID(postid);
-        requestPost.setBoardID(boardid);
         postService.updatePost(requestPost);
       }
     }

@@ -21,6 +21,7 @@ public class PostDTO {
   private int companyID;
   private String postTitle;
   private String postContent;
+  private String postContentExceptHTMLTag;
   private String postRegisterTime;
   private Boolean isTemp;
 }
