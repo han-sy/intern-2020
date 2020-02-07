@@ -31,7 +31,7 @@ $(document).on('click', '#add_board_btn', function () {
 function clickSaveAddedBoard() {
   var userData = new User();
   var boardName = $('#input_board_name').val();
-  var boardName = boardName.trim();
+  boardName = boardName.trim();
   if (boardName == "") {
     alert("게시판 제목을 입력하세요.");
     return;
@@ -45,8 +45,8 @@ function clickSaveAddedBoard() {
     return;
   }
   console.log("boardName :" + boardName);
-  var askSave = confirm("<" + boardName + ">게시판을 추가하시겠습니까?");
-  if (askSave) {
+  var isAcceptance = confirm("<" + boardName + ">게시판을 추가하시겠습니까?");
+  if (isAcceptance) {
     $(function () {
       updateTabByNewBoardListAfterAddBoard(boardName, userData.getJsonString());
     });
@@ -59,8 +59,6 @@ function clickDeleteBoardBtn() {
     getBoardList(getBoardListToDelete);
   });
 }
-
-1
 
 //게시판 삭제- 삭제하기버튼 누를시
 function clickSaveDelteBoard() {
@@ -79,8 +77,8 @@ function clickSaveDelteBoard() {
 
   var userData = new User();
   var jsonData = JSON.stringify(boardDataList);
-  var askSave = confirm("선택한 게시판을 정말 삭제하시겠습니까? 게시물또한 모두 삭제됩니다.");
-  if (askSave) {
+  var isAcceptance = confirm("선택한 게시판을 정말 삭제하시겠습니까? 게시물또한 모두 삭제됩니다.");
+  if (isAcceptance) {
     $(function () {
       updateTabByNewBoardListAfterDeleteBoard(jsonData,
           userData.getJsonString()); //삭제이후 tab에 게시판목록 업데이트
@@ -119,8 +117,8 @@ function clickSaveChangeBoard() {
 
   var userData = new User();
   var jsonData = JSON.stringify(boardDataList);
-  var askSave = confirm("게시판 이름변경 내용을 저장하시겠습니까?");
-  if (askSave) {
+  var isAcceptance = confirm("게시판 이름변경 내용을 저장하시겠습니까?");
+  if (isAcceptance) {
     $(function () {
       updateTabByNewBoardListAfterUpdateBoardName(jsonData,
           userData.getJsonString());

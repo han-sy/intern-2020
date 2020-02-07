@@ -29,8 +29,8 @@ $(document).on('click', '#delete_comment', function () {
 
   var deleteDivID = $(this).closest(".commentContainer").attr("id");
   var commentID = deleteDivID.substring(COMMENT_PREFIX.length);
-  var askSave = confirm("선택한 댓글 or 답글을 정말 삭제하시겠습니까?");
-  if (askSave) {
+  var isAcceptance = confirm("선택한 댓글 or 답글을 정말 삭제하시겠습니까?");
+  if (isAcceptance) {
     $(function () {
       deleteCommentByCommentID(postID, boardID, commentID);
     });
@@ -57,8 +57,8 @@ $(document).on('click', '#btn_edit_comment_complete', function () {
   var commentID = commentDiv.parents("div").attr("id").substring(COMMENT_PREFIX.length);
   var postID = $("#postID").html();
   var boardID = getCurrentBoardID();
-  var askSave = confirm("댓글을 수정 하시겠습니까?");
-  if (askSave) {
+  var isAcceptance = confirm("댓글을 수정 하시겠습니까?");
+  if (isAcceptance) {
     $(function () {
       editComment(postID, boardID, commentID, newComment);
     });

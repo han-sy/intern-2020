@@ -36,10 +36,10 @@ function errorFunction(xhr) {
 /**
  * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
  */
-function getByteLength(size, maxLength, byte, i, ch) {
-  var charLength;
-  for (byte = i = 0; ch = size.charCodeAt(i++);
-      byte += ch >> 11 ? 3 : ch >> 7 ? 2 : 1) {
+function getByteLength(size, maxLength) {
+  var charLength,byte,i,charSize;
+  for (byte = i = 0; charSize = size.charCodeAt(i++);
+      byte += charSize >> 11 ? 3 : charSize >> 7 ? 2 : 1) {
     if (byte < maxLength) {
       charLength = i;
     }

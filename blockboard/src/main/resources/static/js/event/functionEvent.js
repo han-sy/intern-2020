@@ -30,8 +30,8 @@ function clickSaveFunctionChange() {
   var jsonData = JSON.stringify(functionDataList);
   var userjsonData = userData.getJsonString();
   //alert(jsonData);
-  var askSave = confirm("기능변경 내용을 저장하시겠습니까?");
-  if (askSave) {
+  var isAcceptance = confirm("기능변경 내용을 저장하시겠습니까?");
+  if (isAcceptance) {
     $(function () {
       getNewFunctionInfo(jsonData,userjsonData);//새로운 기능목록 불러와 기능목록 변경
     });
