@@ -13,12 +13,11 @@ import com.board.project.blockboard.dto.UserDTO;
 import com.board.project.blockboard.service.JwtService;
 import com.board.project.blockboard.service.PostService;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -72,8 +71,7 @@ public class PostController {
     if (LengthCheckUtils.isValid(receivePost, response)) {
       int receivedPostID = receivePost.getPostID();
       receivePost.setBoardID(boardid);
-      receivePost
-          .setPostContentExceptHTMLTag(HTMLTagUtils.HTMLtoString(receivePost.getPostContent()));
+      receivePost.setPostContentExceptHTMLTag(Jsoup.parse(receivePost.getPostContent()).text());
 
       // '글쓰기' -> '저장'or'임시저장' 버튼을 누른 경우에는 html 안에 postID가 존재하지 않아 바로 insert
       if (receivedPostID == 0) {
@@ -145,14 +143,11 @@ public class PostController {
   @PutMapping("/{postid}")
   public void updatePost(@PathVariable("boardid") int boardid, @PathVariable("postid") int postid,
       @ModelAttribute PostDTO requestPost, HttpServletResponse response) {
-    log.info("수정 요청");
     if (LengthCheckUtils.isValid(requestPost, response)) {
       requestPost.setPostID(postid);
       requestPost.setBoardID(boardid);
-      requestPost
-          .setPostContentExceptHTMLTag(HTMLTagUtils.HTMLtoString(requestPost.getPostContent()));
+      requestPost.setPostContentExceptHTMLTag(Jsoup.parse(requestPost.getPostContent()).text());
       if (postValidation.isExistPost(requestPost.getPostID(), response)) {
-        log.info("수정 요청 중");
         postService.updatePost(requestPost);
       }
     }
