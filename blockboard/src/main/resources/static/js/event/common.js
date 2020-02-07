@@ -2,6 +2,12 @@
  * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
  * @file    common.js
  */
+const UNICODE_3_BYTE=11;
+const UNICODE_2_BYTE =7;
+const BYTE_SIZE_3 =3;
+const BYTE_SIZE_2 =2;
+const BYTE_SIZE_1 =1;
+
 
 function returnToLoginPage() {
   redirectLogout();
@@ -37,9 +43,9 @@ function errorFunction(xhr) {
  * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
  */
 function getByteLength(text, maxLength) {
-  var charLength,byte,i,charSize;
-  for (byte = i = 0; charSize = text.charCodeAt(i++);
-      byte += charSize >> 11 ? 3 : charSize >> 7 ? 2 : 1) {
+  var charLength,byte,i,unicodeValue;
+  for (byte = i = 0; uniCodeValue = text.charCodeAt(i++);
+      byte += unicodeValue >> UNICODE_3_BYTE ? BYTE_SIZE_3 : unicodeValue >> UNICODE_2_BYTE ? BYTE_SIZE_2 : BYTE_SIZE_1) {
     if (byte < maxLength) {
       charLength = i;
     }
