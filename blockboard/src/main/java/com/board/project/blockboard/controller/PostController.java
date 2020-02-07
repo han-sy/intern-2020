@@ -98,9 +98,9 @@ public class PostController {
    * @return
    * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
    */
-  @GetMapping("/{pagenumber}/postlist")
+  @GetMapping("")
   public List<PostDTO> getPostListByBoardID(@PathVariable("boardid") int boardID,
-      @PathVariable("pagenumber") int pageNumber) {
+      @RequestParam("pageNumber") int pageNumber) {
     List<PostDTO> postList = postService.getPostListByBoardID(boardID, pageNumber);
     return postList;
   }
