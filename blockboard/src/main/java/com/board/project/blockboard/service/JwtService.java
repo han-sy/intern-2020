@@ -70,7 +70,7 @@ public class JwtService {
     }
   }
 
-  public Map<String, Object> get(String key) {
+  public Map<String, Object> get() {
     HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder
         .currentRequestAttributes()).getRequest();
     Cookie[] getCookie = request.getCookies();
@@ -89,36 +89,16 @@ public class JwtService {
       throw new UnauthorizedException();
     }
     @SuppressWarnings("unchecked")
-    Map<String, Object> value = (LinkedHashMap<String, Object>) claims.getBody().get(key);
+    Map<String, Object> value = (LinkedHashMap<String, Object>) claims.getBody();
     return value;
   }
 
-  public String getUserId() {
-    return this.get(HEADER_NAME).get("userID").toString();
-  }
-
-  public int getCompanyId() {
-    return Integer.parseInt(this.get(HEADER_NAME).get("companyID").toString());
-  }
-
-  public String getUserType() {
-    return this.get(HEADER_NAME).get("userType").toString();
-  }
-
-  public String getUserName() {
-    return this.get(HEADER_NAME).get("userName").toString();
-  }
-
-  /**
-   * @return UserDTO반환
-   * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
-   */
-  public UserDTO getUserDTO() {
-    UserDTO userDTO = new UserDTO();
-    userDTO.setUserID(getUserId());
-    userDTO.setCompanyID(getCompanyId());
-    userDTO.setUserType(getUserType());
-    userDTO.setUserName(getUserName());
-    return userDTO;
+  // Interceptor 의 request 에 JWT 에서 가져온 유저정보를 넣어준다.
+  public void setUserDataToRequest(HttpServletRequest request) {
+    Map<String, Object> jwtClaims = this.get();
+    request.setAttribute("userID", jwtClaims.get("userID").toString());
+    request.setAttribute("userName", jwtClaims.get("userName").toString());
+    request.setAttribute("userType", jwtClaims.get("userType").toString());
+    request.setAttribute("companyID", Integer.parseInt(jwtClaims.get("companyID").toString()));
   }
 }

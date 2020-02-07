@@ -5,9 +5,6 @@
 package com.board.project.blockboard.common.interceptor;
 
 import com.board.project.blockboard.common.util.CookieUtils;
-import com.board.project.blockboard.common.util.JsonParse;
-import com.board.project.blockboard.common.validation.AuthorityValidation;
-import com.board.project.blockboard.dto.UserDTO;
 import com.board.project.blockboard.service.JwtService;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -26,24 +23,14 @@ public class JwtInterceptor implements HandlerInterceptor {
   @Autowired
   private JwtService jwtService;
 
-  private AuthorityValidation validateAuthority;
-
   @Override
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object object)
       throws Exception {
     String token = CookieUtils.getCookie(request, HEADER_AUTH);
-    validateAuthority = new AuthorityValidation();
 
     // JWT Token 만료 검사 + 유저 일치검사
     if (token != null && jwtService.isUsable(token)) {
-      String userDataJson = request.getParameter("userData");
-      if (userDataJson != null) {
-        UserDTO userData = JsonParse.jsonToDTO(userDataJson, UserDTO.class);
-        if (validateAuthority.isValidateUserData(userData, jwtService.getUserDTO(), response)) {
-          return true;
-        }
-        return false;
-      }
+      jwtService.setUserDataToRequest(request);
       return true;
     } else {
       if (isAjaxRequest(request)) {
