@@ -51,7 +51,7 @@ public class JsonParse {
   }
 
   /**
-   * json 을 Map 형태로 바꿔줌
+   * Json String -> Map
    * @author Woohyeok Jun <woohyeok.jun@worksmobile.com>
    * @param json
    * @return
@@ -72,10 +72,11 @@ public class JsonParse {
   }
 
   /**
-   * json 을 Map 형태로 바꿔줌
-   * @author Woohyeok Jun <woohyeok.jun@worksmobile.com>
+   * Map -> JSON Object
+   *
    * @param map Data 저장되어 있는 map
    * @return map convert to JsonObject
+   * @author Woohyeok Jun <woohyeok.jun@worksmobile.com>
    */
   public static JSONObject getJsonStringFromMap(Map<String, Object> map) {
     JSONObject jsonObject = new JSONObject();
@@ -89,11 +90,12 @@ public class JsonParse {
 
   /**
    * Object 형태의 'postStatus'의 Key List 를 PostDTO 에 Binding 한다.
-   * @author Woohyeok Jun <woohyeok.jun@worksmobile.com>
+   *
    * @param post PostDTO 객체
    * @return postStatus 의 Key 들이 Binding 된 PostDTO
+   * @author Woohyeok Jun <woohyeok.jun@worksmobile.com>
    */
-  public static PostDTO statusJsonToPostDTO(PostDTO post) {
+  public static PostDTO setPostStatusFromJsonString(PostDTO post) {
     if (post.getPostStatus() == null) {
       return null;
     }

@@ -8,7 +8,7 @@ function insertPost(boardID, postTitle, postContent) {
   var userData = new User();
   $.ajax({
     type: 'POST',
-    url: "/boards/" + boardID + "/posts",
+    url: `/boards/${boardID}/posts`,
     data: {
       postTitle: postTitle,
       postContent: postContent,
@@ -32,7 +32,7 @@ function insertTempPost(boardID, postID, temp_title, temp_content, is_temp) {
   var companyID = userData.getCompanyID();
   $.ajax({
     type: 'POST',
-    url: "/boards/" + boardID + "/posts",
+    url: `/boards/${boardID}/posts`,
     async: false,
     data: {
       postID: postID,
@@ -61,7 +61,7 @@ function loadPost(boardID, postID) {
   var editor = $('#editor');
   $.ajax({
     type: 'GET',
-    url: "/boards/" + boardID + "/posts/" + postID,
+    url: `/boards/${boardID}/posts/${postID}`,
     async: false,
     error: function (xhr) {
       errorFunction(xhr);
@@ -78,7 +78,7 @@ function loadPost(boardID, postID) {
 function updatePost(boardID, postID, postTitle, postContent) {
   $.ajax({
     type: 'PUT',
-    url: "/boards/" + boardID + "/posts/" + postID,
+    url: `/boards/${boardID}/posts/${postID}`,
     data: {
       postTitle: postTitle,
       postContent: postContent,
@@ -99,7 +99,7 @@ function updatePost(boardID, postID, postTitle, postContent) {
 function completeDeletePost(boardID, postID) {
   $.ajax({
     type: 'DELETE',
-    url: "/boards/" + boardID + "/posts/" + postID,
+    url: `/boards/${boardID}/posts/${postID}`,
     error: function (xhr) {
       errorFunction(xhr);
     },
@@ -114,7 +114,7 @@ function completeDeletePost(boardID, postID) {
 function temporaryDeletePost(boardID, postID) {
   $.ajax({
     type: 'PUT',
-    url: "/boards/" + boardID + "/posts/" + postID + "/trash",
+    url: `/boards/${boardID}/posts/${postID}/trash`,
     error: function (xhr) {
       errorFunction(xhr);
     },
@@ -136,7 +136,7 @@ function searchPost(option, keyword) {
   var boardID = getCurrentBoardID();
   $.ajax({
     type: 'GET',
-    url: '/boards/' + boardID + '/posts/search',
+    url: `/boards/${boardID}/posts/search`,
     data: {
       option: option,
       keyword: keyword.val()
@@ -179,7 +179,7 @@ function getTempPost(postID) {
   postContentObj.html("");
   $.ajax({
     type: 'GET',
-    url: "/boards/0/posts/temp/" + postID,
+    url: `/boards/0/posts/temp/${postID}`,
     error: function (xhr) {  //통신 실패시
       errorFunction(xhr);
       editorClear();
@@ -195,7 +195,7 @@ function getTempPost(postID) {
 function deleteTempPost(postID) {
   $.ajax({
     type: 'DELETE',
-    url: "/boards/0/posts/temp/" + postID,
+    url: `/boards/0/posts/temp/${postID}`,
     error: function (xhr) {
       errorFunction(xhr);
     },
@@ -209,7 +209,7 @@ function deleteTempPost(postID) {
 function addRecentTempPostIdToEditor(boardID, userID, companyID) {
   $.ajax({
     type: 'GET',
-    url: "/boards/" + boardID + "/posts/recent",
+    url: `/boards/${boardID}/posts/recent`,
     data: {
       userID: userID,
       companyID: companyID

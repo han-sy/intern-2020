@@ -11,10 +11,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class GlobalExceptionHandler {
 
   @ExceptionHandler(NullPointerException.class)
-  protected void NullPointerError(HttpServletResponse response, Exception ee) {
+  protected void NullPointerError(HttpServletResponse response) {
     try {
       response.sendError(HttpServletResponse.SC_CONFLICT, "NULL Exception");
-      ee.printStackTrace();
     } catch (IOException e) {
       e.printStackTrace();
     }

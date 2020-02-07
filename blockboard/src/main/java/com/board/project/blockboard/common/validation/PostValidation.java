@@ -24,7 +24,7 @@ public class PostValidation {
   public enum searchOptions {title, writer, content, titleAndContent}
 
   public boolean isTempSavedPost(PostDTO post, HttpServletResponse response) {
-    PostDTO setStatusPost = JsonParse.statusJsonToPostDTO(post);
+    PostDTO setStatusPost = JsonParse.setPostStatusFromJsonString(post);
     if (setStatusPost.getIsTemp()) {
       if (!setStatusPost.getIsTrash()) {
         return true;
@@ -94,7 +94,7 @@ public class PostValidation {
 
   public boolean isInTrashBox(PostDTO post, HttpServletResponse response) {
     try {
-      JsonParse.statusJsonToPostDTO(post);
+      JsonParse.setPostStatusFromJsonString(post);
       if (!post.getIsTrash()) {
         response.sendError(HttpServletResponse.SC_CONFLICT, "휴지통에 존재하지 않습니다.");
       }

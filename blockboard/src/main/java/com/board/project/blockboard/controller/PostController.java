@@ -49,9 +49,9 @@ public class PostController {
    */
   @GetMapping(value = "/{postid}")
   public PostDTO getPostByPostID(@PathVariable("postid") int postID, HttpServletResponse response) {
-    if (postValidation.isExistPost(postID, response)) {
-      PostDTO post = postService.selectPostByPostID(postID);
-      JsonParse.statusJsonToPostDTO(post);
+    PostDTO post = postService.selectPostByPostID(postID);
+    if (postValidation.isExistPost(post, response)) {
+      JsonParse.setPostStatusFromJsonString(post);
       log.info(post.toString());
       return post;
     }
