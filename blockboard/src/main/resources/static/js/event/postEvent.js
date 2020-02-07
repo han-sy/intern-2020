@@ -61,11 +61,11 @@ function postFunction() {
 function checkEmpty() {
   var postTitle = $('#post_title').val();
   var postContent = CKEDITOR.instances.editor.getData();
-  if (postTitle == "") {
+  if (postTitle.trim() == "") {
     alert("게시글 제목을 입력해주세요.");
     return false;
   }
-  if (postContent == "") {
+  if (postContent.trim() == "") {
     alert("게시글 내용을 입력해주세요.");
     return false;
   }
@@ -105,13 +105,12 @@ function postUpdateFunction() {
   }, 100); // 에디터로 게시글 정보 불러옴.
 }
 
-// 게시글 조회 후 삭제 버튼 이벤트
-function postDeleteFunction() {
+// 게시글 조회 후 삭제 버튼 이벤트 -> 휴지통으로
+function movePostToTrashBox() {
   var postID = $("#postID").html();
   var boardID = getCurrentBoardID();
-  if (confirm("정말 삭제하시겠습니까? 삭제 후 복원되지 않습니다.") === true) {
-    deletePost(boardID, postID);
-  }
+  alert("휴지통으로 이동됩니다.");
+  temporaryDeletePost(boardID, postID);
 }
 
 // 게시글 검색 버튼 이벤트
@@ -151,15 +150,16 @@ function clickTempPostEvent(evt) {
   editorAreaCreate("insert");
   var btn_cancel = $('#btn_cancel');
   btn_cancel.html("삭제");
-  btn_cancel.attr('onclick', 'javascript:clickDeleteTempPost()');
+  btn_cancel.attr('onclick', 'javascript:clickCompleteDeletePost()');
   addPostIdToEditor(postID);
   getTempPost(postID);
 }
 
-// 임시저장 게시물 삭제 이벤트
-function clickDeleteTempPost() {
+// 임시저장 게시글 삭제 이벤트 -> 휴지통 거치지 않고 바로 삭제됨.
+function clickTempDeletePost() {
   var postID = $('#editor_postID').html();
-  deleteTempPost(postID);
+  var boardID = getCurrentBoardID();
+  completeDeletePost(boardID, postID);
 }
 
 // length Check 이벤트
@@ -168,5 +168,29 @@ function isValidLength(str, limit) {
     return true;
   } else {
     return false;
+  }
+}
+
+// 휴지통 게시물 클릭 이벤트
+function clickTrashPostEvent(evt) {
+  var postID = evt.getAttribute("data-post");
+  var boardID = getCurrentBoardID();
+  getPostDataAfterPostClick(postID, boardID);
+}
+
+// 휴지통 게시글 완전 삭제 이벤트
+function clickCompleteDeletePost() {
+  var postID = $('#postID').html();
+  var boardID = getCurrentBoardID();
+  if (confirm("삭제하면 복구되지 않습니다. 삭제하시겠습니까?")) {
+    completeDeletePost(boardID, postID);
+  }
+}
+
+// 휴지통 게시글 복원 이벤트
+function clickRestorePost() {
+  var postID = $('#postID').html();
+  if (confirm("원래 게시판으로 복원하시겠습니까?")) {
+    restorePost(postID);
   }
 }

@@ -13,7 +13,9 @@ Handlebars.registerHelper('isAbleFunction', function (options) {
 //댓글기능 on인지 체크
 Handlebars.registerHelper('isCommentAble', function (options) {
   if ($('#functionAble1').attr("value") == "on") {
-    return options.fn(this); //true
+    if (getCurrentBoardID() > 0) {
+      return options.fn(this);
+    } //true
   }
   return options.inverse(this);//false
 });
@@ -83,6 +85,18 @@ Handlebars.registerHelper('isFirstRange', function (option) {
 Handlebars.registerHelper('isLastRange', function (option) {
   var lastPage = this.rangeCount;
   if (this.currentRange >= this.rangeCount) {
+    return option.fn(this);
+  } else {
+    return option.inverse(this);
+  }
+});
+
+/**
+ * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
+ */
+Handlebars.registerHelper('isTrash', function (option) {
+  if (this.isTrash == true) {
+
     return option.fn(this);
   } else {
     return option.inverse(this);

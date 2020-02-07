@@ -28,5 +28,4 @@ public class PostDTO {
   // postStatus 안의 Key List
   private Boolean isTemp;
   private Boolean isTrash;
-  private int originalBoardID;
 }

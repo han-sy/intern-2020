@@ -98,11 +98,16 @@ function getPostDataAfterPostClick(postID, boardID) {
       var postContentHtml = "";
 
       if (commentAbleObj.attr("value") == "on") {
-
         $(function () {
           getCommentList(boardID, postID, getCommentAllContents); //삭제이후 tab에 게시판목록 업데이트 //CommentAjax.js 에 있음
           updateCommentsCount(boardID, postID);
         });
+      }
+      if (boardID == -2) { // 휴지통
+        btn_deletePost.html("완전 삭제");
+        btn_updatePost.html("복원");
+        btn_updatePost.attr('onclick', 'javascript:clickRestorePost()');
+        btn_deletePost.attr('onclick', 'javascript:clickCompleteDeletePost()');
       }
     }
   });
@@ -112,6 +117,8 @@ function getPostDataAfterPostClick(postID, boardID) {
 function getPostListByPageNum(pageNum,boardID) {
   if (boardID == -1) {
     getTempPosts();
+  } else if (boardID == -2) {
+    getPostsInTrashBox();
   } else {
     $.ajax({
       type: 'GET',

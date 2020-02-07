@@ -6,15 +6,13 @@
 
 function insertPost(boardID, postTitle, postContent) {
   var userData = new User();
-  console.log("userID = " + userData.getUserID());
-  console.log("companyID = " + userData.getCompanyID());
-  /*
   $.ajax({
     type: 'POST',
-    url: "/boards/" + boardID + "/posts",
+    url: `/boards/${boardID}/posts`,
     data: {
       postTitle: postTitle,
       postContent: postContent,
+      postStatus: `{"isTemp":false, "isTrash":false}`,
       userID: userData.getUserID(),
       companyID: userData.getCompanyID()
     },
@@ -26,8 +24,6 @@ function insertPost(boardID, postTitle, postContent) {
       refreshPostList();
     }
   });
-
-   */
 }
 
 function insertTempPost(boardID, postID, temp_title, temp_content, is_temp) {
@@ -36,13 +32,13 @@ function insertTempPost(boardID, postID, temp_title, temp_content, is_temp) {
   var companyID = userData.getCompanyID();
   $.ajax({
     type: 'POST',
-    url: "/boards/" + boardID + "/posts",
+    url: `/boards/${boardID}/posts`,
     async: false,
     data: {
       postID: postID,
       postTitle: temp_title,
       postContent: temp_content,
-      postStatus: `{"isTemp":${is_temp}}`,
+      postStatus: `{"isTemp":${is_temp}, "isTrash":false}`,
       userID: userID,
       companyID: companyID
     },
@@ -65,7 +61,7 @@ function loadPost(boardID, postID) {
   var editor = $('#editor');
   $.ajax({
     type: 'GET',
-    url: "/boards/" + boardID + "/posts/" + postID,
+    url: `/boards/${boardID}/posts/${postID}`,
     async: false,
     error: function (xhr) {
       errorFunction(xhr);
@@ -82,7 +78,7 @@ function loadPost(boardID, postID) {
 function updatePost(boardID, postID, postTitle, postContent) {
   $.ajax({
     type: 'PUT',
-    url: "/boards/" + boardID + "/posts/" + postID,
+    url: `/boards/${boardID}/posts/${postID}`,
     data: {
       postTitle: postTitle,
       postContent: postContent,
@@ -99,10 +95,26 @@ function updatePost(boardID, postID, postTitle, postContent) {
   });
 }
 
-function deletePost(boardID, postID) {
+// 게시글 완전 삭제 = 휴지통에서 삭제
+function completeDeletePost(boardID, postID) {
   $.ajax({
     type: 'DELETE',
-    url: "/boards/" + boardID + "/posts/" + postID,
+    url: `/boards/${boardID}/posts/${postID}`,
+    error: function (xhr) {
+      errorFunction(xhr);
+    },
+    success: function () {
+      editorClear();
+      refreshPostList();
+    }
+  });
+}
+
+// 게시글 임시 삭제 = 휴지통으로 이동
+function temporaryDeletePost(boardID, postID) {
+  $.ajax({
+    type: 'PUT',
+    url: `/boards/${boardID}/posts/${postID}/trash`,
     error: function (xhr) {
       errorFunction(xhr);
     },
@@ -125,7 +137,7 @@ function searchPost(option, keyword) {
   var boardID = getCurrentBoardID();
   $.ajax({
     type: 'GET',
-    url: '/boards/' + boardID + '/posts/search',
+    url: `/boards/${boardID}/posts/search`,
     data: {
       option: option,
       keyword: keyword.val()
@@ -168,7 +180,7 @@ function getTempPost(postID) {
   postContentObj.html("");
   $.ajax({
     type: 'GET',
-    url: "/boards/0/posts/temp/" + postID,
+    url: `/boards/0/posts/temp/${postID}`,
     error: function (xhr) {  //통신 실패시
       errorFunction(xhr);
       editorClear();
@@ -184,7 +196,7 @@ function getTempPost(postID) {
 function deleteTempPost(postID) {
   $.ajax({
     type: 'DELETE',
-    url: "/boards/0/posts/temp/" + postID,
+    url: `/boards/0/posts/temp/${postID}`,
     error: function (xhr) {
       errorFunction(xhr);
     },
@@ -198,7 +210,7 @@ function deleteTempPost(postID) {
 function addRecentTempPostIdToEditor(boardID, userID, companyID) {
   $.ajax({
     type: 'GET',
-    url: "/boards/" + boardID + "/posts/recent",
+    url: `/boards/${boardID}/posts/recent`,
     data: {
       userID: userID,
       companyID: companyID
@@ -210,4 +222,38 @@ function addRecentTempPostIdToEditor(boardID, userID, companyID) {
       addPostIdToEditor(data.postID);
     }
   })
+}
+
+// 휴지통에 있는 게시글들을 가져온다.
+function getPostsInTrashBox() {
+  var userData = new User();
+  $.ajax({
+    type: 'GET',
+    url: `/boards/0/posts/trash`,
+    data: {
+      userID: userData.getUserID(),
+      companyID: userData.getCompanyID()
+    },
+    error: function (xhr) {
+      errorFunction(xhr);
+    },
+    success: function (data) {
+      loadPostList(data);
+    }
+  })
+}
+
+function restorePost(postID) {
+  $.ajax({
+    type: 'PUT',
+    url: `/boards/0/posts/${postID}/restore`,
+    error: function (xhr) {
+      errorFunction(xhr);
+    },
+    success: function () {
+      alert("게시글이 복원되었습니다.");
+      refreshPostList();
+    }
+  })
+
 }

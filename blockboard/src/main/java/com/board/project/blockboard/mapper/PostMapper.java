@@ -29,7 +29,13 @@ public interface PostMapper {
 
   List<PostDTO> selectTempPosts(UserDTO userDTO);
 
-  List<PostDTO> selectPostByBoardID(int boardID,int startIndex,int pageSize);
+  List<PostDTO> selectPostByBoardID(int boardID, int startIndex, int pageSize);
 
   int selectPostCountByBoardID(int boardID);
+
+  void temporaryDeletePost(PostDTO post);
+
+  List<PostDTO> selectPostsInTrashBox(UserDTO userDTO);
+
+  void restorePost(PostDTO post);
 }

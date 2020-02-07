@@ -5,13 +5,16 @@
 package com.board.project.blockboard.service;
 
 import com.board.project.blockboard.common.constant.ConstantData;
+import com.board.project.blockboard.common.util.JsonParse;
 import com.board.project.blockboard.dto.PaginationDTO;
 import com.board.project.blockboard.dto.PostDTO;
 import com.board.project.blockboard.dto.UserDTO;
 import com.board.project.blockboard.mapper.PostMapper;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -54,17 +57,36 @@ public class PostService {
     return postMapper.selectPostByPostID(postID);
   }
 
-  public void deleteTempPost(int postID) {
-    postMapper.deletePostByPostID(postID);
+  public void movePostToTrash(PostDTO post) {
+    postMapper.temporaryDeletePost(post);
+  }
+
+  public List<PostDTO> getPostsInTrashBox(UserDTO requestUser) {
+    return postMapper.selectPostsInTrashBox(requestUser);
+  }
+
+  public void restorePost(PostDTO post) {
+    postMapper.restorePost(post);
+  }
+
+  public void setPostStatusIsTempAndIsTrash(PostDTO post, boolean isTemp, boolean isTrash) {
+    Map<String, Object> statusMap = new HashMap<>();
+    statusMap.put("isTemp", isTemp);
+    statusMap.put("isTrash", isTrash);
+
+    JSONObject statusJson = JsonParse.getJsonStringFromMap(statusMap);
+    post.setPostStatus(statusJson.toJSONString());
   }
 
   /**
    * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
    */
-  public List<PostDTO> getPostListByBoardID(int boardID,int pageNumber) {
+  public List<PostDTO> getPostListByBoardID(int boardID, int pageNumber) {
     int pageCount = getPostsCountByBoardID(boardID);
-    PaginationDTO pageInfo = new PaginationDTO(pageCount,pageNumber,ConstantData.PAGE_SIZE,ConstantData.RANGE_SIZE);
-    List<PostDTO> postlist = postMapper.selectPostByBoardID(boardID,pageInfo.getStartIndex(), ConstantData.PAGE_SIZE);
+    PaginationDTO pageInfo = new PaginationDTO(pageCount, pageNumber, ConstantData.PAGE_SIZE,
+        ConstantData.RANGE_SIZE);
+    List<PostDTO> postlist = postMapper
+        .selectPostByBoardID(boardID, pageInfo.getStartIndex(), ConstantData.PAGE_SIZE);
     return postlist;
   }
 
@@ -75,10 +97,11 @@ public class PostService {
     PostDTO post = postMapper.selectPostByPostID(postID);
     return post;
   }
+
   /**
    * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
    */
-  public int getPostsCountByBoardID(int boardID){
+  public int getPostsCountByBoardID(int boardID) {
     int postCounts = postMapper.selectPostCountByBoardID(boardID);
     return postCounts;
   }

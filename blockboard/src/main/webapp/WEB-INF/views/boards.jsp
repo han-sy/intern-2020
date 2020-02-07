@@ -133,6 +133,7 @@
                 </li>
                 {{/boards}}
                 <li data-tab="-1" class=tabmenu id=default style="cursor:pointer"> 임시보관함</li>
+                <li data-tab="-2" class=tabmenu id=default style="cursor:pointer"> 휴지통</li>
             </script>
         </div>
         <div class="border-left border-success col">
@@ -360,7 +361,7 @@
                         onclick="javascript:postUpdateFunction()">수정
                 </button>
                 <button id="btn_deletePost" class="btn btn-success" style="visibility:hidden"
-                        onclick="javascript:postDeleteFunction()">삭제
+                        onclick="javascript:movePostToTrashBox()">삭제
                 </button>
                 {{/post}}
 
@@ -529,20 +530,26 @@
                     <tbody id="postlist"></tbody>
                     <script id="posts-template" type="text/x-handlebars-template">
                         {{#posts}}
-                        {{#isTemp}}
-                        <tr class="postclick" data-post={{postID}}
-                            onclick="javascript:clickTempPostEvent(this)">
-                            <td scope="row">{{postTitle}}</td>
+                            {{#isTemp}}
+                                <tr class="postclick" data-post={{postID}}
+                                    onclick="javascript:clickTempPostEvent(this)">
+                                    <td scope="row">{{postTitle}}</td>
                             {{else}}
-                        <tr class="postclick" data-post={{postID}}
-                            onclick="javascript:clickTrEvent(this)">
-                            <td scope="row">{{postTitle}}</td>
+                                {{#isTrash}}
+                                    <tr class="postclick" data-post={{postID}}
+                                        onclick="javascript:clickTrashPostEvent(this)">
+                                        <td scope="row">{{postTitle}}</td>
+                                {{else}}
+                                    <tr class="postclick" data-post={{postID}}
+                                        onclick="javascript:clickTrEvent(this)">
+                                        <td scope="row">{{postTitle}}</td>
+                                {{/isTrash}}
                             {{/isTemp}}
-                            <td>{{userName}}</td>
-                            <td>{{postRegisterTime}}</td>
-                            <a style="visibility:hidden">{{postID}}</a>
-                            <a style="visibility:hidden">{{boardID}}</a>
-                        </tr>
+                                <td>{{userName}}</td>
+                                <td>{{postRegisterTime}}</td>
+                                <a style="visibility:hidden">{{postID}}</a>
+                                <a style="visibility:hidden">{{boardID}}</a>
+                            </tr>
                         {{/posts}}
                     </script>
                 </table>
