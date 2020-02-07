@@ -78,7 +78,7 @@
     ORDER BY postRegisterTime DESC;
   </select>
 
-  <select id="selectRecentTempPost" parameterType="hashMap"
+  <select id="selectRecentTempPost" parameterType="com.board.project.blockboard.dto.UserDTO"
     resultType="com.board.project.blockboard.dto.PostDTO">
         SELECT post_id AS postID,
             user_id AS userID,

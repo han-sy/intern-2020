@@ -5,16 +5,13 @@
 
 
 function insertPost(boardID, postTitle, postContent) {
-  var userData = new User();
   $.ajax({
     type: 'POST',
     url: `/boards/${boardID}/posts`,
     data: {
       postTitle: postTitle,
       postContent: postContent,
-      postStatus: `{"isTemp":false, "isTrash":false}`,
-      userID: userData.getUserID(),
-      companyID: userData.getCompanyID()
+      postStatus: `{"isTemp":false, "isTrash":false}`
     },
     error: function (xhr) {
       errorFunction(xhr);
@@ -27,9 +24,6 @@ function insertPost(boardID, postTitle, postContent) {
 }
 
 function insertTempPost(boardID, postID, temp_title, temp_content, is_temp) {
-  var userData = new User();
-  var userID = userData.getUserID();
-  var companyID = userData.getCompanyID();
   $.ajax({
     type: 'POST',
     url: `/boards/${boardID}/posts`,
@@ -38,9 +32,7 @@ function insertTempPost(boardID, postID, temp_title, temp_content, is_temp) {
       postID: postID,
       postTitle: temp_title,
       postContent: temp_content,
-      postStatus: `{"isTemp":${is_temp}, "isTrash":false}`,
-      userID: userID,
-      companyID: companyID
+      postStatus: `{"isTemp":${is_temp}, "isTrash":false}`
     },
     error: function (xhr) {
       errorFunction(xhr);
@@ -48,7 +40,7 @@ function insertTempPost(boardID, postID, temp_title, temp_content, is_temp) {
       refreshPostList();
     },
     success: function () {
-      addRecentTempPostIdToEditor(boardID, userID, companyID);
+      addRecentTempPostIdToEditor(boardID);
       if (is_temp) {
         alert("임시저장 되었습니다.");
       }
@@ -58,7 +50,6 @@ function insertTempPost(boardID, postID, temp_title, temp_content, is_temp) {
 
 function loadPost(boardID, postID) {
   var post_title = $('#post_title');
-  var editor = $('#editor');
   $.ajax({
     type: 'GET',
     url: `/boards/${boardID}/posts/${postID}`,
@@ -129,8 +120,7 @@ function temporaryDeletePost(boardID, postID) {
 function refreshPostList() {
   var boardID = getCurrentBoardID();
   postClear();
-  var boardID = getCurrentBoardID();
-  getPageList(1,boardID,updatePageList)
+  getPageList(1, boardID, updatePageList)
 }
 
 function searchPost(option, keyword) {
@@ -157,19 +147,13 @@ function searchPost(option, keyword) {
 }
 
 function getTempPosts() {
-  var userData = new User();
   $.ajax({
     type: 'GET',
     url: "/boards/-1/posts/temp",
-    data: {
-      userID: userData.getUserID(),
-      companyID: userData.getCompanyID()
-    },
     error: function (xhr) {
       errorFunction(xhr);
     },
     success: function (data) {
-      console.log(JSON.stringify(data));
       loadPostList(data);
     }
   })
@@ -193,28 +177,10 @@ function getTempPost(postID) {
   });
 }
 
-function deleteTempPost(postID) {
-  $.ajax({
-    type: 'DELETE',
-    url: `/boards/0/posts/temp/${postID}`,
-    error: function (xhr) {
-      errorFunction(xhr);
-    },
-    success: function () {
-      editorClear();
-      refreshPostList();
-    }
-  });
-}
-
-function addRecentTempPostIdToEditor(boardID, userID, companyID) {
+function addRecentTempPostIdToEditor(boardID) {
   $.ajax({
     type: 'GET',
     url: `/boards/${boardID}/posts/recent`,
-    data: {
-      userID: userID,
-      companyID: companyID
-    },
     error: function (xhr) {
       errorFunction(xhr);
     },
@@ -226,14 +192,9 @@ function addRecentTempPostIdToEditor(boardID, userID, companyID) {
 
 // 휴지통에 있는 게시글들을 가져온다.
 function getPostsInTrashBox() {
-  var userData = new User();
   $.ajax({
     type: 'GET',
     url: `/boards/0/posts/trash`,
-    data: {
-      userID: userData.getUserID(),
-      companyID: userData.getCompanyID()
-    },
     error: function (xhr) {
       errorFunction(xhr);
     },

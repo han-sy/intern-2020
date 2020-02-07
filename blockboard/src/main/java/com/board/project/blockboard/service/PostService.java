@@ -45,8 +45,8 @@ public class PostService {
     return postMapper.searchPost(option, keyword);
   }
 
-  public PostDTO selectRecentTemp(Map<String, Object> param) {
-    return postMapper.selectRecentTempPost(param);
+  public PostDTO selectRecentTemp(UserDTO requestUser) {
+    return postMapper.selectRecentTempPost(requestUser);
   }
 
   public List<PostDTO> getTempPosts(UserDTO userDTO) {

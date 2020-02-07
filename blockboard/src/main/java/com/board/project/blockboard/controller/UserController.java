@@ -39,9 +39,8 @@ public class UserController {
    * @return 로그인 메인화면으로 redirect
    */
   @PostMapping("/login")
-  public String loginCheck(@ModelAttribute UserDTO requestUser, HttpServletResponse response) {
-    log.info("userID = " + requestUser.getUserID());
-    log.info("userPwd = " + requestUser.getUserPassword());
+  public String loginCheck(HttpServletRequest request, HttpServletResponse response) {
+    UserDTO requestUser = new UserDTO(request);
     boolean isValid = userService.loginCheck(requestUser, response);
     if (isValid) {
       return "redirect:/main";
@@ -84,10 +83,7 @@ public class UserController {
 
   @GetMapping("/userinfo")
   @ResponseBody
-  public Map<String, Object> info() {
-    Map<String, Object> map = new HashMap<>();
-    map.put("userID", jwtService.getUserId());
-    map.put("companyID", jwtService.getCompanyId());
-    return map;
+  public UserDTO info(HttpServletRequest request) {
+    return new UserDTO(request);
   }
 }

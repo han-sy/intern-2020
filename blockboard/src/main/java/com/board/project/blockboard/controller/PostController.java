@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -179,11 +180,9 @@ public class PostController {
    * @return 가장 최근에 임시저장된 게시물 객체
    */
   @GetMapping("/recent")
-  public PostDTO recentTempPost() {
-    Map<String, Object> param = new HashMap<>();
-    param.put("userID", jwtService.getUserId());
-    param.put("companyID", jwtService.getCompanyId());
-    return postService.selectRecentTemp(param);
+  public PostDTO recentTempPost(HttpServletRequest request) {
+    UserDTO requestUser = new UserDTO(request);
+    return postService.selectRecentTemp(requestUser);
   }
 
   /**
@@ -192,7 +191,8 @@ public class PostController {
    * @return 임시 저장된 게시물 목록
    */
   @GetMapping("/temp")
-  public List<PostDTO> getTempPosts(@ModelAttribute UserDTO requestUser) {
+  public List<PostDTO> getTempPosts(HttpServletRequest request) {
+    UserDTO requestUser = new UserDTO(request);
     return postService.getTempPosts(requestUser);
   }
 
@@ -226,18 +226,17 @@ public class PostController {
   /**
    * 휴지통의 게시물 목록을 불러온다.
    *
-   * @param requestUser 해당 유저의 휴지통을 불러오기 위한 객체
    * @return 해당 유저의 휴지통 목록
    */
   @GetMapping("/trash")
-  public List<PostDTO> getPostsInTrashBox(@ModelAttribute UserDTO requestUser) {
+  public List<PostDTO> getPostsInTrashBox(HttpServletRequest request) {
+    UserDTO requestUser = new UserDTO(request);
     return postService.getPostsInTrashBox(requestUser);
   }
 
   /**
    * 휴지통의 게시물을 복원한다.
    *
-   * @param requestUser 해당 유저의 휴지통을 불러오기 위한 객체
    * @return 해당 유저의 휴지통 목록
    */
   @PutMapping("/{postid}/restore")
