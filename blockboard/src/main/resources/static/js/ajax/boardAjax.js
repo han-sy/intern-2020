@@ -122,7 +122,10 @@ function getPostListByPageNum(pageNum,boardID) {
   } else {
     $.ajax({
       type: 'GET',
-      url: `/boards/${boardID}/posts/${pageNum}/postlist`,
+      url: `/boards/${boardID}/posts`,
+      data:{
+        pageNumber:pageNum
+      },
       error: function () {  //통신 실패시
         alert('통신실패!');
       },
