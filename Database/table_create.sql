@@ -52,8 +52,8 @@ create table posts(
     board_id int(9) not null,
     company_id int(9) not null,
     post_title varchar(150) not null,
-    post_content text character set utf8mb4 collate utf8mb4_unicode_ci not null,
-	post_content_except_htmltag varchar(10000) character set utf8mb4 collate utf8mb4_unicode_ci not null,
+    post_content longtext character set utf8mb4 collate utf8mb4_unicode_ci not null,
+	post_content_except_htmltag longtext character set utf8mb4 collate utf8mb4_unicode_ci not null,
     post_register_time datetime not null,
     post_last_update_time datetime null,
     post_status json null,
@@ -68,7 +68,7 @@ create table comments(
 	post_id int(9) not null,
 	user_id varchar(20) not null,
 	company_id int(9) not null,
-    comment_content varchar(4000) character set utf8mb4 collate utf8mb4_unicode_ci not null,
+    comment_content longtext character set utf8mb4 collate utf8mb4_unicode_ci not null,
     comment_register_time timestamp not null,
     comment_referenced_id int(9),
     comment_referenced_user_id varchar(20),
@@ -151,3 +151,6 @@ from posts;
 update posts
 set post_status='{"isTemp":false, "isTrash":false}'
 where post_id <105;
+update posts
+set company_id = 1
+where company_id = 2;
