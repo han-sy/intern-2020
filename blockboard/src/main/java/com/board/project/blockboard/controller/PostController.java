@@ -4,7 +4,6 @@
  */
 package com.board.project.blockboard.controller;
 
-import com.board.project.blockboard.common.util.HTMLTagUtils;
 import com.board.project.blockboard.common.util.JsonParse;
 import com.board.project.blockboard.common.util.LengthCheckUtils;
 import com.board.project.blockboard.common.validation.PostValidation;
