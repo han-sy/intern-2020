@@ -40,6 +40,7 @@ function errorFunction(xhr) {
   }
 }
 /**
+ * text의 byte길이와 글자수를 반환하는 함수입니다.
  * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
  */
 function getByteLength(text, maxLength) {
@@ -50,7 +51,6 @@ function getByteLength(text, maxLength) {
       charLength = i;
     }
   }
-
   return [byte, charLength - 2];
 }
 /**
