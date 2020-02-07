@@ -12,6 +12,7 @@ import com.board.project.blockboard.service.FunctionService;
 import com.board.project.blockboard.service.JwtService;
 import java.io.IOException;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,9 +39,9 @@ public class FunctionController {
    * @return 리스트 반환
    */
   @GetMapping(value = "/{companyid}")
-  public List<FunctionDTO> getFunctionInfo() {
-    int companyID = jwtService.getCompanyId();
-    List<FunctionDTO> functionInfoList = functionService.getfunctionInfoListByCompanyID(companyID);
+  public List<FunctionDTO> getFunctionInfo(HttpServletRequest request) {
+    UserDTO userData =new UserDTO(request);
+    List<FunctionDTO> functionInfoList = functionService.getfunctionInfoListByCompanyID(userData.getCompanyID());
     return functionInfoList;
   }
 
@@ -49,9 +50,9 @@ public class FunctionController {
    */
   @PostMapping(value = "/{companyid}")
   public void insertNewFunctionData(@RequestParam("functionInfoData") String newfunctionInfoData,
-      @RequestParam("userData") String userJsonData, HttpServletResponse response)
+      @RequestParam("userData") String userJsonData, HttpServletResponse response,HttpServletRequest request)
       throws IOException {
-    UserDTO userData = JsonParse.jsonToDTO(userJsonData,UserDTO.class);
+    UserDTO userData = new UserDTO(request);
     if (AuthorityValidation.isAdmin(userData, response)) {
       functionService.updateNewFunctionsInfo(userData.getCompanyID(), newfunctionInfoData);
     }

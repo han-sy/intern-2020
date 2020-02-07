@@ -5,7 +5,7 @@
 const KEYCODE = {
   ENTER: 13
 };
-var MAX_LENGTH = {
+const MAX_LENGTH = {
   BOARD_NAME: 150
 };
 $(function () {
@@ -48,7 +48,7 @@ function clickSaveAddedBoard() {
   var isAcceptance = confirm("<" + boardName + ">게시판을 추가하시겠습니까?");
   if (isAcceptance) {
     $(function () {
-      updateTabByNewBoardListAfterAddBoard(boardName, userData.getJsonString());
+      updateTabByNewBoardListAfterAddBoard(boardName);
     });
   }
 }
@@ -80,8 +80,7 @@ function clickSaveDelteBoard() {
   var isAcceptance = confirm("선택한 게시판을 정말 삭제하시겠습니까? 게시물또한 모두 삭제됩니다.");
   if (isAcceptance) {
     $(function () {
-      updateTabByNewBoardListAfterDeleteBoard(jsonData,
-          userData.getJsonString()); //삭제이후 tab에 게시판목록 업데이트
+      updateTabByNewBoardListAfterDeleteBoard(jsonData); //삭제이후 tab에 게시판목록 업데이트
     });
   }
 }
@@ -120,8 +119,7 @@ function clickSaveChangeBoard() {
   var isAcceptance = confirm("게시판 이름변경 내용을 저장하시겠습니까?");
   if (isAcceptance) {
     $(function () {
-      updateTabByNewBoardListAfterUpdateBoardName(jsonData,
-          userData.getJsonString());
+      updateTabByNewBoardListAfterUpdateBoardName(jsonData);
     });
   }
   $('#config_container').html("");

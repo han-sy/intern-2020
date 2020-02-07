@@ -14,9 +14,11 @@ import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import javafx.beans.binding.ObjectExpression;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.User;
 import org.apache.commons.codec.binary.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -88,15 +90,15 @@ public class JwtService {
     } catch (Exception e) {
       throw new UnauthorizedException();
     }
-    @SuppressWarnings("unchecked")
-    Map<String, Object> value = (LinkedHashMap<String, Object>) claims.getBody();
-    return value;
+    return (Map<String, Object>) claims.getBody().get(HEADER_NAME);
   }
 
   // Interceptor 의 request 에 JWT 에서 가져온 유저정보를 넣어준다.
   public void setUserDataToRequest(HttpServletRequest request) {
     Map<String, Object> jwtClaims = this.get();
+    log.info("!!!"+jwtClaims.toString());
     request.setAttribute("userID", jwtClaims.get("userID").toString());
+    //log.info(jwtClaims.get("userID").toString());
     request.setAttribute("userName", jwtClaims.get("userName").toString());
     request.setAttribute("userType", jwtClaims.get("userType").toString());
     request.setAttribute("companyID", Integer.parseInt(jwtClaims.get("companyID").toString()));

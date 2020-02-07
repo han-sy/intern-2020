@@ -5,9 +5,11 @@
 package com.board.project.blockboard.controller;
 
 import com.board.project.blockboard.dto.CommentDTO;
+import com.board.project.blockboard.dto.UserDTO;
 import com.board.project.blockboard.service.CommentService;
 import com.board.project.blockboard.service.JwtService;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -49,10 +51,9 @@ public class CommentController {
    */
   @PostMapping("")
   public void writeComment(@RequestParam("postID") int postID,
-      @RequestParam("commentContent") String commentContent) {
-    String userID = jwtService.getUserId();
-    int companyID = jwtService.getCompanyId();
-    commentService.writeCommentWithUserInfo(userID, commentContent, companyID, postID);
+      @RequestParam("commentContent") String commentContent, HttpServletRequest request) {
+    UserDTO useeData = new UserDTO(request);
+    commentService.writeCommentWithUserInfo(useeData.getUserID(), commentContent, useeData.getCompanyID(), postID);
   }
 
   /**

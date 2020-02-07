@@ -5,6 +5,7 @@
 package com.board.project.blockboard.controller;
 
 import com.board.project.blockboard.dto.BoardDTO;
+import com.board.project.blockboard.dto.UserDTO;
 import com.board.project.blockboard.service.BoardService;
 import com.board.project.blockboard.service.CompanyService;
 import com.board.project.blockboard.service.FunctionService;
@@ -44,19 +45,19 @@ public class MainController {
   @GetMapping("/main")
   public String getMainContent(HttpServletRequest request,
       Model model) {  // 일일이 예외처리 안해서 Exception으로 수정 (동욱)
-    String userID = jwtService.getUserId();
-    int companyID = jwtService.getCompanyId();
 
-    List<BoardDTO> boardList = boardService.getBoardListByCompanyID(companyID);
+    UserDTO userData = new UserDTO(request);
+
+    List<BoardDTO> boardList = boardService.getBoardListByCompanyID(userData.getCompanyID());
 
     model.addAttribute("boardList", boardList); //게시판 목록
-    model.addAttribute("companyName", companyService.getCompanyNameByUserID(userID));//회사이름
-    model.addAttribute("userType", userService.getUserTypeByUserID(userID));
-    model.addAttribute("companyID", companyID);
-    model.addAttribute("userID", userID);
-    model.addAttribute("userName", userService.getUserNameByUserID(userID));
+    model.addAttribute("companyName", companyService.getCompanyNameByUserID(userData.getUserID()));//회사이름
+    model.addAttribute("userType", userService.getUserTypeByUserID(userData.getUserID()));
+    model.addAttribute("companyID", userData.getCompanyID());
+    model.addAttribute("userID", userData.getUserID());
+    model.addAttribute("userName", userService.getUserNameByUserID(userData.getUserID()));
     model.addAttribute("functionInfoList",
-        functionService.getfunctionInfoListByCompanyID(companyID));
+        functionService.getfunctionInfoListByCompanyID(userData.getCompanyID()));
 
     return "boards";
   }

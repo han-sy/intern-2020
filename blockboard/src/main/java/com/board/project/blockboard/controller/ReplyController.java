@@ -6,6 +6,7 @@ package com.board.project.blockboard.controller;
 
 
 import com.board.project.blockboard.dto.CommentDTO;
+import com.board.project.blockboard.dto.UserDTO;
 import com.board.project.blockboard.service.JwtService;
 import com.board.project.blockboard.service.ReplyService;
 import java.util.List;
@@ -50,11 +51,11 @@ public class ReplyController {
   public void writeReply(@RequestParam("postID") int postID,
       @RequestParam("commentContent") String commentContent,
       @RequestParam("commentReferencedID") int commentReferencedID,
-      @RequestParam("commentReferencedUserID") String commentReferencedUserID) {
-    String userID = jwtService.getUserId();
-    int companyID = jwtService.getCompanyId();
+      @RequestParam("commentReferencedUserID") String commentReferencedUserID,
+      HttpServletRequest request) {
+    UserDTO userData = new UserDTO(request);
     replyService
-        .writeReplyWithUserInfo(userID, companyID, postID, commentContent, commentReferencedID,
+        .writeReplyWithUserInfo(userData.getUserID(), userData.getCompanyID(), postID, commentContent, commentReferencedID,
             commentReferencedUserID);
   }
 }

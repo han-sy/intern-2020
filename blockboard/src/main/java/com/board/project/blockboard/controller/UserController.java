@@ -39,8 +39,7 @@ public class UserController {
    * @return 로그인 메인화면으로 redirect
    */
   @PostMapping("/login")
-  public String loginCheck(HttpServletRequest request, HttpServletResponse response) {
-    UserDTO requestUser = new UserDTO(request);
+  public String loginCheck(@ModelAttribute UserDTO requestUser, HttpServletResponse response) {
     boolean isValid = userService.loginCheck(requestUser, response);
     if (isValid) {
       return "redirect:/main";

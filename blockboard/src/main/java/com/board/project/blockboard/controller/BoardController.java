@@ -12,6 +12,7 @@ import com.board.project.blockboard.dto.UserDTO;
 import com.board.project.blockboard.service.BoardService;
 import com.board.project.blockboard.service.JwtService;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,11 +43,11 @@ public class BoardController {
    */
   @GetMapping(value = "")
   @ResponseBody
-  public List<BoardDTO> getBoardList() {
-    int companyID = jwtService.getCompanyId();
+  public List<BoardDTO> getBoardList(HttpServletRequest request) {
+    UserDTO userData = new UserDTO(request);
 
     //게시판 목록
-    List<BoardDTO> boardList = boardService.getBoardListByCompanyID(companyID); // select로 받아오기
+    List<BoardDTO> boardList = boardService.getBoardListByCompanyID(userData.getCompanyID()); // select로 받아오기
     return boardList;
   }
 
@@ -57,9 +58,8 @@ public class BoardController {
    */
   @PostMapping(value = "")
   @ResponseBody
-  public void insertNewBoard(@RequestParam("boardName") String newBoardName,
-      @RequestParam("userData") String userJsonData, HttpServletResponse response) {
-    UserDTO userData = JsonParse.jsonToDTO(userJsonData, UserDTO.class);
+  public void insertNewBoard(@RequestParam("boardName") String newBoardName, HttpServletRequest request, HttpServletResponse response) {
+    UserDTO userData = new UserDTO(request);
     if (AuthorityValidation.isAdmin(userData, response)) {
       boardService.insertNewBoard(newBoardName, userData);
     }
@@ -74,8 +74,8 @@ public class BoardController {
   @PutMapping(value = "")
   @ResponseBody
   public void changeNewBoardName(@RequestParam("newTitles") String newTitleList,
-      @RequestParam("userData") String userJsonData, HttpServletResponse response) {
-    UserDTO userData = JsonParse.jsonToDTO(userJsonData, UserDTO.class);
+      HttpServletRequest request, HttpServletResponse response) {
+    UserDTO userData = new UserDTO(request);
     if (AuthorityValidation.isAdmin(userData, response)) {
       boardService.updateChangedName(newTitleList, userData.getCompanyID());
     }
@@ -89,8 +89,8 @@ public class BoardController {
   @DeleteMapping(value = "")
   @ResponseBody
   public void deleteBoardbyBoardID(@RequestParam("deleteList") String deleteBoards,
-      @RequestParam("userData") String userJsonData, HttpServletResponse response) {
-    UserDTO userData = JsonParse.jsonToDTO(userJsonData, UserDTO.class);
+      HttpServletRequest request, HttpServletResponse response) {
+    UserDTO userData = new UserDTO(request);
     if (AuthorityValidation.isAdmin(userData, response)) {
       boardService.deleteBoardsByDeleteBoardList(deleteBoards); //기존데이터
     }
