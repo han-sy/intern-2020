@@ -14,12 +14,10 @@
 $(document).on('click', '.page-item', function () {
   console.log("!!!!!");
 
-  $(".page-item").removeClass("active-page");
-  $(this).addClass("active-page");
   var boardID = getCurrentBoardID();
   var pageNum = $(this).find(".page-link").attr("data-page");
-  getPostListByPageNum(pageNum,boardID);
   getPageList(pageNum,boardID,updatePageList);
+
 
 });
 

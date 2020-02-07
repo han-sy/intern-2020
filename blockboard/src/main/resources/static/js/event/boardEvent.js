@@ -177,9 +177,8 @@ $(document).on("click", ".tabmenu", function clickTabEvent() {
   if (boardID > 0) {
     $(function () {
       btn_write.attr('style', 'visibility:visible');
-      getPostListByPageNum(1,boardID);
       getPageList(1,boardID,updatePageList);
-      $("#pagination_content").children().first().trigger('click');
+
     });
   } else {
     btn_write.attr('style', 'visibility:hidden');

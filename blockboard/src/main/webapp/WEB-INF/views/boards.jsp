@@ -586,7 +586,7 @@
                     {{#pagesInfo}}
                     {{#isFirstPage}}
                     {{else}}
-                    <li class="page-item page-btn"><a class="page-link"
+                    <li class="page-item"><a class="page-link"
                                                       style="cursor: pointer;" data-page="1">처음</a></li>
                     {{/isFirstPage}}
                     {{#isFirstRange}}
@@ -594,7 +594,7 @@
                     <li class="page-item"><a class="page-link" style="cursor: pointer;" data-page ='{{prevPage}}'>이전</a></li>
                     {{/isFirstRange}}
                     {{#each pageList}}
-                    <li class="page-item"><a class="page-link" style="cursor: pointer;" data-page ='{{this}}'>{{this}}</a>
+                    <li class="page-item" id ="page{{this}}"><a class="page-link page-index" style="cursor: pointer;" data-page ='{{this}}'>{{this}}</a>
                     </li>
                     {{/each}}
                     {{#isLastRange}}
