@@ -5,7 +5,7 @@
 function updateCommentsCount(boardID, postID) {
   $.ajax({
     type: 'GET',
-    url: "/boards/" + boardID + "/posts/" + postID + "/comments/counts",
+    url: `/boards/${boardID}/posts/${postID}/comments/counts`,
     error: function () {  //통신 실패시
       alert('통신실패!');
     },
@@ -19,7 +19,7 @@ function updateCommentsCount(boardID, postID) {
 function getCommentList(boardID, postID, successFunction) {
   $.ajax({
     type: 'GET',
-    url: "/boards/" + boardID + "/posts/" + postID + "/comments",
+    url: `/boards/${boardID}/posts/${postID}/comments`,
     error: function (error) {  //통신 실패시
       alert('통신실패!' + error);
     },
@@ -33,7 +33,7 @@ function getCommentList(boardID, postID, successFunction) {
 function insertComment(boardID, postID, commentText) {
   $.ajax({
     type: 'POST',
-    url: "/boards/" + boardID + "/posts/" + postID + "/comments",
+    url: `/boards/${boardID}/posts/${postID}/comments`,
     data: {boardID: boardID, postID: postID, commentContent: commentText},
     error: function () {  //통신 실패시
       alert('통신실패!');
@@ -50,7 +50,7 @@ function insertComment(boardID, postID, commentText) {
 function deleteCommentByCommentID(postID, boardID, commentID) {
   $.ajax({
     type: 'DELETE',
-    url: "/boards/" + boardID + "/posts/" + postID + "/comments/" + commentID,
+    url: `/boards/${boardID}/posts/${postID}/comments/${commentID}`,
     error: function () {  //통신 실패시
       alert('통신실패!');
     },
@@ -65,7 +65,7 @@ function deleteCommentByCommentID(postID, boardID, commentID) {
 function editComment(postID, boardID, commentID, newComment) {
   $.ajax({
     type: 'PUT',
-    url: "/boards/" + boardID + "/posts/" + postID + "/comments/" + commentID,
+    url: `/boards/${boardID}/posts/${postID}/comments/${commentID}`,
     data: {newComment, newComment},
     error: function () {  //통신 실패시
       alert('통신실패!수정');
@@ -80,7 +80,7 @@ function editComment(postID, boardID, commentID, newComment) {
 function getReplyList(boardID, postID, commentID, successFunction) {
   $.ajax({
     type: 'GET',
-    url: "/boards/" + boardID + "/posts/" + postID + "/comments/" + commentID,
+    url: `/boards/${boardID}/posts/${postID}/comments/${commentID}`,
     error: function (error) {  //통신 실패시
       alert('통신실패!' + error);
     },
@@ -96,8 +96,7 @@ function insertReply(boardID, postID, commentContent, commentReferencedID,
   //alert(commentReferencedUserID);
   $.ajax({
     type: 'POST',
-    url: "/boards/" + boardID + "/posts/" + postID + "/comments/"
-        + commentReferencedID,
+    url: `/boards/${boardID}/posts/${postID}/comments/${commentReferencedID}`,
     data: {
       boardID: boardID,
       postID: postID,

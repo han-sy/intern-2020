@@ -7,7 +7,7 @@
 function updateTabByNewBoardListAfterAddBoard(boardName) {
   $.ajax({
     type: 'POST',
-    url: "/boards",
+    url: `/boards`,
     data: {boardName: boardName},
     error: function (xhr) {  //통신 실패시
       errorFunction(xhr);
@@ -22,7 +22,7 @@ function updateTabByNewBoardListAfterAddBoard(boardName) {
 function updateTabByNewBoardListAfterDeleteBoard(jsonData) {
   $.ajax({
     type: 'DELETE',
-    url: "/boards",
+    url: `/boards`,
     data: {deleteList: jsonData},
     error: function (xhr) {  //통신 실패시
       errorFunction(xhr);
@@ -38,7 +38,7 @@ function updateTabByNewBoardListAfterDeleteBoard(jsonData) {
 function updateTabByNewBoardListAfterUpdateBoardName(jsonData) {
   $.ajax({
     type: 'PUT',
-    url: "/boards",
+    url: `/boards`,
     data: {newTitles: jsonData},
     error: function (xhr) {  //통신 실패시
       errorFunction(xhr);
@@ -71,7 +71,7 @@ function getPostDataAfterPostClick(postID, boardID) {
   postContentObj.html("");
   $.ajax({
     type: 'GET',
-    url: "/boards/" + boardID + "/posts/" + postID,
+    url: `/boards/${boardID}/posts/${postID}`,
     error: function (error) {  //통신 실패시
       alert('통신실패!' + error);
     },
@@ -122,7 +122,7 @@ function getPostListByPageNum(pageNum,boardID) {
   } else {
     $.ajax({
       type: 'GET',
-      url: '/boards/' + boardID + "/posts/"+pageNum+"/postlist",
+      url: `/boards/${boardID}/posts/${pageNum}/postlist`,
       error: function () {  //통신 실패시
         alert('통신실패!');
       },

@@ -6,7 +6,7 @@
 function getFunctionList(companyID, successFunction) {
   $.ajax({
     type: 'GET',
-    url: "/functions/" + companyID,
+    url: `functions/${companyID}`,
     error: function () {  //통신 실패시
       alert('통신실패!');
     },
@@ -21,7 +21,7 @@ function getNewFunctionInfo(jsonData,userData) {
   //alert(jsonData);
   $.ajax({
     type: 'POST',
-    url: "/functions/" + userData.companyID,
+    url: `/functions/${userData.companyID}`,
     data: {functionInfoData: jsonData,userData:userData},
     error: function (error,msg) {  //통신 실패시
       errorFunction(error);

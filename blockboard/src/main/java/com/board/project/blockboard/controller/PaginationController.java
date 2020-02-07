@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
@@ -21,15 +22,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Slf4j
 @Controller
-@RequestMapping("/boards/{boardid}/pages/")
+@RequestMapping("/boards/{boardid}/pages")
 public class PaginationController {
   @Autowired
   private PaginationService paginationService;
 
 
-  @GetMapping(value = "/{pagenumber}")
+  @GetMapping(value = "")
   @ResponseBody
-  public PaginationDTO getPageList(@PathVariable("boardid") int boardID,@PathVariable("pagenumber") int pageNumber) {
+  public PaginationDTO getPageList(@PathVariable("boardid") int boardID,@RequestParam("pageNumber") int pageNumber) {
 
     //게시판 목록
     PaginationDTO  pageInfo= paginationService.getPageListByPageNumber(pageNumber,boardID); // select로 받아오기

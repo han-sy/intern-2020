@@ -3,7 +3,7 @@
  * @file commentEvent.js
  */
 const COMMENT_PREFIX = {
-  length: 10
+  length: 7
 };
 
 //댓글 추가버튼 누를때

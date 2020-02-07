@@ -7,7 +7,10 @@
 function getPageList(pageNumber,boardID,successFunction) {
   $.ajax({
     type: 'GET',
-    url: '/boards/'+boardID+"/pages/"+pageNumber,
+    url: `/boards/${boardID}/pages`,
+    data:{
+      pageNumber:pageNumber
+    },
     error: function () {  //통신 실패시
       alert('통신실패!');
     },
