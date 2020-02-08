@@ -100,8 +100,10 @@ public class PostController {
    */
   @GetMapping("")
   public List<PostDTO> getPostListByBoardID(@PathVariable("boardid") int boardID,
-      @RequestParam("pageNumber") int pageNumber) {
-    List<PostDTO> postList = postService.getPostListByBoardID(boardID, pageNumber);
+      @RequestParam("pageNumber") int pageNumber,HttpServletRequest request) {
+    UserDTO userDTO = new UserDTO(request);
+    List<PostDTO> postList = postService.getPostListByBoardID(boardID, pageNumber,userDTO.getCompanyID());
+    log.info("postList:"+postList);
     return postList;
   }
 

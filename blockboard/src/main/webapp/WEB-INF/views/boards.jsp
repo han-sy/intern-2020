@@ -533,7 +533,8 @@
                             {{#isTemp}}
                                 <tr class="postclick" data-post={{postID}}
                                     onclick="javascript:clickTempPostEvent(this)">
-                                    <td scope="row">{{postTitle}}</td>
+                                    <td scope="row">{{postTitle}}
+                                    </td>
                             {{else}}
                                 {{#isTrash}}
                                     <tr class="postclick" data-post={{postID}}
@@ -542,7 +543,9 @@
                                 {{else}}
                                     <tr class="postclick" data-post={{postID}}
                                         onclick="javascript:clickTrEvent(this)">
-                                        <td scope="row">{{postTitle}}</td>
+                                        <td scope="row">{{postTitle}}
+                                            <span style="color:#28A745;" >({{commentsCount}})</span>
+                                        </td>
                                 {{/isTrash}}
                             {{/isTemp}}
                                 <td>{{userName}}</td>

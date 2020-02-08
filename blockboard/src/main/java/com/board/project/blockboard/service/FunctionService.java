@@ -47,6 +47,13 @@ public class FunctionService {
     List<FunctionDTO> functionInfoList = getFunctionInfoByCompanyID(companyID);
     return functionInfoList;
   }
+  public boolean getFunctionStatus(int companyID,int functionID){
+    Map<String, Object> functionPrimaryKey = new HashMap<String, Object>();
+    functionPrimaryKey.put("functionID", functionID);
+    functionPrimaryKey.put("companyID", companyID);
+    boolean result = functionMapper.selectFunctionCheckByCompanyIDAndFunctionID(functionPrimaryKey);
+    return result;
+  }
 
   /**
    * @param companyID

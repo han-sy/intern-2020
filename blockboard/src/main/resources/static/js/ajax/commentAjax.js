@@ -80,7 +80,7 @@ function editComment(postID, boardID, commentID, newComment) {
 function getReplyList(boardID, postID, commentID, successFunction) {
   $.ajax({
     type: 'GET',
-    url: `/boards/${boardID}/posts/${postID}/comments/${commentID}`,
+    url: `/boards/${boardID}/posts/${postID}/comments/${commentID}/replies`,
     error: function (error) {  //통신 실패시
       alert('통신실패!' + error);
     },
@@ -96,7 +96,7 @@ function insertReply(boardID, postID, commentContent, commentReferencedID,
   //alert(commentReferencedUserID);
   $.ajax({
     type: 'POST',
-    url: `/boards/${boardID}/posts/${postID}/comments/${commentReferencedID}`,
+    url: `/boards/${boardID}/posts/${postID}/comments/${commentReferencedID}/replies`,
     data: {
       boardID: boardID,
       postID: postID,

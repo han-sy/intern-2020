@@ -91,6 +91,15 @@ Handlebars.registerHelper('isLastRange', function (option) {
   }
 });
 
+Handlebars.registerHelper('hasComments', function (option) {
+  console.log("comment 개수 : "+ this.commentsCount);
+  if (this.commentsCount) {
+    return option.fn(this);
+  } else {
+    return option.inverse(this);
+  }
+});
+
 /**
  * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
  */

@@ -20,4 +20,5 @@ public interface FunctionMapper {
 
   void deleteFunctionCheckData(Map<String, Object> functionPrimaryKey);
 
+  boolean selectFunctionCheckByCompanyIDAndFunctionID(Map<String, Object> functionPrimaryKey);
 }

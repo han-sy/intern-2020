@@ -126,6 +126,7 @@ function getPostListByPageNum(pageNum,boardID) {
       data:{
         pageNumber:pageNum
       },
+      dataType:"JSON",
       error: function () {  //통신 실패시
         alert('통신실패!');
       },

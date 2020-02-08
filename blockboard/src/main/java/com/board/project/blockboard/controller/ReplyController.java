@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("/boards/{boardid}/posts/{postid}/comments/{commentid}")
+@RequestMapping("/boards/{boardid}/posts/{postid}/comments/{commentid}/replies")
 public class ReplyController {
 
   @Autowired
@@ -34,7 +34,7 @@ public class ReplyController {
    * 답글 조회
    */
   @GetMapping("")
-  public List<CommentDTO> getReplysByComment(@PathVariable("postid") int postID,
+  public List<CommentDTO> getRepliesByComment(@PathVariable("postid") int postID,
       @PathVariable("commentid") int commentReferencedID, HttpServletRequest request) {
     List<CommentDTO> replyList = replyService.getReplyListByCommentID(commentReferencedID);
     return replyList;

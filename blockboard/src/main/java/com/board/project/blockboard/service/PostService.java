@@ -24,6 +24,8 @@ public class PostService {
 
   @Autowired
   private PostMapper postMapper;
+  @Autowired
+  private CommentService commentService;
 
   public void insertPost(PostDTO post) {
     postMapper.insertPost(post);
@@ -79,15 +81,32 @@ public class PostService {
   }
 
   /**
+   * 게시판 번호와 페이지번호를 가지고 출력할 게시물 목록 반환
    * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
    */
-  public List<PostDTO> getPostListByBoardID(int boardID, int pageNumber) {
+  public List<PostDTO> getPostListByBoardID(int boardID, int pageNumber,int companyID) {
     int pageCount = getPostsCountByBoardID(boardID);
     PaginationDTO pageInfo = new PaginationDTO(pageCount, pageNumber, ConstantData.PAGE_SIZE,
         ConstantData.RANGE_SIZE);
-    List<PostDTO> postlist = postMapper
+    List<PostDTO> postList = postMapper
         .selectPostByBoardID(boardID, pageInfo.getStartIndex(), ConstantData.PAGE_SIZE);
-    return postlist;
+
+    //댓글수 update
+    for(PostDTO post : postList){
+      int commentsCount = commentService.getCommentCountByPostID(post.getPostID(),companyID);
+      post.setCommentsCount(commentsCount);
+    }
+
+    return postList;
+  }
+
+  /**
+   * 게시물 출력에 필요한 정보를 추가한다. 댓글수
+   * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+   */
+  private List<PostDTO> updatePostInfo(List<PostDTO> postList,int companyID) {
+
+    return postList;
   }
 
   /**
