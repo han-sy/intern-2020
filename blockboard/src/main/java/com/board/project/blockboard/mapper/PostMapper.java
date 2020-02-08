@@ -38,4 +38,6 @@ public interface PostMapper {
   List<PostDTO> selectPostsInTrashBox(UserDTO userDTO);
 
   void restorePost(PostDTO post);
+
+  void updateViewCnt(int postID);
 }

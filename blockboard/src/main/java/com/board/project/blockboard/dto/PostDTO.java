@@ -30,4 +30,5 @@ public class PostDTO {
   private Boolean isTrash;
 
   private int commentsCount;
+  private int viewCount;
 }

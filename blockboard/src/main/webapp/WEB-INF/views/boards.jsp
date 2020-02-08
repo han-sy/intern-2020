@@ -351,6 +351,7 @@
                 <p class="h4">{{postTitle}}</p>
                 <p class="h6" align="right">{{userName}}</p>
                 <p class="h6" align="right">{{postRegisterTime}}</p>
+                <p class="h6" align="right">조회수 {{viewCount}}</p>
                 <hr>
                 <div class="d-block">
                     <p>{{{postContent}}}</p>
@@ -524,6 +525,7 @@
                         <th scope="col">제목</th>
                         <th scope="col">작성자</th>
                         <th scope="col">작성일</th>
+                        <th scope="col">조회수</th>
                     </tr>
                     </thead>
                     <!--게시글 목록 -->
@@ -544,12 +546,16 @@
                                     <tr class="postclick" data-post={{postID}}
                                         onclick="javascript:clickTrEvent(this)">
                                         <td scope="row">{{postTitle}}
-                                            <span style="color:#28A745;" >({{commentsCount}})</span>
+                                            {{#isCommentAble}}
+                                            <span style="color:#28A745;">({{commentsCount}})</span>
+                                            {{else}}
+                                            {{/isCommentAble}}
                                         </td>
                                 {{/isTrash}}
                             {{/isTemp}}
                                 <td>{{userName}}</td>
                                 <td>{{postRegisterTime}}</td>
+                                <td>{{viewCount}}</td>
                                 <a style="visibility:hidden">{{postID}}</a>
                                 <a style="visibility:hidden">{{boardID}}</a>
                             </tr>
