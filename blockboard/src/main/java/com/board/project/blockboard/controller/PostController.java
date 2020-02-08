@@ -49,8 +49,8 @@ public class PostController {
    * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
    */
   @GetMapping(value = "/{postid}")
-  public PostDTO getPostByPostID(@PathVariable("postid") int postID, HttpServletResponse response) {
-    PostDTO post = postService.selectPostByPostID(postID);
+  public PostDTO getPostByPostID(@PathVariable("postid") int postID, HttpServletResponse response, HttpServletRequest request) {
+    PostDTO post = postService.selectPostByPostID(postID,request,response);
     if (postValidation.isExistPost(post, response)) {
       JsonParse.setPostStatusFromJsonString(post);
       log.info(post.toString());
@@ -128,8 +128,8 @@ public class PostController {
    */
   @PutMapping("/{postid}/trash")
   public void deletePostTemporary(@PathVariable("boardid") int boardID,
-      @PathVariable("postid") int postID, HttpServletResponse response) {
-    PostDTO post = postService.selectPostByPostID(postID);
+      @PathVariable("postid") int postID, HttpServletRequest request,HttpServletResponse response) {
+    PostDTO post = postService.selectPostByPostID(postID,request,response);
     if (postValidation.isValidDelete(boardID, post, response)) {
       postService.setPostStatusIsTempAndIsTrash(post, false, true);
       postService.movePostToTrash(post);
@@ -242,8 +242,8 @@ public class PostController {
    * @return 해당 유저의 휴지통 목록
    */
   @PutMapping("/{postid}/restore")
-  public void restorePost(@PathVariable("postid") int postID, HttpServletResponse response) {
-    PostDTO post = postService.selectPostByPostID(postID);
+  public void restorePost(@PathVariable("postid") int postID, HttpServletRequest request,HttpServletResponse response) {
+    PostDTO post = postService.selectPostByPostID(postID,request,response);
     if (postValidation.isExistPost(post, response) && postValidation.isInTrashBox(post, response)) {
       postService.setPostStatusIsTempAndIsTrash(post, false, false);
       postService.restorePost(post);

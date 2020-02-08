@@ -13,6 +13,9 @@ import com.board.project.blockboard.mapper.PostMapper;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +39,13 @@ public class PostService {
     postMapper.deletePostByPostID(postID);
   }
 
-  public PostDTO selectPostByPostID(int postID) {
-    updateViewCnt(postID);
+  /**
+   * 게시글 목록 조회와 조회수 증가
+   * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+   */
+  public PostDTO selectPostByPostID(int postID, HttpServletRequest request, HttpServletResponse response) {
+    updateViewCnt(postID,request,response);//조회수 업데이트 알고리즘
+
     return postMapper.selectPostByPostID(postID);
   }
 
@@ -127,8 +135,29 @@ public class PostService {
     return postCounts;
   }
 
-  public void updateViewCnt(int postID){
-     postMapper.updateViewCnt(postID);
+  /**
+   * 조회수 증가 알고리즘 조회시 5분동안은
+   * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+   */
+  //TODO 휴지통인경우 임시저장함인경우는 따로 구분해서 조회수 증가 안되도록 해야됨. 1번방법 : 임시저장이나 휴지통인 경우 제외 ,2번방법 : 작성자 조회수증가에서 제외.
+  public void updateViewCnt(int postID,HttpServletRequest request, HttpServletResponse response){
+    boolean isOpened=false;
+    Cookie[] cookies = request.getCookies();
+    if(cookies!=null){ //쿠키가 없을때
+      for(Cookie cookie:cookies){
+        if(cookie.getName().equals("view"+postID)){
+          cookie.setMaxAge(5*60);//5분으로 다시
+          isOpened = true;
+        }
+      }
+      if(!isOpened){
+        postMapper.updateViewCnt(postID);
+        Cookie newCookie= new Cookie("view"+postID,postID+"");
+        newCookie.setMaxAge(5*60);//5분저장
+        response.addCookie(newCookie);
+      }
+    }
+
   }
 }
 
