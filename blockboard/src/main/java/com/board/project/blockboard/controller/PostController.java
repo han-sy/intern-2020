@@ -9,7 +9,6 @@ import com.board.project.blockboard.common.util.LengthCheckUtils;
 import com.board.project.blockboard.common.validation.PostValidation;
 import com.board.project.blockboard.dto.PostDTO;
 import com.board.project.blockboard.dto.UserDTO;
-import com.board.project.blockboard.service.JwtService;
 import com.board.project.blockboard.service.PostService;
 import java.io.IOException;
 import java.util.List;
@@ -36,8 +35,6 @@ public class PostController {
   @Autowired
   private PostService postService;
   @Autowired
-  private JwtService jwtService;
-  @Autowired
   private PostValidation postValidation;
 
   /**
@@ -51,7 +48,6 @@ public class PostController {
     PostDTO post = postService.selectPostByPostID(postID);
     if (postValidation.isExistPost(post, response)) {
       JsonParse.setPostStatusFromJsonString(post);
-      log.info(post.toString());
       return post;
     }
     return null;
@@ -65,23 +61,24 @@ public class PostController {
    */
   @PostMapping("")
   public void insertPost(@PathVariable("boardid") int boardid,
-      @ModelAttribute PostDTO receivePost, HttpServletResponse response) {
-    log.info(receivePost.toString());
+      @ModelAttribute PostDTO receivePost, HttpServletRequest request, HttpServletResponse response) {
+    // 게시글 제목, 내용 길이 체크
     if (LengthCheckUtils.isValid(receivePost, response)) {
       int receivedPostID = receivePost.getPostID();
       receivePost.setBoardID(boardid);
+      receivePost.setUserID(request.getAttribute("userID").toString());
+      receivePost.setUserName(request.getAttribute("userName").toString());
+      receivePost.setCompanyID(Integer.parseInt(request.getAttribute("companyID").toString()));
       receivePost.setPostContentExceptHTMLTag(Jsoup.parse(receivePost.getPostContent()).text());
 
       // '글쓰기' -> '저장'or'임시저장' 버튼을 누른 경우에는 html 안에 postID가 존재하지 않아 바로 insert
       if (receivedPostID == 0) {
-        postService.setPostStatusIsTempAndIsTrash(receivePost, false, false);
         postService.insertPost(receivePost);
       } else {
         // [임시보관함]의 게시글에서 '저장'or'임시저장' 버튼을 눌렀는데 실제로 임시저장 되어있는 게시물이면 insert(update)
         PostDTO receivePostInDatabase = postService.getPostByPostID(receivedPostID);
         if (postValidation.isExistPost(receivePostInDatabase, response) &&
             postValidation.isTempSavedPost(receivePostInDatabase, response)) {
-          postService.setPostStatusIsTempAndIsTrash(receivePost, true, false);
           postService.insertPost(receivePost);
         }
       }
@@ -185,9 +182,9 @@ public class PostController {
    * @return 임시 저장된 게시물 목록
    */
   @GetMapping("/temp")
-  public List<PostDTO> getTempPosts(HttpServletRequest request) {
+  public List<PostDTO> getTempPosts(HttpServletRequest request, @RequestParam("pageNumber") int pageNumber) {
     UserDTO requestUser = new UserDTO(request);
-    return postService.getTempPosts(requestUser);
+    return postService.selectMyTempPosts(requestUser, pageNumber);
   }
 
   /**
@@ -222,10 +219,11 @@ public class PostController {
    *
    * @return 해당 유저의 휴지통 목록
    */
-  @GetMapping("/trash")
-  public List<PostDTO> getPostsInTrashBox(HttpServletRequest request) {
+  @GetMapping("/recycleBin")
+  public List<PostDTO> getMyRecyclePosts(HttpServletRequest request,
+      @RequestParam("pageNumber") int pageNumber) {
     UserDTO requestUser = new UserDTO(request);
-    return postService.getPostsInTrashBox(requestUser);
+    return postService.getMyRecyclePosts(requestUser, pageNumber);
   }
 
   /**
@@ -240,5 +238,24 @@ public class PostController {
       postService.setPostStatusIsTempAndIsTrash(post, false, false);
       postService.restorePost(post);
     }
+  }
+
+  /**
+   * 요청한 회원이 작성한 게시글만 불러온다. (휴지통, 임시보관 제외)
+   *
+   * @return 해당 유저의 게시글 목록
+   */
+  @GetMapping("/myArticle")
+  public List<PostDTO> selectMyPosts(HttpServletRequest request,
+      @RequestParam("pageNumber") int pageNumber) {
+    UserDTO user = new UserDTO(request);
+    return postService.selectMyPosts(user, pageNumber);
+  }
+
+  @GetMapping("/myReply")
+  public List<PostDTO> selectMyPostsIncludeMyReplies(HttpServletRequest request,
+      @RequestParam("pageNumber") int pageNumber) {
+    UserDTO user = new UserDTO(request);
+    return postService.selectPostsIncludeMyReplies(user, pageNumber);
   }
 }

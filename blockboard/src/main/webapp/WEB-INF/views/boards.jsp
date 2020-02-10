@@ -101,11 +101,13 @@
                style="cursor:pointer"><strong>기능 변경</strong></a>
             <hr>
             {{#functions}}
-            {{#isAbleFunction}}
-            <a class="dropdown-item d-none" id='functionAble{{functionID}}' value='off'>{{functionName}}</a>
-            {{else}}
-            <a class="dropdown-item" id='functionAble{{functionID}}' value='on'>{{functionName}}</a>
-            {{/isAbleFunction}}
+                {{#isAbleFunction}}
+                    <a class="dropdown-item d-none" id='functionAble{{functionID}}'
+                       value='off'>{{functionName}}</a>
+                {{else}}
+                    <a class="dropdown-item" id='functionAble{{functionID}}'
+                       value='on'>{{functionName}}</a>
+                {{/isAbleFunction}}
             {{/functions}}
         </script>
         <a class="nav-link text-white" id="current_user_info" style="nav-right: auto"
@@ -127,13 +129,15 @@
             </ul>
             <!--게시판 목록 템플릿-->
             <script id="boards-template" type="text/x-handlebars-template">
+                <li data-tab="-1" class="tabmenu" id=default style="cursor:pointer"> 내가 쓴 글</li>
+                <li data-tab="-2" class="tabmenu" id=default style="cursor:pointer"> 내가 쓴 댓글</li>
                 {{#boards}}
-                <li data-tab={{boardID}} class=tabmenu id=default style="cursor:pointer">
-                    {{boardName}}
-                </li>
+                    <li data-tab={{boardID}} class=tabmenu id=default style="cursor:pointer">
+                        {{boardName}}
+                    </li>
                 {{/boards}}
-                <li data-tab="-1" class=tabmenu id=default style="cursor:pointer"> 임시보관함</li>
-                <li data-tab="-2" class=tabmenu id=default style="cursor:pointer"> 휴지통</li>
+                <li data-tab="-3" class=tabmenu id=default style="cursor:pointer"> 임시보관함</li>
+                <li data-tab="-4" class=tabmenu id=default style="cursor:pointer"> 휴지통</li>
             </script>
         </div>
         <div class="border-left border-success col">
@@ -199,13 +203,13 @@
             <script id="deleteboards-template" type="text/x-handlebars-template">
                 {{#boards}}
 
-                <div class="custom-control custom-checkbox checkbox-success"
-                     style="padding: 15px 1px 10px 30px;">
-                    <input class="custom-control-input" type='checkbox' name='boardDelete'
-                           id="checkDelBoard{{boardID}}" value='{{boardID}}'/>
-                    <label class="custom-control-label"
-                           for="checkDelBoard{{boardID}}">{{boardName}}</label>
-                </div>
+                    <div class="custom-control custom-checkbox checkbox-success"
+                         style="padding: 15px 1px 10px 30px;">
+                        <input class="custom-control-input" type='checkbox' name='boardDelete'
+                               id="checkDelBoard{{boardID}}" value='{{boardID}}'/>
+                        <label class="custom-control-label"
+                               for="checkDelBoard{{boardID}}">{{boardName}}</label>
+                    </div>
                 {{/boards}}
             </script>
             <!-- 게시판 이름변경 Modal -->
@@ -237,13 +241,15 @@
             <!--게시판 이름변경 템플릿-->
             <script id="changeBoardName-template" type="text/x-handlebars-template">
                 {{#boards}}
-                <div class='boardInfo' id='board{{boardID}}' style="padding: 15px 1px 5px 10px;">
-                    <span class='deleteBoard' data-board='board{{boardID}}'> {{boardName}} </span>
-                    <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
-                    <input class="form-control" type='text' name='boardname'
-                           data-boardid={{boardID}} data-oldname="{{boardName}}"
-                           value="{{boardName}}">
-                </div>
+                    <div class='boardInfo' id='board{{boardID}}'
+                         style="padding: 15px 1px 5px 10px;">
+                        <span class='deleteBoard'
+                              data-board='board{{boardID}}'> {{boardName}} </span>
+                        <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+                        <input class="form-control" type='text' name='boardname'
+                               data-boardid={{boardID}} data-oldname="{{boardName}}"
+                               value="{{boardName}}">
+                    </div>
                 {{/boards}}
             </script>
             <!-- 기능변경 Modal -->
@@ -275,27 +281,27 @@
             <!--기능변경 템플릿-->
             <script id="changeFunctionInfo-template" type="text/x-handlebars-template">
                 {{#functions}}
-                {{#isAbleFunction}}
-                <div class="btn-group-toggle" data-toggle="buttons"
-                     style="padding: 3px 1px 1px 10px;">
-                    <label class="btn btn-default _function-switch">
-                        <span>{{functionName}}</span>
-                        <input class='function_checkbox' type='checkbox' name='function'
-                               value={{functionID}}>
-                        <span class='_switch'>OFF</span>
-                    </label>
-                </div>
-                {{else}}
-                <div class="btn-group-toggle" data-toggle="buttons"
-                     style="padding: 3px 1px 1px 10px;">
-                    <label class="btn btn-success _function-switch">
-                        <span>{{functionName}}</span>
-                        <input class='function_checkbox' type='checkbox' name='function'
-                               value={{functionID}} checked>
-                        <span class='_switch'>ON</span>
-                    </label>
-                </div>
-                {{/isAbleFunction}}
+                    {{#isAbleFunction}}
+                        <div class="btn-group-toggle" data-toggle="buttons"
+                             style="padding: 3px 1px 1px 10px;">
+                            <label class="btn btn-default _function-switch">
+                                <span>{{functionName}}</span>
+                                <input class='function_checkbox' type='checkbox' name='function'
+                                       value={{functionID}}>
+                                <span class='_switch'>OFF</span>
+                            </label>
+                        </div>
+                    {{else}}
+                        <div class="btn-group-toggle" data-toggle="buttons"
+                             style="padding: 3px 1px 1px 10px;">
+                            <label class="btn btn-success _function-switch">
+                                <span>{{functionName}}</span>
+                                <input class='function_checkbox' type='checkbox' name='function'
+                                       value={{functionID}} checked>
+                                <span class='_switch'>ON</span>
+                            </label>
+                        </div>
+                    {{/isAbleFunction}}
                 {{/functions}}
             </script>
             <!--게시글 작성 폼-->
@@ -312,7 +318,8 @@
                     <!--게시글 작성 시 게시판 목록 템플릿-->
                     <script id="writecontent-boards-template" type="text/x-handlebars-template">
                         {{#boards}}
-                        <option data-tab={{boardID}} class=tabmenu id=default>{{boardName}}</option>
+                            <option data-tab={{boardID}} class=tabmenu
+                                    id=default>{{boardName}}</option>
                         {{/boards}}
                     </script>
                 </div>
@@ -348,132 +355,135 @@
             <!--게시물 내용 템플릿-->
             <script id="postcontent-template" type="text/x-handlebars-template">
                 {{#post}}
-                <p class="h4">{{postTitle}}</p>
-                <p class="h6" align="right">{{userName}}</p>
-                <p class="h6" align="right">{{postRegisterTime}}</p>
-                <hr>
-                <div class="d-block">
-                    <p>{{{postContent}}}</p>
-                </div>
-                <a id="postID" style="visibility: hidden;">{{postID}}</a>
-                <br>
-                <button id="btn_updatePost" class="btn btn-success" style="visibility:hidden"
-                        onclick="javascript:postUpdateFunction()">수정
-                </button>
-                <button id="btn_deletePost" class="btn btn-success" style="visibility:hidden"
-                        onclick="javascript:movePostToTrashBox()">삭제
-                </button>
+                    <p class="h4">{{postTitle}}</p>
+                    <p class="h6" align="right">{{userName}}</p>
+                    <p class="h6" align="right">{{postRegisterTime}}</p>
+                    <hr>
+                    <div class="d-block">
+                        <p>{{{postContent}}}</p>
+                    </div>
+                    <a id="postID" style="visibility: hidden;">{{postID}}</a>
+                    <br>
+                    <button id="btn_updatePost" class="btn btn-success" style="visibility:hidden"
+                            onclick="javascript:postUpdateFunction()">수정
+                    </button>
+                    <button id="btn_deletePost" class="btn btn-success" style="visibility:hidden"
+                            onclick="javascript:movePostToTrashBox()">삭제
+                    </button>
                 {{/post}}
 
                 {{#isCommentAble}}
-                <div class=comment_section>
-                    <br><br>
-                    <div class="row">
+                    <div class=comment_section>
+                        <br><br>
+                        <div class="row">
                         <span class="col-2">
                             <strong class="c">댓글 </strong>
                         (<span id=commentCount></span>)
                         </span>
-                        <a class=' commentBtn text-success font-weight-bold text-button'
-                           style="cursor: pointer;">댓글 달기</a>
+                            <a class=' commentBtn text-success font-weight-bold text-button'
+                               style="cursor: pointer;">댓글 달기</a>
+                        </div>
+                        <div class=comment_list_container></div>
+                        <div class=comment_input_container></div>
+                {{else}}
                     </div>
-                    <div class=comment_list_container></div>
-                    <div class=comment_input_container></div>
-                    {{else}}
-                </div>
                 {{/isCommentAble}}
             </script>
             <!--댓글리스트 템플릿-->
             <script id="commentList-template" type="text/x-handlebars-template">
                 {{#comments}}
-                <hr>
-                <div class='referenceCommentContainer ' data-id='{{commentID}}'>
+                    <hr>
+                    <div class='referenceCommentContainer ' data-id='{{commentID}}'>
 
-                    <div class="row border-left-comment">
-                        <div></div>
-                        <div class='commentContainer ' id='comment{{commentID}}'
-                             style="padding-left: 50px">
-                            <div class="user"><h5><strong class=name
-                                                          data-id={{userID}}>{{userName}}</strong>
-                            </h5></div>
-                            <div>
+                        <div class="row border-left-comment">
+                            <div></div>
+                            <div class='commentContainer ' id='comment{{commentID}}'
+                                 style="padding-left: 50px">
+                                <div class="user"><h5><strong class=name
+                                                              data-id={{userID}}>{{userName}}</strong>
+                                </h5></div>
                                 <div>
-                                    <div class="comment_area comment_content" id=translate_area
-                                         style="width: 100%;">{{{commentContent}}}
+                                    <div>
+                                        <div class="comment_area comment_content" id=translate_area
+                                             style="width: 100%;">{{{commentContent}}}
+                                        </div>
+                                        <br>
+                                        <div class="date text-muted">{{commentRegisterTime}}</div>
                                     </div>
-                                    <br>
-                                    <div class="date text-muted">{{commentRegisterTime}}</div>
-                                </div>
-                                <div class="btn">
-                                    {{#isReplyAble}}
-                                    <a class='text-success text-button text-button font-weight-bold replyBtn'
-                                       style="cursor: pointer;">답글</a>
-                                    {{else}}
-                                    {{/isReplyAble}}
+                                    <div class="btn">
+                                        {{#isReplyAble}}
+                                            <a class='text-success text-button text-button font-weight-bold replyBtn'
+                                               style="cursor: pointer;">답글</a>
+                                        {{else}}
+                                        {{/isReplyAble}}
 
-                                    {{#isSameUser}}
-                                    <a class="text-success text-button text-button font-weight-bold"
-                                       id='edit_comment' style="cursor: pointer;">수정</a>
-                                    <a class="text-success text-button text-button font-weight-bold"
-                                       id='delete_comment' style="cursor: pointer;">삭제</a>
-                                    {{else}}
-                                    {{/isSameUser}}
+                                        {{#isSameUser}}
+                                            <a class="text-success text-button text-button font-weight-bold"
+                                               id='edit_comment' style="cursor: pointer;">수정</a>
+                                            <a class="text-success text-button text-button font-weight-bold"
+                                               id='delete_comment' style="cursor: pointer;">삭제</a>
+                                        {{else}}
+                                        {{/isSameUser}}
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    {{#isReplyAble}}
-                    <div class='replyContainer' id='reply_container{{commentID}}'
-                         style='padding: 5px 1px 3px 30px;'>
-                    </div>
-                    <div id='reply_input_container{{commentID}}'
-                         style='padding: 5px 1px 3px 30px;'></div>
-                    {{else}}
-                    {{/isReplyAble}}
-                    <div>
+                        {{#isReplyAble}}
+                            <div class='replyContainer' id='reply_container{{commentID}}'
+                                 style='padding: 5px 1px 3px 30px;'>
+                            </div>
+                            <div id='reply_input_container{{commentID}}'
+                                 style='padding: 5px 1px 3px 30px;'></div>
+                        {{else}}
+                        {{/isReplyAble}}
+                        <div>
 
+                        </div>
                     </div>
-                </div>
                 {{/comments}}
             </script>
             <!--답글 List 템플릿-->
             <script id="replyList-template" type="text/x-handlebars-template">
                 {{#replies}}
-                <hr>
-                <div class='row '>
-                    <div class="col-1">
-                    </div>
-                    <div class='commentContainer col-11' id='comment{{commentID}}'>
-                        <div class="user"><h5><strong class=name
-                                                      data-id={{userID}}>{{userName}}</strong></h5>
+                    <hr>
+                    <div class='row '>
+                        <div class="col-1">
                         </div>
-                        <div>
-                            <div class="comment_area row" id=translate_area">
-                                <strong class="nametag text-primary "
-                                        data-id={{commentReferencedUserID}}
-                                        style="cursor:pointer;padding: 0px 0px 0px 15px">{{commentReferencedUserName}}</strong>
-                                <div class="comment_content col-10" style="float:left;">
-                                    {{{commentContent}}}
-                                </div>
+                        <div class='commentContainer col-11' id='comment{{commentID}}'>
+                            <div class="user"><h5><strong class=name
+                                                          data-id={{userID}}>{{userName}}</strong>
+                            </h5>
                             </div>
-                            <br>
-                            <div class="date text-muted">{{commentRegisterTime}}</div>
-                        </div>
-                        <div class=btn>
-                            {{#isReplyAble}}
-                            <a class='text-success text-button font-weight-bold replyBtn'
-                               style="cursor: pointer;">답글</a>
-                            {{else}}
-                            {{/isReplyAble}}
-                            {{#isSameUser}}
-                            <a class="text-success text-button font-weight-bold" id='edit_comment'
-                               style="cursor: pointer;">수정</a>
-                            <a class="text-success text-button font-weight-bold" id='delete_comment'
-                               style="cursor: pointer;">삭제</a>
-                            {{else}}
-                            {{/isSameUser}}
+                            <div>
+                                <div class="comment_area row" id=translate_area">
+                                    <strong class="nametag text-primary "
+                                            data-id={{commentReferencedUserID}}
+                                            style="cursor:pointer;padding: 0px 0px 0px 15px">{{commentReferencedUserName}}</strong>
+                                    <div class="comment_content col-10" style="float:left;">
+                                        {{{commentContent}}}
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="date text-muted">{{commentRegisterTime}}</div>
+                            </div>
+                            <div class=btn>
+                                {{#isReplyAble}}
+                                    <a class='text-success text-button font-weight-bold replyBtn'
+                                       style="cursor: pointer;">답글</a>
+                                {{else}}
+                                {{/isReplyAble}}
+                                {{#isSameUser}}
+                                    <a class="text-success text-button font-weight-bold"
+                                       id='edit_comment'
+                                       style="cursor: pointer;">수정</a>
+                                    <a class="text-success text-button font-weight-bold"
+                                       id='delete_comment'
+                                       style="cursor: pointer;">삭제</a>
+                                {{else}}
+                                {{/isSameUser}}
+                            </div>
                         </div>
                     </div>
-                </div>
                 {{/replies}}
                 <div>
                 </div>
@@ -481,39 +491,39 @@
             <!--댓글 답글 input form 템플릿-->
             <script id="commentInputForm-template" type="text/x-handlebars-template">
                 {{#attribute}}
-                <br>
-                <div style='width: 100%' class=commentHtml>
-                    {{{tag}}}
-                    <textarea class="form-control" id=commentText placeholder='{{type}}을 입력하세요'
-                              name=commentTxt></textarea>
-                    <div align="right">
-                        {{#isReply}}
-                        <a class="text-success text-button font-weight-bold {{{buttonSelector}}}"
-                           style="cursor: pointer;">{{buttonName}}</a>
-                        <a class="btn_close_cmt_input text-success text-button font-weight-bold"
-                           style="cursor: pointer;">취소</a>
-                        {{else}}
-                        <a class="text-success text-button font-weight-bold {{{buttonSelector}}}"
-                           style="cursor: pointer;">{{buttonName}}</a>
-                        {{/isReply}}
+                    <br>
+                    <div style='width: 100%' class=commentHtml>
+                        {{{tag}}}
+                        <textarea class="form-control" id=commentText placeholder='{{type}}을 입력하세요'
+                                  name=commentTxt></textarea>
+                        <div align="right">
+                            {{#isReply}}
+                                <a class="text-success text-button font-weight-bold {{{buttonSelector}}}"
+                                   style="cursor: pointer;">{{buttonName}}</a>
+                                <a class="btn_close_cmt_input text-success text-button font-weight-bold"
+                                   style="cursor: pointer;">취소</a>
+                            {{else}}
+                                <a class="text-success text-button font-weight-bold {{{buttonSelector}}}"
+                                   style="cursor: pointer;">{{buttonName}}</a>
+                            {{/isReply}}
+                        </div>
                     </div>
-                </div>
                 {{/attribute}}
             </script>
             <!--댓글 수정 템플릿-->
             <script id="editCommentForm-template" type="text/x-handlebars-template">
                 {{#attribute}}
-                <br>
-                <div style='width: 100%' class=commentHtml>
+                    <br>
+                    <div style='width: 100%' class=commentHtml>
                 <textarea class="form-control" style='width: 100%' id='commentText'
                           placeholder='댓글을 입력하세요'
                           name=commentTxt>{{{oldText}}}</textarea>
-                    <div>
-                        <a id=btn_edit_comment_complete
-                           class="text-success text-button font-weight-bold"
-                           style="cursor: pointer;">수정하기</a>
+                        <div>
+                            <a id=btn_edit_comment_complete
+                               class="text-success text-button font-weight-bold"
+                               style="cursor: pointer;">수정하기</a>
+                        </div>
                     </div>
-                </div>
                 {{/attribute}}
             </script>
             <!--게시글 목록 템플릿-->
@@ -535,15 +545,15 @@
                                     onclick="javascript:clickTempPostEvent(this)">
                                     <td scope="row">{{postTitle}}</td>
                             {{else}}
-                                {{#isTrash}}
+                                {{#isRecycle}}
                                     <tr class="postclick" data-post={{postID}}
-                                        onclick="javascript:clickTrashPostEvent(this)">
+                                        onclick="javascript:clickRecyclePostEvent(this)">
                                         <td scope="row">{{postTitle}}</td>
                                 {{else}}
                                     <tr class="postclick" data-post={{postID}}
                                         onclick="javascript:clickTrEvent(this)">
                                         <td scope="row">{{postTitle}}</td>
-                                {{/isTrash}}
+                                {{/isRecycle}}
                             {{/isTemp}}
                                 <td>{{userName}}</td>
                                 <td>{{postRegisterTime}}</td>
@@ -551,6 +561,10 @@
                                 <a style="visibility:hidden">{{boardID}}</a>
                             </tr>
                         {{/posts}}
+                    </script>
+
+                    <script id="empty-posts-template" type="text/x-handlebars-template">
+                        <h3 style="text-align: center">표시할 게시글이 없습니다.</h3>
                     </script>
                 </table>
 
@@ -591,27 +605,33 @@
                 <!--게시판 페이징 템픞릿-->
                 <script id="pageList-template" type="text/x-handlebars-template">
                     {{#pagesInfo}}
-                    {{#isFirstPage}}
-                    {{else}}
-                    <li class="page-item"><a class="page-link"
-                                                      style="cursor: pointer;" data-page="1">처음</a></li>
-                    {{/isFirstPage}}
-                    {{#isFirstRange}}
-                    {{else}}
-                    <li class="page-item"><a class="page-link" style="cursor: pointer;" data-page ='{{prevPage}}'>이전</a></li>
-                    {{/isFirstRange}}
-                    {{#each pageList}}
-                    <li class="page-item" id ="page{{this}}"><a class="page-link page-index" style="cursor: pointer;" data-page ='{{this}}'>{{this}}</a>
-                    </li>
-                    {{/each}}
-                    {{#isLastRange}}
-                    {{else}}
-                    <li class="page-item"><a class="page-link" style="cursor: pointer;" data-page ='{{nextPage}}'>다음</a></li>
-                    {{/isLastRange}}
-                    {{#isLastPage}}
-                    {{else}}
-                    <li class="page-item"><a class="page-link" style="cursor: pointer;" data-page ='{{pageCount}}'>마지막</a></li>
-                    {{/isLastPage}}
+                        {{#isFirstPage}}
+                        {{else}}
+                            <li class="page-item"><a class="page-link"
+                                                     style="cursor: pointer;" data-page="1">처음</a>
+                            </li>
+                        {{/isFirstPage}}
+                        {{#isFirstRange}}
+                        {{else}}
+                            <li class="page-item"><a class="page-link" style="cursor: pointer;"
+                                                     data-page='{{prevPage}}'>이전</a></li>
+                        {{/isFirstRange}}
+                        {{#each pageList}}
+                            <li class="page-item" id="page{{this}}"><a class="page-link page-index"
+                                                                       style="cursor: pointer;"
+                                                                       data-page='{{this}}'>{{this}}</a>
+                            </li>
+                        {{/each}}
+                        {{#isLastRange}}
+                        {{else}}
+                            <li class="page-item"><a class="page-link" style="cursor: pointer;"
+                                                     data-page='{{nextPage}}'>다음</a></li>
+                        {{/isLastRange}}
+                        {{#isLastPage}}
+                        {{else}}
+                            <li class="page-item"><a class="page-link" style="cursor: pointer;"
+                                                     data-page='{{pageCount}}'>마지막</a></li>
+                        {{/isLastPage}}
                     {{/pagesInfo}}
                 </script>
 

@@ -66,9 +66,8 @@ function getBoardList(successFunction) {
 //TODO handlebar 적용하기
 //게시물 클릭후 게시물 데이터 받아오기
 function getPostDataAfterPostClick(postID, boardID) {
-  var postContentObj = $('#postcontent');
   var userID = $('#current_user_info').attr('data-id');
-  postContentObj.html("");
+  postClear();
   $.ajax({
     type: 'GET',
     url: `/boards/${boardID}/posts/${postID}`,
@@ -103,36 +102,43 @@ function getPostDataAfterPostClick(postID, boardID) {
           updateCommentsCount(boardID, postID);
         });
       }
-      if (boardID == -2) { // 휴지통
-        btn_deletePost.html("완전 삭제");
-        btn_updatePost.html("복원");
-        btn_updatePost.attr('onclick', 'javascript:clickRestorePost()');
-        btn_deletePost.attr('onclick', 'javascript:clickCompleteDeletePost()');
-      }
     }
   });
 }
 
 //탭클릭후 게시판 목록 불러오기
-function getPostListByPageNum(pageNum,boardID) {
-  if (boardID == -1) {
-    getTempPosts();
-  } else if (boardID == -2) {
-    getPostsInTrashBox();
-  } else {
-    $.ajax({
-      type: 'GET',
-      url: `/boards/${boardID}/posts`,
-      data:{
-        pageNumber:pageNum
-      },
-      error: function () {  //통신 실패시
-        alert('통신실패!');
-      },
-      success: function (data) {
-        loadPostList(data);
-      }
-    });
+function getPostListByPageNum(pageNum, boardID) {
+  var btn_write = $('#btn_write');
+  btn_write.attr('style', 'visibility:hidden');
+
+  switch (boardID) {
+    case "-1":
+      getMyPosts(pageNum);
+      break;
+    case "-2":
+      getMyReplies(pageNum);
+      break;
+    case "-3":
+      getTempPosts(pageNum);
+      break;
+    case "-4":
+      getRecyclePosts(pageNum);
+      break;
+    default:
+      btn_write.attr('style', 'visibility:visible');
+      $.ajax({
+        type: 'GET',
+        url: `/boards/${boardID}/posts`,
+        data: {
+          pageNumber: pageNum
+        },
+        error: function () {  //통신 실패시
+          alert('통신실패!');
+        },
+        success: function (data) {
+          loadPostList(data);
+        }
+      });
   }
 }
 

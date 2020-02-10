@@ -51,7 +51,7 @@ function postFunction() {
     // 임시 or 자동 저장된 글을 한번 더 '저장' 버튼을 누를 때
     else {
       insertTempPost(boardID, postID, postTitle, postContent, false);
-      getTempPosts();
+      getPageList(1, getCurrentBoardID(), updatePageList);
     }
     editorClear();
   }
@@ -172,10 +172,10 @@ function isValidLength(str, limit) {
 }
 
 // 휴지통 게시물 클릭 이벤트
-function clickTrashPostEvent(evt) {
+function clickRecyclePostEvent(evt) {
   var postID = evt.getAttribute("data-post");
   var boardID = getCurrentBoardID();
-  getPostDataAfterPostClick(postID, boardID);
+  getRecyclePost(postID, boardID);
 }
 
 // 휴지통 게시글 완전 삭제 이벤트

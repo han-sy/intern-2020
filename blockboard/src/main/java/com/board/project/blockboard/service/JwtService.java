@@ -5,20 +5,16 @@
 package com.board.project.blockboard.service;
 
 import com.board.project.blockboard.common.exception.UnauthorizedException;
-import com.board.project.blockboard.dto.UserDTO;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.Map;
-import javafx.beans.binding.ObjectExpression;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.User;
 import org.apache.commons.codec.binary.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;

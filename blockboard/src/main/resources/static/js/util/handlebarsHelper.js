@@ -94,9 +94,8 @@ Handlebars.registerHelper('isLastRange', function (option) {
 /**
  * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
  */
-Handlebars.registerHelper('isTrash', function (option) {
-  if (this.isTrash == true) {
-
+Handlebars.registerHelper('isRecycle', function (option) {
+  if (this.isRecycle == true) {
     return option.fn(this);
   } else {
     return option.inverse(this);

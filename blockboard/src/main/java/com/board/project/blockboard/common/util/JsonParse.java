@@ -108,10 +108,10 @@ public class JsonParse {
     } else {
       post.setIsTemp(map.get("isTemp").toString().equals("true"));
     }
-    if (map.get("isTrash") == null) {
-      post.setIsTrash(false);
+    if (map.get("isRecycle") == null) {
+      post.setIsRecycle(false);
     } else {
-      post.setIsTrash(map.get("isTrash").toString().equals("true"));
+      post.setIsRecycle(map.get("isRecycle").toString().equals("true"));
     }
     return post;
   }

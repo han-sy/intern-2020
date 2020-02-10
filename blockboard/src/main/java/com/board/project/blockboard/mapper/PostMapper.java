@@ -27,7 +27,7 @@ public interface PostMapper {
 
   PostDTO selectRecentTempPost(UserDTO requestUser);
 
-  List<PostDTO> selectTempPosts(UserDTO userDTO);
+  List<PostDTO> selectMyTempPosts(Map<String, Object> map);
 
   List<PostDTO> selectPostByBoardID(int boardID, int startIndex, int pageSize);
 
@@ -35,7 +35,19 @@ public interface PostMapper {
 
   void temporaryDeletePost(PostDTO post);
 
-  List<PostDTO> selectPostsInTrashBox(UserDTO userDTO);
-
   void restorePost(PostDTO post);
+
+  List<PostDTO> selectMyPosts(Map<String, Object> map);
+
+  List<PostDTO> selectMyPostsIncludeMyReplies(Map<String, Object> map);
+
+  List<PostDTO> selectMyRecyclePosts(Map<String, Object> map);
+
+  int getMyPostsCount(UserDTO user);
+
+  int getPostsCountIncludeMyReplies(UserDTO user);
+
+  int getMyTempPostsCount(UserDTO user);
+
+  int getMyRecyclePostsCount(UserDTO user);
 }

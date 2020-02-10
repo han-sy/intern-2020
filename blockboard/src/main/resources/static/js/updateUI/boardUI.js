@@ -10,7 +10,13 @@ function updateTab(data) {
   var itemList = template(board);
   $('#tab_id').html(itemList);
   updateboardListInEditor(board);
-  $("#tab_id").children().first().trigger('click');
+
+  $("#tab_id").children().each(function() {
+    if($(this).attr('data-tab') > 0) {
+      $(this).trigger('click');
+      return;
+    }
+  });
 }
 
 //게시글 내용
@@ -48,4 +54,21 @@ function getBoardListToChangeName(data) {
   var boardList = {boards: data};
   var itemList = template(boardList);
   $('.modal-body-changeBoardName').html(itemList);
+}
+
+/**
+ * @author Woohyeok Jun <woohyeok.jun@worksmobile.com>
+ */
+// 내 게시글/댓글 목록
+function loadMyPostList(data) {
+  var source = $('#my-posts-template').html();
+  var template = Handlebars.compile(source);
+  var post = {posts: data};
+  var itemList = template(post);
+  $('#postlist').html(itemList);
+}
+
+function showEmptyList() {
+  var source = $('#empty-posts-template').html();
+  $('#postlist').html(source);
 }

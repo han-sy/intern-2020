@@ -170,19 +170,8 @@ $(document).on("click", ".tabmenu", function clickTabEvent() {
   postClear();
   editorClear();
 
-  if (boardID == -1) {
-    btn_write.attr('style', 'visibility:hidden');
-    getTempPosts();
-  } else if (boardID == -2) {
-    btn_write.attr('style', 'visibility:hidden');
-    getPostsInTrashBox();
-  } else {
-    $(function () {
-      btn_write.attr('style', 'visibility:visible');
-      getPageList(1,boardID,updatePageList);
-
-    });
-  }
+  btn_write.attr('style', 'visibility:visible');
+  getPageList(1, boardID, updatePageList);
 });
 
 // 현재 선택된 게시판 ID 찾기

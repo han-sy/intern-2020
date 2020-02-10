@@ -49,9 +49,7 @@ public class PostService {
     return postMapper.selectRecentTempPost(requestUser);
   }
 
-  public List<PostDTO> getTempPosts(UserDTO userDTO) {
-    return postMapper.selectTempPosts(userDTO);
-  }
+
 
   public PostDTO selectTempPost(int postID) {
     return postMapper.selectPostByPostID(postID);
@@ -61,10 +59,6 @@ public class PostService {
     postMapper.temporaryDeletePost(post);
   }
 
-  public List<PostDTO> getPostsInTrashBox(UserDTO requestUser) {
-    return postMapper.selectPostsInTrashBox(requestUser);
-  }
-
   public void restorePost(PostDTO post) {
     postMapper.restorePost(post);
   }
@@ -72,10 +66,68 @@ public class PostService {
   public void setPostStatusIsTempAndIsTrash(PostDTO post, boolean isTemp, boolean isTrash) {
     Map<String, Object> statusMap = new HashMap<>();
     statusMap.put("isTemp", isTemp);
-    statusMap.put("isTrash", isTrash);
+    statusMap.put("isRecycle", isTrash);
 
     JSONObject statusJson = JsonParse.getJsonStringFromMap(statusMap);
     post.setPostStatus(statusJson.toJSONString());
+  }
+
+
+  public List<PostDTO> selectMyPosts(UserDTO user, int pageNumber) {
+    Map<String, Object> map = new HashMap<>();
+    int pageCount = postMapper.getMyPostsCount(user);
+    PaginationDTO pageInfo = new PaginationDTO(pageCount, pageNumber, ConstantData.PAGE_SIZE,
+        ConstantData.RANGE_SIZE);
+    map.put("user", user);
+    map.put("startIndex", pageInfo.getStartIndex());
+    map.put("pageSize", ConstantData.PAGE_SIZE);
+    return postMapper.selectMyPosts(map);
+  }
+
+  public List<PostDTO> selectPostsIncludeMyReplies(UserDTO user, int pageNumber) {
+    Map<String, Object> map = new HashMap<>();
+    int pageCount = postMapper.getPostsCountIncludeMyReplies(user);
+    PaginationDTO pageInfo = new PaginationDTO(pageCount, pageNumber, ConstantData.PAGE_SIZE,
+        ConstantData.RANGE_SIZE);
+    map.put("user", user);
+    map.put("startIndex", pageInfo.getStartIndex());
+    map.put("pageSize", ConstantData.PAGE_SIZE);
+    return postMapper.selectMyPostsIncludeMyReplies(map);
+  }
+
+  public List<PostDTO> selectMyTempPosts(UserDTO user, int pageNumber) {
+    Map<String, Object> map = new HashMap<>();
+    int pageCount = postMapper.getMyTempPostsCount(user);
+    PaginationDTO pageInfo = new PaginationDTO(pageCount, pageNumber, ConstantData.PAGE_SIZE,
+        ConstantData.RANGE_SIZE);
+    map.put("user", user);
+    map.put("startIndex", pageInfo.getStartIndex());
+    map.put("pageSize", ConstantData.PAGE_SIZE);
+    return postMapper.selectMyTempPosts(map);
+  }
+
+  public List<PostDTO> getMyRecyclePosts(UserDTO user, int pageNumber) {
+    Map<String, Object> map = new HashMap<>();
+    int pageCount = postMapper.getMyRecyclePostsCount(user);
+    PaginationDTO pageInfo = new PaginationDTO(pageCount, pageNumber, ConstantData.PAGE_SIZE,
+        ConstantData.RANGE_SIZE);
+    map.put("user", user);
+    map.put("startIndex", pageInfo.getStartIndex());
+    map.put("pageSize", ConstantData.PAGE_SIZE);
+    return postMapper.selectMyRecyclePosts(map);
+  }
+
+  public int getMyPostsCount(UserDTO user) {
+    return postMapper.getMyPostsCount(user);
+  }
+  public int getMyRepliesCount(UserDTO user) {
+    return postMapper.getPostsCountIncludeMyReplies(user);
+  }
+  public int getMyTempPostsCount(UserDTO user) {
+    return postMapper.getMyTempPostsCount(user);
+  }
+  public int getMyRecyclePostsCount(UserDTO user) {
+    return postMapper.getMyRecyclePostsCount(user);
   }
 
   /**
