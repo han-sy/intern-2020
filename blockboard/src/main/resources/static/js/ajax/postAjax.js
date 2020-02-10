@@ -208,11 +208,16 @@ function getRecyclePosts(pageNum) {
     },
     success: function (data) {
       console.log(JSON.stringify(data));
-      loadPostList(data);
+      if(data == "") {
+        showEmptyList();
+      } else {
+        loadPostList(data);
+      }
     }
   })
 }
 
+// 휴지통에 있는 게시글 복원하기
 function restorePost(postID) {
   $.ajax({
     type: 'PUT',
@@ -227,6 +232,7 @@ function restorePost(postID) {
   });
 }
 
+// 내가 작성한 게시글 불러오기
 function getMyPosts(pageNum) {
   $.ajax({
     type: 'GET',
@@ -239,11 +245,16 @@ function getMyPosts(pageNum) {
     },
     success: function (data) {
       console.log(JSON.stringify(data));
-      loadPostList(data);
+      if(data == "") {
+        showEmptyList();
+      } else {
+        loadPostList(data);
+      }
     }
   });
 }
 
+// 내 댓글이 달린 게시글 받아오기
 function getMyReplies(pageNum) {
   $.ajax({
     type: 'GET',
@@ -265,7 +276,7 @@ function getMyReplies(pageNum) {
   });
 }
 
-//게시물 클릭후 게시물 데이터 받아오기
+// 휴지통 게시글 받아오기
 function getRecyclePost(postID, boardID) {
   postClear();
   $.ajax({

@@ -20,7 +20,6 @@ public class PaginationService {
 
   public PaginationDTO getPageListByPageNumber(int pageNumber, int boardID, UserDTO user) {
     int postCount;
-    log.info("boardID = " + boardID);
     switch (boardID) {
       case ConstantData.BOARD_MY_POSTS:
         postCount = postService.getMyPostsCount(user);
@@ -35,9 +34,7 @@ public class PaginationService {
         postCount = postService.getMyRecyclePostsCount(user);
         break;
       default:
-        log.info("page합니다");
         postCount = postService.getPostsCountByBoardID(boardID);
-        log.info("total = " + postCount);
     }
 
     PaginationDTO paginationInfo = new PaginationDTO(postCount,pageNumber, ConstantData.PAGE_SIZE,ConstantData.RANGE_SIZE);
