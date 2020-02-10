@@ -53,9 +53,11 @@ public interface PostMapper {
 
   int getMyRecyclePostsCount(UserDTO user);
 
-  int getRecentPostsCount();
+  int getRecentPostsCount(int companyID);
   
   void updateViewCnt(int postID);
 
   List<PostDTO> selectPopularPostListByCompanyID(int companyID);
+
+  int getPopularPostsCount(int companyID);
 }

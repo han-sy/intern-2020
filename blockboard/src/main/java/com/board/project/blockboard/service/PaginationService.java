@@ -34,7 +34,13 @@ public class PaginationService {
         postCount = postService.getMyRecyclePostsCount(user);
         break;
       case ConstantData.BOARD_RECENT:
-        postCount = postService.getRecentPostsCount();
+        postCount = postService.getRecentPostsCount(user.getCompanyID());
+        break;
+      case ConstantData.BOARD_POPULAR:
+        postCount = postService.getPopularPostsCount(user.getCompanyID());
+        if(postCount >= ConstantData.PAGE_SIZE) {
+          postCount = ConstantData.PAGE_SIZE;
+        }
         break;
       default:
         postCount = postService.getPostsCountByBoardID(boardID);

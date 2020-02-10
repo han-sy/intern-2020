@@ -262,8 +262,9 @@ public class PostController {
   }
 
   @GetMapping("/recent")
-  public List<PostDTO> selectRecentPosts(@RequestParam("pageNumber") int pageNumber) {
-    return postService.selectRecentPosts(pageNumber);
+  public List<PostDTO> selectRecentPosts(HttpServletRequest request, @RequestParam("pageNumber") int pageNumber) {
+    UserDTO userData = new UserDTO(request);
+    return postService.selectRecentPosts(userData.getCompanyID(), pageNumber);
   }
   
   @GetMapping("/popular-board")

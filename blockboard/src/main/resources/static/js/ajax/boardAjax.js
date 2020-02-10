@@ -109,26 +109,27 @@ function getPostDataAfterPostClick(postID, boardID) {
 //탭클릭후 게시판 목록 불러오기
 function getPostListByPageNum(pageNum, boardID) {
   var btn_write = $('#btn_write');
-  btn_write.attr('style', 'visibility:hidden');
+  if(boardID < 0)
+    btn_write.attr('style', 'visibility:hidden');
 
   switch (boardID) {
-    case "-1":
+    case -1:
       getMyPosts(pageNum);
       break;
-    case "-2":
+    case -2:
       getMyReplies(pageNum);
       break;
-    case "-3":
+    case -3:
       getTempPosts(pageNum);
       break;
-    case "-4":
+    case -4:
       getRecyclePosts(pageNum);
       break;
-    case "-5":
+    case -5:
       getRecentPosts(pageNum);
       break;
-    case "-6":
-      getPopularPostList();
+    case -6:
+      getPopularPostList(pageNum);
       break;
     default:
       btn_write.attr('style', 'visibility:visible');

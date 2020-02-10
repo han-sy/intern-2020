@@ -384,4 +384,12 @@
       ORDER  BY post.view_count DESC
       LIMIT  0, 10;
   </select>
+
+  <select id="getPopularPostsCount" parameterType="int" resultType="int">
+      SELECT Count(post_id)
+      FROM   posts
+      WHERE  company_id = #{companyID}
+             AND ( Json_extract(post_status, '$.isTemp') = false
+                   AND Json_extract(post_status, '$.isRecycle') = false )
+  </select>
 </mapper>

@@ -141,7 +141,11 @@ function searchPost(option, keyword) {
       postsClear(); // 게시글 목록 화면 Clear
       keyword.val("");
 
-      loadPostList(data);
+      if(data == "") {
+        showEmptyList();
+      } else {
+        loadPostList(data);
+      }
     }
   });
 }
@@ -158,7 +162,11 @@ function getTempPosts(pageNum) {
       errorFunction(xhr);
     },
     success: function (data) {
-      loadPostList(data);
+      if(data == "") {
+        showEmptyList();
+      } else {
+        loadPostList(data);
+      }
     }
   })
 }
@@ -324,10 +332,13 @@ function getRecentPosts(pageNum) {
 }
 
 // 인기 게시글 받아오기
-function getPopularPostList(){
+function getPopularPostList(pageNum){
   $.ajax({
     type: 'GET',
     url: `/boards/-6/posts/popular-board`,
+    data: {
+      pageNumber: pageNum
+    },
     error: function (xhr) {
       errorFunction(xhr);
     },

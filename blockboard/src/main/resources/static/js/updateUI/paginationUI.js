@@ -13,6 +13,6 @@ function updatePageList(data,pageList) {
   $('#page'+data.currentPage).css('color','#28A745');
   $('#page'+data.currentPage).css('font-weight','bold');
   $('#page'+data.currentPage).css('font-size','110%');
-  var boardID = getCurrentBoardID();
+  var boardID = parseInt(getCurrentBoardID());
   getPostListByPageNum(data.currentPage,boardID);
 }
