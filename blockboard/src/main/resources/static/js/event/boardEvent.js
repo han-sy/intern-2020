@@ -8,6 +8,9 @@ const KEYCODE = {
 const MAX_LENGTH = {
   BOARD_NAME: 150
 };
+const BOARD_ID ={
+  POPULAR:-6
+};
 $(function () {
   $('#input_board_name').keyup(function () {
     bytesHandler(this, "#board_name_length", MAX_LENGTH.BOARD_NAME);
@@ -134,13 +137,13 @@ function changeTrColor(trObj) {
 }
 
 // 게시글 목록에서 게시글 클릭시
-function clickTrEvent(trObj) {
-  var postID = trObj.getAttribute("data-post");
+$(document).on('click','.normal_post_click',function () {
+  var postID = $(this).attr("data-post");
   var boardID = getActiveBoardID();
   $(function () {
     getPostDataAfterPostClick(postID, boardID); //boardAjax.js 참고
   });
-}
+});
 
 //닫기 버튼 클릭
 $(document).on('click', '.functionClose', clickConfigClose());
@@ -160,7 +163,6 @@ $(document).on("mouseleave", ".tabmenu", function () {
 // 탭 메뉴 클릭 이벤트 - 해당 게시판의 게시글 불러옴
 $(document).on("click", ".tabmenu", function clickTabEvent() {
   var boardID = $(this).attr('data-tab');
-  var btn_write = $('#btn_write');
   $('.tabmenu').css('color', 'black');
   $('.tabmenu').removeClass("font-weight-bold");
   $('.tabmenu').removeClass("active_tab");
@@ -169,8 +171,7 @@ $(document).on("click", ".tabmenu", function clickTabEvent() {
   $(this).addClass("font-weight-bold");
   postClear();
   editorClear();
-
-  btn_write.attr('style', 'visibility:visible');
+  
   getPageList(1, boardID, updatePageList);
 });
 

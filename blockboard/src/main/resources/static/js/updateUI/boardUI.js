@@ -34,7 +34,7 @@ function loadPostList(data) {
   var template = Handlebars.compile(source);
   var post = {posts: data};
   var itemList = template(post);
-  $('#postlist').html(itemList);
+  $('#post_table').html(itemList);
 
 }
 

@@ -28,11 +28,17 @@
         WHERE  comments.post_id = #{postID}
                AND comments.comment_referenced_id IS NULL;
     </select>
-  <select id="getCommentCountByPostID" parameterType="int" resultType="int">
+  <select id="getAllCommentsCountByPostID" parameterType="int" resultType="int">
         SELECT Count(comment_id)
         FROM   comments
         WHERE  post_id = #{postID};
     </select>
+  <select id="getOnlyCommentsCountByPostID" parameterType="int" resultType="int">
+        SELECT Count(comment_id)
+        FROM   comments
+        WHERE  post_id = #{postID}
+               AND comment_referenced_id IS NULL;
+  </select>
   <insert id="insertNewCommentByCommentInfo" parameterType="hashmap">
         INSERT INTO comments
                     (post_id,

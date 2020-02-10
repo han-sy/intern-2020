@@ -44,8 +44,8 @@ public class PostController {
    * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
    */
   @GetMapping(value = "/{postid}")
-  public PostDTO getPostByPostID(@PathVariable("postid") int postID, HttpServletResponse response) {
-    PostDTO post = postService.selectPostByPostID(postID);
+  public PostDTO getPostByPostID(@PathVariable("postid") int postID, HttpServletResponse response, HttpServletRequest request) {
+    PostDTO post = postService.selectPostByPostID(postID,request,response);
     if (postValidation.isExistPost(post, response)) {
       JsonParse.setPostStatusFromJsonString(post);
       return post;
@@ -94,8 +94,10 @@ public class PostController {
    */
   @GetMapping("")
   public List<PostDTO> getPostListByBoardID(@PathVariable("boardid") int boardID,
-      @RequestParam("pageNumber") int pageNumber) {
-    List<PostDTO> postList = postService.getPostListByBoardID(boardID, pageNumber);
+      @RequestParam("pageNumber") int pageNumber,HttpServletRequest request) {
+    UserDTO userDTO = new UserDTO(request);
+    List<PostDTO> postList = postService.getPostListByBoardID(boardID, pageNumber,userDTO.getCompanyID());
+    log.info("postList:"+postList);
     return postList;
   }
 
@@ -120,8 +122,8 @@ public class PostController {
    */
   @PutMapping("/{postid}/trash")
   public void deletePostTemporary(@PathVariable("boardid") int boardID,
-      @PathVariable("postid") int postID, HttpServletResponse response) {
-    PostDTO post = postService.selectPostByPostID(postID);
+      @PathVariable("postid") int postID, HttpServletRequest request,HttpServletResponse response) {
+    PostDTO post = postService.selectPostByPostID(postID,request,response);
     if (postValidation.isValidDelete(boardID, post, response)) {
       postService.setPostStatusIsTempAndIsTrash(post, false, true);
       postService.movePostToTrash(post);
@@ -232,8 +234,8 @@ public class PostController {
    * @return 해당 유저의 휴지통 목록
    */
   @PutMapping("/{postid}/restore")
-  public void restorePost(@PathVariable("postid") int postID, HttpServletResponse response) {
-    PostDTO post = postService.selectPostByPostID(postID);
+  public void restorePost(@PathVariable("postid") int postID, HttpServletRequest request,HttpServletResponse response) {
+    PostDTO post = postService.selectPostByPostID(postID,request,response);
     if (postValidation.isExistPost(post, response) && postValidation.isInTrashBox(post, response)) {
       postService.setPostStatusIsTempAndIsTrash(post, false, false);
       postService.restorePost(post);
@@ -262,5 +264,11 @@ public class PostController {
   @GetMapping("/recent")
   public List<PostDTO> selectRecentPosts(@RequestParam("pageNumber") int pageNumber) {
     return postService.selectRecentPosts(pageNumber);
+  }
+  
+  @GetMapping("/popular-board")
+  public List<PostDTO> getPopularPosts(HttpServletRequest request){
+    UserDTO userData = new UserDTO(request);
+    return postService.getPopularPostList(userData.getCompanyID());
   }
 }

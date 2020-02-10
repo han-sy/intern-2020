@@ -4,12 +4,8 @@
  */
 package com.board.project.blockboard.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import org.apache.ibatis.type.Alias;
 
 @Alias("PostDTO")
@@ -32,4 +28,7 @@ public class PostDTO {
   // postStatus 안의 Key List
   private Boolean isTemp;
   private Boolean isRecycle;
+  private Boolean isPopular;
+  private int commentsCount;
+  private int viewCount;
 }

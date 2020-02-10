@@ -12,8 +12,11 @@ Handlebars.registerHelper('isAbleFunction', function (options) {
 
 //댓글기능 on인지 체크
 Handlebars.registerHelper('isCommentAble', function (options) {
+  console.log("댓글사용여부 체크");
   if ($('#functionAble1').attr("value") == "on") {
-    if (getCurrentBoardID() > 0) {
+    var boardID = getCurrentBoardID();
+    if (boardID > 0 || boardID==BOARD_ID.POPULAR) {
+      console.log("on");
       return options.fn(this);
     } //true
   }
@@ -22,6 +25,7 @@ Handlebars.registerHelper('isCommentAble', function (options) {
 
 //답글기능 on인지 체크
 Handlebars.registerHelper('isReplyAble', function (options) {
+  console.log("답글사용여부 체크");
   if ($('#functionAble2').attr("value") == "on") {
     return options.fn(this); //true
   }
@@ -85,6 +89,23 @@ Handlebars.registerHelper('isFirstRange', function (option) {
 Handlebars.registerHelper('isLastRange', function (option) {
   var lastPage = this.rangeCount;
   if (this.currentRange >= this.rangeCount) {
+    return option.fn(this);
+  } else {
+    return option.inverse(this);
+  }
+});
+
+Handlebars.registerHelper('hasComments', function (option) {
+  console.log("comment 개수 : "+ this.commentsCount);
+  if (this.commentsCount) {
+    return option.fn(this);
+  } else {
+    return option.inverse(this);
+  }
+});
+Handlebars.registerHelper('isPopular', function (option) {
+  var boardID = parseInt(getCurrentBoardID());
+  if (boardID < 0) {
     return option.fn(this);
   } else {
     return option.inverse(this);

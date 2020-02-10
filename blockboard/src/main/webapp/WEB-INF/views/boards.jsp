@@ -130,13 +130,16 @@
             <!--게시판 목록 템플릿-->
             <script id="boards-template" type="text/x-handlebars-template">
                 <li data-tab="-5" class="tabmenu" id=default style="cursor:pointer"> 최신 게시글</li>
+                <li data-tab="-6" class=tabmenu id=default style="cursor:pointer"> 인기게시글</li>
                 <li data-tab="-1" class="tabmenu" id=default style="cursor:pointer"> 내가 쓴 글</li>
                 <li data-tab="-2" class="tabmenu" id=default style="cursor:pointer"> 내가 쓴 댓글</li>
+                <hr>
                 {{#boards}}
                     <li data-tab={{boardID}} class=tabmenu id=default style="cursor:pointer">
                         {{boardName}}
                     </li>
                 {{/boards}}
+                <hr>
                 <li data-tab="-3" class=tabmenu id=default style="cursor:pointer"> 임시보관함</li>
                 <li data-tab="-4" class=tabmenu id=default style="cursor:pointer"> 휴지통</li>
             </script>
@@ -356,21 +359,22 @@
             <!--게시물 내용 템플릿-->
             <script id="postcontent-template" type="text/x-handlebars-template">
                 {{#post}}
-                    <p class="h4">{{postTitle}}</p>
-                    <p class="h6" align="right">{{userName}}</p>
-                    <p class="h6" align="right">{{postRegisterTime}}</p>
-                    <hr>
-                    <div class="d-block">
-                        <p>{{{postContent}}}</p>
-                    </div>
-                    <a id="postID" style="visibility: hidden;">{{postID}}</a>
-                    <br>
-                    <button id="btn_updatePost" class="btn btn-success" style="visibility:hidden"
-                            onclick="javascript:postUpdateFunction()">수정
-                    </button>
-                    <button id="btn_deletePost" class="btn btn-success" style="visibility:hidden"
-                            onclick="javascript:movePostToTrashBox()">삭제
-                    </button>
+                <p class="h4">{{postTitle}}</p>
+                <p class="h6" align="right">{{userName}}</p>
+                <p class="h6" align="right">{{postRegisterTime}}</p>
+                <p class="h6" align="right">조회수 {{viewCount}}</p>
+                <hr>
+                <div class="d-block">
+                    <p>{{{postContent}}}</p>
+                </div>
+                <a id="postID" style="visibility: hidden;">{{postID}}</a>
+                <br>
+                <button id="btn_updatePost" class="btn btn-success" style="visibility:hidden"
+                        onclick="javascript:postUpdateFunction()">수정
+                </button>
+                <button id="btn_deletePost" class="btn btn-success" style="visibility:hidden"
+                        onclick="javascript:movePostToTrashBox()">삭제
+                </button>
                 {{/post}}
 
                 {{#isCommentAble}}
@@ -527,42 +531,57 @@
                     </div>
                 {{/attribute}}
             </script>
-            <!--게시글 목록 템플릿-->
+
             <div id="tabcontent" class="container-fluid">
-                <table class="table table-hover" cellpadding="0" cellspacing="0" border="0">
+                <table id="post_table" class="table table-hover" cellpadding="0" cellspacing="0"
+                       border="0"></table>
+                <!--게시글 목록 템플릿-->
+                <script id="posts-template" type="text/x-handlebars-template">
                     <thead>
                     <tr>
+                        {{#isPopular}}
+                        <th scope="col">게시판</th>
+                        {{else}}
+                        {{/isPopular}}
                         <th scope="col">제목</th>
                         <th scope="col">작성자</th>
                         <th scope="col">작성일</th>
+                        <th scope="col">조회수</th>
                     </tr>
                     </thead>
-                    <!--게시글 목록 -->
-                    <tbody id="postlist"></tbody>
-                    <script id="posts-template" type="text/x-handlebars-template">
-                        {{#posts}}
-                            {{#isTemp}}
+                    <tbody id="postlist">
+                    {{#posts}}
+                        {{#isTemp}}
+                            <tr class="postclick" data-post={{postID}}
+                                onclick="javascript:clickTempPostEvent(this)">
+                                <td scope="row">{{postTitle}}
+                                </td>
+                        {{else}}
+                            {{#isRecycle}}
                                 <tr class="postclick" data-post={{postID}}
-                                    onclick="javascript:clickTempPostEvent(this)">
+                                    onclick="javascript:clickRecyclePostEvent(this)">
                                     <td scope="row">{{postTitle}}</td>
                             {{else}}
-                                {{#isRecycle}}
-                                    <tr class="postclick" data-post={{postID}}
-                                        onclick="javascript:clickRecyclePostEvent(this)">
-                                        <td scope="row">{{postTitle}}</td>
+                                <tr class="postclick normal_post_click" data-post='{{postID}}'>
+                                {{#isPopular}}
+                                        <td>{{boardName}}</td>
                                 {{else}}
-                                    <tr class="postclick" data-post={{postID}}
-                                        onclick="javascript:clickTrEvent(this)">
-                                        <td scope="row">{{postTitle}}</td>
-                                {{/isRecycle}}
-                            {{/isTemp}}
+                                {{/isPopular}}
+                                    <td scope="row">{{postTitle}}
+                                        {{#isCommentAble}}
+                                            <span style="color:#28A745;">({{commentsCount}})</span>
+                                        {{/isCommentAble}}
+                                    </td>
+                            {{/isRecycle}}
                                 <td>{{userName}}</td>
                                 <td>{{postRegisterTime}}</td>
+                                <td>{{viewCount}}</td>
                                 <a style="visibility:hidden">{{postID}}</a>
                                 <a style="visibility:hidden">{{boardID}}</a>
                             </tr>
-                        {{/posts}}
-                    </script>
+                        {{/isTemp}}
+                    {{/posts}}
+                </script>
 
                     <script id="empty-posts-template" type="text/x-handlebars-template">
                         <h3 style="text-align: center">표시할 게시글이 없습니다.</h3>
@@ -606,33 +625,32 @@
                 <!--게시판 페이징 템픞릿-->
                 <script id="pageList-template" type="text/x-handlebars-template">
                     {{#pagesInfo}}
-                        {{#isFirstPage}}
-                        {{else}}
-                            <li class="page-item"><a class="page-link"
-                                                     style="cursor: pointer;" data-page="1">처음</a>
-                            </li>
-                        {{/isFirstPage}}
-                        {{#isFirstRange}}
-                        {{else}}
-                            <li class="page-item"><a class="page-link" style="cursor: pointer;"
-                                                     data-page='{{prevPage}}'>이전</a></li>
-                        {{/isFirstRange}}
-                        {{#each pageList}}
-                            <li class="page-item" id="page{{this}}"><a class="page-link page-index"
-                                                                       style="cursor: pointer;"
-                                                                       data-page='{{this}}'>{{this}}</a>
-                            </li>
-                        {{/each}}
-                        {{#isLastRange}}
-                        {{else}}
-                            <li class="page-item"><a class="page-link" style="cursor: pointer;"
-                                                     data-page='{{nextPage}}'>다음</a></li>
-                        {{/isLastRange}}
-                        {{#isLastPage}}
-                        {{else}}
-                            <li class="page-item"><a class="page-link" style="cursor: pointer;"
-                                                     data-page='{{pageCount}}'>마지막</a></li>
-                        {{/isLastPage}}
+                    {{#isFirstPage}}
+                    {{else}}
+                    <li class="page-item"><a class="page-link"
+                                             style="cursor: pointer;" data-page="1">처음</a></li>
+                    {{/isFirstPage}}
+                    {{#isFirstRange}}
+                    {{else}}
+                    <li class="page-item"><a class="page-link" style="cursor: pointer;"
+                                             data-page='{{prevPage}}'>이전</a></li>
+                    {{/isFirstRange}}
+                    {{#each pageList}}
+                    <li class="page-item" id="page{{this}}"><a class="page-link page-index"
+                                                               style="cursor: pointer;"
+                                                               data-page='{{this}}'>{{this}}</a>
+                    </li>
+                    {{/each}}
+                    {{#isLastRange}}
+                    {{else}}
+                    <li class="page-item"><a class="page-link" style="cursor: pointer;"
+                                             data-page='{{nextPage}}'>다음</a></li>
+                    {{/isLastRange}}
+                    {{#isLastPage}}
+                    {{else}}
+                    <li class="page-item"><a class="page-link" style="cursor: pointer;"
+                                             data-page='{{pageCount}}'>마지막</a></li>
+                    {{/isLastPage}}
                     {{/pagesInfo}}
                 </script>
 

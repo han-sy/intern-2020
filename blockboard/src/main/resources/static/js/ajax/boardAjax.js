@@ -127,6 +127,9 @@ function getPostListByPageNum(pageNum, boardID) {
     case "-5":
       getRecentPosts(pageNum);
       break;
+    case "-6":
+      getPopularPostList();
+      break;
     default:
       btn_write.attr('style', 'visibility:visible');
       $.ajax({

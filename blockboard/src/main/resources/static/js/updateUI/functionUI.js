@@ -11,6 +11,7 @@ function updateNewFunctionInfoUI(data) {
   $('#fuctionListContainer').html(itemList);
   $('#postcontent').html("");
   alert("기능이 변경되었습니다.");
+  $("#tab_id").children().first().trigger('click');
 }
 
 //기능변경 체크 UI

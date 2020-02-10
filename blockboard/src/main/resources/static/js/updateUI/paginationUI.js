@@ -3,7 +3,7 @@
  * @file paginationUI.js
  */
 
-//기능 변경 업데이트
+//페이지 리스트 업데이트
 function updatePageList(data,pageList) {
   var source = $('#pageList-template').html();
   var template = Handlebars.compile(source);

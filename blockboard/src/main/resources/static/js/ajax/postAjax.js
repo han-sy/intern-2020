@@ -314,7 +314,29 @@ function getRecentPosts(pageNum) {
       errorFunction(xhr);
     },
     success: function (data) {
-      loadPostList(data);
+      if(data == "") {
+        showEmptyList();
+      } else {
+        loadPostList(data);
+      }
     }
-  })
+  });
+}
+
+// 인기 게시글 받아오기
+function getPopularPostList(){
+  $.ajax({
+    type: 'GET',
+    url: `/boards/-6/posts/popular-board`,
+    error: function (xhr) {
+      errorFunction(xhr);
+    },
+    success: function (data) {
+      if(data == "") {
+        showEmptyList();
+      } else {
+        loadPostList(data);
+      }
+    }
+  });
 }

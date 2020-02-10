@@ -131,7 +131,8 @@
                post.post_content          AS postContent,
                post.post_register_time    AS postRegisterTime,
                post.post_last_update_time AS postLastUpdateTime,
-               post.post_status           AS postStatus
+               post.post_status           AS postStatus,
+               post.view_count            AS viewCount
         FROM   posts post
                JOIN users users ON post.user_id = users.user_id
                JOIN boards board ON post.board_id = board.board_id
@@ -151,9 +152,12 @@
                 post.post_title AS postTitle,
                 post.post_content AS postContent,
                 post.post_register_time AS postRegisterTime,
-                users.user_name AS userName
+                users.user_name AS userName,
+                board.board_name AS boardName,
+                post.view_count AS viewCount
         FROM    posts post
            JOIN  users users ON post.user_id = users.user_id
+           JOIN  boards board ON post.board_id = board.board_id
            JOIN  comments comment ON post.post_id = comment.post_id
         WHERE  comment.user_id = #{user.userID} AND
                (json_extract(post.post_status, '$.isTemp') = false AND
@@ -218,7 +222,8 @@
             post.post_title AS postTitle,
             post.post_content AS postContent,
             post.post_register_time AS postRegisterTime,
-            users.user_name AS userName
+            users.user_name AS userName,
+            post.view_count AS viewCount
         FROM    posts post
            JOIN users users ON post.user_id = users.user_id
            JOIN boards board ON post.board_id = board.board_id
@@ -310,16 +315,16 @@
                post.post_content          AS postContent,
                post.post_register_time    AS postRegisterTime,
                post.post_last_update_time AS postLastUpdateTime,
-               post.post_status           AS postStatus
+               post.post_status           AS postStatus,
+               post.view_count            AS viewCount
         FROM   posts post
                JOIN users users ON post.user_id = users.user_id
                JOIN boards board ON post.board_id = board.board_id
-
         WHERE  post.board_id = #{boardID} AND
                (json_extract(post.post_status, '$.isTemp') = false AND
                     json_extract(post.post_status, '$.isRecycle') = false)
         ORDER  BY post.post_register_time DESC
-        LIMIT  #{startIndex},#{pageSize};
+        LIMIT  #{startIndex}, #{pageSize};
     </select>
 
   <!--게시글 id로 게시글반환-->
@@ -335,7 +340,8 @@
                post.post_content       AS postContent,
                post.post_register_time AS postRegisterTime,
                post.post_last_update_time AS postLastUpdateTime,
-               post.post_status        AS postStatus
+               post.post_status        AS postStatus,
+               post.view_count            AS viewCount
         FROM   posts post
                JOIN users users
                 ON post.user_id = users.user_id
@@ -346,5 +352,36 @@
       SELECT Count(post_id)
       FROM   posts
       WHERE  board_id = #{boardID};
+  </select>
+
+  <update id="updateViewCnt" parameterType="int">
+      UPDATE posts
+      SET    view_count = view_count + 1
+      WHERE  post_id = #{postID};
+  </update>
+
+  <select id="selectPopularPostListByCompanyID" parameterType="int" resultType="com.board.project.blockboard.dto.PostDTO">
+      SELECT post.post_id               AS postID,
+             post.user_id               AS userID,
+             users.user_name            AS userName,
+             post.board_id              AS boardID,
+             boards.board_name          AS boardName,
+             post.company_id            AS companyID,
+             post.post_title            AS postTitle,
+             post.post_content          AS postContent,
+             post.post_register_time    AS postRegisterTime,
+             post.post_last_update_time AS postLastUpdateTime,
+             post.post_status           AS postStatus,
+             post.view_count            AS viewCount
+      FROM   posts post
+             JOIN users users
+               ON post.user_id = users.user_id
+             JOIN boards boards
+               ON post.board_id = boards.board_id
+      WHERE  post.company_id = #{companyID}
+             AND ( Json_extract(post.post_status, '$.isTemp') = false
+                   AND Json_extract(post.post_status, '$.isRecycle') = false )
+      ORDER  BY post.view_count DESC
+      LIMIT  0, 10;
   </select>
 </mapper>

@@ -26,5 +26,7 @@ public interface CommentMapper {
 
   void deleteCommentByCommentReferencedID(int commentID);
 
-  int getCommentCountByPostID(int postID);
+  int getAllCommentsCountByPostID(int postID);
+
+  int getOnlyCommentsCountByPostID(int postID);
 }
