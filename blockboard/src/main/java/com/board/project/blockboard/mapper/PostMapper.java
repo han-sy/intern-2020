@@ -43,6 +43,8 @@ public interface PostMapper {
 
   List<PostDTO> selectMyRecyclePosts(Map<String, Object> map);
 
+  List<PostDTO> selectRecentPosts(Map<String, Object> map);
+
   int getMyPostsCount(UserDTO user);
 
   int getPostsCountIncludeMyReplies(UserDTO user);
@@ -50,4 +52,6 @@ public interface PostMapper {
   int getMyTempPostsCount(UserDTO user);
 
   int getMyRecyclePostsCount(UserDTO user);
+
+  int getRecentPostsCount();
 }

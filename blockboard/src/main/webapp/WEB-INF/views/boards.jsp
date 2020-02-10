@@ -129,6 +129,7 @@
             </ul>
             <!--게시판 목록 템플릿-->
             <script id="boards-template" type="text/x-handlebars-template">
+                <li data-tab="-5" class="tabmenu" id=default style="cursor:pointer"> 최신 게시글</li>
                 <li data-tab="-1" class="tabmenu" id=default style="cursor:pointer"> 내가 쓴 글</li>
                 <li data-tab="-2" class="tabmenu" id=default style="cursor:pointer"> 내가 쓴 댓글</li>
                 {{#boards}}

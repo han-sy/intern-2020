@@ -124,6 +124,9 @@ function getPostListByPageNum(pageNum, boardID) {
     case "-4":
       getRecyclePosts(pageNum);
       break;
+    case "-5":
+      getRecentPosts(pageNum);
+      break;
     default:
       btn_write.attr('style', 'visibility:visible');
       $.ajax({

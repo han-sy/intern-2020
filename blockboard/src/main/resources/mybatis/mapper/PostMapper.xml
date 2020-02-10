@@ -208,6 +208,27 @@
         LIMIT  #{startIndex}, #{pageSize};
   </select>
 
+  <select id="selectRecentPosts" parameterType="hashMap"
+    resultType="com.board.project.blockboard.dto.PostDTO">
+        SELECT  post.post_id AS postID,
+            post.user_id AS userID,
+            post.board_id AS boardID,
+            board.board_name AS boardName,
+            post.company_id AS companyID,
+            post.post_title AS postTitle,
+            post.post_content AS postContent,
+            post.post_register_time AS postRegisterTime,
+            users.user_name AS userName
+        FROM    posts post
+           JOIN users users ON post.user_id = users.user_id
+           JOIN boards board ON post.board_id = board.board_id
+        WHERE  DATE(post.post_register_time) >= DATE(SUBDATE(NOW(), INTERVAL 30 DAY)) AND
+               (json_extract(post.post_status, '$.isTemp') = false AND
+                    json_extract(post.post_status, '$.isRecycle') = false)
+        ORDER BY post.post_register_time DESC
+        LIMIT  #{startIndex},#{pageSize};
+  </select>
+
   <select id="getMyPostsCount" parameterType="com.board.project.blockboard.dto.UserDTO"
     resultType="int">
         SELECT Count(post_id)
@@ -244,6 +265,14 @@
         WHERE  user_id = #{userID} AND
                (json_extract(post_status, '$.isTemp') = false AND
                     json_extract(post_status, '$.isRecycle') = true);
+  </select>
+
+  <select id="getRecentPostsCount" resultType="int">
+        SELECT Count(post_id)
+        FROM   posts
+        WHERE  DATE(post_register_time) >= DATE(SUBDATE(NOW(), INTERVAL 30 DAY)) AND
+               (json_extract(post_status, '$.isTemp') = false AND
+                    json_extract(post_status, '$.isRecycle') = false);
   </select>
 
   <sql id="searchOption">

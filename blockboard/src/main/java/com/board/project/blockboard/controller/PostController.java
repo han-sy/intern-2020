@@ -170,7 +170,7 @@ public class PostController {
    *
    * @return 가장 최근에 임시저장된 게시물 객체
    */
-  @GetMapping("/recent")
+  @GetMapping("/temp/recent")
   public PostDTO recentTempPost(HttpServletRequest request) {
     UserDTO requestUser = new UserDTO(request);
     return postService.selectRecentTemp(requestUser);
@@ -257,5 +257,10 @@ public class PostController {
       @RequestParam("pageNumber") int pageNumber) {
     UserDTO user = new UserDTO(request);
     return postService.selectPostsIncludeMyReplies(user, pageNumber);
+  }
+
+  @GetMapping("/recent")
+  public List<PostDTO> selectRecentPosts(@RequestParam("pageNumber") int pageNumber) {
+    return postService.selectRecentPosts(pageNumber);
   }
 }

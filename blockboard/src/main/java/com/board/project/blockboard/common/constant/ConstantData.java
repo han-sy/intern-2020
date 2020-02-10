@@ -16,4 +16,5 @@ public class ConstantData {
   public static final int BOARD_MY_REPLIES = -2;
   public static final int BOARD_TEMP = -3;
   public static final int BOARD_RECYCLE = -4;
+  public static final int BOARD_RECENT = -5;
 }

@@ -184,7 +184,7 @@ function getTempPost(postID) {
 function addRecentTempPostIdToEditor(boardID) {
   $.ajax({
     type: 'GET',
-    url: `/boards/${boardID}/posts/recent`,
+    url: `/boards/${boardID}/posts/temp/recent`,
     error: function (xhr) {
       errorFunction(xhr);
     },
@@ -300,4 +300,21 @@ function getRecyclePost(postID, boardID) {
       btn_deletePost.attr('onclick', 'javascript:clickCompleteDeletePost()');
     }
   });
+}
+
+// 최신 게시글 받아오기
+function getRecentPosts(pageNum) {
+  $.ajax({
+    type: 'GET',
+    url: `/boards/-5/posts/recent`,
+    data: {
+      pageNumber: pageNum
+    },
+    error: function (xhr) {
+      errorFunction(xhr);
+    },
+    success: function (data) {
+      loadPostList(data);
+    }
+  })
 }

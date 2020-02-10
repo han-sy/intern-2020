@@ -97,6 +97,12 @@ public class PostService {
     return postMapper.selectMyRecyclePosts(map);
   }
 
+  public List<PostDTO> selectRecentPosts(int pageNumber) {
+    int pageCount = postMapper.getRecentPostsCount();
+    Map<String, Object> map = makeMapPageInfo(pageCount, pageNumber);
+    return postMapper.selectRecentPosts(map);
+  }
+
   public int getMyPostsCount(UserDTO user) {
     return postMapper.getMyPostsCount(user);
   }
@@ -113,11 +119,24 @@ public class PostService {
     return postMapper.getMyRecyclePostsCount(user);
   }
 
+  public int getRecentPostsCount() {
+    return postMapper.getRecentPostsCount();
+  }
+
   public Map<String, Object> makeMapUserAndPageInfo(UserDTO user, int pageCount, int pageNumber) {
     Map<String, Object> map = new HashMap<>();
     PaginationDTO pageInfo = new PaginationDTO(pageCount, pageNumber, ConstantData.PAGE_SIZE,
         ConstantData.RANGE_SIZE);
     map.put("user", user);
+    map.put("startIndex", pageInfo.getStartIndex());
+    map.put("pageSize", ConstantData.PAGE_SIZE);
+    return map;
+  }
+
+  public Map<String, Object> makeMapPageInfo(int pageCount, int pageNumber) {
+    Map<String, Object> map = new HashMap<>();
+    PaginationDTO pageInfo = new PaginationDTO(pageCount, pageNumber, ConstantData.PAGE_SIZE,
+        ConstantData.RANGE_SIZE);
     map.put("startIndex", pageInfo.getStartIndex());
     map.put("pageSize", ConstantData.PAGE_SIZE);
     return map;
