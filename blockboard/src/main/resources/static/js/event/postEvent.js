@@ -24,7 +24,7 @@ $(document).on("click", "#btn_write", function () {
 });
 
 // '임시저장' 이벤트 함수
-function tempsaveFunction() {
+$(document).on('click', '.btn_tempSave', function () {
   var postTitle = $('#post_title').val();
   var postContent = CKEDITOR.instances.editor.getData();
   var postID = $('#editor_postID').html();
@@ -34,10 +34,10 @@ function tempsaveFunction() {
     insertTempPost(boardID, postID, postTitle, postContent, true);
     refreshPostList();
   }
-}
+});
 
 // '저장' 이벤트 함수
-function postFunction() {
+$(document).on('click', '.btn_post', function () {
   var postTitle = $('#post_title').val();
   var postContent = CKEDITOR.instances.editor.getData();
   var postID = $('#editor_postID').html();
@@ -55,7 +55,7 @@ function postFunction() {
     }
     editorClear();
   }
-}
+});
 
 // 게시글 제목 or 내용 비었는지 검사
 function checkEmpty() {
@@ -92,7 +92,7 @@ function postUpdate() {
 }
 
 // 게시글 조회 후 '수정' 버튼 이벤트
-function postUpdateFunction() {
+$(document).on('click', '.btn_modify', function () {
   var postID = $("#postID").html();
   var boardID = getCurrentBoardID();
   postClear();
@@ -103,15 +103,15 @@ function postUpdateFunction() {
   setTimeout(function () {
     loadPost(boardID, postID)
   }, 100); // 에디터로 게시글 정보 불러옴.
-}
+});
 
 // 게시글 조회 후 삭제 버튼 이벤트 -> 휴지통으로
-function movePostToTrashBox() {
+$(document).on('click', '.btn_delete', function () {
   var postID = $("#postID").html();
   var boardID = getCurrentBoardID();
   alert("휴지통으로 이동됩니다.");
   temporaryDeletePost(boardID, postID);
-}
+});
 
 // 게시글 검색 버튼 이벤트
 function search() {
@@ -121,17 +121,17 @@ function search() {
 }
 
 // 작성 취소 버튼 이벤트
-function writeCancel() {
+$(document).on('click', '.btn_cancel', function () {
   if (confirm("작성된 내용이 저장되지 않을 수도 있습니다. 이동하시겠습니까?") == true) {
     editorClear();
   }
-}
+});
 
 // 자동 저장 on
 function on_autosave() {
   autosave = setInterval(function () {
-    tempsaveFunction()
-  }, 1000 * (60 * 3));
+    $('.btn_tempSave').trigger('click');
+  }, 1000 * 5);
 }
 
 // 자동 저장 off

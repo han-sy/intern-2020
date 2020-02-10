@@ -199,13 +199,15 @@
         post.post_content AS postContent,
         post.post_register_time AS postRegisterTime,
         users.user_name AS userName,
+        board.board_name AS boardName,
         json_extract(post.post_status, '$.isTemp') AS isTemp
     FROM   posts post
            JOIN users users
             ON post.user_id = users.user_id
+           JOIN boards board
+            ON post.board_id = board.board_id
     WHERE
         post.user_id=#{user.userID} AND
-        post.company_id=#{user.companyID} AND
         json_extract(post.post_status, '$.isTemp') = true
     ORDER BY
         postRegisterTime DESC
