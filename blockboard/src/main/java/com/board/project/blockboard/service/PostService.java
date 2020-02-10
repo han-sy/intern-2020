@@ -109,9 +109,9 @@ public class PostService {
     return postMapper.selectMyRecyclePosts(map);
   }
 
-  public List<PostDTO> selectRecentPosts(int companyID, int pageNumber) {
-    int pageCount = postMapper.getRecentPostsCount(companyID);
-    Map<String, Object> map = makeMapPageInfo(pageCount, pageNumber);
+  public List<PostDTO> selectRecentPosts(UserDTO user, int pageNumber) {
+    int pageCount = postMapper.getRecentPostsCount(user.getCompanyID());
+    Map<String, Object> map = makeMapUserAndPageInfo(user, pageCount, pageNumber);
     return postMapper.selectRecentPosts(map);
   }
 
@@ -228,7 +228,6 @@ public class PostService {
         response.addCookie(newCookie);
       }
     }
-
   }
 
   public List<PostDTO> getPopularPostList(int companyID) {

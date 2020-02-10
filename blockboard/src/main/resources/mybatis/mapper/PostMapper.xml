@@ -228,6 +228,7 @@
            JOIN users users ON post.user_id = users.user_id
            JOIN boards board ON post.board_id = board.board_id
         WHERE  DATE(post.post_register_time) >= DATE(SUBDATE(NOW(), INTERVAL 30 DAY)) AND
+               post.company_id = #{user.companyID} AND
                (json_extract(post.post_status, '$.isTemp') = false AND
                     json_extract(post.post_status, '$.isRecycle') = false)
         ORDER BY post.post_register_time DESC
@@ -272,10 +273,11 @@
                     json_extract(post_status, '$.isRecycle') = true);
   </select>
 
-  <select id="getRecentPostsCount" resultType="int">
+  <select id="getRecentPostsCount" parameterType="int" resultType="int">
         SELECT Count(post_id)
         FROM   posts
         WHERE  DATE(post_register_time) >= DATE(SUBDATE(NOW(), INTERVAL 30 DAY)) AND
+               company_id = #{companyID} AND
                (json_extract(post_status, '$.isTemp') = false AND
                     json_extract(post_status, '$.isRecycle') = false);
   </select>
