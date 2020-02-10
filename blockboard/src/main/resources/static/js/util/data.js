@@ -31,3 +31,74 @@ class User {
   }
 }
 
+class FunctionOn{
+  constructor(){
+    if($('#functionAble1').attr("value") == "on"){
+      this.comment = true;
+    } else if($('#functionAble1').attr("value") == "off"){
+      this.comment = false;
+    }else{
+      changedDataError();
+    }
+
+    if($('#functionAble2').attr("value") == "on"){
+      this.reply = true;
+    } else if($('#functionAble2').attr("value") == "off"){
+      this.reply =false;
+    }else{
+      changedDataError();
+    }
+
+    if($('#functionAble3').attr("value") == "on"){
+      this.fileAttach = true;
+    }else if($('#functionAble3').attr("value") == "off"){
+      this.fileAttach =false;
+    }else{
+      changedDataError();
+    }
+
+    if($('#functionAble4').attr("value") == "on"){
+      this.inlineImage=true;
+    }else if($('#functionAble4').attr("value") == "off"){
+      this.inlineImage=false;
+    }else{
+      changedDataError();
+    }
+
+    if($('#functionAble5').attr("value") == "on"){
+      this.tempSave = true;
+    }else if($('#functionAble5').attr("value") == "off"){
+      this.tempSave = false;
+    }else{
+      changedDataError();
+    }
+
+    if($('#functionAble6').attr("value") == "on"){
+      this.sticker = true;
+    }else if($('#functionAble6').attr("value") == "off"){
+      this.sticker = false;
+    }else{
+      changedDataError();
+    }
+  }
+
+  isCommentOn(){
+    return this.comment;
+  }
+  isReplyOn(){
+    return this.reply;
+  }
+  isFileAttachOn(){
+    return this.fileAttach;
+  }
+  isInlineImageOn(){
+    return this.inlineImage;
+  }
+  isTempSaveOn(){
+    return this.tempSave;
+  }
+  isStickerOn(){
+    return this.sticker;
+  }
+}
+

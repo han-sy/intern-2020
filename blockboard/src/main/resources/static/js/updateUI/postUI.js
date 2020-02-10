@@ -82,3 +82,17 @@ function updateboardListInEditor(board) {
   itemList = template(board);
   $('#boardIDinEditor').html(itemList);
 }
+function openFileAttachForm() {
+  source = $('#file-attach-form-template').html();
+  template = Handlebars.compile(source);
+  item = template();
+  $('#fileAttachForm').html(item);
+}
+
+function openDragAndDropForm(){
+  source = $('#file-attach-drag-and-drop-form-template').html();
+  template = Handlebars.compile(source);
+  item = template();
+  $('#file_drop_container').html(item);
+
+}

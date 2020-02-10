@@ -19,6 +19,10 @@ function returnToLoginPage() {
 function redirectLogout() {
   window.location.href = "/logout";
 }
+function changedDataError(){
+  alert("페이지가 임의로 변경되었습니다.");
+  redirectLogout();
+}
 
 function getContextPath() {
   var hostIndex = location.href.indexOf(location.host) + location.host.length;

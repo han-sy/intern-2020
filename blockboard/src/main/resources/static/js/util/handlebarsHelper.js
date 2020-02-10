@@ -12,7 +12,8 @@ Handlebars.registerHelper('isAbleFunction', function (options) {
 
 //댓글기능 on인지 체크
 Handlebars.registerHelper('isCommentAble', function (options) {
-  if ($('#functionAble1').attr("value") == "on") {
+  var functionOn = new FunctionOn();
+  if (functionOn.isCommentOn()) {
     var boardID = getCurrentBoardID();
     if (boardID > 0 || boardID == BOARD_ID.POPULAR) {
       return options.fn(this);
@@ -23,7 +24,17 @@ Handlebars.registerHelper('isCommentAble', function (options) {
 
 //답글기능 on인지 체크
 Handlebars.registerHelper('isReplyAble', function (options) {
-  if ($('#functionAble2').attr("value") == "on") {
+  var functionOn = new FunctionOn();
+  if (functionOn.isReplyOn()) {
+    return options.fn(this); //true
+  }
+  return options.inverse(this);//false
+});
+
+//답글기능 on인지 체크
+Handlebars.registerHelper('isFileAttachAble', function (options) {
+  var functionOn = new FunctionOn();
+  if (functionOn.isFileAttachOn()) {
     return options.fn(this); //true
   }
   return options.inverse(this);//false
