@@ -4,7 +4,6 @@
  */
 package com.board.project.blockboard.service;
 
-import com.board.project.blockboard.common.constant.ConstantData;
 import com.board.project.blockboard.common.constant.ConstantData.FunctionID;
 import com.board.project.blockboard.dto.CommentDTO;
 import com.board.project.blockboard.mapper.CommentMapper;
@@ -58,14 +57,13 @@ public class CommentService {
   }
 
 
-  public int getCommentCountByPostID(int postID,int companyID) {
+  public int getCommentCountByPostID(int postID, int companyID) {
     boolean isCommentOn = functionService.getFunctionStatus(companyID, FunctionID.COMMENT);
-    boolean isReplyOn = functionService.getFunctionStatus(companyID,FunctionID.REPLY);
-    if(isCommentOn){//댓글ON
+    boolean isReplyOn = functionService.getFunctionStatus(companyID, FunctionID.REPLY);
+    if (isCommentOn) {//댓글ON
       if (isReplyOn) {//답글ON
         return commentMapper.getAllCommentsCountByPostID(postID);
-      }
-      else{//답글 OFF
+      } else {//답글 OFF
         return commentMapper.getOnlyCommentsCountByPostID(postID);
       }
     }

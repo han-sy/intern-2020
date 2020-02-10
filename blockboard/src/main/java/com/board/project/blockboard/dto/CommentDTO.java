@@ -5,10 +5,8 @@
 package com.board.project.blockboard.dto;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 public class CommentDTO {
 
   private int commentID;

@@ -359,22 +359,22 @@
             <!--게시물 내용 템플릿-->
             <script id="postcontent-template" type="text/x-handlebars-template">
                 {{#post}}
-                <p class="h4">{{postTitle}}</p>
-                <p class="h6" align="right">{{userName}}</p>
-                <p class="h6" align="right">{{postRegisterTime}}</p>
-                <p class="h6" align="right">조회수 {{viewCount}}</p>
-                <hr>
-                <div class="d-block">
-                    <p>{{{postContent}}}</p>
-                </div>
-                <a id="postID" style="visibility: hidden;">{{postID}}</a>
-                <br>
-                <button id="btn_updatePost" class="btn btn-success" style="visibility:hidden"
-                        onclick="javascript:postUpdateFunction()">수정
-                </button>
-                <button id="btn_deletePost" class="btn btn-success" style="visibility:hidden"
-                        onclick="javascript:movePostToTrashBox()">삭제
-                </button>
+                    <p class="h4">{{postTitle}}</p>
+                    <p class="h6" align="right">{{userName}}</p>
+                    <p class="h6" align="right">{{postRegisterTime}}</p>
+                    <p class="h6" align="right">조회수 {{viewCount}}</p>
+                    <hr>
+                    <div class="d-block">
+                        <p>{{{postContent}}}</p>
+                    </div>
+                    <a id="postID" style="visibility: hidden;">{{postID}}</a>
+                    <br>
+                    <button id="btn_updatePost" class="btn btn-success" style="visibility:hidden"
+                            onclick="javascript:postUpdateFunction()">수정
+                    </button>
+                    <button id="btn_deletePost" class="btn btn-success" style="visibility:hidden"
+                            onclick="javascript:movePostToTrashBox()">삭제
+                    </button>
                 {{/post}}
 
                 {{#isCommentAble}}
@@ -540,7 +540,7 @@
                     <thead>
                     <tr>
                         {{#isPopular}}
-                        <th scope="col">게시판</th>
+                            <th scope="col">게시판</th>
                         {{else}}
                         {{/isPopular}}
                         <th scope="col">제목</th>
@@ -583,9 +583,9 @@
                     {{/posts}}
                 </script>
 
-                    <script id="empty-posts-template" type="text/x-handlebars-template">
-                        <h3 style="text-align: center">표시할 게시글이 없습니다.</h3>
-                    </script>
+                <script id="empty-posts-template" type="text/x-handlebars-template">
+                    <h3 style="text-align: center">표시할 게시글이 없습니다.</h3>
+                </script>
                 </table>
 
                 <div id="searchcontent">
@@ -625,32 +625,33 @@
                 <!--게시판 페이징 템픞릿-->
                 <script id="pageList-template" type="text/x-handlebars-template">
                     {{#pagesInfo}}
-                    {{#isFirstPage}}
-                    {{else}}
-                    <li class="page-item"><a class="page-link"
-                                             style="cursor: pointer;" data-page="1">처음</a></li>
-                    {{/isFirstPage}}
-                    {{#isFirstRange}}
-                    {{else}}
-                    <li class="page-item"><a class="page-link" style="cursor: pointer;"
-                                             data-page='{{prevPage}}'>이전</a></li>
-                    {{/isFirstRange}}
-                    {{#each pageList}}
-                    <li class="page-item" id="page{{this}}"><a class="page-link page-index"
-                                                               style="cursor: pointer;"
-                                                               data-page='{{this}}'>{{this}}</a>
-                    </li>
-                    {{/each}}
-                    {{#isLastRange}}
-                    {{else}}
-                    <li class="page-item"><a class="page-link" style="cursor: pointer;"
-                                             data-page='{{nextPage}}'>다음</a></li>
-                    {{/isLastRange}}
-                    {{#isLastPage}}
-                    {{else}}
-                    <li class="page-item"><a class="page-link" style="cursor: pointer;"
-                                             data-page='{{pageCount}}'>마지막</a></li>
-                    {{/isLastPage}}
+                        {{#isFirstPage}}
+                        {{else}}
+                            <li class="page-item"><a class="page-link"
+                                                     style="cursor: pointer;" data-page="1">처음</a>
+                            </li>
+                        {{/isFirstPage}}
+                        {{#isFirstRange}}
+                        {{else}}
+                            <li class="page-item"><a class="page-link" style="cursor: pointer;"
+                                                     data-page='{{prevPage}}'>이전</a></li>
+                        {{/isFirstRange}}
+                        {{#each pageList}}
+                            <li class="page-item" id="page{{this}}"><a class="page-link page-index"
+                                                                       style="cursor: pointer;"
+                                                                       data-page='{{this}}'>{{this}}</a>
+                            </li>
+                        {{/each}}
+                        {{#isLastRange}}
+                        {{else}}
+                            <li class="page-item"><a class="page-link" style="cursor: pointer;"
+                                                     data-page='{{nextPage}}'>다음</a></li>
+                        {{/isLastRange}}
+                        {{#isLastPage}}
+                        {{else}}
+                            <li class="page-item"><a class="page-link" style="cursor: pointer;"
+                                                     data-page='{{pageCount}}'>마지막</a></li>
+                        {{/isLastPage}}
                     {{/pagesInfo}}
                 </script>
 

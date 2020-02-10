@@ -6,12 +6,10 @@ package com.board.project.blockboard.common.util;
 
 
 import com.board.project.blockboard.dto.FunctionDTO;
-
 import com.board.project.blockboard.dto.PostDTO;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.Arrays;

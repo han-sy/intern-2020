@@ -19,7 +19,8 @@ public class ConstantData {
   public static final int BOARD_RECENT = -5;
   public static final int BOARD_POPULAR = -6;
 
-  public static final class FunctionID{
+  public static final class FunctionID {
+
     public static final int COMMENT = 1;
     public static final int REPLY = 2;
     public static final int ATTACH_FILE = 3;

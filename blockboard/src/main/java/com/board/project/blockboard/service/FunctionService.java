@@ -23,7 +23,6 @@ public class FunctionService {
   private FunctionMapper functionMapper;
 
   public List<FunctionDTO> getFunctionInfoByCompanyID(int companyID) {
-    System.out.println("companyID:" + companyID);
     return functionMapper.selectFunctionCheckByCompanyID(companyID);
   }
 
@@ -46,7 +45,8 @@ public class FunctionService {
     List<FunctionDTO> functionInfoList = getFunctionInfoByCompanyID(companyID);
     return functionInfoList;
   }
-  public boolean getFunctionStatus(int companyID,int functionID){
+
+  public boolean getFunctionStatus(int companyID, int functionID) {
     Map<String, Object> functionPrimaryKey = new HashMap<String, Object>();
     functionPrimaryKey.put("functionID", functionID);
     functionPrimaryKey.put("companyID", companyID);
@@ -54,11 +54,6 @@ public class FunctionService {
     return result;
   }
 
-  /**
-   * @param companyID
-   * @param functionInfoData functionID, functionCheck(ON or OFF)  두가지 키를 가지는 Jsonlist
-   *                         /js/functionEvent.js 에 있는 clickSaveFunctionChange()에서 json 생성
-   */
   public void updateNewFunctionsInfo(int companyID, List<FunctionDTO> functionNewList) {
     List<FunctionDTO> functionOldList = getFunctionInfoByCompanyID(companyID); //기존데이터
     //ajax를 통해 넘어온 json 형식의 string을 map 타입으로 변경
@@ -67,11 +62,11 @@ public class FunctionService {
       for (FunctionDTO oldFunction : functionOldList) {
         int sameIndex = functionOldList.indexOf(oldFunction);
         FunctionDTO newFunction = functionNewList.get(sameIndex);
-        int changeInfo = CompareData.compareFunctionOnOff(oldFunction,newFunction);
+        int changeInfo = CompareData.compareFunctionOnOff(oldFunction, newFunction);
 
-        if (changeInfo== ConstantData.OFF_TO_ON)
+        if (changeInfo == ConstantData.OFF_TO_ON) {
           changeFunctionOffToOn(newFunction.getFunctionID(), companyID);//delete문
-        else if (changeInfo ==ConstantData.ON_TO_OFF) {
+        } else if (changeInfo == ConstantData.ON_TO_OFF) {
           changeFunctionOnToOff(newFunction.getFunctionID(), companyID);//insert문
         }
       }

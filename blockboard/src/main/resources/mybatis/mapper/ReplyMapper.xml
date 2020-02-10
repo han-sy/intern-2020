@@ -9,38 +9,38 @@
 <mapper namespace="com.board.project.blockboard.mapper.ReplyMapper">
   <select id="selectRepliesByCommentID" parameterType="int"
     resultType="com.board.project.blockboard.dto.CommentDTO">
-        SELECT comments.comment_id            AS commentID,
-               comments.post_id               AS postID,
-               comments.user_id               AS userID,
-               users.user_name                AS userName,
-               comments.company_id            AS companyID,
-               comments.comment_content       AS commentContent,
-               comments.comment_register_time AS commentRegisterTime,
-               comments.comment_referenced_id AS commentReferencedID,
-               referenced_user.user_id        AS commentReferencedUserID,
-               referenced_user.user_name      AS commentReferencedUserName
-        FROM   comments comments
-               LEFT OUTER JOIN users users
-                            ON comments.user_id = users.user_id
-               LEFT OUTER JOIN users referenced_user
-                            ON comments.comment_referenced_user_id =
-                               referenced_user.user_id
-        WHERE  comments.comment_referenced_id = #{commentReferencedID};
-    </select>
+    SELECT comments.comment_id            AS commentID,
+           comments.post_id               AS postID,
+           comments.user_id               AS userID,
+           users.user_name                AS userName,
+           comments.company_id            AS companyID,
+           comments.comment_content       AS commentContent,
+           comments.comment_register_time AS commentRegisterTime,
+           comments.comment_referenced_id AS commentReferencedID,
+           referenced_user.user_id        AS commentReferencedUserID,
+           referenced_user.user_name      AS commentReferencedUserName
+    FROM comments comments
+           LEFT OUTER JOIN users users
+                           ON comments.user_id = users.user_id
+           LEFT OUTER JOIN users referenced_user
+                           ON comments.comment_referenced_user_id =
+                              referenced_user.user_id
+    WHERE comments.comment_referenced_id = #{commentReferencedID};
+  </select>
 
   <insert id="insertNewReplyByCommentInfo" parameterType="hashmap">
-        INSERT INTO comments
-                    (post_id,
-                     user_id,
-                     company_id,
-                     comment_content,
-                     comment_referenced_id,
-                     comment_referenced_user_id)
-        VALUES      ( #{postID},
-                      #{userID},
-                      #{companyID},
-                      #{commentContent},
-                      #{commentReferencedID},
-                      #{commentReferencedUserID});
-    </insert>
+    INSERT INTO comments
+    (post_id,
+     user_id,
+     company_id,
+     comment_content,
+     comment_referenced_id,
+     comment_referenced_user_id)
+    VALUES (#{postID},
+            #{userID},
+            #{companyID},
+            #{commentContent},
+            #{commentReferencedID},
+            #{commentReferencedUserID});
+  </insert>
 </mapper>

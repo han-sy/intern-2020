@@ -43,8 +43,7 @@ public class ReplyService {
     reply.setCommentReferencedID(commentReferencedID);
     reply.setCommentReferencedUserID(commentReferencedUserID);
     reply.setCommentReferencedUserName(userMapper.selectUserNameByUserID(commentReferencedUserID));
-    log.info("!!!", reply.toString());
-    int result = replyMapper.insertNewReplyByCommentInfo(reply);
+    replyMapper.insertNewReplyByCommentInfo(reply);
 
   }
 }

@@ -9,7 +9,6 @@ import com.board.project.blockboard.dto.UserDTO;
 import com.board.project.blockboard.service.BoardService;
 import com.board.project.blockboard.service.CompanyService;
 import com.board.project.blockboard.service.FunctionService;
-import com.board.project.blockboard.service.JwtService;
 import com.board.project.blockboard.service.UserService;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -21,8 +20,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class MainController {
 
-  @Autowired
-  private JwtService jwtService;
   @Autowired
   private BoardService boardService;
   @Autowired
@@ -51,7 +48,8 @@ public class MainController {
     List<BoardDTO> boardList = boardService.getBoardListByCompanyID(userData.getCompanyID());
 
     model.addAttribute("boardList", boardList); //게시판 목록
-    model.addAttribute("companyName", companyService.getCompanyNameByUserID(userData.getUserID()));//회사이름
+    model.addAttribute("companyName",
+        companyService.getCompanyNameByUserID(userData.getUserID()));//회사이름
     model.addAttribute("userType", userService.getUserTypeByUserID(userData.getUserID()));
     model.addAttribute("companyID", userData.getCompanyID());
     model.addAttribute("userID", userData.getUserID());

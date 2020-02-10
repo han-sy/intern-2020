@@ -15,8 +15,8 @@ spring:
     livereload:
       enabled: true
   resource:
-    static-locations : classpath:/static/
-    add-mappings : true
+    static-locations: classpath:/static/
+    add-mappings: true
   mustache:
     cache: false
   output:

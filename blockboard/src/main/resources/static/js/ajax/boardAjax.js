@@ -63,7 +63,6 @@ function getBoardList(successFunction) {
   });
 }
 
-//TODO handlebar 적용하기
 //게시물 클릭후 게시물 데이터 받아오기
 function getPostDataAfterPostClick(postID, boardID) {
   var userID = $('#current_user_info').attr('data-id');
@@ -86,11 +85,9 @@ function getPostDataAfterPostClick(postID, boardID) {
       var btn_deletePost = $('#btn_deletePost');
       var btn_updatePost = $('#btn_updatePost');
       if (data.userID == userID) {
-        console.log("수정 삭제 표시");
         btn_deletePost.attr('style', 'visibility:visible');
         btn_updatePost.attr('style', 'visibility:visible');
       } else {
-        console.log("수정 삭제 미표시");
         btn_deletePost.attr('style', 'visibility:hidden');
         btn_updatePost.attr('style', 'visibility:hidden');
       }
@@ -109,26 +106,27 @@ function getPostDataAfterPostClick(postID, boardID) {
 //탭클릭후 게시판 목록 불러오기
 function getPostListByPageNum(pageNum, boardID) {
   var btn_write = $('#btn_write');
-  if(boardID < 0)
+  if (boardID < 0) {
     btn_write.attr('style', 'visibility:hidden');
+  }
 
   switch (boardID) {
-    case -1:
+    case BOARD_ID.MY_POST:
       getMyPosts(pageNum);
       break;
-    case -2:
+    case BOARD_ID.MY_REPLY:
       getMyReplies(pageNum);
       break;
-    case -3:
+    case BOARD_ID.TEMP_BOX:
       getTempPosts(pageNum);
       break;
-    case -4:
+    case BOARD_ID.RECYCLE:
       getRecyclePosts(pageNum);
       break;
-    case -5:
+    case BOARD_ID.RECENT:
       getRecentPosts(pageNum);
       break;
-    case -6:
+    case BOARD_ID.POPULAR:
       getPopularPostList(pageNum);
       break;
     default:

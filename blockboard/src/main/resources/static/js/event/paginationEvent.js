@@ -3,7 +3,6 @@
  * @file paginationEvent.js
  */
 
-
 /**
  * 페이징 이벤트
  * 1. li의 값을 가져온다
@@ -12,13 +11,9 @@
  * */
 
 $(document).on('click', '.page-item', function () {
-  console.log("!!!!!");
-
   var boardID = getCurrentBoardID();
   var pageNum = $(this).find(".page-link").attr("data-page");
-  getPageList(pageNum,boardID,updatePageList);
-
-
+  getPageList(pageNum, boardID, updatePageList);
 });
 
 

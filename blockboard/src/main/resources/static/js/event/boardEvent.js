@@ -8,8 +8,13 @@ const KEYCODE = {
 const MAX_LENGTH = {
   BOARD_NAME: 150
 };
-const BOARD_ID ={
-  POPULAR:-6
+const BOARD_ID = {
+  MY_POST: -1,
+  MY_REPLY: -2,
+  TEMP_BOX: -3,
+  RECYCLE: -4,
+  RECENT: -5,
+  POPULAR: -6
 };
 $(function () {
   $('#input_board_name').keyup(function () {
@@ -137,7 +142,7 @@ function changeTrColor(trObj) {
 }
 
 // 게시글 목록에서 게시글 클릭시
-$(document).on('click','.normal_post_click',function () {
+$(document).on('click', '.normal_post_click', function () {
   var postID = $(this).attr("data-post");
   var boardID = getActiveBoardID();
   $(function () {
@@ -171,7 +176,7 @@ $(document).on("click", ".tabmenu", function clickTabEvent() {
   $(this).addClass("font-weight-bold");
   postClear();
   editorClear();
-  
+
   getPageList(1, boardID, updatePageList);
 });
 

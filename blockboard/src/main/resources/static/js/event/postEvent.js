@@ -124,10 +124,6 @@ function search() {
 function writeCancel() {
   if (confirm("작성된 내용이 저장되지 않을 수도 있습니다. 이동하시겠습니까?") == true) {
     editorClear();
-    // 브라우저의 history값 구현 후에 마저 구현하기
-    console.log("확인버튼 클릭");
-  } else {
-    console.log("취소버튼 클릭");
   }
 }
 

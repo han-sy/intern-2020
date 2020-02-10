@@ -4,15 +4,15 @@
  */
 
 //페이지 리스트 업데이트
-function updatePageList(data,pageList) {
+function updatePageList(data, pageList) {
   var source = $('#pageList-template').html();
   var template = Handlebars.compile(source);
-  var pagesInfo = {pagesInfo: data,pageList:pageList};
+  var pagesInfo = {pagesInfo: data, pageList: pageList};
   var item = template(pagesInfo);
   $('#pagination_content').html(item);
-  $('#page'+data.currentPage).css('color','#28A745');
-  $('#page'+data.currentPage).css('font-weight','bold');
-  $('#page'+data.currentPage).css('font-size','110%');
+  $('#page' + data.currentPage).css('color', '#28A745');
+  $('#page' + data.currentPage).css('font-weight', 'bold');
+  $('#page' + data.currentPage).css('font-size', '110%');
   var boardID = parseInt(getCurrentBoardID());
-  getPostListByPageNum(data.currentPage,boardID);
+  getPostListByPageNum(data.currentPage, boardID);
 }

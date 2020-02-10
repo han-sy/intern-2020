@@ -11,8 +11,8 @@ function updateTab(data) {
   $('#tab_id').html(itemList);
   updateboardListInEditor(board);
 
-  $("#tab_id").children().each(function() {
-    if($(this).attr('data-tab') > 0) {
+  $("#tab_id").children().each(function () {
+    if ($(this).attr('data-tab') > 0) {
       $(this).trigger('click');
       return;
     }

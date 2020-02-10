@@ -15,27 +15,7 @@ import org.springframework.stereotype.Repository;
 @Mapper
 public interface PostMapper {
 
-  void insertPost(PostDTO post);
-
-  void deletePostByPostID(int postID);
-
-  PostDTO selectPostByPostID(int postID);
-
-  void updatePost(PostDTO post);
-
   List<PostDTO> searchPost(String option, String keyword);
-
-  PostDTO selectRecentTempPost(UserDTO requestUser);
-
-  List<PostDTO> selectMyTempPosts(Map<String, Object> map);
-
-  List<PostDTO> selectPostByBoardID(int boardID, int startIndex, int pageSize);
-
-  int selectPostCountByBoardID(int boardID);
-
-  void temporaryDeletePost(PostDTO post);
-
-  void restorePost(PostDTO post);
 
   List<PostDTO> selectMyPosts(Map<String, Object> map);
 
@@ -44,6 +24,30 @@ public interface PostMapper {
   List<PostDTO> selectMyRecyclePosts(Map<String, Object> map);
 
   List<PostDTO> selectRecentPosts(Map<String, Object> map);
+
+  List<PostDTO> selectMyTempPosts(Map<String, Object> map);
+
+  List<PostDTO> selectPostByBoardID(int boardID, int startIndex, int pageSize);
+
+  List<PostDTO> selectPopularPostListByCompanyID(int companyID);
+
+  PostDTO selectPostByPostID(int postID);
+
+  PostDTO selectRecentTempPost(UserDTO requestUser);
+
+  void temporaryDeletePost(PostDTO post);
+
+  void restorePost(PostDTO post);
+
+  void insertPost(PostDTO post);
+
+  void deletePostByPostID(int postID);
+
+  void updatePost(PostDTO post);
+
+  void updateViewCnt(int postID);
+
+  int selectPostCountByBoardID(int boardID);
 
   int getMyPostsCount(UserDTO user);
 
@@ -54,10 +58,6 @@ public interface PostMapper {
   int getMyRecyclePostsCount(UserDTO user);
 
   int getRecentPostsCount(int companyID);
-  
-  void updateViewCnt(int postID);
-
-  List<PostDTO> selectPopularPostListByCompanyID(int companyID);
 
   int getPopularPostsCount(int companyID);
 }

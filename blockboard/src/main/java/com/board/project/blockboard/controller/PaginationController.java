@@ -28,10 +28,12 @@ public class PaginationController {
 
   @GetMapping(value = "/{boardid}/pages")
   @ResponseBody
-  public PaginationDTO getPageList(@PathVariable("boardid") int boardID, @RequestParam("pageNumber") int pageNumber, HttpServletRequest request) {
+  public PaginationDTO getPageList(@PathVariable("boardid") int boardID,
+      @RequestParam("pageNumber") int pageNumber, HttpServletRequest request) {
     UserDTO user = new UserDTO(request);
     //게시판 목록
-    PaginationDTO  pageInfo= paginationService.getPageListByPageNumber(pageNumber,boardID, user); // select로 받아오기
+    PaginationDTO pageInfo = paginationService
+        .getPageListByPageNumber(pageNumber, boardID, user); // select로 받아오기
     return pageInfo;
   }
 }

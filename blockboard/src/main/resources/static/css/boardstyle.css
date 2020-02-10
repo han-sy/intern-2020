@@ -122,9 +122,10 @@
 
 <!--
 페이지네이션
+
 -->
 
-.active-page{
+.active-page {
   background-color: #28A745;
-  color:white;
+  color: white;
 }

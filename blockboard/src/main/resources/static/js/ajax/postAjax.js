@@ -141,7 +141,7 @@ function searchPost(option, keyword) {
       postsClear(); // 게시글 목록 화면 Clear
       keyword.val("");
 
-      if(data == "") {
+      if (data == "") {
         showEmptyList();
       } else {
         loadPostList(data);
@@ -151,7 +151,6 @@ function searchPost(option, keyword) {
 }
 
 function getTempPosts(pageNum) {
-  console.log("getTempPosts");
   $.ajax({
     type: 'GET',
     url: "/boards/-1/posts/temp",
@@ -162,7 +161,7 @@ function getTempPosts(pageNum) {
       errorFunction(xhr);
     },
     success: function (data) {
-      if(data == "") {
+      if (data == "") {
         showEmptyList();
       } else {
         loadPostList(data);
@@ -204,7 +203,6 @@ function addRecentTempPostIdToEditor(boardID) {
 
 // 휴지통에 있는 게시글들을 가져온다.
 function getRecyclePosts(pageNum) {
-  console.log("휴지통 호출");
   $.ajax({
     type: 'GET',
     url: `/boards/-4/posts/recycleBin`,
@@ -215,8 +213,7 @@ function getRecyclePosts(pageNum) {
       errorFunction(xhr);
     },
     success: function (data) {
-      console.log(JSON.stringify(data));
-      if(data == "") {
+      if (data == "") {
         showEmptyList();
       } else {
         loadPostList(data);
@@ -252,8 +249,7 @@ function getMyPosts(pageNum) {
       errorFunction(xhr);
     },
     success: function (data) {
-      console.log(JSON.stringify(data));
-      if(data == "") {
+      if (data == "") {
         showEmptyList();
       } else {
         loadPostList(data);
@@ -274,8 +270,7 @@ function getMyReplies(pageNum) {
       errorFunction(xhr);
     },
     success: function (data) {
-      console.log(JSON.stringify(data));
-      if(data == "") {
+      if (data == "") {
         showEmptyList();
       } else {
         loadPostList(data);
@@ -322,7 +317,7 @@ function getRecentPosts(pageNum) {
       errorFunction(xhr);
     },
     success: function (data) {
-      if(data == "") {
+      if (data == "") {
         showEmptyList();
       } else {
         loadPostList(data);
@@ -332,7 +327,7 @@ function getRecentPosts(pageNum) {
 }
 
 // 인기 게시글 받아오기
-function getPopularPostList(pageNum){
+function getPopularPostList(pageNum) {
   $.ajax({
     type: 'GET',
     url: `/boards/-6/posts/popular-board`,
@@ -343,7 +338,7 @@ function getPopularPostList(pageNum){
       errorFunction(xhr);
     },
     success: function (data) {
-      if(data == "") {
+      if (data == "") {
         showEmptyList();
       } else {
         loadPostList(data);

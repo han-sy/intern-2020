@@ -38,22 +38,6 @@ public class PostController {
   private PostValidation postValidation;
 
   /**
-   * 게시글 가져오기
-   *
-   * @return PostDTO + 유저일치여부 로 구성된 map
-   * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
-   */
-  @GetMapping(value = "/{postid}")
-  public PostDTO getPostByPostID(@PathVariable("postid") int postID, HttpServletResponse response, HttpServletRequest request) {
-    PostDTO post = postService.selectPostByPostID(postID,request,response);
-    if (postValidation.isExistPost(post, response)) {
-      JsonParse.setPostStatusFromJsonString(post);
-      return post;
-    }
-    return null;
-  }
-
-  /**
    * 게시물 작성
    *
    * @param boardid     게시물을 올릴 게시판 id
@@ -61,7 +45,8 @@ public class PostController {
    */
   @PostMapping("")
   public void insertPost(@PathVariable("boardid") int boardid,
-      @ModelAttribute PostDTO receivePost, HttpServletRequest request, HttpServletResponse response) {
+      @ModelAttribute PostDTO receivePost, HttpServletRequest request,
+      HttpServletResponse response) {
     // 게시글 제목, 내용 길이 체크
     if (LengthCheckUtils.isValid(receivePost, response)) {
       int receivedPostID = receivePost.getPostID();
@@ -94,11 +79,29 @@ public class PostController {
    */
   @GetMapping("")
   public List<PostDTO> getPostListByBoardID(@PathVariable("boardid") int boardID,
-      @RequestParam("pageNumber") int pageNumber,HttpServletRequest request) {
+      @RequestParam("pageNumber") int pageNumber, HttpServletRequest request) {
     UserDTO userDTO = new UserDTO(request);
-    List<PostDTO> postList = postService.getPostListByBoardID(boardID, pageNumber,userDTO.getCompanyID());
-    log.info("postList:"+postList);
+    List<PostDTO> postList = postService
+        .getPostListByBoardID(boardID, pageNumber, userDTO.getCompanyID());
+    log.info("postList:" + postList);
     return postList;
+  }
+
+  /**
+   * 게시글 가져오기
+   *
+   * @return PostDTO + 유저일치여부 로 구성된 map
+   * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+   */
+  @GetMapping(value = "/{postid}")
+  public PostDTO getPostByPostID(@PathVariable("postid") int postID, HttpServletResponse response,
+      HttpServletRequest request) {
+    PostDTO post = postService.selectPostByPostID(postID, request, response);
+    if (postValidation.isExistPost(post, response)) {
+      JsonParse.setPostStatusFromJsonString(post);
+      return post;
+    }
+    return null;
   }
 
   /**
@@ -111,22 +114,6 @@ public class PostController {
   public void deletePost(@PathVariable("postid") int postID, HttpServletResponse response) {
     if (postValidation.isExistPost(postID, response)) {
       postService.deletePost(postID);
-    }
-  }
-
-  /**
-   * 게시물 삭제 후 휴지통 이동
-   *
-   * @param boardID 휴디통으로 이동할 게시물의 게시판 id
-   * @param postID  휴지통으로 이동할 게시물 id
-   */
-  @PutMapping("/{postid}/trash")
-  public void deletePostTemporary(@PathVariable("boardid") int boardID,
-      @PathVariable("postid") int postID, HttpServletRequest request,HttpServletResponse response) {
-    PostDTO post = postService.selectPostByPostID(postID,request,response);
-    if (postValidation.isValidDelete(boardID, post, response)) {
-      postService.setPostStatusIsTempAndIsTrash(post, false, true);
-      postService.movePostToTrash(post);
     }
   }
 
@@ -152,6 +139,38 @@ public class PostController {
   }
 
   /**
+   * 게시물 삭제 후 휴지통 이동
+   *
+   * @param boardID 휴디통으로 이동할 게시물의 게시판 id
+   * @param postID  휴지통으로 이동할 게시물 id
+   */
+  @PutMapping("/{postid}/trash")
+  public void deletePostTemporary(@PathVariable("boardid") int boardID,
+      @PathVariable("postid") int postID, HttpServletRequest request,
+      HttpServletResponse response) {
+    PostDTO post = postService.selectPostByPostID(postID, request, response);
+    if (postValidation.isValidDelete(boardID, post, response)) {
+      postService.setPostStatusIsTempAndIsTrash(post, false, true);
+      postService.movePostToTrash(post);
+    }
+  }
+
+  /**
+   * 휴지통의 게시물을 복원한다.
+   *
+   * @return 해당 유저의 휴지통 목록
+   */
+  @PutMapping("/{postid}/restore")
+  public void restorePost(@PathVariable("postid") int postID, HttpServletRequest request,
+      HttpServletResponse response) {
+    PostDTO post = postService.selectPostByPostID(postID, request, response);
+    if (postValidation.isExistPost(post, response) && postValidation.isInTrashBox(post, response)) {
+      postService.setPostStatusIsTempAndIsTrash(post, false, false);
+      postService.restorePost(post);
+    }
+  }
+
+  /**
    * 수정한 게시물을 저장할 때
    *
    * @param option  검색 옵션 (ex : 제목, 내용, 작성자)
@@ -167,16 +186,6 @@ public class PostController {
     return null;
   }
 
-  /**
-   * 가장 최근에 임시저장된 게시글 가져올 때
-   *
-   * @return 가장 최근에 임시저장된 게시물 객체
-   */
-  @GetMapping("/temp/recent")
-  public PostDTO recentTempPost(HttpServletRequest request) {
-    UserDTO requestUser = new UserDTO(request);
-    return postService.selectRecentTemp(requestUser);
-  }
 
   /**
    * 임시 저장 게시물 목록을 가져올 때 (현재 로그인된 userID, companyID이 필요)
@@ -184,7 +193,8 @@ public class PostController {
    * @return 임시 저장된 게시물 목록
    */
   @GetMapping("/temp")
-  public List<PostDTO> getTempPosts(HttpServletRequest request, @RequestParam("pageNumber") int pageNumber) {
+  public List<PostDTO> getTempPosts(HttpServletRequest request,
+      @RequestParam("pageNumber") int pageNumber) {
     UserDTO requestUser = new UserDTO(request);
     return postService.selectMyTempPosts(requestUser, pageNumber);
   }
@@ -217,6 +227,17 @@ public class PostController {
   }
 
   /**
+   * 가장 최근에 임시저장된 게시글 가져올 때
+   *
+   * @return 가장 최근에 임시저장된 게시물 객체
+   */
+  @GetMapping("/temp/recent")
+  public PostDTO recentTempPost(HttpServletRequest request) {
+    UserDTO requestUser = new UserDTO(request);
+    return postService.selectRecentTemp(requestUser);
+  }
+
+  /**
    * 휴지통의 게시물 목록을 불러온다.
    *
    * @return 해당 유저의 휴지통 목록
@@ -228,19 +249,6 @@ public class PostController {
     return postService.getMyRecyclePosts(requestUser, pageNumber);
   }
 
-  /**
-   * 휴지통의 게시물을 복원한다.
-   *
-   * @return 해당 유저의 휴지통 목록
-   */
-  @PutMapping("/{postid}/restore")
-  public void restorePost(@PathVariable("postid") int postID, HttpServletRequest request,HttpServletResponse response) {
-    PostDTO post = postService.selectPostByPostID(postID,request,response);
-    if (postValidation.isExistPost(post, response) && postValidation.isInTrashBox(post, response)) {
-      postService.setPostStatusIsTempAndIsTrash(post, false, false);
-      postService.restorePost(post);
-    }
-  }
 
   /**
    * 요청한 회원이 작성한 게시글만 불러온다. (휴지통, 임시보관 제외)
@@ -262,13 +270,14 @@ public class PostController {
   }
 
   @GetMapping("/recent")
-  public List<PostDTO> selectRecentPosts(HttpServletRequest request, @RequestParam("pageNumber") int pageNumber) {
+  public List<PostDTO> selectRecentPosts(HttpServletRequest request,
+      @RequestParam("pageNumber") int pageNumber) {
     UserDTO user = new UserDTO(request);
     return postService.selectRecentPosts(user, pageNumber);
   }
-  
+
   @GetMapping("/popular-board")
-  public List<PostDTO> getPopularPosts(HttpServletRequest request){
+  public List<PostDTO> getPopularPosts(HttpServletRequest request) {
     UserDTO userData = new UserDTO(request);
     return postService.getPopularPostList(userData.getCompanyID());
   }
