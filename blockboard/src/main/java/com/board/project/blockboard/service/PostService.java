@@ -75,36 +75,44 @@ public class PostService {
 
   public List<PostDTO> selectMyPosts(UserDTO user, int pageNumber) {
     int pageCount = postMapper.getMyPostsCount(user);
-    return postMapper.selectMyPosts(makeMapUserAndPageInfo(user, pageCount, pageNumber));
+    Map<String, Object> map = makeMapUserAndPageInfo(user, pageCount, pageNumber);
+    return postMapper.selectMyPosts(map);
   }
 
   public List<PostDTO> selectPostsIncludeMyReplies(UserDTO user, int pageNumber) {
     int pageCount = postMapper.getPostsCountIncludeMyReplies(user);
-    return postMapper.selectMyPostsIncludeMyReplies(makeMapUserAndPageInfo(user, pageCount, pageNumber));
+    Map<String, Object> map = makeMapUserAndPageInfo(user, pageCount, pageNumber);
+    return postMapper.selectMyPostsIncludeMyReplies(map);
   }
 
   public List<PostDTO> selectMyTempPosts(UserDTO user, int pageNumber) {
     int pageCount = postMapper.getMyTempPostsCount(user);
-    return postMapper.selectMyTempPosts(makeMapUserAndPageInfo(user, pageCount, pageNumber));
+    Map<String, Object> map = makeMapUserAndPageInfo(user, pageCount, pageNumber);
+    return postMapper.selectMyTempPosts(map);
   }
 
   public List<PostDTO> getMyRecyclePosts(UserDTO user, int pageNumber) {
     int pageCount = postMapper.getMyRecyclePostsCount(user);
-    return postMapper.selectMyRecyclePosts(makeMapUserAndPageInfo(user, pageCount, pageNumber));
+    Map<String, Object> map = makeMapUserAndPageInfo(user, pageCount, pageNumber);
+    return postMapper.selectMyRecyclePosts(map);
   }
 
   public int getMyPostsCount(UserDTO user) {
     return postMapper.getMyPostsCount(user);
   }
+
   public int getMyRepliesCount(UserDTO user) {
     return postMapper.getPostsCountIncludeMyReplies(user);
   }
+
   public int getMyTempPostsCount(UserDTO user) {
     return postMapper.getMyTempPostsCount(user);
   }
+
   public int getMyRecyclePostsCount(UserDTO user) {
     return postMapper.getMyRecyclePostsCount(user);
   }
+
   public Map<String, Object> makeMapUserAndPageInfo(UserDTO user, int pageCount, int pageNumber) {
     Map<String, Object> map = new HashMap<>();
     PaginationDTO pageInfo = new PaginationDTO(pageCount, pageNumber, ConstantData.PAGE_SIZE,
