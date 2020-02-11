@@ -5,7 +5,7 @@
 
 function sendFileToServer(formData,status)
 {
-  var uploadURL = "/fileUpload"; //Upload URL
+  var uploadURL = "/files"; //Upload URL
   var extraData ={}; //Extra Data.
   var jqXHR=$.ajax({
     xhr: function() {
@@ -59,7 +59,7 @@ function updatePostIDToFiles(postID,fileList) {
   console.log(fileList);
   $.ajax({
     type: 'PUT',
-    url: `/fileUpload`,
+    url: `/files`,
     data: JSON.stringify(fileList),
     dataType: "json",
     contentType: 'application/json',
@@ -68,6 +68,22 @@ function updatePostIDToFiles(postID,fileList) {
     },
     success: function () {
       alert("게시글 작성완료 :"+postID);
+    }
+  });
+}
+
+function getFileList(postID,successFunction) {
+  $.ajax({
+    type: 'GET',
+    url: `/files`,
+    data: {postID:postID},
+    dataType: "json",
+    contentType: 'application/json',
+    error: function (error, msg) {  //통신 실패시
+      errorFunction(error);
+    },
+    success: function (data) {
+      successFunction(data);
     }
   });
 }

@@ -1,5 +1,7 @@
 package com.board.project.blockboard.mapper;
 
+import com.board.project.blockboard.dto.FileDTO;
+import java.util.List;
 import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
@@ -15,4 +17,8 @@ public interface FileMapper {
   void insertFile(Map<String, Object> fileAttributes);
 
   void updatePostIDByStoredFileName(Map<String, Object> fileAttributes);
+
+  List<FileDTO> selectFileListByPostID(int postID);
+
+  FileDTO selectFileByFileID(int fileID);
 }

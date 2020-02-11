@@ -346,17 +346,19 @@
                     </div>
                     <div class="col-10">
                         <a class='file_drag_and_drop_btn text-success font-weight-bold text-button'
-                           style="cursor: pointer;" >열기</a>
-                        <div id = file_drop_container></div>
+                           style="cursor: pointer;">열기</a>
+                        <div id=file_drop_container></div>
                     </div>
 
                 </script>
-                <script id="file-attach-drag-and-drop-form-template" type="text/x-handlebars-template">
-                    <form name="uploadForm" id="uploadForm" enctype="multipart/form-data" method="post">
+                <script id="file-attach-drag-and-drop-form-template"
+                        type="text/x-handlebars-template">
+                    <form name="uploadForm" id="uploadForm" enctype="multipart/form-data"
+                          method="post">
                         <table class="table" width="100%" border="1px">
                             <tbody id="fileTableTbody">
                             <tr>
-                                <td class = "dragAndDropDiv">
+                                <td class="dragAndDropDiv">
                                     파일을 드래그 하세요
                                 </td>
                             </tr>
@@ -396,6 +398,10 @@
                 <p class="h6" align="right">{{postRegisterTime}}</p>
                 <p class="h6" align="right">조회수 {{viewCount}}</p>
                 <hr>
+                <div class="attached_file_list_container">
+                    <!--첨부파일 컨테이너 -->
+                </div>
+
                 <div class="d-block">
                     <p>{{{postContent}}}</p>
                 </div>
@@ -425,6 +431,17 @@
                     {{else}}
                 </div>
                 {{/isCommentAble}}
+            </script>
+            <!--첨부파일 리스트 템플릿-->
+            <script id="attached-file-list-template" type="text/x-handlebars-template">
+                <a class='text-success font-weight-bold'>첨부파일</a>
+                {{#files}}
+                <div class="form-group">
+                    <p><a class="attached-file-download" data-fileid='{{fileID}}' href="/files/{{fileID}}" >{{originFileName}} ( {{fileSize}} B )</a></p>
+                </div>
+
+                {{/files}}
+                <hr>
             </script>
             <!--댓글리스트 템플릿-->
             <script id="commentList-template" type="text/x-handlebars-template">
@@ -718,6 +735,7 @@
 <script src="/static/js/updateUI/functionUI.js"></script>
 <script src="/static/js/updateUI/paginationUI.js"></script>
 <script src="/static/js/updateUI/postUI.js"></script>
+<script src="/static/js/updateUI/fileUI.js"></script>
 <script src="/static/js/util/windowLoad.js"></script>
 
 </body>

@@ -66,6 +66,7 @@ function getBoardList(successFunction) {
 //게시물 클릭후 게시물 데이터 받아오기
 function getPostDataAfterPostClick(postID, boardID) {
   var userID = $('#current_user_info').attr('data-id');
+  var functionOn = new FunctionOn();
   postClear();
   $.ajax({
     type: 'GET',
@@ -79,9 +80,12 @@ function getPostDataAfterPostClick(postID, boardID) {
 
       //게시글 내용 출력
       loadPostContent(data);
+      if(functionOn.fileAttach){
+        getFileList(postID,updateFileListInPostUI);
+      }
+
 
       // 작성글의 userID와 현재 로그인한 userID가 같으면 삭제버튼 표시
-      var commentAbleObj = $('#functionAble1');
       var btn_deletePost = $('#btn_deletePost');
       var btn_updatePost = $('#btn_updatePost');
       if (data.userID == userID) {
@@ -93,7 +97,7 @@ function getPostDataAfterPostClick(postID, boardID) {
       }
       var postContentHtml = "";
 
-      if (commentAbleObj.attr("value") == "on") {
+      if (functionOn.comment) {
         $(function () {
           getCommentList(boardID, postID, getCommentAllContents); //삭제이후 tab에 게시판목록 업데이트 //CommentAjax.js 에 있음
           updateCommentsCount(boardID, postID);

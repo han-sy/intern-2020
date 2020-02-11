@@ -41,3 +41,8 @@ $(document).on("drop",".dragAndDropDiv",function(e){
 
   handleFileUpload(files);
 });
+
+$(document).on("click",".attached-file-download",function(){
+  console.log($(this).attr("data-fileid"));
+  downloadFile($(this).attr("data-fileid"));
+});
