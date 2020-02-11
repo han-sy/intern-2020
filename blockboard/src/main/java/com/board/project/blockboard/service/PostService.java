@@ -19,7 +19,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.json.simple.JSONObject;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,7 +34,7 @@ public class PostService {
   @Autowired
   private PostValidation postValidation;
 
-  public void insertPost(PostDTO receivePost, int boardID, HttpServletRequest request,
+  public int insertPost(PostDTO receivePost, int boardID, HttpServletRequest request,
       HttpServletResponse response) {
     if (LengthCheckUtils.isValid(receivePost, response)) {
       int receivedPostID = receivePost.getPostID();
@@ -44,7 +43,7 @@ public class PostService {
       receivePost.setUserName(request.getAttribute("userName").toString());
       receivePost.setCompanyID(Integer.parseInt(request.getAttribute("companyID").toString()));
       receivePost.setPostContentExceptHTMLTag(Jsoup.parse(receivePost.getPostContent()).text());
-
+      JsonParse.setPostStatusFromJsonString(receivePost);
       // '글쓰기' -> '저장'or'임시저장' 버튼을 누른 경우에는 html 안에 postID가 존재하지 않아 바로 insert
       if (receivedPostID == 0) {
         postMapper.insertPost(receivePost);
@@ -53,10 +52,12 @@ public class PostService {
         PostDTO receivePostInDatabase = postMapper.selectPostByPostID(receivedPostID);
         if (postValidation.isExistPost(receivePostInDatabase, boardID, response) &&
             postValidation.isTempSavedPost(receivePostInDatabase, response)) {
+          log.info(receivePost.getPostStatus().toString());
           postMapper.insertPost(receivePost);
         }
       }
     }
+    return receivePost.getPostID();
   }
 
   public void deletePost(int postID, int boardID, HttpServletRequest request,
@@ -65,21 +66,27 @@ public class PostService {
     UserDTO user = new UserDTO(request);
     if (postValidation.isExistPost(post, boardID, response) &&
         postValidation.isValidChange(post, user, response)) {
-      postMapper.deletePostByPostID(postID);
+      JsonParse.setPostStatusFromJsonString(post); // post_status json -> PostDTO Binding
+      if (post.getIsRecycle() || post.getIsTemp()) {
+        postMapper.deletePostByPostID(postID);
+      } else {
+        postMapper.temporaryDeletePost(post);
+      }
     }
   }
 
-  public void updatePost(PostDTO requestPost, int postID, int originalBoardID,
-      HttpServletRequest request,
+  public void updatePost(PostDTO requestPost, int postID, HttpServletRequest request,
       HttpServletResponse response) {
     UserDTO user = new UserDTO(request);
     PostDTO post = postMapper.selectPostByPostID(postID);
     if (LengthCheckUtils.isValid(requestPost, response)) {
-      if (postValidation.isExistPost(post, originalBoardID, response) && postValidation
+      if (postValidation.isExistPost(post, response) && postValidation
           .isValidChange(post, user, response)) {
-        requestPost.setPostID(postID);
-        requestPost.setPostContentExceptHTMLTag(Jsoup.parse(requestPost.getPostContent()).text());
-        postMapper.updatePost(requestPost);
+        post.setBoardID(requestPost.getBoardID());
+        post.setPostTitle(requestPost.getPostTitle());
+        post.setPostContent(requestPost.getPostContent());
+        post.setPostContentExceptHTMLTag(Jsoup.parse(requestPost.getPostContent()).text());
+        postMapper.updatePost(post);
       }
     }
   }
@@ -107,56 +114,12 @@ public class PostService {
     return null;
   }
 
-  public PostDTO selectRecentTemp(HttpServletRequest request) {
-    UserDTO user = new UserDTO(request);
-    return postMapper.selectRecentTempPost(user);
-  }
-
-  public PostDTO selectTempPost(int postID, HttpServletResponse response) {
-    PostDTO post = postMapper.selectPostByPostID(postID);
-    if (postValidation.isExistPost(post, response) &&
-        postValidation.isTempSavedPost(post, response)) {
-      return post;
-    }
-    return null;
-  }
-
-  public PostDTO selectRecyclePost(int postID, HttpServletResponse response) {
-    PostDTO post = postMapper.selectPostByPostID(postID);
-    if (postValidation.isExistPost(post, response) &&
-        postValidation.isTempSavedPost(post, response)) {
-      return post;
-    }
-    return null;
-  }
-
-  public void movePostToTrash(int postID, int boardID, HttpServletRequest request,
-      HttpServletResponse response) {
-    UserDTO user = new UserDTO(request);
-    PostDTO post = postMapper.selectPostByPostID(postID);
-    if (postValidation.isExistPost(post, boardID, response) && postValidation
-        .isValidChange(post, user, response)) {
-      this.setPostStatusIsTempAndIsTrash(post, false, true);
-      postMapper.temporaryDeletePost(post);
-    }
-  }
-
   public void restorePost(int postID, HttpServletRequest request, HttpServletResponse response) {
     UserDTO user = new UserDTO(request);
     PostDTO post = postMapper.selectPostByPostID(postID);
     if (postValidation.isValidRestore(post, user, response)) {
-      this.setPostStatusIsTempAndIsTrash(post, false, false);
       postMapper.restorePost(post);
     }
-  }
-
-  public void setPostStatusIsTempAndIsTrash(PostDTO post, boolean isTemp, boolean isTrash) {
-    Map<String, Object> statusMap = new HashMap<>();
-    statusMap.put("isTemp", isTemp);
-    statusMap.put("isRecycle", isTrash);
-
-    JSONObject statusJson = JsonParse.getJsonStringFromMap(statusMap);
-    post.setPostStatus(statusJson.toJSONString());
   }
 
   public List<PostDTO> selectMyPosts(UserDTO user, int pageNumber) {

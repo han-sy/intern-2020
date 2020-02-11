@@ -349,8 +349,8 @@
                     <div id="editorcontent-hidden"></div>
                 </script>
                 <script id="postid-template" type="text/x-handlebars-template">
-                    <a id="editor_postID" style="display:none">{{postID}}</a>
-                    <a id="editor_originalBoardID" style="display:none">{{boardID}}</a>
+                    <a id="postID" style="display:none">{{postID}}</a>
+                    <a id="boardID" style="display:none">{{boardID}}</a>
                 </script>
             </div>
 
@@ -554,16 +554,19 @@
                     <tbody id="postlist">
                     {{#posts}}
                         {{#isTemp}}
-                            <tr class="postclick temp_post_click" data-post={{postID}}>
+                            <tr class="postclick temp_post_click" data-post={{postID}}
+                                data-board={{boardID}}>
                                 <td>{{boardName}}</td>
                                 <td>{{postTitle}}</td>
                         {{else}}
                             {{#isRecycle}}
-                                <tr class="postclick recycle_post_click" data-post={{postID}}>
+                                <tr class="postclick recycle_post_click" data-post={{postID}}
+                                    data-board={{boardID}}>
                                     <td>{{boardName}}</td>
                                     <td>{{postTitle}}</td>
                             {{else}}
-                                <tr class="postclick normal_post_click" data-post='{{postID}}'>
+                                <tr class="postclick normal_post_click" data-post={{postID}}
+                                    data-board={{boardID}}>
                                 {{#isPopular}}
                                         <td>{{boardName}}</td>
                                 {{else}}
@@ -575,8 +578,8 @@
                                     </td>
                             {{/isRecycle}}
                         {{/isTemp}}
-                                <td>{{userName}}</td>
-                                <td>{{postRegisterTime}}</td>
+                            <td>{{userName}}</td>
+                            <td>{{postRegisterTime}}</td>
                         {{#isTemp}}
                         {{else}}
                             {{#isRecycle}}
@@ -584,9 +587,7 @@
                                     <td>{{viewCount}}</td>
                             {{/isRecycle}}
                         {{/isTemp}}
-                                <a style="visibility:hidden">{{postID}}</a>
-                                <a style="visibility:hidden">{{boardID}}</a>
-                            </tr>
+                        </tr>
                     {{/posts}}
                 </script>
 

@@ -95,11 +95,12 @@ public class JsonParse {
    * @return postStatus 의 Key 들이 Binding 된 PostDTO
    * @author Woohyeok Jun <woohyeok.jun@worksmobile.com>
    */
-  public static PostDTO setPostStatusFromJsonString(PostDTO post) {
+  public static void setPostStatusFromJsonString(PostDTO post) {
     if (post.getPostStatus() == null) {
-      return null;
+      post.setIsTemp(false);
+      post.setIsRecycle(false);
+      return;
     }
-
     Map<String, Object> map = getMapFromJsonString(post.getPostStatus().toString());
     if (map.get("isTemp") == null) {
       post.setIsTemp(false);
@@ -111,6 +112,5 @@ public class JsonParse {
     } else {
       post.setIsRecycle(map.get("isRecycle").toString().equals("true"));
     }
-    return post;
   }
 }

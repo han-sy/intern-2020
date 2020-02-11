@@ -7,30 +7,23 @@ package com.board.project.blockboard.common.validation;
 import com.board.project.blockboard.common.util.JsonParse;
 import com.board.project.blockboard.dto.PostDTO;
 import com.board.project.blockboard.dto.UserDTO;
-import com.board.project.blockboard.mapper.PostMapper;
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
 public class PostValidation {
 
-  @Autowired
-  private PostMapper postMapper;
-
   public enum searchOptions {title, writer, content, titleAndContent}
 
   public boolean isTempSavedPost(PostDTO post, HttpServletResponse response) {
     try {
-      PostDTO setStatusPost = JsonParse.setPostStatusFromJsonString(post);
-      if (setStatusPost.getIsTemp()) {
-        if (!setStatusPost.getIsRecycle()) {
-          return true;
-        }
+      JsonParse.setPostStatusFromJsonString(post);
+      if (post.getIsTemp()) {
+        return true;
       }
       response.sendError(HttpServletResponse.SC_CONFLICT, "이미 저장된 게시물입니다.");
     } catch (IOException e) {
@@ -93,7 +86,7 @@ public class PostValidation {
   public boolean isValidRestore(PostDTO post, UserDTO user, HttpServletResponse response) {
     try {
       JsonParse.setPostStatusFromJsonString(post);
-      if(!StringUtils.equals(post.getUserID(), user.getUserID())) {
+      if (!StringUtils.equals(post.getUserID(), user.getUserID())) {
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "복구 권한이 없습니다.");
       } else {
         if (!post.getIsRecycle()) {
