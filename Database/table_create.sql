@@ -1,4 +1,5 @@
 use block_board;
+drop table files;
 drop table comments;
 drop table posts;
 drop table users;
@@ -77,6 +78,17 @@ create table comments(
 	foreign key(user_id) references users(user_id) ON DELETE CASCADE,
 	foreign key(company_id) references companies(company_id) ON DELETE CASCADE,
     primary key(comment_id)
+)ENGINE =InnoDB DEFAULT charset= utf8;
+
+create table files(
+	file_id int(9) not null auto_increment,
+    post_id int(9) ,
+    comment_id int(9),
+    origin_file_name varchar(200) not null,
+    stored_file_name varchar(200) not null,
+    file_size int(11) NULL default null,
+    upload_time timestamp not null,
+    primary key(file_id)
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
 alter table boards auto_increment=1;
@@ -176,6 +188,21 @@ SELECT Count(comment_id)
         WHERE  post_id = 1
         AND comment_referenced_id is null; 
         
-UPDATE posts
-SET view_count = view_count + 1
-WHERE post_id = 1;
+
+
+select * from posts;
+insert into posts (user_id, board_id, company_id, post_title, post_content, post_content_except_htmltag, post_register_time) values (1,5,1,'자유2','<p>22222</p>','22222',now());
+SELECT LAST_INSERT_ID();
+select max(post_id)
+from posts;
+select 1;
+
+select file_id as fileID,
+post_id as postID,
+comment_id as commentID,
+origin_file_name as originFileName,
+stored_file_name as storedFileName,
+file_size as fileSize,
+upload_time as uploadTime
+from files
+where post_id = 131;
