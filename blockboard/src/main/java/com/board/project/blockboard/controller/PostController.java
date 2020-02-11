@@ -44,7 +44,7 @@ public class PostController {
    * @param receivePost 받은 게시물 정보
    */
   @PostMapping("")
-  public void insertPost(@PathVariable("boardid") int boardid,
+  public int insertPost(@PathVariable("boardid") int boardid,
       @ModelAttribute PostDTO receivePost, HttpServletRequest request,
       HttpServletResponse response) {
     // 게시글 제목, 내용 길이 체크
@@ -58,16 +58,18 @@ public class PostController {
 
       // '글쓰기' -> '저장'or'임시저장' 버튼을 누른 경우에는 html 안에 postID가 존재하지 않아 바로 insert
       if (receivedPostID == 0) {
-        postService.insertPost(receivePost);
+        return postService.insertPost(receivePost);
       } else {
         // [임시보관함]의 게시글에서 '저장'or'임시저장' 버튼을 눌렀는데 실제로 임시저장 되어있는 게시물이면 insert(update)
         PostDTO receivePostInDatabase = postService.getPostByPostID(receivedPostID);
         if (postValidation.isExistPost(receivePostInDatabase, response) &&
             postValidation.isTempSavedPost(receivePostInDatabase, response)) {
-          postService.insertPost(receivePost);
+          return postService.insertPost(receivePost);
         }
       }
     }
+    //TODO 에러메시지 보내기
+    return 0;
   }
 
   /**

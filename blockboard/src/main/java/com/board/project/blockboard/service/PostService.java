@@ -30,8 +30,10 @@ public class PostService {
   @Autowired
   private CommentService commentService;
 
-  public void insertPost(PostDTO post) {
+  public int insertPost(PostDTO post) {
+
     postMapper.insertPost(post);
+    return post.getPostID();
   }
 
   public void deletePost(int postID) {

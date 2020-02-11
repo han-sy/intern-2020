@@ -10,7 +10,9 @@ import lombok.Data;
 public class FileDTO {
   private int fileID;
   private int postID;
-  private String fileName;
-  private String fileOriginalName;
-  private String fileUrl;
+  private int commentID;
+  private String originFileName;
+  private String storedFileName;
+  private long fileSize;
+  private String uploadTime;
 }

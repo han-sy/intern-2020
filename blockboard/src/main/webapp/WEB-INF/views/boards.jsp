@@ -345,11 +345,8 @@
                         <label class="font-weight-light">파일첨부</label>
                     </div>
                     <div class="col-10">
-
-                        <input type ="file" name="files" class='file_from_myPC text-success font-weight-bold text-button'
-                           style="cursor: pointer;">내 PC</input>
                         <a class='file_drag_and_drop_btn text-success font-weight-bold text-button'
-                           style="cursor: pointer;" value="open">열기</a>
+                           style="cursor: pointer;" >열기</a>
                         <div id = file_drop_container></div>
                     </div>
 
@@ -705,14 +702,17 @@
 <script src="/static/js/event/functionEvent.js"></script>
 <script src="/static/js/event/paginationEvent.js"></script>
 <script src="/static/js/event/common.js"></script>
+<script src="/static/js/event/fileEvent.js"></script>
 <script src="/static/js/ajax/functionAjax.js"></script>
 <script src="/static/js/ajax/commentAjax.js"></script>
 <script src="/static/js/ajax/postAjax.js"></script>
 <script src="/static/js/ajax/boardAjax.js"></script>
 <script src="/static/js/ajax/paginationAjax.js"></script>
+<script src="/static/js/ajax/fileAjax.js"></script>
 <script src="/static/ckeditor/ckeditor.js"></script>
 <script src="/static/ckeditor/adapters/jquery.js"></script>
 <script src="/static/js/util/handlebarsHelper.js"></script>
+<script src="/static/js/util/file.js"></script>
 <script src="/static/js/updateUI/boardUI.js"></script>
 <script src="/static/js/updateUI/commentUI.js"></script>
 <script src="/static/js/updateUI/functionUI.js"></script>

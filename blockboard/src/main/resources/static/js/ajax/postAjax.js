@@ -16,8 +16,9 @@ function insertPost(boardID, postTitle, postContent) {
     error: function (xhr) {
       errorFunction(xhr);
     },
-    success: function () {
-      alert("게시글 작성완료");
+    success: function (data) {
+      console.log("data : "+data);
+      updatePostIDToFiles(data);
       refreshPostList();
     }
   });

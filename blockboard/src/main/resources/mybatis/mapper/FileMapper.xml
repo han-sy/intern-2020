@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+ * @file FileMapper.xml
+-->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.board.project.blockboard.mapper.FileMapper">
+  <insert id="insertFile" parameterType="hashmap">
+    INSERT INTO files
+                (origin_file_name,
+                 stored_file_name,
+                 file_size)
+    VALUES     (#{originFileName},
+                #{storedFileName},
+                #{fileSize});
+  </insert>
+
+  <update id="updatePostIDByStoredFileName" parameterType="hashmap">
+    UPDATE files
+    SET    post_id = #{postID}
+    WHERE  stored_file_name = #{storedFileName};
+  </update>
+</mapper>

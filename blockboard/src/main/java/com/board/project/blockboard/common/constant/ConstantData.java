@@ -19,6 +19,7 @@ public class ConstantData {
   public static final int BOARD_RECENT = -5;
   public static final int BOARD_POPULAR = -6;
 
+  public static final String ATTACH_FILE_PATH = "C:/test";
   public static final class FunctionID {
 
     public static final int COMMENT = 1;
