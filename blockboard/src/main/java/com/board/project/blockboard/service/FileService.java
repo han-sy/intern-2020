@@ -5,7 +5,7 @@
 package com.board.project.blockboard.service;
 
 import com.board.project.blockboard.common.constant.ConstantData;
-import com.board.project.blockboard.common.util.Time;
+import com.board.project.blockboard.common.util.Common;
 import com.board.project.blockboard.dto.FileDTO;
 import com.board.project.blockboard.mapper.FileMapper;
 import java.io.File;
@@ -36,8 +36,8 @@ public class FileService {
   private FileMapper fileMapper;
 
   public String uploadFile(MultipartHttpServletRequest multipartRequest) {
-    String now = Time.getTime();
-    log.info("now : " + now);
+    String uuid = Common.getNewUUID();
+    log.info("uuid : " + uuid);
     Iterator<String> itr = multipartRequest.getFileNames();
 
     String filePath = ConstantData.ATTACH_FILE_PATH; //설정파일로 뺀다.
@@ -48,7 +48,7 @@ public class FileService {
 
       String originFileName = mpf.getOriginalFilename(); //파일명
 
-      String storedFileName = "file_attach_" + now + "_" + originFileName;
+      String storedFileName = uuid + "_" + originFileName;
       String fileFullPath = filePath + "/" + storedFileName;
       long fileSize = mpf.getSize();
       File file = new File(fileFullPath);
