@@ -53,10 +53,10 @@ function postsClear() {
 }
 
 // 에디터 UI에 hidden type으로 PostID 추가
-function addPostIdToEditor(postID) {
+function addPostInfoToEditor(postID, boardID) {
   var source = $('#postid-template').html();
   var template = Handlebars.compile(source);
-  var IDitem = {postID: postID};
+  var IDitem = {postID: postID, boardID: boardID};
   var itemList = template(IDitem);
   $('#editorcontent-hidden').html(itemList);
 }

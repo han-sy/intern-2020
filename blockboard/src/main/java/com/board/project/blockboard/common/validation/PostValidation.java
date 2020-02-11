@@ -6,6 +6,7 @@ package com.board.project.blockboard.common.validation;
 
 import com.board.project.blockboard.common.util.JsonParse;
 import com.board.project.blockboard.dto.PostDTO;
+import com.board.project.blockboard.dto.UserDTO;
 import com.board.project.blockboard.mapper.PostMapper;
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
@@ -24,13 +25,13 @@ public class PostValidation {
   public enum searchOptions {title, writer, content, titleAndContent}
 
   public boolean isTempSavedPost(PostDTO post, HttpServletResponse response) {
-    PostDTO setStatusPost = JsonParse.setPostStatusFromJsonString(post);
-    if (setStatusPost.getIsTemp()) {
-      if (!setStatusPost.getIsRecycle()) {
-        return true;
-      }
-    }
     try {
+      PostDTO setStatusPost = JsonParse.setPostStatusFromJsonString(post);
+      if (setStatusPost.getIsTemp()) {
+        if (!setStatusPost.getIsRecycle()) {
+          return true;
+        }
+      }
       response.sendError(HttpServletResponse.SC_CONFLICT, "이미 저장된 게시물입니다.");
     } catch (IOException e) {
       e.printStackTrace();
@@ -38,13 +39,13 @@ public class PostValidation {
     return false;
   }
 
-  public boolean isExistPost(int postID, HttpServletResponse response) {
-    PostDTO post = postMapper.selectPostByPostID(postID);
-    if (post != null) {
-      return true;
-    }
+  public boolean isExistPost(PostDTO post, int boardID, HttpServletResponse response) {
     try {
-      response.sendError(HttpServletResponse.SC_CONFLICT, "요청한 게시물을 찾을 수 없습니다.");
+      if (post == null) {
+        response.sendError(HttpServletResponse.SC_CONFLICT, "요청한 게시물을 찾을 수 없습니다.");
+        return false;
+      }
+      return true;
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -52,11 +53,12 @@ public class PostValidation {
   }
 
   public boolean isExistPost(PostDTO post, HttpServletResponse response) {
-    if (post != null) {
-      return true;
-    }
     try {
-      response.sendError(HttpServletResponse.SC_CONFLICT, "요청한 게시물을 찾을 수 없습니다.");
+      if (post == null) {
+        response.sendError(HttpServletResponse.SC_CONFLICT, "요청한 게시물을 찾을 수 없습니다.");
+        return false;
+      }
+      return true;
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -76,15 +78,11 @@ public class PostValidation {
     return true;
   }
 
-  public boolean isValidDelete(int boardID, PostDTO post, HttpServletResponse response) {
+  public boolean isValidChange(PostDTO post, UserDTO user,
+      HttpServletResponse response) {
     try {
-      if (post == null) {
-        response.sendError(HttpServletResponse.SC_CONFLICT, "존재하지 않은 게시물입니다.");
-        return false;
-      }
-      if (post.getBoardID() != boardID) {
-        response.sendError(HttpServletResponse.SC_CONFLICT, "현재 게시판에 없는 글입니다.");
-        return false;
+      if (!StringUtils.equals(post.getUserID(), user.getUserID())) {
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "게시물 변경 권한이 없습니다.");
       }
     } catch (IOException e) {
       e.printStackTrace();
@@ -92,11 +90,15 @@ public class PostValidation {
     return true;
   }
 
-  public boolean isInTrashBox(PostDTO post, HttpServletResponse response) {
+  public boolean isValidRestore(PostDTO post, UserDTO user, HttpServletResponse response) {
     try {
       JsonParse.setPostStatusFromJsonString(post);
-      if (!post.getIsRecycle()) {
-        response.sendError(HttpServletResponse.SC_CONFLICT, "휴지통에 존재하지 않습니다.");
+      if(!StringUtils.equals(post.getUserID(), user.getUserID())) {
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "복구 권한이 없습니다.");
+      } else {
+        if (!post.getIsRecycle()) {
+          response.sendError(HttpServletResponse.SC_CONFLICT, "휴지통에 존재하지 않습니다.");
+        }
       }
     } catch (IOException e) {
       e.printStackTrace();

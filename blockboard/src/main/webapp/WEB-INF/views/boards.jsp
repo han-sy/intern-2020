@@ -350,6 +350,7 @@
                 </script>
                 <script id="postid-template" type="text/x-handlebars-template">
                     <a id="editor_postID" style="display:none">{{postID}}</a>
+                    <a id="editor_originalBoardID" style="display:none">{{boardID}}</a>
                 </script>
             </div>
 
@@ -366,6 +367,7 @@
                         <p>{{{postContent}}}</p>
                     </div>
                     <a id="postID" style="visibility: hidden;">{{postID}}</a>
+                    <a id="boardIdInPost" style="visibility: hidden">{{boardID}}</a>
                     <br>
                     <button class="btn btn-success btn_modify" style="visibility:hidden">수정</button>
                     <button class="btn btn-success btn_delete" style="visibility:hidden">삭제</button>
@@ -552,14 +554,12 @@
                     <tbody id="postlist">
                     {{#posts}}
                         {{#isTemp}}
-                            <tr class="postclick" data-post={{postID}}
-                                onclick="javascript:clickTempPostEvent(this)">
+                            <tr class="postclick temp_post_click" data-post={{postID}}>
                                 <td>{{boardName}}</td>
                                 <td>{{postTitle}}</td>
                         {{else}}
                             {{#isRecycle}}
-                                <tr class="postclick" data-post={{postID}}
-                                    onclick="javascript:clickRecyclePostEvent(this)">
+                                <tr class="postclick recycle_post_click" data-post={{postID}}>
                                     <td>{{boardName}}</td>
                                     <td>{{postTitle}}</td>
                             {{else}}

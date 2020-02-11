@@ -4,18 +4,13 @@
  */
 package com.board.project.blockboard.controller;
 
-import com.board.project.blockboard.common.util.JsonParse;
-import com.board.project.blockboard.common.util.LengthCheckUtils;
-import com.board.project.blockboard.common.validation.PostValidation;
 import com.board.project.blockboard.dto.PostDTO;
 import com.board.project.blockboard.dto.UserDTO;
 import com.board.project.blockboard.service.PostService;
-import java.io.IOException;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,40 +29,18 @@ public class PostController {
 
   @Autowired
   private PostService postService;
-  @Autowired
-  private PostValidation postValidation;
 
   /**
    * 게시물 작성
    *
-   * @param boardid     게시물을 올릴 게시판 id
+   * @param boardID     게시물을 올릴 게시판 id
    * @param receivePost 받은 게시물 정보
    */
   @PostMapping("")
-  public void insertPost(@PathVariable("boardid") int boardid,
+  public void insertPost(@PathVariable("boardid") int boardID,
       @ModelAttribute PostDTO receivePost, HttpServletRequest request,
       HttpServletResponse response) {
-    // 게시글 제목, 내용 길이 체크
-    if (LengthCheckUtils.isValid(receivePost, response)) {
-      int receivedPostID = receivePost.getPostID();
-      receivePost.setBoardID(boardid);
-      receivePost.setUserID(request.getAttribute("userID").toString());
-      receivePost.setUserName(request.getAttribute("userName").toString());
-      receivePost.setCompanyID(Integer.parseInt(request.getAttribute("companyID").toString()));
-      receivePost.setPostContentExceptHTMLTag(Jsoup.parse(receivePost.getPostContent()).text());
-
-      // '글쓰기' -> '저장'or'임시저장' 버튼을 누른 경우에는 html 안에 postID가 존재하지 않아 바로 insert
-      if (receivedPostID == 0) {
-        postService.insertPost(receivePost);
-      } else {
-        // [임시보관함]의 게시글에서 '저장'or'임시저장' 버튼을 눌렀는데 실제로 임시저장 되어있는 게시물이면 insert(update)
-        PostDTO receivePostInDatabase = postService.getPostByPostID(receivedPostID);
-        if (postValidation.isExistPost(receivePostInDatabase, response) &&
-            postValidation.isTempSavedPost(receivePostInDatabase, response)) {
-          postService.insertPost(receivePost);
-        }
-      }
-    }
+    postService.insertPost(receivePost, boardID, request, response);
   }
 
   /**
@@ -81,10 +54,8 @@ public class PostController {
   public List<PostDTO> getPostListByBoardID(@PathVariable("boardid") int boardID,
       @RequestParam("pageNumber") int pageNumber, HttpServletRequest request) {
     UserDTO userDTO = new UserDTO(request);
-    List<PostDTO> postList = postService
+    return postService
         .getPostListByBoardID(boardID, pageNumber, userDTO.getCompanyID());
-    log.info("postList:" + postList);
-    return postList;
   }
 
   /**
@@ -94,14 +65,10 @@ public class PostController {
    * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
    */
   @GetMapping(value = "/{postid}")
-  public PostDTO getPostByPostID(@PathVariable("postid") int postID, HttpServletResponse response,
-      HttpServletRequest request) {
-    PostDTO post = postService.selectPostByPostID(postID, request, response);
-    if (postValidation.isExistPost(post, response)) {
-      JsonParse.setPostStatusFromJsonString(post);
-      return post;
-    }
-    return null;
+  public PostDTO getPostByPostID(@PathVariable("postid") int postID,
+      @PathVariable("boardid") int boardID, HttpServletRequest request,
+      HttpServletResponse response) {
+    return postService.selectPostByPostID(postID, boardID, request, response);
   }
 
   /**
@@ -111,32 +78,29 @@ public class PostController {
    * @return
    */
   @DeleteMapping("/{postid}")
-  public void deletePost(@PathVariable("postid") int postID, HttpServletResponse response) {
-    if (postValidation.isExistPost(postID, response)) {
-      postService.deletePost(postID);
-    }
+  public void deletePost(@PathVariable("boardid") int boardID,
+      @PathVariable("postid") int postID, HttpServletRequest request,
+      HttpServletResponse response) {
+    postService.deletePost(postID, boardID, request, response);
   }
 
   /**
    * 수정한 게시물을 저장할 때
    *
-   * @param boardid     수정 후 게시물을 올릴 게시판 id
-   * @param postid      수정할 게시물 id
-   * @param requestPost 수정할 게시물 제목과 내용이 담긴 객체
+   * @param originalBoardID 수정 전 게시물의 게시판 id
+   * @param postID          수정할 게시물 id
+   * @param requestPost     수정할 게시물 제목과 내용이 담긴 객체
    * @return
    */
   @PutMapping("/{postid}")
-  public void updatePost(@PathVariable("boardid") int boardid, @PathVariable("postid") int postid,
-      @ModelAttribute PostDTO requestPost, HttpServletResponse response) {
-    if (LengthCheckUtils.isValid(requestPost, response)) {
-      requestPost.setPostID(postid);
-      requestPost.setBoardID(boardid);
-      requestPost.setPostContentExceptHTMLTag(Jsoup.parse(requestPost.getPostContent()).text());
-      if (postValidation.isExistPost(requestPost.getPostID(), response)) {
-        postService.updatePost(requestPost);
-      }
-    }
+  public void updatePost(@PathVariable("boardid") int originalBoardID,
+      @PathVariable("postid") int postID,
+      @ModelAttribute PostDTO requestPost, HttpServletRequest request,
+      HttpServletResponse response) {
+    postService.updatePost(requestPost, postID, originalBoardID, request, response);
+
   }
+
 
   /**
    * 게시물 삭제 후 휴지통 이동
@@ -148,11 +112,7 @@ public class PostController {
   public void deletePostTemporary(@PathVariable("boardid") int boardID,
       @PathVariable("postid") int postID, HttpServletRequest request,
       HttpServletResponse response) {
-    PostDTO post = postService.selectPostByPostID(postID, request, response);
-    if (postValidation.isValidDelete(boardID, post, response)) {
-      postService.setPostStatusIsTempAndIsTrash(post, false, true);
-      postService.movePostToTrash(post);
-    }
+    postService.movePostToTrash(postID, boardID, request, response);
   }
 
   /**
@@ -163,11 +123,7 @@ public class PostController {
   @PutMapping("/{postid}/restore")
   public void restorePost(@PathVariable("postid") int postID, HttpServletRequest request,
       HttpServletResponse response) {
-    PostDTO post = postService.selectPostByPostID(postID, request, response);
-    if (postValidation.isExistPost(post, response) && postValidation.isInTrashBox(post, response)) {
-      postService.setPostStatusIsTempAndIsTrash(post, false, false);
-      postService.restorePost(post);
-    }
+    postService.restorePost(postID, request, response);
   }
 
   /**
@@ -179,11 +135,8 @@ public class PostController {
    */
   @GetMapping("/search")
   public List<PostDTO> searchPost(@RequestParam("option") String option,
-      @RequestParam("keyword") String keyword, HttpServletResponse response) throws IOException {
-    if (postValidation.isValidSearch(option, keyword, response)) {
-      return postService.searchPost(option, keyword);
-    }
-    return null;
+      @RequestParam("keyword") String keyword, HttpServletResponse response) {
+    return postService.searchPost(option, keyword, response);
   }
 
 
@@ -206,11 +159,7 @@ public class PostController {
    */
   @GetMapping("/temp/{postid}")
   public PostDTO getTempPost(@PathVariable("postid") int postID, HttpServletResponse response) {
-    PostDTO post = postService.selectTempPost(postID);
-    if (postValidation.isTempSavedPost(post, response)) {
-      return post;
-    }
-    return null;
+    return postService.selectTempPost(postID, response);
   }
 
   /**
@@ -220,10 +169,10 @@ public class PostController {
    * @return
    */
   @DeleteMapping("/temp/{postid}")
-  public void deleteTempPost(@PathVariable("postid") int postID, HttpServletResponse response) {
-    if (postValidation.isExistPost(postID, response)) {
-      postService.deletePost(postID);
-    }
+  public void deleteTempPost(@PathVariable("postid") int postID,
+      @PathVariable("boardid") int boardID, HttpServletRequest request,
+      HttpServletResponse response) {
+    postService.deletePost(postID, boardID, request, response);
   }
 
   /**
@@ -233,8 +182,7 @@ public class PostController {
    */
   @GetMapping("/temp/recent")
   public PostDTO recentTempPost(HttpServletRequest request) {
-    UserDTO requestUser = new UserDTO(request);
-    return postService.selectRecentTemp(requestUser);
+    return postService.selectRecentTemp(request);
   }
 
   /**
@@ -243,12 +191,22 @@ public class PostController {
    * @return 해당 유저의 휴지통 목록
    */
   @GetMapping("/recycleBin")
-  public List<PostDTO> getMyRecyclePosts(HttpServletRequest request,
+  public List<PostDTO> getRecyclePosts(HttpServletRequest request,
       @RequestParam("pageNumber") int pageNumber) {
     UserDTO requestUser = new UserDTO(request);
     return postService.getMyRecyclePosts(requestUser, pageNumber);
   }
 
+  /**
+   * 휴지통의 게시글을 불러온다.
+   *
+   * @return 해당 유저의 휴지통 목록
+   */
+  @GetMapping("/recycleBin/{postid}")
+  public PostDTO getRecyclePost(@PathVariable("postid") int postID,
+      HttpServletResponse response) {
+    return postService.selectRecyclePost(postID, response);
+  }
 
   /**
    * 요청한 회원이 작성한 게시글만 불러온다. (휴지통, 임시보관 제외)

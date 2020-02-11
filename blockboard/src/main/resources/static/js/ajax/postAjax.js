@@ -58,7 +58,7 @@ function loadPost(boardID, postID) {
       errorFunction(xhr);
     },
     success: function (data) {
-      addPostIdToEditor(postID);
+      addPostInfoToEditor(postID, boardID);
       initBoardIdOptionInEditor(boardID);
       post_title.val(data.postTitle);
       CKEDITOR.instances['editor'].setData(data.postContent);
@@ -66,11 +66,12 @@ function loadPost(boardID, postID) {
   });
 }
 
-function updatePost(boardID, postID, postTitle, postContent) {
+function updatePost(originalBoardID, changedBoardID, postID, postTitle, postContent) {
   $.ajax({
     type: 'PUT',
-    url: `/boards/${boardID}/posts/${postID}`,
+    url: `/boards/${originalBoardID}/posts/${postID}`,
     data: {
+      boardID: changedBoardID,
       postTitle: postTitle,
       postContent: postContent,
     },
@@ -285,22 +286,25 @@ function getRecyclePost(postID, boardID) {
   $.ajax({
     type: 'GET',
     url: `/boards/${boardID}/posts/${postID}`,
-    error: function (error) {  //통신 실패시
-      alert('통신실패!' + error);
+    error: function (xhr) {
+      errorFunction(xhr);
+      refreshPostList();
     },
     success: function (data) {
       $('#writecontent').hide();
       $('#btn_write').show();
-      //게시글 내용 출력
+
       loadPostContent(data);
-      var btn_deletePost = $('#btn_deletePost');
-      var btn_updatePost = $('#btn_updatePost');
+      var btn_deletePost = $('.btn_delete');
+      var btn_updatePost = $('.btn_modify');
       btn_deletePost.attr('style', 'visibility:visible');
       btn_updatePost.attr('style', 'visibility:visible');
       btn_deletePost.html("완전 삭제");
       btn_updatePost.html("복원");
-      btn_updatePost.attr('onclick', 'javascript:clickRestorePost()');
-      btn_deletePost.attr('onclick', 'javascript:clickCompleteDeletePost()');
+      btn_updatePost.removeClass("btn_modify");
+      btn_deletePost.removeClass("btn_delete");
+      btn_updatePost.addClass("btn_restore");
+      btn_deletePost.addClass("btn_completeDelete");
     }
   });
 }
