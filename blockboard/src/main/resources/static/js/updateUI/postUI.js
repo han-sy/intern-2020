@@ -81,11 +81,16 @@ function updateboardListInEditor(board) {
   $('#boardIDinEditor').html(itemList);
 }
 
-function openFileAttachForm() {
+function openFileAttachForm(postID) {
   source = $('#file-attach-form-template').html();
   template = Handlebars.compile(source);
   item = template();
   $('#fileAttachForm').html(item);
+  console.log("파일리스트받아오기");
+  if(!isNullData(postID)){
+    console.log(postID);
+    getFileList(postID,createStatusbarUI);
+  }
 }
 
 function openDragAndDropForm() {

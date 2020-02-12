@@ -82,3 +82,13 @@ function bytesHandler(obj, selector, maxLength) {
   }
   $(selector).focus();
 }
+/**
+ * Data의 값유무를 리턴하는 함수
+ * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+ */
+function isNullData(data){
+  if(data==""||data ==null || data ==undefined){
+    return true;
+  }
+  return false;
+}

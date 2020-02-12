@@ -19,6 +19,7 @@ function getCurrentBoardID() {
 
 // '글쓰기' 버튼 이벤트
 $(document).on("click", "#btn_write", function () {
+  postClear();
   editorAreaCreate("insert");
   initBoardIdOptionInEditor(getCurrentBoardID());
   var funcionOn = new FunctionOn();
@@ -52,7 +53,7 @@ $(document).on('click', '.btn_post', function () {
   if (checkEmpty()) {
     // 게시글 ID가 존재하지 않으면? 바로 저장
     if (typeof postID == "undefined") {
-      insertPost(boardID, postTitle, postContent);
+      insertPost(postID,boardID, postTitle, postContent);
     }
     // 임시 or 자동 저장된 글을 한번 더 '저장' 버튼을 누를 때
     else {
@@ -95,6 +96,7 @@ $(document).on('click', '.btn_update', function () {
   var postTitle = $('#post_title').val();
   var postContent = CKEDITOR.instances.editor.getData();
   var boardID = $('#boardIDinEditor option:selected').attr('data-tab');
+  updatePostIDToFiles(postID);
   updatePost(boardID, originalBoardID, postID, postTitle, postContent);
 });
 
@@ -109,8 +111,10 @@ $(document).on('click', '.btn_modify', function () {
   post_button.removeClass("btn_post");
   post_button.addClass("btn_update");
   setTimeout(function () {
-    loadPost(boardID, postID)
+    loadPost(boardID, postID);
   }, 100); // 에디터로 게시글 정보 불러옴.
+  openFileAttachForm(postID);//파일첨부폼
+
 });
 
 // 게시글 조회 후 삭제 버튼 이벤트
@@ -136,6 +140,7 @@ function search() {
 // 작성 취소 버튼 이벤트
 $(document).on('click', '.btn_cancel', function () {
   if (confirm("작성된 내용이 저장되지 않을 수도 있습니다. 이동하시겠습니까?") == true) {
+    deleteAllAttachedFile();
     editorClear();
   }
 });
@@ -163,6 +168,7 @@ $(document).on('click', '.temp_post_click', function () {
   btn_cancel.addClass("btn_delete");
   btn_cancel.removeClass("btn_cancel");
   loadPost(boardID, postID);
+  openFileAttachForm(postID);//파일첨부폼
 });
 
 // length Check 이벤트

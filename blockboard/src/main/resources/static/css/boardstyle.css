@@ -133,27 +133,29 @@
 
 <!--
 파일첨부
+
 -->
 .dragAndDropDiv {
-  border: 2px dashed #92AAB0;
   width: 650px;
-  height: 200px;
+  height: 150px;
+  border: 2px dashed #92AAB0;
   color: #92AAB0;
   text-align: center;
   vertical-align: middle;
   padding: 10px 0px 10px 10px;
-  font-size:200%;
+  font-size: 200%;
   display: table-cell;
 }
+
 .progressBar {
   width: 200px;
   height: 22px;
   border: 1px solid #ddd;
   border-radius: 5px;
   overflow: hidden;
-  display:inline-block;
-  margin:0px 10px 5px 5px;
-  vertical-align:top;
+  display: inline-block;
+  margin: 0px 10px 5px 5px;
+  vertical-align: top;
 }
 
 .progressBar div {
@@ -162,42 +164,61 @@
   text-align: right;
   line-height: 22px; /* same as #progressBar height if we want text middle aligned */
   width: 0;
-  background-color: #28A745; border-radius: 3px;
+  background-color: #28A745;
+  border-radius: 3px;
 }
-.statusbar{
-  border-top:1px solid #A9CCD1;
-  min-height:25px;
-  width:99%;
-  padding:10px 10px 0px 10px;
-  vertical-align:top;
+
+.statusbar {
+  border-top: 1px solid #A9CCD1;
+  min-height: 25px;
+  width: 99%;
+  padding: 10px 10px 0px 10px;
+  vertical-align: top;
 }
-.statusbar:nth-child(odd){
-  background:#EBEFF0;
+
+.statusbar:nth-child(odd) {
+  background: #EBEFF0;
 }
-.filename{
-  display:inline-block;
-  vertical-align:top;
-  width:250px;
+
+.filename {
+  display: inline-block;
+  vertical-align: top;
+  width: 250px;
 }
-.filesize{
-  display:inline-block;
-  vertical-align:top;
-  color:#30693D;
-  width:100px;
-  margin-left:10px;
-  margin-right:5px;
+
+.filesize {
+  display: inline-block;
+  vertical-align: top;
+  color: #30693D;
+  width: 100px;
+  margin-left: 10px;
+  margin-right: 5px;
 }
-.abort{
-  background-color:#A8352F;
-  -moz-border-radius:4px;
-  -webkit-border-radius:4px;
-  border-radius:4px;display:inline-block;
-  color:#fff;
-  font-family:arial;font-size:13px;font-weight:normal;
-  padding:4px 15px;
-  cursor:pointer;
-  vertical-align:top
+
+.abort {
+  background-color: #A8352F;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  display: inline-block;
+  color: #fff;
+  font-family: arial;
+  font-size: 13px;
+  font-weight: normal;
+  padding: 4px 15px;
+  cursor: pointer;
+  vertical-align: top
 }
-.delete-statusbar{
+
+.delete-statusbar {
   margin-left: 40px;
+}
+
+.dragAndDropBox {
+  height: 150px;
+  text-align: center;
+  border-style: solid;
+  border-color: #5cb85c;
+  margin: 3px;
+  vertical-align: center;
 }

@@ -345,30 +345,25 @@
                 <script id="file-attach-form-template" type="text/x-handlebars-template">
                     <div class="col-2">
                         <label class="font-weight-light">파일첨부</label>
+                        <a class='file_drag_and_drop_btn text-success font-weight-bold text-button'
+                           style="cursor: pointer; margin-left: 5px">열기</a>
                     </div>
                     <div class="col-10">
-                        <a class='file_drag_and_drop_btn text-success font-weight-bold text-button'
-                           style="cursor: pointer;">열기</a>
-                        <div id=file_drop_container></div>
+                        <form name="uploadForm" id="uploadForm" enctype="multipart/form-data"
+                              method="post">
+                            <div class="upload_list_start_point"></div>
+                            <div id=file_drop_container></div>
+
+                        </form>
+
                     </div>
 
                 </script>
                 <script id="file-attach-drag-and-drop-form-template"
                         type="text/x-handlebars-template">
-                    <form name="uploadForm" id="uploadForm" enctype="multipart/form-data"
-                          method="post">
-                        <table class="table" width="100%" border="1px">
-                            <tbody id="fileTableTbody">
-                            <tr>
-                                <td class="dragAndDropDiv">
-                                    파일을 드래그 하세요
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </form>
-                    <a class='file_upload_btn text-success font-weight-bold text-button'
-                       onclick="uploadFile(); return false;">파일업로드</a>
+                    <div class="dragAndDropDiv dragAndDropBox">
+                        파일을 드래그 하세요
+                    </div>
                 </script>
 
 
@@ -439,6 +434,22 @@
 
                 {{/files}}
                 <hr>
+            </script>
+            <!--statusbar 템플릿-->
+            <script id="attached-file-statusbar-template" type="text/x-handlebars-template">
+                {{#files}}
+                <div class="statusbar">
+                    <div class="filename"
+                         data-filename='{{storedFileName}}'>{{originFileName}}
+                    </div>
+                    <div class="filesize">{{fileSize}}</div>
+                    <div class="progressBar">
+                        <div style="width: 199px;">100%</div>
+                    </div>
+                    <div class="abort" style="display: none;">중지</div>
+                    <a class="delete-statusbar file_upload_btn text-success font-weight-bold text-button">삭제</a>
+                </div>
+                {{/files}}
             </script>
             <!--댓글리스트 템플릿-->
             <script id="commentList-template" type="text/x-handlebars-template">

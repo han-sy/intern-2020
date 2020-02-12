@@ -7,7 +7,7 @@ function handleFileUpload(files) {
   for (var i = 0; i < files.length; i++) {
     var fd = new FormData();
     fd.append('file', files[i]);
-    var status = new createStatusbar($(".dragAndDropDiv"));
+    var status = new createStatusbar($(".upload_list_start_point"));
 
     status.setFileNameSize(files[i].name, files[i].size);
     //console.log("status : "+status.filename.attr("data-filename"));
@@ -55,14 +55,7 @@ function deleteAllAttachedFile() {
 }
 
 function createStatusbar(obj) {
-
-  rowCount++;
-  var row = "odd";
-  if (rowCount % 2 == 0) {
-    row = "even";
-  }
-
-  this.statusbar = $("<div class='statusbar " + row + "'></div>");
+  this.statusbar = $("<div class='statusbar'></div>");
   this.filename = $("<div class='filename' ></div>").appendTo(this.statusbar);
   this.size = $("<div class='filesize'></div>").appendTo(this.statusbar);
   this.progressBar = $("<div class='progressBar'><div></div></div>").appendTo(

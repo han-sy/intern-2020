@@ -13,3 +13,12 @@ function updateFileListInPostUI(data){
 function deleteStatusbarUI(obj) {
   obj.remove();
 }
+
+function createStatusbarUI(data){
+  console.log(data);
+  var source = $('#attached-file-statusbar-template').html();
+  var template = Handlebars.compile(source);
+  var files = {files: data};
+  var itemList = template(files);
+  $(".upload_list_start_point").html(itemList);
+}

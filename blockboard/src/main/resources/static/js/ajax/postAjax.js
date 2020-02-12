@@ -4,7 +4,7 @@
  */
 
 
-function insertPost(boardID, postTitle, postContent) {
+function insertPost(postID,boardID, postTitle, postContent) {
   $.ajax({
     type: 'POST',
     url: `/boards/${boardID}/posts`,
@@ -18,7 +18,11 @@ function insertPost(boardID, postTitle, postContent) {
     },
     success: function (data) {
       console.log("data : "+data);
-      updatePostIDToFiles(data);
+      if(isNullData(postID)){
+        updatePostIDToFiles(data);
+      }else{
+        updatePostIDToFiles(postID);
+      }
       refreshPostList();
     }
   });
@@ -43,6 +47,11 @@ function insertTempPost(boardID, postID, temp_title, temp_content, is_temp) {
     success: function (data) {
       if (is_temp) {
         addPostInfoToEditor(data, boardID);
+        if(isNullData(postID)){
+          updatePostIDToFiles(data);
+        }else{
+          updatePostIDToFiles(postID);
+        }
         alert("임시저장 되었습니다.")
       } else {
         alert("게시물이 작성되었습니다.");

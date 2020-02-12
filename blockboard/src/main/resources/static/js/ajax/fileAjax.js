@@ -75,6 +75,7 @@ function getFileList(postID,successFunction) {
       errorFunction(error);
     },
     success: function (data) {
+      console.log(data);
       successFunction(data);
     }
   });

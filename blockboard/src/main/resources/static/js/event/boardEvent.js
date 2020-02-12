@@ -133,14 +133,6 @@ function clickSaveChangeBoard() {
   $('#config_container').html("");
 }
 
-//색변경 탭에 mouseover시 실행
-function changeTrColor(trObj) {
-  trObj.style.backgroundColor = "green";
-  trObj.onmouseout = function () {
-    trObj.style.backgroundColor = "lightgreen";
-  }
-}
-
 // 게시글 목록에서 게시글 클릭시
 $(document).on('click', '.normal_post_click', function () {
   var postID = $(this).attr("data-post");
