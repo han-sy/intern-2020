@@ -2,27 +2,24 @@
  * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
  * @file    postUI.js
  */
-var isCreated = false;
 
 // 에디터 div 생성
 function editorAreaCreate(method) {
   editorClear();
-  $('#editorcontent-hidden').html("");
-  $('#post_title').val("");
+  createEditorTemplate();
   $('#writecontent').css("display", "");
   $('#btn_write').css("display", "none");
   $('#btn_deletePost').attr('style', 'visibility:hidden');
   $('#btn_updatePost').attr('style', 'visibility:hidden');
   // textarea에 CKEditor 적용
-  if (!isCreated) {
-    isCreated = true;
-    CKEDITOR.replace('editor');
-  }
+  CKEDITOR.replace('editor');
 
   // 게시글 작성시에만(수정 X) 자동저장 & 임시저장 기능 작동
   if (method == "insert") {
     $('#btn_temp').attr('style', 'visibility:visible');
-    on_autosave();
+    if ($('#functionAble5').attr("value") == "on") {
+      on_autosave();
+    }
   } else {
     $('#btn_temp').attr('style', 'visibility:hidden');
   }
@@ -36,6 +33,7 @@ function editorClear() {
   var post_button = $('#btn_post');
   var writecontent = $('#writecontent');
   var btn_cancel = $('#btn_cancel');
+  $('#post_title').val("");
   btn_cancel.html("작성취소");
   post_button.html("저장");
   btn_cancel.attr('onclick', 'javascript:writeCancel()');
@@ -55,10 +53,10 @@ function postsClear() {
 }
 
 // 에디터 UI에 hidden type으로 PostID 추가
-function addPostIdToEditor(postID) {
+function addPostInfoToEditor(postID, boardID) {
   var source = $('#postid-template').html();
   var template = Handlebars.compile(source);
-  var IDitem = {postID: postID};
+  var IDitem = {postID: postID, boardID: boardID};
   var itemList = template(IDitem);
   $('#editorcontent-hidden').html(itemList);
 }
@@ -81,4 +79,10 @@ function updateboardListInEditor(board) {
   template = Handlebars.compile(source);
   itemList = template(board);
   $('#boardIDinEditor').html(itemList);
+}
+
+function createEditorTemplate() {
+  var source = $('#editorcontent-template').html();
+  var template = Handlebars.compile(source);
+  $('#editorcontent').html(template);
 }

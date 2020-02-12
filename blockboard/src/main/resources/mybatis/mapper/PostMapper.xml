@@ -17,9 +17,12 @@
     company_id,
     post_title,
     post_content,
-    post_content_except_htmltag,
     post_register_time,
-    post_status )
+    post_content_except_htmltag
+    <if test="isTemp">
+      ,post_status
+    </if>
+    )
     VALUES (
     <if test='postID != 0'>
       #{postID},
@@ -29,23 +32,34 @@
     #{companyID},
     #{postTitle},
     #{postContent},
-    #{postContentExceptHTMLTag},
     NOW(),
-    <choose>
-      <when test="postStatus == ''">
-        '{"isTemp": false, "isRecycle": false}')
-      </when>
-      <otherwise>
-        #{postStatus} )
-      </otherwise>
-    </choose>
+    #{postContentExceptHTMLTag}
+    <if test="isTemp">
+        ,json_object('isTemp', true)
+    </if>
+    )
     ON DUPLICATE KEY UPDATE
     board_id=#{boardID},
     post_title=#{postTitle},
     post_content=#{postContent},
     post_content_except_htmltag=#{postContentExceptHTMLTag},
     post_register_time=NOW(),
-    post_status=#{postStatus};
+    <choose>
+      <when test="isTemp">
+        post_status=json_set(post_status, '$.isTemp', true);
+      </when>
+      <otherwise>
+        post_status=json_remove(post_status, '$.isTemp');
+      </otherwise>
+    </choose>
+    <selectKey keyProperty="postID" resultType="int" order="AFTER">
+      <if test='postID != 0'>
+        SELECT #{postID};
+      </if>
+      <if test='postID == 0'>
+        SELECT LAST_INSERT_ID();
+      </if>
+    </selectKey>
   </insert>
 
   <delete id="deletePostByPostID" parameterType="int">
@@ -59,7 +73,8 @@
         post_content=#{postContent},
         post_content_except_htmltag=#{postContentExceptHTMLTag},
         post_last_update_time=NOW(),
-        board_id=#{boardID}
+        board_id=#{boardID},
+        post_status=#{postStatus}
     WHERE post_id=#{postID};
   </update>
 
@@ -76,46 +91,23 @@
     board.board_name AS boardName,
     users.user_name AS userName
     FROM posts post
-    JOIN boards board
-    ON post.board_id = board.board_id
-    JOIN users users
-    ON post.user_id = users.user_id
-    WHERE
+        JOIN boards board ON post.board_id = board.board_id
+        JOIN users users ON post.user_id = users.user_id
+    WHERE   (json_extract(post.post_status, '$.isTemp') IS NULL AND
+            json_extract(post.post_status, '$.isRecycle') IS NULL)
     <include refid="searchOption"/>
     ORDER BY postRegisterTime DESC;
   </select>
 
-  <select id="selectRecentTempPost" parameterType="com.board.project.blockboard.dto.UserDTO"
-    resultType="com.board.project.blockboard.dto.PostDTO">
-    SELECT post_id AS postID,
-        user_id AS userID,
-        board_id AS boardID,
-        company_id AS companyID,
-        post_title AS postTitle,
-        post_content AS postContent,
-        post_register_time AS postRegisterTime,
-        post_status AS postStatus
-    FROM
-        posts
-    WHERE
-        user_id=#{userID} AND
-        company_id=#{companyID} AND
-        json_extract(post_status, '$.isTemp') = true
-    ORDER BY
-        postRegisterTime DESC
-    LIMIT
-        1;
-  </select>
-
   <update id="temporaryDeletePost" parameterType="com.board.project.blockboard.dto.PostDTO">
     UPDATE posts
-    SET post_status=#{postStatus}
+    SET post_status=json_object('isRecycle', true)
     WHERE post_id=#{postID};
   </update>
 
   <update id="restorePost" parameterType="com.board.project.blockboard.dto.PostDTO">
     UPDATE posts
-    SET post_status=#{postStatus}
+    SET post_status=json_remove(post_status, '$.isRecycle')
     WHERE post_id=#{postID};
   </update>
 
@@ -137,8 +129,8 @@
            JOIN users users ON post.user_id = users.user_id
            JOIN boards board ON post.board_id = board.board_id
     WHERE  post.user_id = #{user.userID} AND
-           (json_extract(post.post_status, '$.isTemp') = false AND
-                json_extract(post.post_status, '$.isRecycle') = false)
+           (json_extract(post.post_status, '$.isTemp') IS NULL AND
+                json_extract(post.post_status, '$.isRecycle') IS NULL)
     ORDER  BY post.post_register_time DESC
     LIMIT  #{startIndex},#{pageSize};
   </select>
@@ -160,8 +152,8 @@
        JOIN  boards board ON post.board_id = board.board_id
        JOIN  comments comment ON post.post_id = comment.post_id
     WHERE  comment.user_id = #{user.userID} AND
-           (json_extract(post.post_status, '$.isTemp') = false AND
-                json_extract(post.post_status, '$.isRecycle') = false)
+           (json_extract(post.post_status, '$.isTemp') IS NULL AND
+                json_extract(post.post_status, '$.isRecycle') IS NULL)
     ORDER BY post.post_register_time DESC
     LIMIT  #{startIndex},#{pageSize};
   </select>
@@ -199,13 +191,15 @@
         post.post_content AS postContent,
         post.post_register_time AS postRegisterTime,
         users.user_name AS userName,
+        board.board_name AS boardName,
         json_extract(post.post_status, '$.isTemp') AS isTemp
     FROM   posts post
            JOIN users users
             ON post.user_id = users.user_id
+           JOIN boards board
+            ON post.board_id = board.board_id
     WHERE
         post.user_id=#{user.userID} AND
-        post.company_id=#{user.companyID} AND
         json_extract(post.post_status, '$.isTemp') = true
     ORDER BY
         postRegisterTime DESC
@@ -229,8 +223,8 @@
        JOIN boards board ON post.board_id = board.board_id
     WHERE  DATE(post.post_register_time) >= DATE(SUBDATE(NOW(), INTERVAL 30 DAY)) AND
            post.company_id = #{user.companyID} AND
-           (json_extract(post.post_status, '$.isTemp') = false AND
-                json_extract(post.post_status, '$.isRecycle') = false)
+           (json_extract(post.post_status, '$.isTemp') IS NULL AND
+                json_extract(post.post_status, '$.isRecycle') IS NULL)
     ORDER BY post.post_register_time DESC
     LIMIT  #{startIndex},#{pageSize};
   </select>
@@ -240,8 +234,8 @@
     SELECT Count(post_id)
     FROM   posts
     WHERE  user_id = #{userID} AND
-           (json_extract(post_status, '$.isTemp') = false AND
-                json_extract(post_status, '$.isRecycle') = false);
+           (json_extract(post_status, '$.isTemp') IS NULL AND
+                json_extract(post_status, '$.isRecycle') IS NULL)
   </select>
 
   <select id="getPostsCountIncludeMyReplies"
@@ -251,8 +245,8 @@
     FROM   posts post
         JOIN comments comment ON post.post_id = comment.post_id
     WHERE  comment.user_id = #{userID} AND
-           (json_extract(post_status, '$.isTemp') = false AND
-                json_extract(post_status, '$.isRecycle') = false);
+           (json_extract(post.post_status, '$.isTemp') IS NULL AND
+                json_extract(post.post_status, '$.isRecycle') IS NULL)
   </select>
 
   <select id="getMyTempPostsCount" parameterType="com.board.project.blockboard.dto.UserDTO"
@@ -261,7 +255,7 @@
     FROM   posts
     WHERE  user_id = #{userID} AND
            (json_extract(post_status, '$.isTemp') = true AND
-                json_extract(post_status, '$.isRecycle') = false);
+                json_extract(post_status, '$.isRecycle') IS NULL);
   </select>
 
   <select id="getMyRecyclePostsCount" parameterType="com.board.project.blockboard.dto.UserDTO"
@@ -269,7 +263,7 @@
     SELECT Count(post_id)
     FROM   posts
     WHERE  user_id = #{userID} AND
-           (json_extract(post_status, '$.isTemp') = false AND
+           (json_extract(post_status, '$.isTemp') IS NULL AND
                 json_extract(post_status, '$.isRecycle') = true);
   </select>
 
@@ -278,11 +272,12 @@
     FROM   posts
     WHERE  DATE(post_register_time) >= DATE(SUBDATE(NOW(), INTERVAL 30 DAY)) AND
            company_id = #{companyID} AND
-           (json_extract(post_status, '$.isTemp') = false AND
-                json_extract(post_status, '$.isRecycle') = false);
+           (json_extract(post_status, '$.isTemp') IS NULL AND
+                json_extract(post_status, '$.isRecycle') IS NULL)
   </select>
 
   <sql id="searchOption">
+    AND
     <choose>
       <!-- 검색옵션이 제목 일 경우 -->
       <when test="option == 'title'">
@@ -323,8 +318,8 @@
            JOIN users users ON post.user_id = users.user_id
            JOIN boards board ON post.board_id = board.board_id
     WHERE  post.board_id = #{boardID} AND
-           (json_extract(post.post_status, '$.isTemp') = false AND
-                json_extract(post.post_status, '$.isRecycle') = false)
+           (json_extract(post.post_status, '$.isTemp') IS NULL AND
+                json_extract(post.post_status, '$.isRecycle') IS NULL)
     ORDER  BY post.post_register_time DESC
     LIMIT  #{startIndex}, #{pageSize};
   </select>
@@ -381,9 +376,9 @@
              ON post.user_id = users.user_id
            JOIN boards boards
              ON post.board_id = boards.board_id
-    WHERE  post.company_id = #{companyID}
-           AND ( Json_extract(post.post_status, '$.isTemp') = false
-                 AND Json_extract(post.post_status, '$.isRecycle') = false )
+    WHERE  post.company_id = #{companyID} AND
+           (json_extract(post.post_status, '$.isTemp') IS NULL AND
+                json_extract(post.post_status, '$.isRecycle') IS NULL)
     ORDER  BY post.view_count DESC
     LIMIT  0, 10;
   </select>
@@ -391,8 +386,8 @@
   <select id="getPopularPostsCount" parameterType="int" resultType="int">
     SELECT Count(post_id)
     FROM   posts
-    WHERE  company_id = #{companyID}
-           AND ( Json_extract(post_status, '$.isTemp') = false
-                 AND Json_extract(post_status, '$.isRecycle') = false )
+    WHERE  company_id = #{companyID} AND
+           (json_extract(post_status, '$.isTemp') IS NULL AND
+                json_extract(post_status, '$.isRecycle') IS NULL)
   </select>
 </mapper>
