@@ -218,3 +218,16 @@ function restorePost(postID) {
   })
 
 }
+
+function getPopularPostList(){
+  $.ajax({
+    type: 'GET',
+    url: `/boards/-6/posts/popular-board`,
+    error: function (xhr) {
+      errorFunction(xhr);
+    },
+    success: function (data) {
+      loadPostList(data);
+    }
+  })
+}

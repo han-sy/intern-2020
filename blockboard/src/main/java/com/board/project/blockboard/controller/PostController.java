@@ -249,4 +249,10 @@ public class PostController {
       postService.restorePost(post);
     }
   }
+
+  @GetMapping("/popular-board")
+  public List<PostDTO> getPopularPosts(HttpServletRequest request){
+    UserDTO userData = new UserDTO(request);
+    return postService.getPopularPostList(userData.getCompanyID());
+  }
 }
