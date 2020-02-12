@@ -30,7 +30,6 @@ public class FunctionController {
 
   /**
    * 기존 기능 on/off 정보
-   *
    * @return 리스트 반환
    */
   @GetMapping(value = "/{companyid}")

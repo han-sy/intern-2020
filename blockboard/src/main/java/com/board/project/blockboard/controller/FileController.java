@@ -27,23 +27,36 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 public class FileController {
   @Autowired
   private FileService fileService;
+
+  /**
+   * 드래그앤 드랍후 파일을 바로 업로드
+   */
   @PostMapping(value = "/files")
   public String uploadFile(MultipartHttpServletRequest multipartRequest) {
     return fileService.uploadFile(multipartRequest);
 
   }
 
+  /**
+   * 파일 테이블에 postID 업데이트 최종으로 리스트에 추가된 목록을 기준으로
+   */
   @PutMapping(value = "/files")
   public void updatePostIdToFile(@RequestBody List<FileDTO> fileList ){
     fileService.updatePostID(fileList);
   }
 
+  /**
+   *  게시물 id를 가지고 게시물 첨부파일 리스트 가져오기
+   */
   @GetMapping(value = "/files")
-  public List<FileDTO> updatePostIdToFile(@RequestParam int postID){
+    public List<FileDTO> getFileList(@RequestParam int postID){
 
     return fileService.getFileList(postID);
   }
 
+  /**
+   * 파일 다운로드
+   */
   @GetMapping(value = "/files/{fileid}")
   public void downloadFile(@PathVariable("fileid") int fileID, HttpServletResponse response,
       HttpServletRequest request){

@@ -1,5 +1,5 @@
 /**
- * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
+ * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
  * @file    fileAjax.js
  */
 
