@@ -57,6 +57,7 @@ create table posts(
     post_register_time datetime not null,
     post_last_update_time datetime null,
     post_status json null,
+    view_count int(9) default 0,
 	foreign key(user_id) references users(user_id) ON DELETE CASCADE,
 	foreign key(board_id) references boards(board_id) ON DELETE CASCADE,
 	foreign key(company_id) references companies(company_id) ON DELETE CASCADE,
@@ -128,23 +129,29 @@ INSERT INTO `Posts` (`user_id`,`board_id`,`company_id`,`post_title`,`post_conten
 
 
 
-SELECT post.post_id            AS postID,
-               post.user_id            AS userID,
-               users.user_name          AS userName,
-               post.board_id           AS boardID,
-               post.company_id         AS companyID,
-               post.post_title         AS postTitle,
-               post.post_content       AS postContent,
-               post.post_register_time AS postRegisterTime,
+SELECT post.post_id               AS postID,
+               post.user_id               AS userID,
+               users.user_name            AS userName,
+               post.board_id              AS boardID,
+               post.company_id            AS companyID,
+               post.post_title            AS postTitle,
+               post.post_content          AS postContent,
+               post.post_register_time    AS postRegisterTime,
                post.post_last_update_time AS postLastUpdateTime,
-               post.post_status        AS postStatus
+               post.post_status           AS postStatus,
+               count(comments.comment_id) AS commentsCount,
+               post.view_count			  AS viewCount
         FROM   posts post
                JOIN users users
-                ON post.user_id = users.user_id
-        WHERE  post.board_id = 1
-               AND json_extract(post.post_status, '$.isTemp') IS NULL
+                 ON post.user_id = users.user_id
+                 JOIN comments comments
+                    ON post.post_id = comments.post_id
+        WHERE  post.board_id = 1 AND
+               (json_extract(post.post_status, '$.isTemp') = false AND
+                    json_extract(post.post_status, '$.isTrash') = false)
+					AND comment_referenced_id IS NULL
         ORDER  BY post.post_register_time DESC
-        LIMIT 0,5;
+        LIMIT  0,10;
         
 select *
 from posts;
@@ -154,3 +161,21 @@ where post_id <105;
 update posts
 set company_id = 1
 where company_id = 2;
+
+select if(count(function_id)>0,true,false)
+from functions_check
+where company_id = 1
+AND function_id = 1;
+
+select * 
+FROM   comments
+        WHERE  post_id = 1
+        AND comment_referenced_id is NULL; 
+SELECT Count(comment_id)
+        FROM   comments
+        WHERE  post_id = 1
+        AND comment_referenced_id is null; 
+        
+UPDATE posts
+SET view_count = view_count + 1
+WHERE post_id = 1;

@@ -4,7 +4,6 @@
  */
 package com.board.project.blockboard.controller;
 
-import com.board.project.blockboard.common.util.JsonParse;
 import com.board.project.blockboard.common.validation.AuthorityValidation;
 import com.board.project.blockboard.dto.FunctionDTO;
 import com.board.project.blockboard.dto.UserDTO;
@@ -18,8 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -40,8 +39,9 @@ public class FunctionController {
    */
   @GetMapping(value = "/{companyid}")
   public List<FunctionDTO> getFunctionInfo(HttpServletRequest request) {
-    UserDTO userData =new UserDTO(request);
-    List<FunctionDTO> functionInfoList = functionService.getfunctionInfoListByCompanyID(userData.getCompanyID());
+    UserDTO userData = new UserDTO(request);
+    List<FunctionDTO> functionInfoList = functionService
+        .getfunctionInfoListByCompanyID(userData.getCompanyID());
     return functionInfoList;
   }
 
@@ -49,12 +49,13 @@ public class FunctionController {
    * 기능 on/off 정보 업데이트
    */
   @PostMapping(value = "/{companyid}")
-  public void insertNewFunctionData(@RequestParam("functionInfoData") String newfunctionInfoData,
-      @RequestParam("userData") String userJsonData, HttpServletResponse response,HttpServletRequest request)
+  public void insertNewFunctionData(@RequestBody List<FunctionDTO> functionDTOList,
+      HttpServletResponse response, HttpServletRequest request)
       throws IOException {
     UserDTO userData = new UserDTO(request);
+    log.info("fuctionDTOList : "+functionDTOList);
     if (AuthorityValidation.isAdmin(userData, response)) {
-      functionService.updateNewFunctionsInfo(userData.getCompanyID(), newfunctionInfoData);
+      functionService.updateNewFunctionsInfo(userData.getCompanyID(), functionDTOList);
     }
 
   }

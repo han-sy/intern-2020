@@ -28,4 +28,8 @@ public class PostDTO {
   // postStatus 안의 Key List
   private Boolean isTemp;
   private Boolean isTrash;
+  private Boolean isPopular;
+
+  private int commentsCount;
+  private int viewCount;
 }

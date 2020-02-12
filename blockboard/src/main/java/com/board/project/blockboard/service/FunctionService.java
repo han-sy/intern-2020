@@ -6,7 +6,6 @@ package com.board.project.blockboard.service;
 
 import com.board.project.blockboard.common.constant.ConstantData;
 import com.board.project.blockboard.common.util.CompareData;
-import com.board.project.blockboard.common.util.JsonParse;
 import com.board.project.blockboard.dto.FunctionDTO;
 import com.board.project.blockboard.mapper.FunctionMapper;
 import java.util.HashMap;
@@ -47,16 +46,22 @@ public class FunctionService {
     List<FunctionDTO> functionInfoList = getFunctionInfoByCompanyID(companyID);
     return functionInfoList;
   }
+  public boolean getFunctionStatus(int companyID,int functionID){
+    Map<String, Object> functionPrimaryKey = new HashMap<String, Object>();
+    functionPrimaryKey.put("functionID", functionID);
+    functionPrimaryKey.put("companyID", companyID);
+    boolean result = functionMapper.selectFunctionCheckByCompanyIDAndFunctionID(functionPrimaryKey);
+    return result;
+  }
 
   /**
    * @param companyID
    * @param functionInfoData functionID, functionCheck(ON or OFF)  두가지 키를 가지는 Jsonlist
    *                         /js/functionEvent.js 에 있는 clickSaveFunctionChange()에서 json 생성
    */
-  public void updateNewFunctionsInfo(int companyID, String functionInfoData) {
+  public void updateNewFunctionsInfo(int companyID, List<FunctionDTO> functionNewList) {
     List<FunctionDTO> functionOldList = getFunctionInfoByCompanyID(companyID); //기존데이터
     //ajax를 통해 넘어온 json 형식의 string을 map 타입으로 변경
-    List<FunctionDTO> functionNewList = JsonParse.jsonToDTOList(functionInfoData,FunctionDTO[].class);
 
     try {
       for (FunctionDTO oldFunction : functionOldList) {

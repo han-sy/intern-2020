@@ -109,11 +109,12 @@ function getPostDataAfterPostClick(postID, boardID) {
         btn_updatePost.attr('onclick', 'javascript:clickRestorePost()');
         btn_deletePost.attr('onclick', 'javascript:clickCompleteDeletePost()');
       }
+      getPostListByPageNum(1,boardID);//게시글 목록 최신화
     }
   });
 }
 
-//탭클릭후 게시판 목록 불러오기
+//게시판 목록 불러오기
 function getPostListByPageNum(pageNum,boardID) {
   if (boardID == -1) {
     getTempPosts();
@@ -126,6 +127,7 @@ function getPostListByPageNum(pageNum,boardID) {
       data:{
         pageNumber:pageNum
       },
+      dataType:"JSON",
       error: function () {  //통신 실패시
         alert('통신실패!');
       },

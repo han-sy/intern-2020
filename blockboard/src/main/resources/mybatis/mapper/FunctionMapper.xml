@@ -20,6 +20,13 @@
                                AND functioncheck.company_id = #{companyID};
     </select>
 
+  <select id="selectFunctionCheckByCompanyIDAndFunctionID" parameterType="hashmap" resultType="boolean">
+        SELECT IF(Count(function_id) > 0, TRUE, FALSE)
+        FROM   functions_check
+        WHERE  company_id = #{companyID}
+               AND function_id = #{functionID};
+  </select>
+
   <insert id="insertFunctionCheckData" parameterType="hashmap">
         INSERT INTO functions_check
         VALUES     ( #{companyID},
