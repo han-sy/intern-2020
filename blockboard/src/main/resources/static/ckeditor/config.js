@@ -25,9 +25,45 @@ CKEDITOR.editorConfig = function( config ) {
 		{ name: 'about' }
 	];
 
+	// 에디터의 높이
+	config.height = 400;
+
+	// 에디터에서 ENTER 키 처리를 <br>로 하게 한다.
+	config.enterMode = CKEDITOR.ENTER_BR;
+	
+	let functionOn = new FunctionOn();
+	if (functionOn.isInlineImageOn()) {
+		// 에디터에서 '파일찾기' 할 때의 경로
+		config.filebrowserImageUploadUrl = "/imageUpload";
+
+		// 에디터의 추가 플러그인 설정
+		config.extraPlugins = 'image2, '
+				+ 'dialog, '
+				+ 'filebrowser, '
+				+ 'filetools, '
+				+ 'popup, '
+				+ 'widget, '
+				+ 'widgetselection, '
+				+ 'lineutils, '
+				+ 'contextmenu, '
+				+ 'menu, '
+				+ 'floatpanel, '
+				+ 'panel, '
+				+ 'uploadimage, '
+				+ 'uploadwidget,'
+				+ 'notificationaggregator,'
+				+ 'sticker,'
+				+ 'floatpanel,'
+				+ 'panelbutton,'
+				+ 'button,'
+				+ 'emoji,'
+				+ 'xml,'
+				+ 'ajax';
+	}
+
 	// The default plugins included in the basic setup define some buttons that
 	// are not needed in a basic editor. They are removed here.
-	config.removeButtons = 'Cut,Copy,Paste,Undo,Redo,Anchor,Underline,Strike,Subscript,Superscript';
+	config.removeButtons = 'Strike,Subscript,Superscript';
 
 	// Dialog windows are also simplified.
 	config.removeDialogTabs = 'link:advanced';
