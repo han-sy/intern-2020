@@ -14,7 +14,6 @@ function changeFunction() {
 
 //기능변경사항 저장하기 버튼
 function clickSaveFunctionChange() {
-  var userData = new User();
   var functionDataList = new Array();
   $("input[name=function]").each(function () {
     var functionData = new Object();
@@ -28,12 +27,10 @@ function clickSaveFunctionChange() {
   });
 
   var jsonData = JSON.stringify(functionDataList);
-  var userjsonData = userData.getJsonString();
-  //alert(jsonData);
   var isAcceptance = confirm("기능변경 내용을 저장하시겠습니까?");
   if (isAcceptance) {
     $(function () {
-      getNewFunctionInfo(jsonData,userjsonData);//새로운 기능목록 불러와 기능목록 변경
+      updateNewFunctionInfo(jsonData);//새로운 기능목록 불러와 기능목록 변경
     });
   }
 

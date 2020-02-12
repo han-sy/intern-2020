@@ -101,12 +101,18 @@ public class PostService {
     List<PostDTO> postList = postMapper
         .selectPostByBoardID(boardID, pageInfo.getStartIndex(), ConstantData.PAGE_SIZE);
 
-    //댓글수 update
     for(PostDTO post : postList){
       int commentsCount = commentService.getCommentCountByPostID(post.getPostID(),companyID);
       post.setCommentsCount(commentsCount);
     }
+    return postList;
+  }
 
+  private List<PostDTO> addCommentCountToPostList(List<PostDTO> postList,int companyID){
+    for(PostDTO post : postList){
+      int commentsCount = commentService.getCommentCountByPostID(post.getPostID(),companyID);
+      post.setCommentsCount(commentsCount);
+    }
     return postList;
   }
 
@@ -136,28 +142,39 @@ public class PostService {
   }
 
   /**
-   * 조회수 증가 알고리즘 조회시 5분동안은
+   * 조회수 증가 알고리즘 조회시 5분동안은 조회수 증가불가
    * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
    */
   //TODO 휴지통인경우 임시저장함인경우는 따로 구분해서 조회수 증가 안되도록 해야됨. 1번방법 : 임시저장이나 휴지통인 경우 제외 ,2번방법 : 작성자 조회수증가에서 제외.
-  public void updateViewCnt(int postID,HttpServletRequest request, HttpServletResponse response){
+  public synchronized void updateViewCnt(int postID,HttpServletRequest request, HttpServletResponse response){
+    UserDTO userData = new UserDTO(request);
     boolean isOpened=false;
     Cookie[] cookies = request.getCookies();
     if(cookies!=null){ //쿠키가 없을때
       for(Cookie cookie:cookies){
-        if(cookie.getName().equals("view"+postID)){
+        if(cookie.getName().equals(userData.getUserID()+"view"+postID)){
           cookie.setMaxAge(5*60);//5분으로 다시
           isOpened = true;
         }
       }
       if(!isOpened){
         postMapper.updateViewCnt(postID);
-        Cookie newCookie= new Cookie("view"+postID,postID+"");
+        Cookie newCookie= new Cookie(userData.getUserID()+"view"+postID,postID+"");
         newCookie.setMaxAge(5*60);//5분저장
         response.addCookie(newCookie);
       }
     }
 
+  }
+
+  public List<PostDTO> getPopularPostList(int companyID) {
+    List<PostDTO> postList = postMapper.selectPopularPostListByCompanyID(companyID);
+    for(PostDTO post : postList){
+      int commentsCount = commentService.getCommentCountByPostID(post.getPostID(),companyID);
+      post.setCommentsCount(commentsCount);
+      post.setIsPopular(true);
+    }
+    return postList;
   }
 }
 

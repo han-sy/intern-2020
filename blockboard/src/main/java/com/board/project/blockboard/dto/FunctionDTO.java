@@ -4,15 +4,17 @@
  */
 package com.board.project.blockboard.dto;
 
+import java.util.List;
 import lombok.Data;
+import lombok.NonNull;
 import org.apache.ibatis.type.Alias;
 
 @Alias("FunctionDTO")
 @Data
 public class FunctionDTO {
 
-  int functionID;
-  boolean functionOn;
-  String functionName;
-  String functionData;
+  private int functionID;
+  private boolean functionOn;
+  private String functionName;
+  private String functionData;
 }

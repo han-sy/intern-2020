@@ -40,4 +40,6 @@ public interface PostMapper {
   void restorePost(PostDTO post);
 
   void updateViewCnt(int postID);
+
+  List<PostDTO> selectPopularPostListByCompanyID(int companyID);
 }
