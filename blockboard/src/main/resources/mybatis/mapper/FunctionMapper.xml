@@ -10,33 +10,35 @@
 
   <select id="selectFunctionCheckByCompanyID" parameterType="int"
     resultType="com.board.project.blockboard.dto.FunctionDTO">
-        SELECT FUNCTION.function_id                              AS functionID,
-               IF(ISNULL(functioncheck.company_id), FALSE, TRUE) AS functionOn,
-               FUNCTION.function_name                            AS functionName,
-               functioncheck.function_data                       AS functionData
-        FROM   functions FUNCTION
-               LEFT OUTER JOIN functions_check functioncheck
-                            ON FUNCTION.function_id = functioncheck.function_id
-                               AND functioncheck.company_id = #{companyID};
-    </select>
+    SELECT FUNCTION.function_id                              AS functionID,
+           IF(ISNULL(functioncheck.company_id), FALSE, TRUE) AS functionOn,
+           FUNCTION.function_name                            AS functionName,
+           functioncheck.function_data                       AS functionData
+    FROM functions FUNCTION
+           LEFT OUTER JOIN functions_check functioncheck
+                           ON FUNCTION.function_id = functioncheck.function_id
+                             AND functioncheck.company_id = #{companyID};
+  </select>
 
-  <select id="selectFunctionCheckByCompanyIDAndFunctionID" parameterType="hashmap" resultType="boolean">
-        SELECT IF(Count(function_id) > 0, TRUE, FALSE)
-        FROM   functions_check
-        WHERE  company_id = #{companyID}
-               AND function_id = #{functionID};
+  <select id="selectFunctionCheckByCompanyIDAndFunctionID" parameterType="hashmap"
+    resultType="boolean">
+    SELECT IF(Count(function_id) > 0, TRUE, FALSE)
+    FROM functions_check
+    WHERE company_id = #{companyID}
+      AND function_id = #{functionID};
   </select>
 
   <insert id="insertFunctionCheckData" parameterType="hashmap">
-        INSERT INTO functions_check
-        VALUES     ( #{companyID},
-                     #{functionID},
-                     NULL);
-    </insert>
+    INSERT INTO functions_check
+    VALUES (#{companyID},
+            #{functionID},
+            NULL);
+  </insert>
 
   <delete id="deleteFunctionCheckData" parameterType="hashmap">
-        DELETE FROM functions_check
-        WHERE  company_id = #{companyID} 
-               AND function_id = #{functionID}; 
-    </delete>
+    DELETE
+    FROM functions_check
+    WHERE company_id = #{companyID}
+      AND function_id = #{functionID};
+  </delete>
 </mapper>

@@ -2,17 +2,17 @@
  * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
  * @file    common.js
  */
-const UNICODE_3_BYTE=11;
-const UNICODE_2_BYTE =7;
-const BYTE_SIZE_3 =3;
-const BYTE_SIZE_2 =2;
-const BYTE_SIZE_1 =1;
-
+const UNICODE_3_BYTE = 11;
+const UNICODE_2_BYTE = 7;
+const BYTE_SIZE_3 = 3;
+const BYTE_SIZE_2 = 2;
+const BYTE_SIZE_1 = 1;
 
 function returnToLoginPage() {
   redirectLogout();
   alert("세션만료! 로그인 화면으로 돌아갑니다.");
 }
+
 /**
  * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
  */
@@ -39,20 +39,23 @@ function errorFunction(xhr) {
     redirectLogout();
   }
 }
+
 /**
  * text의 byte길이와 글자수를 반환하는 함수입니다.
  * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
  */
 function getByteLength(text, maxLength) {
-  var charLength,byte,i,unicodeValue;
+  var charLength, byte, i, unicodeValue;
   for (byte = i = 0; uniCodeValue = text.charCodeAt(i++);
-      byte += unicodeValue >> UNICODE_3_BYTE ? BYTE_SIZE_3 : unicodeValue >> UNICODE_2_BYTE ? BYTE_SIZE_2 : BYTE_SIZE_1) {
+      byte += unicodeValue >> UNICODE_3_BYTE ? BYTE_SIZE_3 : unicodeValue
+      >> UNICODE_2_BYTE ? BYTE_SIZE_2 : BYTE_SIZE_1) {
     if (byte < maxLength) {
       charLength = i;
     }
   }
   return [byte, charLength - 2];
 }
+
 /**
  * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
  */
@@ -61,7 +64,6 @@ function bytesHandler(obj, selector, maxLength) {
   var textLength = getByteLength(text, maxLength);
   var byteLength = textLength[0];
   var charLength = textLength[1];
-  console.log(charLength + "," + byteLength);
   $(selector).text(byteLength + "/" + maxLength);
   if (byteLength > maxLength) {
     $(selector).text("입력글자수 제한(" + byteLength + "/" + maxLength + ")");

@@ -12,11 +12,11 @@ import org.springframework.stereotype.Repository;
 @Mapper
 public interface UserMapper {
 
-  public UserDTO selectUserByID(String userID);
+  UserDTO selectUserByID(String userID);
 
-  public int selectCompanyIDByUserID(String userID);
+  int selectCompanyIDByUserID(String userID);
 
-  public String selectUserNameByUserID(String userID);
+  String selectUserNameByUserID(String userID);
 
   String selectUserTypeByUserID(String userID);
 }

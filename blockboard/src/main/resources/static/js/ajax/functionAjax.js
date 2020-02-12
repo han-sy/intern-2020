@@ -25,14 +25,12 @@ function updateNewFunctionInfo(functionDTOList) {
     data: functionDTOList,
     dataType: "json",
     contentType: 'application/json',
-    error: function (error,msg) {  //통신 실패시
+    error: function (error, msg) {  //통신 실패시
       errorFunction(error);
     },
     success: function () {
-      console.log("기능변경 성공");
     },
     complete: function () {
-      console.log("기능변경 완료");
       getFunctionList(userData.companyID, updateNewFunctionInfoUI);
     }
   });

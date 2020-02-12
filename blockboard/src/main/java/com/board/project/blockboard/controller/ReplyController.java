@@ -7,7 +7,6 @@ package com.board.project.blockboard.controller;
 
 import com.board.project.blockboard.dto.CommentDTO;
 import com.board.project.blockboard.dto.UserDTO;
-import com.board.project.blockboard.service.JwtService;
 import com.board.project.blockboard.service.ReplyService;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -27,8 +26,6 @@ public class ReplyController {
 
   @Autowired
   private ReplyService replyService;
-  @Autowired
-  private JwtService jwtService;
 
   /**
    * 답글 조회
@@ -55,7 +52,8 @@ public class ReplyController {
       HttpServletRequest request) {
     UserDTO userData = new UserDTO(request);
     replyService
-        .writeReplyWithUserInfo(userData.getUserID(), userData.getCompanyID(), postID, commentContent, commentReferencedID,
+        .writeReplyWithUserInfo(userData.getUserID(), userData.getCompanyID(), postID,
+            commentContent, commentReferencedID,
             commentReferencedUserID);
   }
 }

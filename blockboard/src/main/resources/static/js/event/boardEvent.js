@@ -8,8 +8,13 @@ const KEYCODE = {
 const MAX_LENGTH = {
   BOARD_NAME: 150
 };
-const BOARD_ID ={
-  POPULAR:-6
+const BOARD_ID = {
+  MY_POST: -1,
+  MY_REPLY: -2,
+  TEMP_BOX: -3,
+  RECYCLE: -4,
+  RECENT: -5,
+  POPULAR: -6
 };
 $(function () {
   $('#input_board_name').keyup(function () {
@@ -137,7 +142,7 @@ function changeTrColor(trObj) {
 }
 
 // 게시글 목록에서 게시글 클릭시
-$(document).on('click','.normal_post_click',function () {
+$(document).on('click', '.normal_post_click', function () {
   var postID = $(this).attr("data-post");
   var boardID = getActiveBoardID();
   $(function () {
@@ -163,7 +168,6 @@ $(document).on("mouseleave", ".tabmenu", function () {
 // 탭 메뉴 클릭 이벤트 - 해당 게시판의 게시글 불러옴
 $(document).on("click", ".tabmenu", function clickTabEvent() {
   var boardID = $(this).attr('data-tab');
-  var btn_write = $('#btn_write');
   $('.tabmenu').css('color', 'black');
   $('.tabmenu').removeClass("font-weight-bold");
   $('.tabmenu').removeClass("active_tab");
@@ -173,22 +177,7 @@ $(document).on("click", ".tabmenu", function clickTabEvent() {
   postClear();
   editorClear();
 
-  if (boardID == -1) {
-    btn_write.attr('style', 'visibility:hidden');
-    getTempPosts();
-  } else if (boardID == -2) {
-    btn_write.attr('style', 'visibility:hidden');
-    getPostsInTrashBox();
-  } else if(boardID ==BOARD_ID.POPULAR){
-    $('#pagination_content').html("");
-    getPopularPostList();
-  }else {
-    $(function () {
-      btn_write.attr('style', 'visibility:visible');
-      getPageList(1,boardID,updatePageList);
-
-    });
-  }
+  getPageList(1, boardID, updatePageList);
 });
 
 // 현재 선택된 게시판 ID 찾기

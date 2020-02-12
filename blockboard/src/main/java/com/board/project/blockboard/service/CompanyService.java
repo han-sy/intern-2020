@@ -19,9 +19,4 @@ public class CompanyService {
   public String getCompanyNameByUserID(String userID) {
     return companyMapper.selectCompanyNameByUserID(userID);
   }
-
-  public int getCompanyIDByUserID(String userID) {
-    log.info("boardMapper userid: " + userID);
-    return companyMapper.selectCompanyIDByUserID(userID);
-  }
 }

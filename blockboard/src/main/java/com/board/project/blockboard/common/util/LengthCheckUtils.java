@@ -1,3 +1,7 @@
+/**
+ * @author Woohyeok Jun <woohyeok.jun@worksmobile.com>
+ * @file LengthCheckUtils.java
+ */
 package com.board.project.blockboard.common.util;
 
 import com.board.project.blockboard.dto.CommentDTO;

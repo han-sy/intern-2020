@@ -4,21 +4,16 @@
  */
 package com.board.project.blockboard.service;
 
-import com.board.project.blockboard.common.exception.UnauthorizedException;
-import com.board.project.blockboard.dto.UserDTO;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.Map;
-import javafx.beans.binding.ObjectExpression;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.User;
 import org.apache.commons.codec.binary.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -33,7 +28,7 @@ public class JwtService {
 
   public <T> String create(String key, T data, String subject) {
     String issure = "BlockBoard";
-    Date exDate = new Date(System.currentTimeMillis() + (60000 * 60 * 24)); // 토큰 만료 시간 10분
+    Date exDate = new Date(System.currentTimeMillis() + (60000 * 60 * 24));
     String jwt = Jwts.builder()
         .setHeaderParam("typ", "JWT")
         .setHeaderParam("regDate", System.currentTimeMillis())
@@ -88,7 +83,7 @@ public class JwtService {
           .setSigningKey(SALT.getBytes("UTF-8"))
           .parseClaimsJws(jwt);
     } catch (Exception e) {
-      throw new UnauthorizedException();
+      e.printStackTrace();
     }
     return (Map<String, Object>) claims.getBody().get(HEADER_NAME);
   }
@@ -96,9 +91,7 @@ public class JwtService {
   // Interceptor 의 request 에 JWT 에서 가져온 유저정보를 넣어준다.
   public void setUserDataToRequest(HttpServletRequest request) {
     Map<String, Object> jwtClaims = this.get();
-    log.info("!!!"+jwtClaims.toString());
     request.setAttribute("userID", jwtClaims.get("userID").toString());
-    //log.info(jwtClaims.get("userID").toString());
     request.setAttribute("userName", jwtClaims.get("userName").toString());
     request.setAttribute("userType", jwtClaims.get("userType").toString());
     request.setAttribute("companyID", Integer.parseInt(jwtClaims.get("companyID").toString()));

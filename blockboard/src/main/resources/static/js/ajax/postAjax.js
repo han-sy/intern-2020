@@ -11,7 +11,7 @@ function insertPost(boardID, postTitle, postContent) {
     data: {
       postTitle: postTitle,
       postContent: postContent,
-      postStatus: `{"isTemp":false, "isTrash":false}`
+      postStatus: `{"isTemp":false, "isRecycle":false}`
     },
     error: function (xhr) {
       errorFunction(xhr);
@@ -32,7 +32,7 @@ function insertTempPost(boardID, postID, temp_title, temp_content, is_temp) {
       postID: postID,
       postTitle: temp_title,
       postContent: temp_content,
-      postStatus: `{"isTemp":${is_temp}, "isTrash":false}`
+      postStatus: `{"isTemp":${is_temp}, "isRecycle":false}`
     },
     error: function (xhr) {
       errorFunction(xhr);
@@ -141,20 +141,31 @@ function searchPost(option, keyword) {
       postsClear(); // 게시글 목록 화면 Clear
       keyword.val("");
 
-      loadPostList(data);
+      if (data == "") {
+        showEmptyList();
+      } else {
+        loadPostList(data);
+      }
     }
   });
 }
 
-function getTempPosts() {
+function getTempPosts(pageNum) {
   $.ajax({
     type: 'GET',
     url: "/boards/-1/posts/temp",
+    data: {
+      pageNumber: pageNum
+    },
     error: function (xhr) {
       errorFunction(xhr);
     },
     success: function (data) {
-      loadPostList(data);
+      if (data == "") {
+        showEmptyList();
+      } else {
+        loadPostList(data);
+      }
     }
   })
 }
@@ -180,7 +191,7 @@ function getTempPost(postID) {
 function addRecentTempPostIdToEditor(boardID) {
   $.ajax({
     type: 'GET',
-    url: `/boards/${boardID}/posts/recent`,
+    url: `/boards/${boardID}/posts/temp/recent`,
     error: function (xhr) {
       errorFunction(xhr);
     },
@@ -191,19 +202,27 @@ function addRecentTempPostIdToEditor(boardID) {
 }
 
 // 휴지통에 있는 게시글들을 가져온다.
-function getPostsInTrashBox() {
+function getRecyclePosts(pageNum) {
   $.ajax({
     type: 'GET',
-    url: `/boards/0/posts/trash`,
+    url: `/boards/-4/posts/recycleBin`,
+    data: {
+      pageNumber: pageNum
+    },
     error: function (xhr) {
       errorFunction(xhr);
     },
     success: function (data) {
-      loadPostList(data);
+      if (data == "") {
+        showEmptyList();
+      } else {
+        loadPostList(data);
+      }
     }
   })
 }
 
+// 휴지통에 있는 게시글 복원하기
 function restorePost(postID) {
   $.ajax({
     type: 'PUT',
@@ -215,19 +234,115 @@ function restorePost(postID) {
       alert("게시글이 복원되었습니다.");
       refreshPostList();
     }
-  })
-
+  });
 }
 
-function getPopularPostList(){
+// 내가 작성한 게시글 불러오기
+function getMyPosts(pageNum) {
   $.ajax({
     type: 'GET',
-    url: `/boards/-6/posts/popular-board`,
+    url: `/boards/-1/posts/myArticle`,
+    data: {
+      pageNumber: pageNum
+    },
     error: function (xhr) {
       errorFunction(xhr);
     },
     success: function (data) {
-      loadPostList(data);
+      if (data == "") {
+        showEmptyList();
+      } else {
+        loadPostList(data);
+      }
     }
-  })
+  });
+}
+
+// 내 댓글이 달린 게시글 받아오기
+function getMyReplies(pageNum) {
+  $.ajax({
+    type: 'GET',
+    url: `/boards/-2/posts/myReply`,
+    data: {
+      pageNumber: pageNum
+    },
+    error: function (xhr) {
+      errorFunction(xhr);
+    },
+    success: function (data) {
+      if (data == "") {
+        showEmptyList();
+      } else {
+        loadPostList(data);
+      }
+    }
+  });
+}
+
+// 휴지통 게시글 받아오기
+function getRecyclePost(postID, boardID) {
+  postClear();
+  $.ajax({
+    type: 'GET',
+    url: `/boards/${boardID}/posts/${postID}`,
+    error: function (error) {  //통신 실패시
+      alert('통신실패!' + error);
+    },
+    success: function (data) {
+      $('#writecontent').hide();
+      $('#btn_write').show();
+      //게시글 내용 출력
+      loadPostContent(data);
+      var btn_deletePost = $('#btn_deletePost');
+      var btn_updatePost = $('#btn_updatePost');
+      btn_deletePost.attr('style', 'visibility:visible');
+      btn_updatePost.attr('style', 'visibility:visible');
+      btn_deletePost.html("완전 삭제");
+      btn_updatePost.html("복원");
+      btn_updatePost.attr('onclick', 'javascript:clickRestorePost()');
+      btn_deletePost.attr('onclick', 'javascript:clickCompleteDeletePost()');
+    }
+  });
+}
+
+// 최신 게시글 받아오기
+function getRecentPosts(pageNum) {
+  $.ajax({
+    type: 'GET',
+    url: `/boards/-5/posts/recent`,
+    data: {
+      pageNumber: pageNum
+    },
+    error: function (xhr) {
+      errorFunction(xhr);
+    },
+    success: function (data) {
+      if (data == "") {
+        showEmptyList();
+      } else {
+        loadPostList(data);
+      }
+    }
+  });
+}
+
+// 인기 게시글 받아오기
+function getPopularPostList(pageNum) {
+  $.ajax({
+    type: 'GET',
+    url: `/boards/-6/posts/popular-board`,
+    data: {
+      pageNumber: pageNum
+    },
+    error: function (xhr) {
+      errorFunction(xhr);
+    },
+    success: function (data) {
+      if (data == "") {
+        showEmptyList();
+      } else {
+        loadPostList(data);
+      }
+    }
+  });
 }

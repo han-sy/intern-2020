@@ -26,7 +26,7 @@ public class PostValidation {
   public boolean isTempSavedPost(PostDTO post, HttpServletResponse response) {
     PostDTO setStatusPost = JsonParse.setPostStatusFromJsonString(post);
     if (setStatusPost.getIsTemp()) {
-      if (!setStatusPost.getIsTrash()) {
+      if (!setStatusPost.getIsRecycle()) {
         return true;
       }
     }
@@ -95,7 +95,7 @@ public class PostValidation {
   public boolean isInTrashBox(PostDTO post, HttpServletResponse response) {
     try {
       JsonParse.setPostStatusFromJsonString(post);
-      if (!post.getIsTrash()) {
+      if (!post.getIsRecycle()) {
         response.sendError(HttpServletResponse.SC_CONFLICT, "휴지통에 존재하지 않습니다.");
       }
     } catch (IOException e) {

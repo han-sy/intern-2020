@@ -8,7 +8,6 @@ import com.board.project.blockboard.common.validation.AuthorityValidation;
 import com.board.project.blockboard.dto.FunctionDTO;
 import com.board.project.blockboard.dto.UserDTO;
 import com.board.project.blockboard.service.FunctionService;
-import com.board.project.blockboard.service.JwtService;
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -28,9 +27,6 @@ public class FunctionController {
 
   @Autowired
   private FunctionService functionService;
-  @Autowired
-  private JwtService jwtService;
-
 
   /**
    * 기존 기능 on/off 정보
@@ -53,7 +49,7 @@ public class FunctionController {
       HttpServletResponse response, HttpServletRequest request)
       throws IOException {
     UserDTO userData = new UserDTO(request);
-    log.info("fuctionDTOList : "+functionDTOList);
+    log.info("fuctionDTOList : " + functionDTOList);
     if (AuthorityValidation.isAdmin(userData, response)) {
       functionService.updateNewFunctionsInfo(userData.getCompanyID(), functionDTOList);
     }

@@ -5,12 +5,10 @@
 package com.board.project.blockboard.controller;
 
 
-import com.board.project.blockboard.common.util.JsonParse;
 import com.board.project.blockboard.common.validation.AuthorityValidation;
 import com.board.project.blockboard.dto.BoardDTO;
 import com.board.project.blockboard.dto.UserDTO;
 import com.board.project.blockboard.service.BoardService;
-import com.board.project.blockboard.service.JwtService;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,8 +31,6 @@ public class BoardController {
 
   @Autowired
   private BoardService boardService;
-  @Autowired
-  private JwtService jwtService;
 
   /**
    * 게시판 목록 가져오기
@@ -47,7 +43,8 @@ public class BoardController {
     UserDTO userData = new UserDTO(request);
 
     //게시판 목록
-    List<BoardDTO> boardList = boardService.getBoardListByCompanyID(userData.getCompanyID()); // select로 받아오기
+    List<BoardDTO> boardList = boardService
+        .getBoardListByCompanyID(userData.getCompanyID()); // select로 받아오기
     return boardList;
   }
 
@@ -58,7 +55,8 @@ public class BoardController {
    */
   @PostMapping(value = "")
   @ResponseBody
-  public void insertNewBoard(@RequestParam("boardName") String newBoardName, HttpServletRequest request, HttpServletResponse response) {
+  public void insertNewBoard(@RequestParam("boardName") String newBoardName,
+      HttpServletRequest request, HttpServletResponse response) {
     UserDTO userData = new UserDTO(request);
     if (AuthorityValidation.isAdmin(userData, response)) {
       boardService.insertNewBoard(newBoardName, userData);

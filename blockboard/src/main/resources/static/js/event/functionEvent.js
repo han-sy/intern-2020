@@ -6,7 +6,6 @@
 //"기능변경" 버튼 클릭시
 function changeFunction() {
   var companyID = $('.navbar-brand').attr("value");
-  console.log("companyID : " + companyID);
   $(function () {
     getFunctionList(companyID, getFunctionCheckList);
   });
@@ -40,7 +39,6 @@ function clickSaveFunctionChange() {
 $(document).on('click', '._function-switch', function () {
   var switchText = $(this).find("._switch");
   var checkBox = $(this).find(".function_checkbox");
-  console.log(switchText.html() == "ON");
   if (checkBox.prop("checked")) {
     $(this).removeClass('btn-success');
     $(this).addClass('btn-default');

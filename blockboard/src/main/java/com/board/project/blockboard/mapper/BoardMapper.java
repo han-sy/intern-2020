@@ -16,9 +16,9 @@ public interface BoardMapper {
 
   List<BoardDTO> selectBoardsByCompanyID(int companyID);
 
-  void insertBoard(BoardDTO newBoard);
-
   BoardDTO selectBoardByBoardName(String newBoardName);
+
+  void insertBoard(BoardDTO newBoard);
 
   void updateBoardName(Map<String, Object> boardAttributes);
 

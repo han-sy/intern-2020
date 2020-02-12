@@ -2,10 +2,6 @@
  * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
  * @file handlebarsHelper.js
  */
-const BOARD_ID ={
-  POPULAR:-6
-};
-
 //기능 사용여부 체크 하는 헬퍼함수
 Handlebars.registerHelper('isAbleFunction', function (options) {
   if (!(this.functionOn)) {
@@ -16,11 +12,9 @@ Handlebars.registerHelper('isAbleFunction', function (options) {
 
 //댓글기능 on인지 체크
 Handlebars.registerHelper('isCommentAble', function (options) {
-  console.log("댓글사용여부 체크");
   if ($('#functionAble1').attr("value") == "on") {
     var boardID = getCurrentBoardID();
-    if (boardID > 0 || boardID==BOARD_ID.POPULAR) {
-      console.log("on");
+    if (boardID > 0 || boardID == BOARD_ID.POPULAR) {
       return options.fn(this);
     } //true
   }
@@ -29,7 +23,6 @@ Handlebars.registerHelper('isCommentAble', function (options) {
 
 //답글기능 on인지 체크
 Handlebars.registerHelper('isReplyAble', function (options) {
-  console.log("답글사용여부 체크");
   if ($('#functionAble2').attr("value") == "on") {
     return options.fn(this); //true
   }
@@ -39,7 +32,6 @@ Handlebars.registerHelper('isReplyAble', function (options) {
 //같은 사용자인지 체크
 Handlebars.registerHelper('isSameUser', function (options) {
   var currentUserID = $("#current_user_info").attr("data-id");
-  console.log(this.userID + "," + currentUserID);
   if (this.userID == currentUserID) {
     return options.fn(this); //true
   }
@@ -100,7 +92,6 @@ Handlebars.registerHelper('isLastRange', function (option) {
 });
 
 Handlebars.registerHelper('hasComments', function (option) {
-  console.log("comment 개수 : "+ this.commentsCount);
   if (this.commentsCount) {
     return option.fn(this);
   } else {
@@ -108,8 +99,8 @@ Handlebars.registerHelper('hasComments', function (option) {
   }
 });
 Handlebars.registerHelper('isPopular', function (option) {
-  var boardID = getCurrentBoardID();
-  if (boardID ==BOARD_ID.POPULAR) {
+  var boardID = parseInt(getCurrentBoardID());
+  if (boardID < 0) {
     return option.fn(this);
   } else {
     return option.inverse(this);
@@ -119,9 +110,8 @@ Handlebars.registerHelper('isPopular', function (option) {
 /**
  * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
  */
-Handlebars.registerHelper('isTrash', function (option) {
-  if (this.isTrash == true) {
-
+Handlebars.registerHelper('isRecycle', function (option) {
+  if (this.isRecycle == true) {
     return option.fn(this);
   } else {
     return option.inverse(this);

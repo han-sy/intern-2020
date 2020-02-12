@@ -24,7 +24,7 @@ public class PaginationDTO {
   private int startIndex; /** 페이지 첫번째 게시물 번호*/
   private int[] pageList;
 
-  public PaginationDTO(int postsCount, int currentPage,int pageSize, int rangeSize){
+  public PaginationDTO(int postsCount, int currentPage, int pageSize, int rangeSize) {
     setCurrentPage(currentPage);
     setPostsCount(postsCount);
     setPageSize(pageSize);
@@ -32,36 +32,35 @@ public class PaginationDTO {
 
     setPageCount(postsCount);
     setRangeCount(pageCount);
-    setStartIndex(currentPage,pageSize);
+    setStartIndex(currentPage, pageSize);
 
   }
 
   /**
    * 현재 페이지를 재설정함과 동시에 시작페이지,끝페이지,이전페이지, 다음페이지 설정.
+   *
    * @param currentPage
    */
-  public void rangeSetting(int currentPage){
+  public void rangeSetting(int currentPage) {
     setCurrentRange(currentPage); //현재 페이지 재설정;
-    this.startPage = (currentRange -1)*rangeSize +1;
-    this.endPage = startPage + rangeSize-1;
+    this.startPage = (currentRange - 1) * rangeSize + 1;
+    this.endPage = startPage + rangeSize - 1;
 
-    if(endPage>pageCount){
+    if (endPage > pageCount) {
       this.endPage = pageCount;
     }
-    if(currentPage>rangeSize){
-      this.prevPage = (currentRange-1)*rangeSize;
-    }
-    else{
-      this.prevPage =1;
+    if (currentPage > rangeSize) {
+      this.prevPage = (currentRange - 1) * rangeSize;
+    } else {
+      this.prevPage = 1;
     }
 
-    if((currentPage/rangeSize)+1<rangeCount){
-      this.nextPage = currentRange*rangeSize+1;
+    if ((currentPage / rangeSize) + 1 < rangeCount) {
+      this.nextPage = currentRange * rangeSize + 1;
+    } else {
+      this.nextPage = pageCount;
     }
-    else{
-      this.nextPage =pageCount;
-    }
-    setPageList(startPage,endPage);
+    setPageList(startPage, endPage);
   }
 
 
@@ -78,19 +77,19 @@ public class PaginationDTO {
   }
 
   public void setCurrentRange(int currentPage) {
-    this.currentRange = (int)((currentPage-1)/rangeSize)+1;
+    this.currentRange = (int) ((currentPage - 1) / rangeSize) + 1;
   }
 
   public void setPostsCount(int postsCount) {
-    this.postsCount = (int) Math.ceil(postsCount*1.0/pageSize);
+    this.postsCount = (int) Math.ceil(postsCount * 1.0 / pageSize);
   }
 
   public void setPageCount(int postsCount) {
-    this.pageCount = (int) Math.ceil(postsCount*1.0/pageSize);
+    this.pageCount = (int) Math.ceil(postsCount * 1.0 / pageSize);
   }
 
   public void setRangeCount(int rangeCount) {
-    this.rangeCount = (int)Math.ceil(pageCount*1.0/rangeSize);
+    this.rangeCount = (int) Math.ceil(pageCount * 1.0 / rangeSize);
   }
 
   public void setStartPage(int startPage) {
@@ -101,15 +100,15 @@ public class PaginationDTO {
     this.endPage = endPage;
   }
 
-  public void setStartIndex(int currentPage,int pageSize) {
-    this.startIndex = (currentPage-1)*pageSize;
+  public void setStartIndex(int currentPage, int pageSize) {
+    this.startIndex = (currentPage - 1) * pageSize;
   }
 
-  public void setPageList(int startPage,int endPage) {
-    int size = endPage-startPage+1;
+  public void setPageList(int startPage, int endPage) {
+    int size = endPage - startPage + 1;
     int[] pageList = new int[size];
-    for(int i=0;i<size;i++){
-      pageList[i] = startPage+i;
+    for (int i = 0; i < size; i++) {
+      pageList[i] = startPage + i;
     }
     this.pageList = pageList;
   }

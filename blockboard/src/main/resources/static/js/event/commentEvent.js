@@ -37,7 +37,6 @@ $(document).on('click', '#delete_comment', function () {
   }
 })
 
-
 //수정 버튼 눌렀을때
 $(document).on('click', '#edit_comment', function () {
   var postID = $("#postID").html();
@@ -54,7 +53,8 @@ $(document).on('click', '#btn_edit_comment_complete', function () {
   commentDiv = $(this).parents("div").parents("div");
   var newComment = commentDiv.children('#commentText').val().replace(/\n/g,
       "<br>");
-  var commentID = commentDiv.parents("div").attr("id").substring(COMMENT_PREFIX.length);
+  var commentID = commentDiv.parents("div").attr("id").substring(
+      COMMENT_PREFIX.length);
   var postID = $("#postID").html();
   var boardID = getCurrentBoardID();
   var isAcceptance = confirm("댓글을 수정 하시겠습니까?");
@@ -82,7 +82,6 @@ $(document).on('click', '.replyBtn', function () {
   var inputID = referenceCommentContainer.find(
       "#reply_input_container" + referenceCommentContainer.attr(
       "data-id")).attr("id");
-  console.log("답글 창 개수 : " + $())
   getCommentInputHtml("답글", "입력",
       "To <strong class =tag style ='cursor:pointer;' data-id="
       + referenceUserID + " >" + referenceUserName + "</strong>",
@@ -115,7 +114,6 @@ $(document).on('click', '.btn_openReply', function () {
 //답글 취소버튼
 $(document).on('click', '.btn_close_cmt_input', function () {
   var referenceCommentContainer = $(this).closest(".referenceCommentContainer");
-  console.log($(this).closest(".replyContainer").html());
   var replyInputContainer = $(
       "#reply_input_container" + referenceCommentContainer.attr("data-id"));
   replyInputContainer.html("");

@@ -63,12 +63,10 @@ function getBoardList(successFunction) {
   });
 }
 
-//TODO handlebar 적용하기
 //게시물 클릭후 게시물 데이터 받아오기
 function getPostDataAfterPostClick(postID, boardID) {
-  var postContentObj = $('#postcontent');
   var userID = $('#current_user_info').attr('data-id');
-  postContentObj.html("");
+  postClear();
   $.ajax({
     type: 'GET',
     url: `/boards/${boardID}/posts/${postID}`,
@@ -87,11 +85,9 @@ function getPostDataAfterPostClick(postID, boardID) {
       var btn_deletePost = $('#btn_deletePost');
       var btn_updatePost = $('#btn_updatePost');
       if (data.userID == userID) {
-        console.log("수정 삭제 표시");
         btn_deletePost.attr('style', 'visibility:visible');
         btn_updatePost.attr('style', 'visibility:visible');
       } else {
-        console.log("수정 삭제 미표시");
         btn_deletePost.attr('style', 'visibility:hidden');
         btn_updatePost.attr('style', 'visibility:hidden');
       }
@@ -103,38 +99,51 @@ function getPostDataAfterPostClick(postID, boardID) {
           updateCommentsCount(boardID, postID);
         });
       }
-      if (boardID == -2) { // 휴지통
-        btn_deletePost.html("완전 삭제");
-        btn_updatePost.html("복원");
-        btn_updatePost.attr('onclick', 'javascript:clickRestorePost()');
-        btn_deletePost.attr('onclick', 'javascript:clickCompleteDeletePost()');
-      }
-      getPostListByPageNum(1,boardID);//게시글 목록 최신화
     }
   });
 }
 
-//게시판 목록 불러오기
-function getPostListByPageNum(pageNum,boardID) {
-  if (boardID == -1) {
-    getTempPosts();
-  } else if (boardID == -2) {
-    getPostsInTrashBox();
-  } else {
-    $.ajax({
-      type: 'GET',
-      url: `/boards/${boardID}/posts`,
-      data:{
-        pageNumber:pageNum
-      },
-      dataType:"JSON",
-      error: function () {  //통신 실패시
-        alert('통신실패!');
-      },
-      success: function (data) {
-        loadPostList(data);
-      }
-    });
+//탭클릭후 게시판 목록 불러오기
+function getPostListByPageNum(pageNum, boardID) {
+  var btn_write = $('#btn_write');
+  if (boardID < 0) {
+    btn_write.attr('style', 'visibility:hidden');
+  }
+
+  switch (boardID) {
+    case BOARD_ID.MY_POST:
+      getMyPosts(pageNum);
+      break;
+    case BOARD_ID.MY_REPLY:
+      getMyReplies(pageNum);
+      break;
+    case BOARD_ID.TEMP_BOX:
+      getTempPosts(pageNum);
+      break;
+    case BOARD_ID.RECYCLE:
+      getRecyclePosts(pageNum);
+      break;
+    case BOARD_ID.RECENT:
+      getRecentPosts(pageNum);
+      break;
+    case BOARD_ID.POPULAR:
+      getPopularPostList(pageNum);
+      break;
+    default:
+      btn_write.attr('style', 'visibility:visible');
+      $.ajax({
+        type: 'GET',
+        url: `/boards/${boardID}/posts`,
+        data: {
+          pageNumber: pageNum
+        },
+        error: function () {  //통신 실패시
+          alert('통신실패!');
+        },
+        success: function (data) {
+          loadPostList(data);
+        }
+      });
   }
 }
 

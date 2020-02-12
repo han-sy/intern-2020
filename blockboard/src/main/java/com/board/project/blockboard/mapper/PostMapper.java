@@ -15,31 +15,49 @@ import org.springframework.stereotype.Repository;
 @Mapper
 public interface PostMapper {
 
+  List<PostDTO> searchPost(String option, String keyword);
+
+  List<PostDTO> selectMyPosts(Map<String, Object> map);
+
+  List<PostDTO> selectMyPostsIncludeMyReplies(Map<String, Object> map);
+
+  List<PostDTO> selectMyRecyclePosts(Map<String, Object> map);
+
+  List<PostDTO> selectRecentPosts(Map<String, Object> map);
+
+  List<PostDTO> selectMyTempPosts(Map<String, Object> map);
+
+  List<PostDTO> selectPostByBoardID(int boardID, int startIndex, int pageSize);
+
+  List<PostDTO> selectPopularPostListByCompanyID(int companyID);
+
+  PostDTO selectPostByPostID(int postID);
+
+  PostDTO selectRecentTempPost(UserDTO requestUser);
+
+  void temporaryDeletePost(PostDTO post);
+
+  void restorePost(PostDTO post);
+
   void insertPost(PostDTO post);
 
   void deletePostByPostID(int postID);
 
-  PostDTO selectPostByPostID(int postID);
-
   void updatePost(PostDTO post);
-
-  List<PostDTO> searchPost(String option, String keyword);
-
-  PostDTO selectRecentTempPost(UserDTO requestUser);
-
-  List<PostDTO> selectTempPosts(UserDTO userDTO);
-
-  List<PostDTO> selectPostByBoardID(int boardID, int startIndex, int pageSize);
-
-  int selectPostCountByBoardID(int boardID);
-
-  void temporaryDeletePost(PostDTO post);
-
-  List<PostDTO> selectPostsInTrashBox(UserDTO userDTO);
-
-  void restorePost(PostDTO post);
 
   void updateViewCnt(int postID);
 
-  List<PostDTO> selectPopularPostListByCompanyID(int companyID);
+  int selectPostCountByBoardID(int boardID);
+
+  int getMyPostsCount(UserDTO user);
+
+  int getPostsCountIncludeMyReplies(UserDTO user);
+
+  int getMyTempPostsCount(UserDTO user);
+
+  int getMyRecyclePostsCount(UserDTO user);
+
+  int getRecentPostsCount(int companyID);
+
+  int getPopularPostsCount(int companyID);
 }

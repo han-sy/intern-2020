@@ -1,3 +1,7 @@
+/**
+ * @author Woohyeok Jun <woohyeok.jun@worksmobile.com>
+ * @file GlobalExceptionHandler.java
+ */
 package com.board.project.blockboard.common.exception;
 
 import java.io.IOException;
@@ -11,22 +15,22 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class GlobalExceptionHandler {
 
   @ExceptionHandler(NullPointerException.class)
-  protected void NullPointerError(HttpServletResponse response, Exception ee) {
+  protected void NullPointerError(HttpServletResponse response, Exception e) {
     try {
       response.sendError(HttpServletResponse.SC_CONFLICT, "NULL Exception");
-      ee.printStackTrace();
-    } catch (IOException e) {
       e.printStackTrace();
+    } catch (IOException ie) {
+      ie.printStackTrace();
     }
   }
 
   @ExceptionHandler(IllegalArgumentException.class)
-  protected void IllegalArgumentError(HttpServletResponse response,Exception ie) {
+  protected void IllegalArgumentError(HttpServletResponse response, Exception e) {
     try {
-      ie.printStackTrace();
-      response.sendError(HttpServletResponse.SC_CONFLICT, "유효하지 않은 변수를 요청하였습니다.");
-    } catch (IOException e) {
       e.printStackTrace();
+      response.sendError(HttpServletResponse.SC_CONFLICT, "유효하지 않은 변수를 요청하였습니다.");
+    } catch (IOException ie) {
+      ie.printStackTrace();
     }
   }
 }

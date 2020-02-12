@@ -35,9 +35,7 @@ function editorClear() {
   }
   var post_button = $('#btn_post');
   var writecontent = $('#writecontent');
-  var btn_write = $('#btn_write');
   var btn_cancel = $('#btn_cancel');
-  btn_write.css("display", "");
   btn_cancel.html("작성취소");
   post_button.html("저장");
   btn_cancel.attr('onclick', 'javascript:writeCancel()');

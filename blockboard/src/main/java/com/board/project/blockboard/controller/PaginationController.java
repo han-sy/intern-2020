@@ -1,11 +1,9 @@
 package com.board.project.blockboard.controller;
 
-import com.board.project.blockboard.common.constant.ConstantData;
-import com.board.project.blockboard.dto.BoardDTO;
 import com.board.project.blockboard.dto.PaginationDTO;
+import com.board.project.blockboard.dto.UserDTO;
 import com.board.project.blockboard.service.PaginationService;
-import com.board.project.blockboard.service.PostService;
-import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,18 +20,20 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Slf4j
 @Controller
-@RequestMapping("/boards/{boardid}/pages")
+@RequestMapping("/boards")
 public class PaginationController {
+
   @Autowired
   private PaginationService paginationService;
 
-
-  @GetMapping(value = "")
+  @GetMapping(value = "/{boardid}/pages")
   @ResponseBody
-  public PaginationDTO getPageList(@PathVariable("boardid") int boardID,@RequestParam("pageNumber") int pageNumber) {
-
+  public PaginationDTO getPageList(@PathVariable("boardid") int boardID,
+      @RequestParam("pageNumber") int pageNumber, HttpServletRequest request) {
+    UserDTO user = new UserDTO(request);
     //게시판 목록
-    PaginationDTO  pageInfo= paginationService.getPageListByPageNumber(pageNumber,boardID); // select로 받아오기
+    PaginationDTO pageInfo = paginationService
+        .getPageListByPageNumber(pageNumber, boardID, user); // select로 받아오기
     return pageInfo;
   }
 }

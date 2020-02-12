@@ -8,8 +8,6 @@ import com.board.project.blockboard.common.util.CookieUtils;
 import com.board.project.blockboard.dto.UserDTO;
 import com.board.project.blockboard.service.JwtService;
 import com.board.project.blockboard.service.UserService;
-import java.util.HashMap;
-import java.util.Map;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -49,20 +47,6 @@ public class UserController {
   }
 
   /**
-   * 로그아웃
-   *
-   * @param response 유효기간이 0인 쿠키를 담은 객체
-   * @return 로그인 메인화면으로 redirect
-   */
-  @GetMapping("/logout")
-  public String logout(HttpServletResponse response) {
-    Cookie c = new Cookie(HEADER_NAME, null);
-    c.setMaxAge(0);
-    response.addCookie(c);
-    return "redirect:/login";
-  }
-
-  /**
    * 로그인 메인 화면
    *
    * @param request 쿠키 조회하기 위한 객체
@@ -79,6 +63,21 @@ public class UserController {
       return "login";
     }
   }
+
+  /**
+   * 로그아웃
+   *
+   * @param response 유효기간이 0인 쿠키를 담은 객체
+   * @return 로그인 메인화면으로 redirect
+   */
+  @GetMapping("/logout")
+  public String logout(HttpServletResponse response) {
+    Cookie c = new Cookie(HEADER_NAME, null);
+    c.setMaxAge(0);
+    response.addCookie(c);
+    return "redirect:/login";
+  }
+
 
   @GetMapping("/userinfo")
   @ResponseBody

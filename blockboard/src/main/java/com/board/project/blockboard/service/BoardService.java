@@ -5,7 +5,6 @@
 package com.board.project.blockboard.service;
 
 import com.board.project.blockboard.dto.BoardDTO;
-import com.board.project.blockboard.dto.PostDTO;
 import com.board.project.blockboard.dto.UserDTO;
 import com.board.project.blockboard.mapper.BoardMapper;
 import com.google.gson.Gson;
@@ -16,7 +15,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.codec.binary.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,12 +24,8 @@ public class BoardService {
 
   @Autowired
   private BoardMapper boardMapper;
-  @Autowired
-  private PostService postService;
 
   public List<BoardDTO> getBoardListByCompanyID(int companyID) {
-    //System.out.println("companyID (session): " + session.getAttribute("COMPANY"));
-    System.out.println("companyID : " + companyID);
     List<BoardDTO> boardList = boardMapper.selectBoardsByCompanyID(companyID);
     return boardList;
   }
@@ -40,12 +34,7 @@ public class BoardService {
     BoardDTO newBoard = new BoardDTO();
     newBoard.setCompanyID(userData.getCompanyID());
     newBoard.setBoardName(newBoardName);
-    log.info("newBoard : " + newBoard);
     boardMapper.insertBoard(newBoard);
-  }
-
-  public BoardDTO getBoardByBoardName(String boardName) {
-    return boardMapper.selectBoardByBoardName(boardName);
   }
 
   public void changeBoardName(int boardID, String boardName) {
@@ -60,7 +49,6 @@ public class BoardService {
     boardMapper.deleteBoard(boardID);
   }
 
-
   public void deleteBoardsByDeleteBoardList(String deleteBoardListJson) {
 
     //ajax를 통해 넘어온 json 형식의 string을 map 타입으로 변경
@@ -71,28 +59,9 @@ public class BoardService {
         .fromJson(deleteBoardListJson, type); //새로운 데이터
 
     for (int i = 0; i < deleteBoardListMap.size(); i++) { //삭제목록 조회
-      //logger.info("boardIDInteger : "+deleteBoardListMap.get(i).get("boardID"));
       int boardIDInteger = Integer.parseInt(deleteBoardListMap.get(i).get("boardID"));
       deleteBoard(boardIDInteger);
     }
-  }
-
-  public Map<String, Object> getPostDataAboutSelected(int postID, String userID) {
-    Map<String, Object> postMapData = new HashMap<String, Object>();
-    PostDTO postData = postService.getPostByPostID(postID);
-    try {
-      // 현재 로그인한 유저와 게시글 작성자가 같을 경우에 'canDelete' 를 true로 전달
-      postMapData.put("canDelete", StringUtils.equals(userID, postData.getUserID()) ? true : false);
-      postMapData.put("postID", postID);
-      postMapData.put("postTitle", postData.getPostTitle());
-      postMapData.put("postContent", postData.getPostContent());
-      postMapData.put("userName", postData.getUserName());
-      postMapData.put("postRegisterTime", postData.getPostRegisterTime());
-      postMapData.put("boardID", postData.getBoardID());
-    } catch (Exception e) {
-      e.printStackTrace();
-    }
-    return postMapData;
   }
 
   public void updateChangedName(String newTItleList, int companyID) {

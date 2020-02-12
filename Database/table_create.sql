@@ -156,7 +156,7 @@ SELECT post.post_id               AS postID,
 select *
 from posts;
 update posts
-set post_status='{"isTemp":false, "isTrash":false}'
+set post_status='{"isTemp":false, "isRecycle":false}'
 where post_id <105;
 update posts
 set company_id = 1
