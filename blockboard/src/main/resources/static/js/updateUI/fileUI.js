@@ -22,3 +22,4 @@ function createStatusbarUI(data){
   var itemList = template(files);
   $(".upload_list_start_point").html(itemList);
 }
+

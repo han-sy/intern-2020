@@ -3,6 +3,11 @@
  * @file    fileAjax.js
  */
 
+/**
+ * 서버에 파일을 전송
+ * @param formData 파일 데이터
+ * @param status statusbar ui를 위한 객체
+ */
 function sendFileToServer(formData,status)
 {
   var uploadURL = "/files"; //Upload URL
@@ -46,6 +51,9 @@ function sendFileToServer(formData,status)
   status.setAbort(jqXHR);
 }
 
+/**
+ * postID 업데이트
+ */
 function updatePostIDToFiles(postID) {
   var fileList = getAttachedFileList(postID);
   console.log(fileList);
@@ -64,6 +72,9 @@ function updatePostIDToFiles(postID) {
   });
 }
 
+/**
+ * postID에 일치하는 파일리스트 반환
+ */
 function getFileList(postID,successFunction) {
   $.ajax({
     type: 'GET',
@@ -81,6 +92,9 @@ function getFileList(postID,successFunction) {
   });
 }
 
+/**
+ * 파일 삭제
+ */
 function deleteFile(storedFileName,obj,successFunction) {
   console.log("storedFileName : "+storedFileName);
   $.ajax({

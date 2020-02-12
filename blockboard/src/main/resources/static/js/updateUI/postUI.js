@@ -80,7 +80,10 @@ function updateboardListInEditor(board) {
   itemList = template(board);
   $('#boardIDinEditor').html(itemList);
 }
-
+/**
+ * 파일첨부 폼
+ * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+ */
 function openFileAttachForm(postID) {
   source = $('#file-attach-form-template').html();
   template = Handlebars.compile(source);
@@ -93,6 +96,10 @@ function openFileAttachForm(postID) {
   }
 }
 
+/**
+ * 드래그앤 드랍 영역
+ * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+ */
 function openDragAndDropForm() {
   source = $('#file-attach-drag-and-drop-form-template').html();
   template = Handlebars.compile(source);
