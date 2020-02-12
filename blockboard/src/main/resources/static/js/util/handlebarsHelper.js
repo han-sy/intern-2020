@@ -131,3 +131,38 @@ Handlebars.registerHelper('isRecycle', function (option) {
     return option.inverse(this);
   }
 });
+
+/**
+ * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
+ */
+Handlebars.registerHelper('isTempBox', function (option) {
+  var boardID = parseInt(getCurrentBoardID());
+  console.log(boardID);
+  if (boardID === BOARD_ID.TEMP_BOX) {
+    return option.fn(this);
+  } else {
+    return option.inverse(this);
+  }
+});
+
+/**
+ * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
+ */
+Handlebars.registerHelper('isRecycleBin', function (option) {
+  var boardID = parseInt(getCurrentBoardID());
+  if (boardID === BOARD_ID.RECYCLE) {
+    return option.fn(this);
+  } else {
+    return option.inverse(this);
+  }
+});
+
+/**
+ * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
+ */
+Handlebars.registerHelper('isTempSaveAble', function (options) {
+  if ($('#functionAble5').attr("value") == "on") {
+    return options.fn(this); //true
+  }
+  return options.inverse(this);//false
+});

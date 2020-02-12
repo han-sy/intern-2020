@@ -167,9 +167,7 @@ SELECT post.post_id               AS postID,
         
 select *
 from posts;
-update posts
-set post_status='{"isTemp":false, "isRecycle":false}'
-where post_id <105;
+
 update posts
 set company_id = 1
 where company_id = 2;
@@ -206,3 +204,5 @@ file_size as fileSize,
 upload_time as uploadTime
 from files
 where post_id = 131;
+
+select * from posts;

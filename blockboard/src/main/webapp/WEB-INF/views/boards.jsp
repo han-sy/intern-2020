@@ -140,7 +140,9 @@
                 </li>
                 {{/boards}}
                 <hr>
+                {{#isTempSaveAble}}
                 <li data-tab="-3" class=tabmenu id=default style="cursor:pointer"> 임시보관함</li>
+                {{/isTempSaveAble}}
                 <li data-tab="-4" class=tabmenu id=default style="cursor:pointer"> 휴지통</li>
             </script>
         </div>
@@ -370,23 +372,20 @@
                 </script>
 
 
-                <div id="editorcontent" class="form-group">
+                <div id="editorcontent" class="form-group"></div>
+                <script id="editorcontent-template" type="text/x-handlebars-template">
                     <textarea id="editor"></textarea>
-                    <button id="btn_post" class="btn btn-success"
-                            onclick="javascript:postFunction()">저장
-                    </button>
-                    <button id="btn_cancel" class="btn btn-success"
-                            onclick="javascript:writeCancel()">작성취소
-                    </button>
-                    <button id="btn_temp" class="btn btn-success"
-                            onclick="javascript:tempsaveFunction()">임시저장
-                    </button>
-                    <div id="editorcontent-hidden">
-                    </div>
-                    <script id="postid-template" type="text/x-handlebars-template">
-                        <a id="editor_postID" style="display:none">{{postID}}</a>
-                    </script>
-                </div>
+                    <button class="btn btn-success btn_post">저장</button>
+                    <button class="btn btn-success btn_cancel">작성취소</button>
+                    {{#isTempSaveAble}}
+                    <button class="btn btn-success btn_tempSave">임시저장</button>
+                    {{/isTempSaveAble}}
+                    <div id="editorcontent-hidden"></div>
+                </script>
+                <script id="postid-template" type="text/x-handlebars-template">
+                    <a id="postID" style="display:none">{{postID}}</a>
+                    <a id="boardID" style="display:none">{{boardID}}</a>
+                </script>
             </div>
 
             <div id="postcontent" class="border-primary"></div>
@@ -406,13 +405,10 @@
                     <p>{{{postContent}}}</p>
                 </div>
                 <a id="postID" style="visibility: hidden;">{{postID}}</a>
+                <a id="boardIdInPost" style="visibility: hidden">{{boardID}}</a>
                 <br>
-                <button id="btn_updatePost" class="btn btn-success" style="visibility:hidden"
-                        onclick="javascript:postUpdateFunction()">수정
-                </button>
-                <button id="btn_deletePost" class="btn btn-success" style="visibility:hidden"
-                        onclick="javascript:movePostToTrashBox()">삭제
-                </button>
+                <button class="btn btn-success btn_modify" style="visibility:hidden">수정</button>
+                <button class="btn btn-success btn_delete" style="visibility:hidden">삭제</button>
                 {{/post}}
 
                 {{#isCommentAble}}
@@ -473,9 +469,9 @@
 
                                     {{#isSameUser}}
                                     <a class="text-success text-button text-button font-weight-bold"
-                                       id='edit_comment' >수정</a>
+                                       id='edit_comment'>수정</a>
                                     <a class="text-success text-button text-button font-weight-bold"
-                                       id='delete_comment' >삭제</a>
+                                       id='delete_comment'>삭제</a>
                                     {{else}}
                                     {{/isSameUser}}
                                 </div>
@@ -523,16 +519,16 @@
                         <div class=btn>
                             {{#isReplyAble}}
                             <a class='text-success text-button font-weight-bold replyBtn'
-                               >답글</a>
+                            >답글</a>
                             {{else}}
                             {{/isReplyAble}}
                             {{#isSameUser}}
                             <a class="text-success text-button font-weight-bold"
                                id='edit_comment'
-                               >수정</a>
+                            >수정</a>
                             <a class="text-success text-button font-weight-bold"
                                id='delete_comment'
-                               >삭제</a>
+                            >삭제</a>
                             {{else}}
                             {{/isSameUser}}
                         </div>
@@ -553,12 +549,12 @@
                     <div align="right">
                         {{#isReply}}
                         <a class="text-success text-button font-weight-bold {{{buttonSelector}}}"
-                           >{{buttonName}}</a>
+                        >{{buttonName}}</a>
                         <a class="btn_close_cmt_input text-success text-button font-weight-bold"
-                           >취소</a>
+                        >취소</a>
                         {{else}}
                         <a class="text-success text-button font-weight-bold {{{buttonSelector}}}"
-                           >{{buttonName}}</a>
+                        >{{buttonName}}</a>
                         {{/isReply}}
                     </div>
                 </div>
@@ -575,7 +571,7 @@
                     <div>
                         <a id=btn_edit_comment_complete
                            class="text-success text-button font-weight-bold"
-                           >수정하기</a>
+                        >수정하기</a>
                     </div>
                 </div>
                 {{/attribute}}
@@ -595,40 +591,52 @@
                         <th scope="col">제목</th>
                         <th scope="col">작성자</th>
                         <th scope="col">작성일</th>
+                        {{#isTempBox}}
+                        {{else}}
+                        {{#isRecycleBin}}
+                        {{else}}
                         <th scope="col">조회수</th>
+                        {{/isRecycleBin}}
+                        {{/isTempBox}}
                     </tr>
                     </thead>
                     <tbody id="postlist">
                     {{#posts}}
                     {{#isTemp}}
-                    <tr class="postclick" data-post={{postID}}
-                        onclick="javascript:clickTempPostEvent(this)">
-                        <td scope="row">{{postTitle}}
-                        </td>
+                    <tr class="postclick temp_post_click" data-post={{postID}}
+                        data-board={{boardID}}>
+                        <td>{{boardName}}</td>
+                        <td>{{postTitle}}</td>
                         {{else}}
                         {{#isRecycle}}
-                    <tr class="postclick" data-post={{postID}}
-                        onclick="javascript:clickRecyclePostEvent(this)">
-                        <td scope="row">{{postTitle}}</td>
+                    <tr class="postclick recycle_post_click" data-post={{postID}}
+                        data-board={{boardID}}>
+                        <td>{{boardName}}</td>
+                        <td>{{postTitle}}</td>
                         {{else}}
-                    <tr class="postclick normal_post_click" data-post='{{postID}}'>
+                    <tr class="postclick normal_post_click" data-post={{postID}}
+                        data-board={{boardID}}>
                         {{#isPopular}}
                         <td>{{boardName}}</td>
                         {{else}}
                         {{/isPopular}}
-                        <td scope="row">{{postTitle}}
+                        <td>{{postTitle}}
                             {{#isCommentAble}}
                             <span style="color:#28A745;">({{commentsCount}})</span>
                             {{/isCommentAble}}
                         </td>
                         {{/isRecycle}}
+                        {{/isTemp}}
                         <td>{{userName}}</td>
                         <td>{{postRegisterTime}}</td>
+                        {{#isTemp}}
+                        {{else}}
+                        {{#isRecycle}}
+                        {{else}}
                         <td>{{viewCount}}</td>
-                        <a style="visibility:hidden">{{postID}}</a>
-                        <a style="visibility:hidden">{{boardID}}</a>
+                        {{/isRecycle}}
+                        {{/isTemp}}
                     </tr>
-                    {{/isTemp}}
                     {{/posts}}
                 </script>
 
