@@ -46,16 +46,8 @@ function sendFileToServer(formData,status)
   status.setAbort(jqXHR);
 }
 
-function updatePostIDToFiles(postID,fileList) {
-  var fileList = new Array();
-  console.log(postID);
-  $(".filename").each(function () {
-    var fileData = new Object();
-    fileData.postID = postID;
-    fileData.storedFileName = $(this).attr("data-filename");
-    console.log("data-filename : "+ fileData.storedFileName);
-    fileList.push(fileData);
-  });
+function updatePostIDToFiles(postID) {
+  var fileList = getAttachedFileList(postID);
   console.log(fileList);
   $.ajax({
     type: 'PUT',
@@ -84,6 +76,21 @@ function getFileList(postID,successFunction) {
     },
     success: function (data) {
       successFunction(data);
+    }
+  });
+}
+
+function deleteFile(storedFileName,obj,successFunction) {
+  console.log("storedFileName : "+storedFileName);
+  $.ajax({
+    type: 'DELETE',
+    url: `/files`,
+    data: {storedFileName:storedFileName},
+    error: function (error, msg) {  //통신 실패시
+      errorFunction(error);
+    },
+    success: function () {
+      successFunction(obj);
     }
   });
 }

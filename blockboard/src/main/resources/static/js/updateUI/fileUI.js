@@ -9,3 +9,7 @@ function updateFileListInPostUI(data){
   var itemList = template(files);
   $(".attached_file_list_container").html(itemList);
 }
+
+function deleteStatusbarUI(obj) {
+  obj.remove();
+}

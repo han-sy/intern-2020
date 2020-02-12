@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -53,6 +54,14 @@ public class FileController {
 
     return fileService.getFileList(postID);
   }
+  /**
+   * 파일 삭제
+   */
+  @DeleteMapping(value = "/files")
+  public void deleteFile(@RequestParam String storedFileName){
+    log.info("storedFileName : "+storedFileName);
+    fileService.deleteFile(storedFileName);
+  }
 
   /**
    * 파일 다운로드
@@ -62,4 +71,6 @@ public class FileController {
       HttpServletRequest request){
     fileService.downloadFile(fileID,response,request);
   }
+
+
 }

@@ -117,6 +117,9 @@ Handlebars.registerHelper('isPopular', function (option) {
     return option.inverse(this);
   }
 });
+Handlebars.registerHelper('printFileSize', function (option) {
+  return getFileSize(this.fileSize);
+});
 
 /**
  * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>

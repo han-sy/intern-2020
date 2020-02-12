@@ -45,4 +45,9 @@
     FROM   files
     WHERE  file_id = #{fileID};
   </select>
+
+  <delete id="deleteFileByStoredFileName" parameterType="string">
+    DELETE FROM files
+    WHERE  stored_file_name = #{storedFileName};
+  </delete>
 </mapper>

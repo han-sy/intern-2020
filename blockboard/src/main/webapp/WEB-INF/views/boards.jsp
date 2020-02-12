@@ -366,7 +366,7 @@
                         </table>
                     </form>
                     <a class='file_upload_btn text-success font-weight-bold text-button'
-                       style="cursor: pointer;" onclick="uploadFile(); return false;">파일업로드</a>
+                       onclick="uploadFile(); return false;">파일업로드</a>
                 </script>
 
 
@@ -424,7 +424,7 @@
                         (<span id=commentCount></span>)
                         </span>
                         <a class=' commentBtn text-success font-weight-bold text-button'
-                           style="cursor: pointer;">댓글 달기</a>
+                        >댓글 달기</a>
                     </div>
                     <div class=comment_list_container></div>
                     <div class=comment_input_container></div>
@@ -437,7 +437,8 @@
                 <a class='text-success font-weight-bold'>첨부파일</a>
                 {{#files}}
                 <div class="form-group">
-                    <p><a class="attached-file-download" data-fileid='{{fileID}}' href="/files/{{fileID}}" >{{originFileName}} ( {{fileSize}} B )</a></p>
+                    <p><a class="attached-file-download" data-fileid='{{fileID}}'
+                          href="/files/{{fileID}}">{{originFileName}} ( {{printFileSize}} )</a></p>
                 </div>
 
                 {{/files}}
@@ -466,16 +467,15 @@
                                 </div>
                                 <div class="btn">
                                     {{#isReplyAble}}
-                                    <a class='text-success text-button text-button font-weight-bold replyBtn'
-                                       style="cursor: pointer;">답글</a>
+                                    <a class='text-success text-button text-button font-weight-bold replyBtn'>답글</a>
                                     {{else}}
                                     {{/isReplyAble}}
 
                                     {{#isSameUser}}
                                     <a class="text-success text-button text-button font-weight-bold"
-                                       id='edit_comment' style="cursor: pointer;">수정</a>
+                                       id='edit_comment' >수정</a>
                                     <a class="text-success text-button text-button font-weight-bold"
-                                       id='delete_comment' style="cursor: pointer;">삭제</a>
+                                       id='delete_comment' >삭제</a>
                                     {{else}}
                                     {{/isSameUser}}
                                 </div>
@@ -523,16 +523,16 @@
                         <div class=btn>
                             {{#isReplyAble}}
                             <a class='text-success text-button font-weight-bold replyBtn'
-                               style="cursor: pointer;">답글</a>
+                               >답글</a>
                             {{else}}
                             {{/isReplyAble}}
                             {{#isSameUser}}
                             <a class="text-success text-button font-weight-bold"
                                id='edit_comment'
-                               style="cursor: pointer;">수정</a>
+                               >수정</a>
                             <a class="text-success text-button font-weight-bold"
                                id='delete_comment'
-                               style="cursor: pointer;">삭제</a>
+                               >삭제</a>
                             {{else}}
                             {{/isSameUser}}
                         </div>
@@ -553,12 +553,12 @@
                     <div align="right">
                         {{#isReply}}
                         <a class="text-success text-button font-weight-bold {{{buttonSelector}}}"
-                           style="cursor: pointer;">{{buttonName}}</a>
+                           >{{buttonName}}</a>
                         <a class="btn_close_cmt_input text-success text-button font-weight-bold"
-                           style="cursor: pointer;">취소</a>
+                           >취소</a>
                         {{else}}
                         <a class="text-success text-button font-weight-bold {{{buttonSelector}}}"
-                           style="cursor: pointer;">{{buttonName}}</a>
+                           >{{buttonName}}</a>
                         {{/isReply}}
                     </div>
                 </div>
@@ -575,7 +575,7 @@
                     <div>
                         <a id=btn_edit_comment_complete
                            class="text-success text-button font-weight-bold"
-                           style="cursor: pointer;">수정하기</a>
+                           >수정하기</a>
                     </div>
                 </div>
                 {{/attribute}}

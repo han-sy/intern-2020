@@ -11,6 +11,7 @@ $(document).on('click', '.file_drag_and_drop_btn', function () {
   } else if (switchText.html() == "닫기") {
     var isAcceptance = confirm("첨부했던 파일들이 지워집니다 계속하시겠습니까?");
     if (isAcceptance) {
+      deleteAllAttachedFile();
       $(function () {
         $("#file_drop_container").html("");
         switchText.html("열기");
@@ -22,18 +23,18 @@ $(document).on('click', '.file_drag_and_drop_btn', function () {
   }
 });
 
-$(document).on("dragenter",".dragAndDropDiv",function(e){
+$(document).on("dragenter", ".dragAndDropDiv", function (e) {
   e.stopPropagation();
   e.preventDefault();
   $(this).css('border', '2px solid #0B85A1');
 });
 
-$(document).on("dragover",".dragAndDropDiv",function(e){
+$(document).on("dragover", ".dragAndDropDiv", function (e) {
   e.stopPropagation();
   e.preventDefault();
 });
 
-$(document).on("drop",".dragAndDropDiv",function(e){
+$(document).on("drop", ".dragAndDropDiv", function (e) {
 
   $(this).css('border', '2px dotted #0B85A1');
   e.preventDefault();
@@ -42,7 +43,19 @@ $(document).on("drop",".dragAndDropDiv",function(e){
   handleFileUpload(files);
 });
 
-$(document).on("click",".attached-file-download",function(){
+//다운로드할 파일 클릭시
+$(document).on("click", ".attached-file-download", function () {
   console.log($(this).attr("data-fileid"));
   downloadFile($(this).attr("data-fileid"));
+});
+
+//스테이터스바 내 삭제 클릭시
+$(document).on("click", ".delete-statusbar", function () {
+  var isAcceptance = confirm("첨부한 파일을 삭제하시겠습니까?");
+  if (isAcceptance) {
+    var storedFileName = $(this).closest('.statusbar').find('.filename').attr(
+        "data-filename");
+    deleteFile(storedFileName,$(this).closest('.statusbar'),deleteStatusbarUI);
+  }
+
 });

@@ -21,4 +21,6 @@ public interface FileMapper {
   List<FileDTO> selectFileListByPostID(int postID);
 
   FileDTO selectFileByFileID(int fileID);
+
+  void deleteFileByStoredFileName(String storedFileName);
 }
