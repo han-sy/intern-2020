@@ -6,6 +6,7 @@ package com.board.project.blockboard.controller;
 
 import com.board.project.blockboard.dto.FileDTO;
 import com.board.project.blockboard.service.FileService;
+import java.io.IOException;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -73,5 +74,21 @@ public class FileController {
     fileService.downloadFile(fileID,response,request);
   }
 
+  /**
+   * @author Woohyeok Jun <woohyeok.jun@worksmobile.com>
+   */
+  @PostMapping("/imageUpload")
+  public String uploadImage(HttpServletResponse response, MultipartHttpServletRequest multiFile)
+      throws Exception {
+    return fileService.uploadImage(response, multiFile);
+  }
 
+  /**
+   * @author Woohyeok Jun <woohyeok.jun@worksmobile.com>
+   */
+  @GetMapping("/img/{fileName}")
+  public byte[] getImage(@PathVariable("fileName") String fileName)
+      throws IOException {
+    return fileService.getImage(fileName);
+  }
 }

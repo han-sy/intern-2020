@@ -10,8 +10,7 @@ const COMMENT_PREFIX = {
 $(document).on('click', '.btn_openComment', function () {
   var postID = $("#postID").html();
   var boardID = getCurrentBoardID();
-  var commentText = $(this).closest(".commentHtml").find(
-      "#commentText").val().replace(/\n/g, "<br>");//엔터 적용 위해
+  var commentText = CKEDITOR.instances['commentText'].getData();
   if (commentText == "") {
     alert("내용을 입력하세요.");
     return;
@@ -100,8 +99,7 @@ $(document).on('click', '.replyBtn', function () {
 $(document).on('click', '.btn_openReply', function () {
   var postID = $("#postID").html();
   var boardID = getCurrentBoardID();
-  var commentText = $(this).closest(".commentHtml").find(
-      "#commentText").val().replace(/\n/g, "<br>");
+  var commentText = CKEDITOR.instances['commentText'].getData();
   var commentReferencedID = $(this).closest(".referenceCommentContainer").attr(
       "data-id");
   var commentReferencedUserID = $(this).closest(".commentHtml").find(

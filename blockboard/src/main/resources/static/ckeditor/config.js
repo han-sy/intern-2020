@@ -55,29 +55,19 @@ CKEDITOR.editorConfig = function (config) {
       + 'xml,'
       + 'ajax';
 
-  if ($('#functionAble4').attr("value") == "on") {
-    config.extraPlugins = "image2";
+  var func = new FunctionOn();
+  if (func.isInlineImageOn()) {
+    config.extraPlugins += ",image2";
   }
 
-  if ($('#functionAble6').attr("value") == "on") {
-    config.extraPlugins = "emoji";
+  if (func.isStickerOn()) {
+    config.extraPlugins += ",emoji";
   }
 
   // The default plugins included in the basic setup define some buttons that
   // are not needed in a basic editor. They are removed here.
 	config.removeButtons = 'Strike,Subscript,Superscript';
 
-	CKEDITOR.on('dialogDefinition', function (evt) {
-		var dialog = evt.data;
-
-		if (dialog.name == 'sticker') {
-			// Get dialog definition.
-			var dialogDefinition = evt.data.definition;
-
-			console.log(dialogDefinition);
-			dialogDefinition.dialog.resize(300,200);
-		}
-	});
   // Dialog windows are also simplified.
   config.removeDialogTabs = 'link:advanced';
 };

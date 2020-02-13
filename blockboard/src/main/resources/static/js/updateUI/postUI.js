@@ -63,7 +63,7 @@ function addPostInfoToEditor(postID, boardID) {
 
 // 작성, 수정 버튼 클릭시 해당 게시판 선택 되어있게
 function initBoardIdOptionInEditor(currentBoardID) {
-  var options = $('#boardIDinEditor').children();
+  var options = $('#selectedBoardIDinEditor').children();
   $(options).each(function (index, item) {
     var data = $(item).attr('data-tab'); // option의 boardID
     if (data == currentBoardID) {
@@ -78,7 +78,7 @@ function updateboardListInEditor(board) {
   source = $('#writecontent-boards-template').html();
   template = Handlebars.compile(source);
   itemList = template(board);
-  $('#boardIDinEditor').html(itemList);
+  $('#selectedBoardIDinEditor').html(itemList);
 }
 
 

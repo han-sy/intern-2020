@@ -15,25 +15,39 @@ function updateCommentListUI(data) {
 }
 
 //댓글 inputform 받아오기
-function getCommentInputHtml(type, buttonName, tag, className, buttonSelector,isReplyInput) {
+function getCommentInputHtml(type, buttonName, tag, className, buttonSelector,
+    isReplyInput) {
   data = {
     type: type,
     className,
     buttonName: buttonName,
     tag: tag,
     buttonSelector: buttonSelector,
-    isReplyInput : isReplyInput
+    isReplyInput: isReplyInput
   };
   var source = $('#commentInputForm-template').html();
   var template = Handlebars.compile(source);
   var attribute = {attribute: data};
   var itemList = template(attribute);
   $(className).html(itemList + "</div>");
+
+  var func = new FunctionOn();
+  var add_on = "";
+  if (func.isStickerOn()) {
+    add_on = "emoji";
+  }
+  if (func.isInlineImageOn()) {
+    add_on = "image2";
+  }
+  if (func.isInlineImageOn() && func.isStickerOn()) {
+    add_on = "image2, emoji";
+  }
+
   CKEDITOR.replace('commentText', {
     height: 150,
     toolbarLocation: 'bottom',
     toolbarGroups: [{name: 'insert'}],
-    extraPlugins: 'emoji'
+    extraPlugins: add_on
   });
 }
 
@@ -74,6 +88,6 @@ function getAllReplyList(data) {
   });
 }
 
-function replyFormClear(){
+function replyFormClear() {
   $('.is_reply_input').html("");
 }

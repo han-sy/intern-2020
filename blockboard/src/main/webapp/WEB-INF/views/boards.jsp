@@ -318,7 +318,7 @@
                         <label class="font-weight-light"> 게시판 선택 </label>
                     </div>
                     <div class="col-2 d-flex">
-                        <select class="form-control-sm" id="boardIDinEditor">
+                        <select class="form-control-sm" id="selectedBoardIDinEditor">
                         </select>
                     </div>
                     <!--게시글 작성 시 게시판 목록 템플릿-->
@@ -378,8 +378,8 @@
                     <div id="editorcontent-hidden"></div>
                 </script>
                 <script id="postid-template" type="text/x-handlebars-template">
-                    <a id="postID" style="display:none">{{postID}}</a>
-                    <a id="boardID" style="display:none">{{boardID}}</a>
+                    <a id="postIdInEditor" style="display:none">{{postID}}</a>
+                    <a id="boardIdInEditor" style="display:none">{{boardID}}</a>
                 </script>
             </div>
 
@@ -485,6 +485,11 @@
                                        id='delete_comment'>삭제</a>
                                     {{else}}
                                     {{/isSameUser}}
+                                    {{#isFileAttachAble}}
+                                        <a class="text-success text-button font-weight-bold open_attached_file_list"
+                                        >첨부파일 보기</a>
+                                    {{else}}
+                                    {{/isFileAttachAble}}
                                 </div>
                             </div>
                         </div>

@@ -33,8 +33,8 @@ $(document).on("click", "#btn_write", function () {
 $(document).on('click', '.btn_tempSave', function () {
   var postTitle = $('#post_title').val();
   var postContent = CKEDITOR.instances.editor.getData();
-  var postID = $('#postID').html();
-  var boardID = $('#boardIDinEditor option:selected').attr('data-tab');
+  var postID = $('#postIdInEditor').html();
+  var boardID = $('#selectedBoardIDinEditor option:selected').attr('data-tab');
   // 제목 & 내용 비었는지 검사
   if (checkEmpty()) {
     insertTempPost(boardID, postID, postTitle, postContent, true);
@@ -46,8 +46,8 @@ $(document).on('click', '.btn_tempSave', function () {
 $(document).on('click', '.btn_post', function () {
   var postTitle = $('#post_title').val();
   var postContent = CKEDITOR.instances.editor.getData();
-  var postID = $('#postID').html();
-  var boardID = $('#boardIDinEditor option:selected').attr('data-tab');
+  var postID = $('#postIdInEditor').html();
+  var boardID = $('#selectedBoardIDinEditor option:selected').attr('data-tab');
 
   // 제목 & 내용 비었는지 검사
   if (checkEmpty()) {
@@ -91,11 +91,11 @@ function checkEmpty() {
 
 // '수정' 버튼 클릭 후 '수정하기' 버튼 이벤트
 $(document).on('click', '.btn_update', function () {
-  var postID = $("#postID").html();
-  var originalBoardID = $("#boardID").html();
+  var postID = $("#postIdInEditor").html();
+  var originalBoardID = $("#boardIdInEditor").html();
   var postTitle = $('#post_title').val();
   var postContent = CKEDITOR.instances.editor.getData();
-  var boardID = $('#boardIDinEditor option:selected').attr('data-tab');
+  var boardID = $('#selectedBoardIDinEditor option:selected').attr('data-tab');
   updateIDToFiles(postID,"");
   updatePost(boardID, originalBoardID, postID, postTitle, postContent);
 });
