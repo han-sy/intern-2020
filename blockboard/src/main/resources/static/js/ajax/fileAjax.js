@@ -71,6 +71,9 @@ function updateIDToFiles(postID,commentID,boardID,commentReferencedID) {
     },
     complete(){
       console.log("!!!");
+      postID = $('#postID').html();
+      boardID = $('#boardIdInPost').html();
+      console.log("pid : "+postID+". bpardID : "+boardID);
       if(isNullData(commentReferencedID)){
         getCommentList(boardID, postID, updateCommentListUI);//성공하면 댓글목록 갱신
       }else{

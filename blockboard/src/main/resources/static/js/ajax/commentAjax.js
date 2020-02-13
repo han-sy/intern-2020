@@ -3,6 +3,7 @@
  * @file commentAjax.js
  */
 function updateCommentsCount(boardID, postID) {
+  console.log("count 함수 에서 postID : "+postID);
   $.ajax({
     type: 'GET',
     url: `/boards/${boardID}/posts/${postID}/comments/counts`,

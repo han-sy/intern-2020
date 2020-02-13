@@ -43,7 +43,7 @@ function getCommentAllContents(data) {
 //댓글수정모드
 function editCommentByCommentID(postID, boardID, commentID) {
   var oldText = $('#comment' + commentID).find(".comment_content").html();
-  oldText = oldText.replace(/<br>/g, "\n");
+  oldText = oldText.replace(/<br>/g, "\n").trim();
   data = {oldText: oldText};
   var source = $('#editCommentForm-template').html();
   var template = Handlebars.compile(source);
