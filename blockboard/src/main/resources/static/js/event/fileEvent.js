@@ -9,7 +9,7 @@
 $(document).on('click', '.open_file_form_btn', function () {
 
   fileFormClear();
-  openFileAttachForm("","",$(this).closest(".comment_input_container"));
+  openFileAttachForm("","",$(this).closest(".commentHtml"));
 });
 
 //파일 열고닫기 텍스트 바꾸기

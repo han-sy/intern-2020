@@ -346,7 +346,7 @@
                     <div class="col-2">
                         <label class="font-weight-light">파일첨부</label>
                         <a class='file_drag_and_drop_btn text-success font-weight-bold text-button'
-                           style="cursor: pointer; margin-left: 5px">닫기</a>
+                           style="cursor: pointer; margin-left: 5px">열기</a>
                     </div>
                     <div class="col-10">
                         <form name="uploadForm" class="uploadForm" enctype="multipart/form-data"
@@ -571,26 +571,26 @@
                     {{{tag}}}
                     <textarea class="form-control" id=commentText placeholder='{{type}}을 입력하세요'
                               name=commentTxt></textarea>
+                    <div class="form-group row file_attach_form">
+                    </div>
+                    <div align="right">
+                        {{#isFileAttachAble}}
+                        <a class="text-success text-button font-weight-bold open_file_form_btn"
+                        >파일첨부</a>
+                        {{else}}
+                        {{/isFileAttachAble}}
+                        {{#isReply}}
+                        <a class="text-success text-button font-weight-bold {{{buttonSelector}}}"
+                        >{{buttonName}}</a>
+                        <a class="btn_close_cmt_input text-success text-button font-weight-bold"
+                        >취소</a>
+                        {{else}}
+                        <a class="text-success text-button font-weight-bold {{{buttonSelector}}}"
+                        >{{buttonName}}</a>
+                        {{/isReply}}
+                    </div>
+                </div>
 
-                </div>
-                <div class="form-group row file_attach_form">
-                </div>
-                <div align="right">
-                    {{#isFileAttachAble}}
-                    <a class="text-success text-button font-weight-bold open_file_form_btn"
-                    >파일첨부</a>
-                    {{else}}
-                    {{/isFileAttachAble}}
-                    {{#isReply}}
-                    <a class="text-success text-button font-weight-bold {{{buttonSelector}}}"
-                    >{{buttonName}}</a>
-                    <a class="btn_close_cmt_input text-success text-button font-weight-bold"
-                    >취소</a>
-                    {{else}}
-                    <a class="text-success text-button font-weight-bold {{{buttonSelector}}}"
-                    >{{buttonName}}</a>
-                    {{/isReply}}
-                </div>
                 {{/attribute}}
             </script>
             <!--댓글 수정 템플릿-->
