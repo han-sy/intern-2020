@@ -27,30 +27,27 @@ public class StickerService {
 
   private final String STICKER_PATH = "/home1/irteam/storage/sticker";
 
-  private final Map<String, Object> cache_stickerList = new HashMap<>();
+  private final Map<String, Object> cache_stickerList = new HashMap<>();  // 모든 스티커 Json
 
-  private final ArrayList<String> cache_groupNames = new ArrayList<>();
-
-  long start, end;
+  private final ArrayList<String> cache_groupNames = new ArrayList<>(); // 모든 그룹 이름
 
   public JSONObject getStickers(HttpServletRequest request) {
-    start = System.nanoTime();
     if (cache_stickerList.isEmpty() || this.isModify()) {
-      JSONArray stickers = new JSONArray();
-      JSONArray groups = new JSONArray();
+      JSONArray stickers = new JSONArray(); // 모든 스티커
+      JSONArray groups = new JSONArray(); // 모든 스티커 그룹
       ArrayList<String> groupNames = new ArrayList<>();
       int count = -1;
       // 하위 디렉토리
       for (File info : Objects.requireNonNull(new File(STICKER_PATH).listFiles())) {
         if (info.isDirectory()) {
           String newPath = STICKER_PATH + "/" + info.getName();
-          JSONObject group = new JSONObject();
-          JSONObject position = new JSONObject();
+          JSONObject group = new JSONObject();  // 스티커 그룹 정보
+          JSONObject position = new JSONObject(); // 각 그룹이 view 에서 표시될 위치
           position.put("x", (count--) * 21);
           position.put("y", 0);
           group.put("groupName", info.getName());
-          groupNames.add(info.getName());
           group.put("position", position);
+          groupNames.add(info.getName());
           for (File sub_info : Objects.requireNonNull(new File(newPath).listFiles())) {
             if (sub_info.isFile() && !sub_info.getName().startsWith("nav")) {
               JSONObject sticker = new JSONObject();
@@ -70,35 +67,30 @@ public class StickerService {
         }
       }
 
-      JSONObject result = new JSONObject();
+      JSONObject result = new JSONObject(); // CKEditor Plugin 으로 보낼 JSON
       result.put("groups", groups);
       result.put("items", stickers);
       cache_stickerList.putAll(result);
       cache_groupNames.addAll(groupNames);
-      end = System.nanoTime();
-      log.info("getStickers: " + (end - start) / 1000000.0);
       return result;
     }
-    end = System.nanoTime();
-    log.info("getStickers: " + (end - start) / 1000000.0);
     return JsonParse.getJsonStringFromMap(cache_stickerList);
   }
 
   public byte[] getSticker(String dirName, String fileName) throws IOException {
-    start = System.nanoTime();
     String requestPath = STICKER_PATH + "/" + dirName + "/" + fileName;
     InputStream in = new FileInputStream(requestPath);
     byte[] imageByteArray = IOUtils.toByteArray(in);
     in.close();
-    end = System.nanoTime();
     return imageByteArray;
   }
 
+  // 스티커 폴더의 변경있으면 cache 초기화
   public boolean isModify() {
     int directoryCount = 0;
 
     for (File info : Objects.requireNonNull(new File(STICKER_PATH).listFiles())) {
-      if(info.isDirectory()) {
+      if (info.isDirectory()) {
         directoryCount++;
         if (!cache_groupNames.contains(info.getName())) {
           cache_groupNames.clear();
@@ -108,6 +100,8 @@ public class StickerService {
       }
     }
     if (directoryCount != cache_groupNames.size()) {
+      cache_groupNames.clear();
+      cache_stickerList.clear();
       return true;
     }
     return false;
