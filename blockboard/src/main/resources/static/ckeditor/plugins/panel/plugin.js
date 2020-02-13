@@ -368,7 +368,7 @@
 			 * @returns {CKEDITOR.dom.nodeList}
 			 */
 			getItems: function() {
-				return this.element.find( 'a,input' );
+				return this.element.find( 'a,input,img' );
 			}
 		},
 

@@ -15,7 +15,7 @@
 }
 
 .cke_emoji-panel {
-	width: 480px;
+	width: 450px;
 	height: 347px;
 	overflow: hidden;
 }
@@ -79,7 +79,7 @@
 }
 
 .cke_emoji-inner_panel .active {
-	border-bottom: 5px solid rgba(44, 195, 255, 1);
+	border-bottom: 2px solid #43A047;
 }
 
 .cke_emoji-navigation_item span {
@@ -98,12 +98,6 @@
 	margin-right: 10px;
 	padding-left: 2px;
 	padding-right: 2px;
-}
-
-.cke_emoji-outer_emoji_block h2 {
-	font-size: 1.3em;
-	font-weight: 600;
-	margin: 5px 0 3px 0;
 }
 
 .cke_emoji-outer_emoji_block ul {
@@ -127,7 +121,7 @@
 	background-color: rgba(44, 195, 255, 0.2);
 }
 
-.cke_emoji-item > a {
+.cke_emoji-item > img {
 	text-decoration: none;
 	display: table-cell;
 	vertical-align: middle;
@@ -135,7 +129,4 @@
 
 .cke_emoji-outer_emoji_block .hidden {
 	display: none
-}
-.cke_emoji-inner_panel a:focus, .cke_emoji-inner_panel input:focus {
-	outline: 2px solid #139FF7;
 }
