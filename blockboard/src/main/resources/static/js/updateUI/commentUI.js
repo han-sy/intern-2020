@@ -29,6 +29,12 @@ function getCommentInputHtml(type, buttonName, tag, className, buttonSelector,is
   var attribute = {attribute: data};
   var itemList = template(attribute);
   $(className).html(itemList + "</div>");
+  CKEDITOR.replace('commentText', {
+    height: 150,
+    toolbarLocation: 'bottom',
+    toolbarGroups: [{name: 'insert'}],
+    extraPlugins: 'emoji'
+  });
 }
 
 //TODO 댓글과 답글을 분리해도 될것같다.
