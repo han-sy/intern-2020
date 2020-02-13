@@ -33,14 +33,20 @@ function getFileSize(size) {
 /**
  * 첨부할 파일 리스트가져오기
  */
-function getAttachedFileList(postID) {
+function getAttachedFileList(postID,commentID) {
   var fileList = new Array();
   console.log(postID);
+  console.log(commentID);
   $(".filename").each(function () {
     var fileData = new Object();
-    if(postID!=""&&postID!=null &&postID!=undefined)
+    if(!isNullData(postID)){
       fileData.postID = postID;
+    }
+    if(!isNullData(commentID)){
+      fileData.commentID = commentID;
+    }
     fileData.storedFileName = $(this).attr("data-filename");
+    console.log("id : "+fileData.postID+","+fileData.commentID);
     console.log("data-filename : "+ fileData.storedFileName);
     fileList.push(fileData);
   });

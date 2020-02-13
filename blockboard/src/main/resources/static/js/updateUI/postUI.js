@@ -80,33 +80,9 @@ function updateboardListInEditor(board) {
   itemList = template(board);
   $('#boardIDinEditor').html(itemList);
 }
-/**
- * 파일첨부 폼
- * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
- */
-function openFileAttachForm(postID) {
-  source = $('#file-attach-form-template').html();
-  template = Handlebars.compile(source);
-  item = template();
-  $('#fileAttachForm').html(item);
-  console.log("파일리스트받아오기");
-  if(!isNullData(postID)){
-    console.log(postID);
-    getFileList(postID,createStatusbarUI);
-  }
-}
 
-/**
- * 드래그앤 드랍 영역
- * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
- */
-function openDragAndDropForm() {
-  source = $('#file-attach-drag-and-drop-form-template').html();
-  template = Handlebars.compile(source);
-  item = template();
-  $('#file_drop_container').html(item);
 
-}
+
 
 function createEditorTemplate() {
   var source = $('#editorcontent-template').html();

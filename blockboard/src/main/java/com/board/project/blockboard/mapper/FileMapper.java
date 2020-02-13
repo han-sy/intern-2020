@@ -16,7 +16,7 @@ public interface FileMapper {
 
   void insertFile(Map<String, Object> fileAttributes);
 
-  void updatePostIDByStoredFileName(Map<String, Object> fileAttributes);
+  void updateIDsByStoredFileName(Map<String, Object> fileAttributes);
 
   List<FileDTO> selectFileListByPostID(int postID);
 

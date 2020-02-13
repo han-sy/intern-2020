@@ -76,12 +76,14 @@ public class FileService {
     return fileName;
   }
 
-  public void updatePostID(List<FileDTO> fileList) {
+  public void updateIDs(List<FileDTO> fileList) {
     for (FileDTO file : fileList) {
       Map<String, Object> fileAttributes = new HashMap<String, Object>();
+      log.info("fileInfo : "+file.getPostID()+","+file.getCommentID()+","+file.getStoredFileName());
       fileAttributes.put("postID", file.getPostID());
+      fileAttributes.put("commentID",file.getCommentID());
       fileAttributes.put("storedFileName", file.getStoredFileName());
-      fileMapper.updatePostIDByStoredFileName(fileAttributes);
+      fileMapper.updateIDsByStoredFileName(fileAttributes);
     }
   }
 

@@ -28,9 +28,14 @@
                 #{fileSize});
   </insert>
 
-  <update id="updatePostIDByStoredFileName" parameterType="hashmap">
+  <update id="updateIDsByStoredFileName" parameterType="hashmap">
     UPDATE files
-    SET    post_id = #{postID}
+    <if test="commentID ==0">
+      SET    post_id = #{postID}
+    </if>
+    <if test="commentID !=0">
+      SET    comment_id = #{commentID}
+    </if>
     WHERE  stored_file_name = #{storedFileName};
   </update>
 

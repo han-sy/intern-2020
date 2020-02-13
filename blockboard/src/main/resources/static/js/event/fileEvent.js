@@ -2,18 +2,25 @@
  * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
  * @file fileEvent.js
  */
+
+
+$(document).on('click', '.open_file_form_btn', function () {
+
+  fileFormClear();
+  openFileAttachForm("","",$(this).closest(".commentHtml"));
+});
+
 //파일 열고닫기 텍스트 바꾸기
 $(document).on('click', '.file_drag_and_drop_btn', function () {
   var switchText = $(this);
   if (switchText.html() == "열기") {
-    openDragAndDropForm();
-    switchText.html("닫기");
+    openDragAndDropForm($(this));
+    $(this).html("닫기");
   } else if (switchText.html() == "닫기") {
     $(function () {
-      $("#file_drop_container").html("");
+      $(".file_drop_container").html("");
       switchText.html("열기");
     });
-
   } else {
     changedDataError();
   }
@@ -56,7 +63,8 @@ $(document).on("click", ".delete-statusbar", function () {
   if (isAcceptance) {
     var storedFileName = $(this).closest('.statusbar').find('.filename').attr(
         "data-filename");
-    deleteFile(storedFileName,$(this).closest('.statusbar'),deleteStatusbarUI);
+    deleteFile(storedFileName, $(this).closest('.statusbar'),
+        deleteStatusbarUI);
   }
 
 });

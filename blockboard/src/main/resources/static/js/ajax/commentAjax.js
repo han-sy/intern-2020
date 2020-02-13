@@ -30,7 +30,7 @@ function getCommentList(boardID, postID, successFunction) {
 }
 
 //댓글 추가
-function insertComment(boardID, postID, commentText) {
+function insertComment(boardID, postID, commentText,commentID) {//댓글 임시저장 기능이 추가될수도있어 commentID 파라미터 추가해놓음
   $.ajax({
     type: 'POST',
     url: `/boards/${boardID}/posts/${postID}/comments`,
@@ -39,9 +39,13 @@ function insertComment(boardID, postID, commentText) {
       alert('통신실패!');
     },
     success: function (data) {
-      getCommentList(boardID, postID, updateCommentListUI);//성공하면 댓글목록 갱신
-      $('#commentText').val("");
-      updateCommentsCount(boardID, postID);
+      console.log("commentID : "+data+","+commentID);
+      if(isNullData(commentID)){
+        updateIDToFiles(postID,data,boardID);
+      }else{
+        updateIDToFiles(postID,commentID,boardID);
+      }
+
     }
   });
 }

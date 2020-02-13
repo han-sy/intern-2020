@@ -19,9 +19,9 @@ function insertPost(postID,boardID, postTitle, postContent) {
     success: function (data) {
       console.log("data : "+data);
       if(isNullData(postID)){
-        updatePostIDToFiles(data);
+        updateIDToFiles(data,"");
       }else{
-        updatePostIDToFiles(postID);
+        updateIDToFiles(postID,"");
       }
       refreshPostList();
     }
@@ -48,9 +48,9 @@ function insertTempPost(boardID, postID, temp_title, temp_content, is_temp) {
       if (is_temp) {
         addPostInfoToEditor(data, boardID);
         if(isNullData(postID)){
-          updatePostIDToFiles(data);
+          updateIDToFiles(data,"");
         }else{
-          updatePostIDToFiles(postID);
+          updateIDToFiles(postID,"");
         }
         alert("임시저장 되었습니다.")
       } else {

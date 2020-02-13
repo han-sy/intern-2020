@@ -102,6 +102,7 @@ function getPostDataAfterPostClick(postID, boardID) {
         $(function () {
           getCommentList(boardID, postID, getCommentAllContents); //삭제이후 tab에 게시판목록 업데이트 //CommentAjax.js 에 있음
           updateCommentsCount(boardID, postID);
+          fileFormClear();
         });
       }
     }

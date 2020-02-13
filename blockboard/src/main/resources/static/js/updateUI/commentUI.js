@@ -15,13 +15,14 @@ function updateCommentListUI(data) {
 }
 
 //댓글 inputform 받아오기
-function getCommentInputHtml(type, buttonName, tag, className, buttonSelector) {
+function getCommentInputHtml(type, buttonName, tag, className, buttonSelector,isReplyInput) {
   data = {
     type: type,
     className,
     buttonName: buttonName,
     tag: tag,
-    buttonSelector: buttonSelector
+    buttonSelector: buttonSelector,
+    isReplyInput : isReplyInput
   };
   var source = $('#commentInputForm-template').html();
   var template = Handlebars.compile(source);
@@ -36,6 +37,7 @@ function getCommentAllContents(data) {
   updateCommentListUI(data);
   getCommentInputHtml("댓글", "입력", "", ".comment_input_container",
       "btn_openComment");
+  fileFormClear();
 }
 
 //댓글수정모드
@@ -64,4 +66,8 @@ function getAllReplyList(data) {
   $.each(data, function (key, value) {
     getReplyList(value.boardID, value.postID, value.commentID, getReplyListUI);
   });
+}
+
+function replyFormClear(){
+  $('.is_reply_input').html("");
 }

@@ -96,7 +96,7 @@ $(document).on('click', '.btn_update', function () {
   var postTitle = $('#post_title').val();
   var postContent = CKEDITOR.instances.editor.getData();
   var boardID = $('#boardIDinEditor option:selected').attr('data-tab');
-  updatePostIDToFiles(postID);
+  updateIDToFiles(postID,"");
   updatePost(boardID, originalBoardID, postID, postTitle, postContent);
 });
 

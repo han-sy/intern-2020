@@ -54,8 +54,8 @@ function sendFileToServer(formData,status)
 /**
  * postID 업데이트
  */
-function updatePostIDToFiles(postID) {
-  var fileList = getAttachedFileList(postID);
+function updateIDToFiles(postID,commentID,boardID) {
+  var fileList = getAttachedFileList("",commentID);
   console.log(fileList);
   $.ajax({
     type: 'PUT',
@@ -67,7 +67,14 @@ function updatePostIDToFiles(postID) {
       errorFunction(error);
     },
     success: function () {
-      alert("게시글 작성완료 :"+postID);
+
+    },
+    complete(){
+      console.log("!!!");
+      getCommentList(boardID, postID, updateCommentListUI);//성공하면 댓글목록 갱신
+      $('#commentText').val("");
+      updateCommentsCount(boardID, postID);
+      fileFormClear();
     }
   });
 }

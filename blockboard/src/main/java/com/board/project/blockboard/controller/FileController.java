@@ -42,8 +42,9 @@ public class FileController {
    * 파일 테이블에 postID 업데이트 최종으로 리스트에 추가된 목록을 기준으로
    */
   @PutMapping(value = "/files")
-  public void updatePostIdToFile(@RequestBody List<FileDTO> fileList ){
-    fileService.updatePostID(fileList);
+  public void updateIdToFile(@RequestBody List<FileDTO> fileList ){
+    log.info("!!!"+fileList.toString());
+    fileService.updateIDs(fileList);
   }
 
   /**

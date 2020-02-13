@@ -41,10 +41,10 @@ public class CommentController {
    * 댓글 추가
    */
   @PostMapping("")
-  public void writeComment(@RequestParam("postID") int postID,
+  public int insertComment(@RequestParam("postID") int postID,
       @RequestParam("commentContent") String commentContent, HttpServletRequest request) {
     UserDTO useeData = new UserDTO(request);
-    commentService
+    return commentService
         .writeCommentWithUserInfo(useeData.getUserID(), commentContent, useeData.getCompanyID(),
             postID);
   }

@@ -19,7 +19,8 @@ $(document).on('click', '.btn_openComment', function () {
   $(function () {
     insertComment(boardID, postID, commentText);
   });
-})
+
+});
 
 //댓글삭제버튼 누를때
 //삭제클릭한곳의 부모의 div의 id뽑게했음
@@ -35,7 +36,7 @@ $(document).on('click', '#delete_comment', function () {
       deleteCommentByCommentID(postID, boardID, commentID);
     });
   }
-})
+});
 
 //수정 버튼 눌렀을때
 $(document).on('click', '#edit_comment', function () {
@@ -46,7 +47,7 @@ $(document).on('click', '#edit_comment', function () {
   $(function () {
     editCommentByCommentID(postID, boardID, commentID);
   });
-})
+});
 
 //댓글수정후 수정하기 버튼 눌렀을때
 $(document).on('click', '#btn_edit_comment_complete', function () {
@@ -63,14 +64,14 @@ $(document).on('click', '#btn_edit_comment_complete', function () {
       editComment(postID, boardID, commentID, newComment);
     });
   }
-})
+});
 
 //댓글달기 버튼
 $(document).on('click', '.commentBtn', function () {
   var offset = $(".comment_input_container").offset().top - $(window).height()
       / 2;
   $(window).scrollTop(offset);
-})
+});
 
 //답글달기 버튼
 $(document).on('click', '.replyBtn', function () {
@@ -82,13 +83,18 @@ $(document).on('click', '.replyBtn', function () {
   var inputID = referenceCommentContainer.find(
       "#reply_input_container" + referenceCommentContainer.attr(
       "data-id")).attr("id");
+
+  replyFormClear(); //답글창 하나만 유지하기위해 다 클리어
+
   getCommentInputHtml("답글", "입력",
       "To <strong class =tag style ='cursor:pointer;' data-id="
       + referenceUserID + " >" + referenceUserName + "</strong>",
-      "#" + inputID, "btn_openReply");
+      "#" + inputID, "btn_openReply","is_reply_input");
+
+  fileFormClear();
   var offset = $("#" + inputID).offset().top - $(window).height() / 2;
   $(window).scrollTop(offset);
-})
+});
 
 //답글 입력 버튼
 $(document).on('click', '.btn_openReply', function () {
@@ -109,7 +115,7 @@ $(document).on('click', '.btn_openReply', function () {
     insertReply(boardID, postID, commentText, commentReferencedID,
         commentReferencedUserID);
   });
-})
+});
 
 //답글 취소버튼
 $(document).on('click', '.btn_close_cmt_input', function () {
@@ -117,4 +123,5 @@ $(document).on('click', '.btn_close_cmt_input', function () {
   var replyInputContainer = $(
       "#reply_input_container" + referenceCommentContainer.attr("data-id"));
   replyInputContainer.html("");
-})
+});
+$('.class_Name').focus();

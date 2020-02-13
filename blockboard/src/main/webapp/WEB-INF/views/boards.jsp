@@ -340,7 +340,7 @@
                     </div>
                 </div>
                 <!--파일추가 폼-->
-                <div class="form-group row " id="fileAttachForm">
+                <div class="form-group row file_attach_form" >
                 </div>
                 <script id="file-attach-form-template" type="text/x-handlebars-template">
                     <div class="col-2">
@@ -349,10 +349,10 @@
                            style="cursor: pointer; margin-left: 5px">열기</a>
                     </div>
                     <div class="col-10">
-                        <form name="uploadForm" id="uploadForm" enctype="multipart/form-data"
+                        <form name="uploadForm" class="uploadForm" enctype="multipart/form-data"
                               method="post">
                             <div class="upload_list_start_point"></div>
-                            <div id=file_drop_container></div>
+                            <div class=file_drop_container></div>
 
                         </form>
 
@@ -488,6 +488,7 @@
                                 </div>
                             </div>
                         </div>
+
                     </div>
                     {{#isReplyAble}}
                     <div class='replyContainer' id='reply_container{{commentID}}'
@@ -553,11 +554,18 @@
             <script id="commentInputForm-template" type="text/x-handlebars-template">
                 {{#attribute}}
                 <br>
-                <div style='width: 100%' class=commentHtml>
+                <div style='width: 100%' class='commentHtml {{isReplyInput}}'>
                     {{{tag}}}
                     <textarea class="form-control" id=commentText placeholder='{{type}}을 입력하세요'
                               name=commentTxt></textarea>
+                    <div class="form-group row file_attach_form" >
+                    </div>
                     <div align="right">
+                        {{#isFileAttachAble}}
+                        <a class="text-success text-button font-weight-bold open_file_form_btn"
+                        >파일첨부</a>
+                        {{else}}
+                        {{/isFileAttachAble}}
                         {{#isReply}}
                         <a class="text-success text-button font-weight-bold {{{buttonSelector}}}"
                         >{{buttonName}}</a>

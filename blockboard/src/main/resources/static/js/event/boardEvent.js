@@ -173,18 +173,6 @@ $(document).on("click", ".tabmenu", function clickTabEvent() {
   getPageList(1, boardID, updatePageList);
 });
 
-// 현재 선택된 게시판 ID 찾기
-function getActiveBoardID() {
-  var boardID;
-  var tabs = $('#tab_id').children();
-  $.each(tabs, function () {
-    if (tabs.hasClass("active_tab") == true) {
-      boardID = tabs.attr('data-tab');
-    }
-  });
-  return boardID;
-}
-
 //기능변경 on/off버튼 텍스트 바꾸기
 $(document).on('click', '._function-switch', function () {
   var switchText = $(this).find("._switch");

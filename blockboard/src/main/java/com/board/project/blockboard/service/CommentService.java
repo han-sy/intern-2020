@@ -31,7 +31,7 @@ public class CommentService {
     return commentMapper.selectCommentsByPostID(postID);
   }
 
-  public CommentDTO writeCommentWithUserInfo(String userID, String commentContent, int companyID,
+  public int writeCommentWithUserInfo(String userID, String commentContent, int companyID,
       int postID) {
     CommentDTO comment = new CommentDTO();
     comment.setCommentContent(commentContent);
@@ -39,9 +39,8 @@ public class CommentService {
     comment.setPostID(postID);
     comment.setUserID(userID);
     comment.setCompanyID(companyID);
-    int result = commentMapper.insertNewCommentByCommentInfo(comment);
-
-    return result == 1 ? comment : null;
+    commentMapper.insertNewCommentByCommentInfo(comment);
+    return comment.getCommentID();
   }
 
   public void deleteComment(int commentID) {
