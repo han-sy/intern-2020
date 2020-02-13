@@ -32,7 +32,7 @@ public class ReplyService {
   /**
    * 답글 insert
    */
-  public void writeReplyWithUserInfo(String userID, int companyID, int postID,
+  public int writeReplyWithUserInfo(String userID, int companyID, int postID,
       String commentContent, int commentReferencedID, String commentReferencedUserID) {
     CommentDTO reply = new CommentDTO();
     reply.setUserID(userID);
@@ -44,6 +44,6 @@ public class ReplyService {
     reply.setCommentReferencedUserID(commentReferencedUserID);
     reply.setCommentReferencedUserName(userMapper.selectUserNameByUserID(commentReferencedUserID));
     replyMapper.insertNewReplyByCommentInfo(reply);
-
+    return reply.getCommentID();
   }
 }

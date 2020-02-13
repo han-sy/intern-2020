@@ -54,7 +54,7 @@ function sendFileToServer(formData,status)
 /**
  * postID 업데이트
  */
-function updateIDToFiles(postID,commentID,boardID) {
+function updateIDToFiles(postID,commentID,boardID,commentReferencedID) {
   var fileList = getAttachedFileList("",commentID);
   console.log(fileList);
   $.ajax({
@@ -71,7 +71,16 @@ function updateIDToFiles(postID,commentID,boardID) {
     },
     complete(){
       console.log("!!!");
-      getCommentList(boardID, postID, updateCommentListUI);//성공하면 댓글목록 갱신
+      postID = $('#postID').html();
+      boardID = $('#boardIdInPost').html();
+      console.log("pid : "+postID+". bpardID : "+boardID);
+      if(isNullData(commentReferencedID)){
+        getCommentList(boardID, postID, updateCommentListUI);//성공하면 댓글목록 갱신
+      }else{
+        getReplyList(boardID, postID, commentReferencedID, getReplyListUI);//성공하면 댓글목록 갱신
+        $('#reply_input_container' + commentReferencedID).html("");
+      }
+
       $('#commentText').val("");
       updateCommentsCount(boardID, postID);
       fileFormClear();
@@ -82,11 +91,11 @@ function updateIDToFiles(postID,commentID,boardID) {
 /**
  * postID에 일치하는 파일리스트 반환
  */
-function getFileList(postID,successFunction) {
+function getFileList(postID,commentID,obj,successFunction) {
   $.ajax({
     type: 'GET',
     url: `/files`,
-    data: {postID:postID},
+    data: {postID:postID,commentID:commentID},
     dataType: "json",
     contentType: 'application/json',
     error: function (error, msg) {  //통신 실패시
@@ -94,7 +103,7 @@ function getFileList(postID,successFunction) {
     },
     success: function (data) {
       console.log(data);
-      successFunction(data);
+      successFunction(data,obj);
     }
   });
 }

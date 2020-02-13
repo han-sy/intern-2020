@@ -45,13 +45,13 @@ public class ReplyController {
    * @param commentContent      답글내용
    */
   @PostMapping("")
-  public void writeReply(@RequestParam("postID") int postID,
+  public int insertReply(@RequestParam("postID") int postID,
       @RequestParam("commentContent") String commentContent,
       @RequestParam("commentReferencedID") int commentReferencedID,
       @RequestParam("commentReferencedUserID") String commentReferencedUserID,
       HttpServletRequest request) {
     UserDTO userData = new UserDTO(request);
-    replyService
+    return replyService
         .writeReplyWithUserInfo(userData.getUserID(), userData.getCompanyID(), postID,
             commentContent, commentReferencedID,
             commentReferencedUserID);

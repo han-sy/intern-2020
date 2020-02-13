@@ -2,25 +2,36 @@
  * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
  * @file fileUI.js
  */
-function updateFileListInPostUI(data){
+
+function updateFileListInPostUI(data,obj){
   var source = $('#attached-file-list-template').html();
   var template = Handlebars.compile(source);
   var files = {files: data};
   var itemList = template(files);
-  $(".attached_file_list_container").html(itemList);
+  obj.html(itemList);
+}
+
+function updateFileListInCommentUI(data,obj){
+  console.log(data);
+  console.log(obj.parents().parents().html());
+  var source = $('#attached-file-list-template').html();
+  var template = Handlebars.compile(source);
+  var files = {files: data};
+  var itemList = template(files);
+  obj.html(itemList);
 }
 
 function deleteStatusbarUI(obj) {
   obj.remove();
 }
 
-function createStatusbarUI(data){
+function createStatusbarUI(data,container){
   console.log(data);
   var source = $('#attached-file-statusbar-template').html();
   var template = Handlebars.compile(source);
   var files = {files: data};
   var itemList = template(files);
-  $(".upload_list_start_point").html(itemList);
+  container.html(itemList);
 }
 
 /**
@@ -43,19 +54,22 @@ function openFileAttachForm(postID,commentID,obj) {
   source = $('#file-attach-form-template').html();
   template = Handlebars.compile(source);
   item = template();
+  var container = null;
   if(isNullData(obj)){
     $('.file_attach_form').html(item);
+    container = $('.file_attach_form').find(".upload_list_start_point");
   }else{
     obj.find('.file_attach_form').html(item);
+    container = obj.find('.file_attach_form').find(".upload_list_start_point");
   }
   console.log("파일리스트받아오기");
   if(!isNullData(postID)){
     console.log(postID);
-    getFileList(postID,createStatusbarUI);
+    getFileList(postID,0,container,createStatusbarUI);
   }
   if(!isNullData(commentID)){
     console.log(commentID);
-    getFileList(commentID,createStatusbarUI);
+    getFileList(0,commentID,container,createStatusbarUI);
   }
 }
 

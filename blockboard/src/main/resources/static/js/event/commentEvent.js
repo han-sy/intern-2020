@@ -40,7 +40,7 @@ $(document).on('click', '#delete_comment', function () {
 //수정 버튼 눌렀을때
 $(document).on('click', '#edit_comment', function () {
   var postID = $("#postID").html();
-  var boardID = getCurrentBoardID();
+  var boardID = $('#boardIdInPost').html();
   var editDivID = $(this).closest(".commentContainer").attr("id");
   var commentID = editDivID.substring(COMMENT_PREFIX.length);
   $(function () {
@@ -49,17 +49,18 @@ $(document).on('click', '#edit_comment', function () {
 });
 
 //댓글수정후 수정하기 버튼 눌렀을때
-$(document).on('click', '#btn_edit_comment_complete', function () {
-  commentDiv = $(this).parents("div").parents("div");
-  var newComment = commentDiv.children('#commentText').val().replace(/\n/g,
+$(document).on('click', '.btn_edit_comment_complete', function () {
+  var newComment = $(this).closest(".commentHtml").find('#commentText').val().replace(/\n/g,
       "<br>");
-  var commentID = commentDiv.parents("div").attr("id").substring(
-      COMMENT_PREFIX.length);
+  var commentID = $(this).closest(".commentContainer").attr("id").substring(COMMENT_PREFIX.length);
+  console.log("commentID");
   var postID = $("#postID").html();
-  var boardID = getCurrentBoardID();
+  var boardID = $('#boardIdInPost').html();
+  console.log(postID+"<-pid bid->"+boardID);
   var isAcceptance = confirm("댓글을 수정 하시겠습니까?");
   if (isAcceptance) {
     $(function () {
+      updateIDToFiles("",commentID);
       editComment(postID, boardID, commentID, newComment);
     });
   }
@@ -74,6 +75,7 @@ $(document).on('click', '.commentBtn', function () {
 
 //답글달기 버튼
 $(document).on('click', '.replyBtn', function () {
+  console.log("답글 창 생성");
   var referenceCommentContainer = $(this).closest(".referenceCommentContainer");
   var referenceUserName = $(this).closest(".commentContainer").find(
       ".name").html();
@@ -122,4 +124,31 @@ $(document).on('click', '.btn_close_cmt_input', function () {
       "#reply_input_container" + referenceCommentContainer.attr("data-id"));
   replyInputContainer.html("");
 });
-$('.class_Name').focus();
+
+$(document).on('click', '.open_attached_file_list', function () {
+  var container = $(this).closest(".commentContainer");
+  var commentID = container.attr("id").substring(COMMENT_PREFIX.length);
+  var fileContainer = $(this).closest(".localCommentContainer").find(".attached_file_list_container_comment");
+  var switchText = $(this);
+  if (switchText.html()=="첨부파일 보기"){
+    getFileList(0,commentID,fileContainer,updateFileListInCommentUI);
+    switchText.html("첨부파일 닫기");
+  }else if("첨부파일 닫기"){
+    fileContainer.html("");
+    switchText.html("첨부파일 보기");
+  } else {
+    changedDataError();
+  }
+});
+
+/**
+ * 파일첨부 수정 버튼 클릭시
+ */
+$(document).on('click', '.open_edit_file_form_btn', function () {
+  var commentID = $(this).closest(".commentContainer").attr("id").substring(COMMENT_PREFIX.length);
+  console.log("commentID :"+commentID);
+  fileFormClear();
+  openFileAttachForm("",commentID,$(this).closest(".commentHtml"));
+});
+
+

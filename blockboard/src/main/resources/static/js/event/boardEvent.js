@@ -136,7 +136,7 @@ function clickSaveChangeBoard() {
 // 게시글 목록에서 게시글 클릭시
 $(document).on('click', '.normal_post_click', function () {
   var postID = $(this).attr("data-post");
-  var boardID = getCurrentBoardID();
+  var boardID = $(this).attr("data-board");
   console.log("boardID = " + boardID);
   $(function () {
     getPostDataAfterPostClick(postID, boardID); //boardAjax.js 참고

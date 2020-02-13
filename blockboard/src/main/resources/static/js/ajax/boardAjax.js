@@ -81,7 +81,10 @@ function getPostDataAfterPostClick(postID, boardID) {
       //게시글 내용 출력
       loadPostContent(data);
       if(functionOn.fileAttach){
-        getFileList(postID,updateFileListInPostUI);
+        var container = $(this).closest("#postcontent").find("attached_file_list_container_post");
+        console.log($(this).closest("#postcontent").html());
+        console.log(container.parents().html());
+        getFileList(postID,0,container,updateFileListInPostUI);
       }
 
 
@@ -101,6 +104,7 @@ function getPostDataAfterPostClick(postID, boardID) {
       if (functionOn.comment) {
         $(function () {
           getCommentList(boardID, postID, getCommentAllContents); //삭제이후 tab에 게시판목록 업데이트 //CommentAjax.js 에 있음
+
           updateCommentsCount(boardID, postID);
           fileFormClear();
         });

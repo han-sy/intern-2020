@@ -52,9 +52,9 @@ public class FileController {
    *  게시물 id를 가지고 게시물 첨부파일 리스트 가져오기
    */
   @GetMapping(value = "/files")
-    public List<FileDTO> getFileList(@RequestParam int postID){
+    public List<FileDTO> getFileList(@RequestParam int postID,@RequestParam int commentID){
 
-    return fileService.getFileList(postID);
+    return fileService.getFileList(postID,commentID);
   }
   /**
    * 파일 삭제

@@ -42,5 +42,13 @@
             #{commentContent},
             #{commentReferencedID},
             #{commentReferencedUserID});
+    <selectKey keyProperty="commentID" resultType="int" order="AFTER">
+      <if test='commentID != 0'>
+        SELECT #{commentID};
+      </if>
+      <if test='commentID == 0'>
+        SELECT LAST_INSERT_ID();
+      </if>
+    </selectKey>
   </insert>
 </mapper>

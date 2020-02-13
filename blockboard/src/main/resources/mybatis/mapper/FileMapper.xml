@@ -7,7 +7,7 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.board.project.blockboard.mapper.FileMapper">
-  <select id="selectFileListByPostID" parameterType="int" resultType="com.board.project.blockboard.dto.FileDTO">
+  <select id="selectFileListByEditorID" parameterType="hashmap" resultType="com.board.project.blockboard.dto.FileDTO">
     SELECT file_id          AS fileID,
            post_id          AS postID,
            comment_id       AS commentID,
@@ -16,7 +16,12 @@
            file_size        AS fileSize,
            upload_time      AS uploadTime
     FROM   files
-    WHERE  post_id = #{postID};
+    <if test="commentID ==0">
+      WHERE  post_id = #{postID};
+    </if>
+    <if test="commentID !=0">
+      WHERE  comment_id = #{commentID};
+    </if>
   </select>
   <insert id="insertFile" parameterType="hashmap">
     INSERT INTO files

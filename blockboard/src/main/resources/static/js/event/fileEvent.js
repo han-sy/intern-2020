@@ -3,7 +3,9 @@
  * @file fileEvent.js
  */
 
-
+/**
+ * 파일 첨부버튼 클릭시
+ */
 $(document).on('click', '.open_file_form_btn', function () {
 
   fileFormClear();
