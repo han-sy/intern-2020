@@ -8,15 +8,14 @@
  * @param formData 파일 데이터
  * @param status statusbar ui를 위한 객체
  */
-function sendFileToServer(formData,status)
-{
+function sendFileToServer(formData, status) {
   var uploadURL = "/files"; //Upload URL
-  var extraData ={}; //Extra Data.
-  var jqXHR=$.ajax({
-    xhr: function() {
+  var extraData = {}; //Extra Data.
+  var jqXHR = $.ajax({
+    xhr: function () {
       var xhrobj = $.ajaxSettings.xhr();
       if (xhrobj.upload) {
-        xhrobj.upload.addEventListener('progress', function(event) {
+        xhrobj.upload.addEventListener('progress', function (event) {
           var percent = 0;
           var position = event.loaded || event.position;
           var total = event.total;
@@ -31,20 +30,21 @@ function sendFileToServer(formData,status)
     },
     url: uploadURL,
     type: "POST",
-    contentType:false,
+    contentType: false,
     processData: false,
     cache: false,
     data: formData,
-    success: function(data){
+    success: function (data) {
       status.setProgress(100);
       console.log(data);
-      status.filename.attr("data-filename",data);
+      status.filename.attr("data-filename", data);
       //$("#status1").append("File upload Done<br>");
     },
-    error:function(request,status,error){
-      alert("code = "+ request.status + " message = " + request.responseText + " error = " + error); // 실패 시 처리
+    error: function (request, status, error) {
+      alert("code = " + request.status + " message = " + request.responseText
+          + " error = " + error); // 실패 시 처리
     },
-    complete:function(data){
+    complete: function (data) {
     }
   });
 
@@ -54,8 +54,8 @@ function sendFileToServer(formData,status)
 /**
  * postID 업데이트
  */
-function updateIDToFiles(postID,commentID,boardID,commentReferencedID) {
-  var fileList = getAttachedFileList("",commentID);
+function updateIDToFiles(postID, commentID, boardID, commentReferencedID) {
+  var fileList = getAttachedFileList("", commentID);
   console.log(fileList);
   $.ajax({
     type: 'PUT',
@@ -69,14 +69,18 @@ function updateIDToFiles(postID,commentID,boardID,commentReferencedID) {
     success: function () {
 
     },
-    complete(){
+    complete() {
       console.log("!!!");
-      postID = $('#postID').html();
-      boardID = $('#boardIdInPost').html();
-      console.log("pid : "+postID+". bpardID : "+boardID);
-      if(isNullData(commentReferencedID)){
+      if (isNullData(postID)) {
+        postID = $('#postID').html();
+      }
+      if (isNullData(boardID)) {
+        boardID = $('#boardIdInPost').html();
+      }
+      console.log("pid : " + postID + ". bpardID : " + boardID);
+      if (isNullData(commentReferencedID)) {
         getCommentList(boardID, postID, updateCommentListUI);//성공하면 댓글목록 갱신
-      }else{
+      } else {
         getReplyList(boardID, postID, commentReferencedID, getReplyListUI);//성공하면 댓글목록 갱신
         $('#reply_input_container' + commentReferencedID).html("");
       }
@@ -91,11 +95,11 @@ function updateIDToFiles(postID,commentID,boardID,commentReferencedID) {
 /**
  * postID에 일치하는 파일리스트 반환
  */
-function getFileList(postID,commentID,obj,successFunction) {
+function getFileList(postID, commentID, obj, successFunction) {
   $.ajax({
     type: 'GET',
     url: `/files`,
-    data: {postID:postID,commentID:commentID},
+    data: {postID: postID, commentID: commentID},
     dataType: "json",
     contentType: 'application/json',
     error: function (error, msg) {  //통신 실패시
@@ -103,7 +107,7 @@ function getFileList(postID,commentID,obj,successFunction) {
     },
     success: function (data) {
       console.log(data);
-      successFunction(data,obj);
+      successFunction(data, obj);
     }
   });
 }
@@ -111,12 +115,12 @@ function getFileList(postID,commentID,obj,successFunction) {
 /**
  * 파일 삭제
  */
-function deleteFile(storedFileName,obj,successFunction) {
-  console.log("storedFileName : "+storedFileName);
+function deleteFile(storedFileName, obj, successFunction) {
+  console.log("storedFileName : " + storedFileName);
   $.ajax({
     type: 'DELETE',
     url: `/files`,
-    data: {storedFileName:storedFileName},
+    data: {storedFileName: storedFileName},
     error: function (error, msg) {  //통신 실패시
       errorFunction(error);
     },
