@@ -11,8 +11,7 @@
       htmlEncode = CKEDITOR.tools.htmlEncode,
       EmojiDropdown = CKEDITOR.tools.createClass({
         $: function (editor, plugin) {
-          var lang = this.lang = editor.lang.emoji,
-              self = this,
+          var self = this,
               ICON_SIZE = 28;
 
           this.listeners = [];
@@ -24,8 +23,8 @@
 
           // Name is responsible for icon name also.
           editor.ui.add('EmojiPanel', CKEDITOR.UI_PANELBUTTON, {
-            label: 'emoji',
-            title: lang.title,
+            label: '스티커',
+            title: '스티커',
             modes: {wysiwyg: 1},
             editorFocus: 0,
             toolbar: 'insert',
@@ -36,19 +35,18 @@
               ],
               attributes: {
                 role: 'listbox',
-                'aria-label': lang.title
+                'aria-label': this.title
               },
               markFirst: false
             },
 
             onBlock: function (panel, block) {
-              var keys = block.keys,
-                  rtl = editor.lang.dir === 'rtl';
+              var keys = block.keys;
 
-              keys[rtl ? 37 : 39] = 'next'; // ARROW-RIGHT
+              keys[39] = 'next'; // ARROW-RIGHT
               keys[40] = 'next'; // ARROW-DOWN
               keys[9] = 'next'; // TAB
-              keys[rtl ? 39 : 37] = 'prev'; // ARROW-LEFT
+              keys[37] = 'prev'; // ARROW-LEFT
               keys[38] = 'prev'; // ARROW-UP
               keys[CKEDITOR.SHIFT + 9] = 'prev'; // SHIFT + TAB
               keys[32] = 'click'; // SPACE
@@ -155,8 +153,7 @@
               }
             });
 
-            return '<nav aria-label="' + htmlEncode(this.lang.navigationLabel)
-                + '"><ul>' + items + '</ul></nav>';
+            return '<nav><ul>' + items + '</ul></nav>';
           },
           createEmojiListBlock: function () {
             var self = this;
@@ -282,7 +279,6 @@
 
   CKEDITOR.plugins.add('emoji', {
     requires: 'ajax,panelbutton,floatpanel',
-    lang: 'en', // %REMOVE_LINE_CORE%
     icons: 'emojipanel',
     hidpi: true,
 

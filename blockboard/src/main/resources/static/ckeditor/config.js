@@ -35,8 +35,7 @@ CKEDITOR.editorConfig = function (config) {
   config.filebrowserImageUploadUrl = "/imageUpload";
 
   // 에디터의 추가 플러그인 설정
-  config.extraPlugins = 'image2, '
-      + 'dialog, '
+  config.extraPlugins = 'dialog, '
       + 'filebrowser, '
       + 'filetools, '
       + 'popup, '
@@ -53,9 +52,16 @@ CKEDITOR.editorConfig = function (config) {
       + 'floatpanel,'
       + 'panelbutton,'
       + 'button,'
-      + 'emoji,'
       + 'xml,'
       + 'ajax';
+
+  if ($('#functionAble4').attr("value") == "on") {
+    config.extraPlugins = "image2";
+  }
+
+  if ($('#functionAble6').attr("value") == "on") {
+    config.extraPlugins = "emoji";
+  }
 
   // The default plugins included in the basic setup define some buttons that
   // are not needed in a basic editor. They are removed here.
@@ -66,7 +72,6 @@ CKEDITOR.editorConfig = function (config) {
 
 		if (dialog.name == 'sticker') {
 			// Get dialog definition.
-			var dialogName = evt.data.name;
 			var dialogDefinition = evt.data.definition;
 
 			console.log(dialogDefinition);
