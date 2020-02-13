@@ -567,7 +567,7 @@
             <script id="commentInputForm-template" type="text/x-handlebars-template">
                 {{#attribute}}
                 <br>
-                <div style='width: 100%' class='commentHtml {{isReplyInput}}'>
+                <div style='width: 100%' class=commentHtml {{isReplyInput}}>
                     {{{tag}}}
                     <textarea class="form-control" id=commentText placeholder='{{type}}을 입력하세요'
                               name=commentTxt></textarea>

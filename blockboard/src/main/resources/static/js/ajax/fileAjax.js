@@ -55,8 +55,8 @@ function sendFileToServer(formData, status) {
  * postID 업데이트
  */
 function updateIDToFiles(postID, commentID, boardID, commentReferencedID) {
-  var fileList = getAttachedFileList("", commentID);
-  console.log(fileList);
+  var fileList = getAttachedFileList(postID, commentID);
+  console.log("insertComment", fileList);
   $.ajax({
     type: 'PUT',
     url: `/files`,
@@ -70,14 +70,12 @@ function updateIDToFiles(postID, commentID, boardID, commentReferencedID) {
 
     },
     complete() {
-      console.log("!!!");
       if (isNullData(postID)) {
         postID = $('#postID').html();
       }
       if (isNullData(boardID)) {
-        boardID = $('#boardIdInPost').html();
+        boardID = getCurrentBoardID();
       }
-      console.log("pid : " + postID + ". bpardID : " + boardID);
       if (isNullData(commentReferencedID)) {
         getCommentList(boardID, postID, updateCommentListUI);//성공하면 댓글목록 갱신
       } else {
@@ -85,7 +83,8 @@ function updateIDToFiles(postID, commentID, boardID, commentReferencedID) {
         $('#reply_input_container' + commentReferencedID).html("");
       }
 
-      $('#commentText').val("");
+      getCommentInputHtml("댓글", "입력", "", ".comment_input_container",
+          "btn_openComment");
       updateCommentsCount(boardID, postID);
       fileFormClear();
     }
@@ -106,7 +105,6 @@ function getFileList(postID, commentID, obj, successFunction) {
       errorFunction(error);
     },
     success: function (data) {
-      console.log(data);
       successFunction(data, obj);
     }
   });

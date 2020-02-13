@@ -40,11 +40,12 @@ function insertComment(boardID, postID, commentText,commentID) {//댓글 임시�
       alert('통신실패!');
     },
     success: function (data) {
-      getCommentInputHtml("댓글", "입력", "", ".comment_input_container",
-          "btn_openComment");
+
+      console.log("insertComment cid = ", commentID);
       if(isNullData(commentID)){
         updateIDToFiles(postID,data,boardID);
       }else{
+        console.log("여기");
         updateIDToFiles(postID,commentID,boardID);
       }
 

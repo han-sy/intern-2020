@@ -17,7 +17,6 @@ function insertPost(postID,boardID, postTitle, postContent) {
       errorFunction(xhr);
     },
     success: function (data) {
-      console.log("data : "+data);
       if(isNullData(postID)){
         updateIDToFiles(data,"");
       }else{

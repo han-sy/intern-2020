@@ -9,7 +9,7 @@ const COMMENT_PREFIX = {
 //댓글 추가버튼 누를때
 $(document).on('click', '.btn_openComment', function () {
   var postID = $("#postID").html();
-  var boardID = getCurrentBoardID();
+  var boardID = $("#boardIdInPost").html();
   var commentText = CKEDITOR.instances['commentText'].getData();
   if (commentText == "") {
     alert("내용을 입력하세요.");

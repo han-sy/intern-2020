@@ -49,8 +49,9 @@ function getAttachedFileList(postID,commentID) {
     console.log("id : "+fileData.postID+","+fileData.commentID);
     console.log("data-filename : "+ fileData.storedFileName);
     fileList.push(fileData);
+
   });
-  return fileList
+  return fileList;
 }
 
 function deleteAllAttachedFile() {

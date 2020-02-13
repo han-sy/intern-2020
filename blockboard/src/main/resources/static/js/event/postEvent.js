@@ -52,6 +52,7 @@ $(document).on('click', '.btn_post', function () {
   // 제목 & 내용 비었는지 검사
   if (checkEmpty()) {
     // 게시글 ID가 존재하지 않으면? 바로 저장
+    console.log("저장 postID = ", postID);
     if (typeof postID == "undefined") {
       insertPost(postID,boardID, postTitle, postContent);
     }
@@ -103,7 +104,7 @@ $(document).on('click', '.btn_update', function () {
 // 게시글 조회 후 '수정' 버튼 이벤트
 $(document).on('click', '.btn_modify', function () {
   var postID = $("#postID").html();
-  var boardID = getCurrentBoardID();
+  var boardID = $("#boardIdInPost").html();
   postClear();
   editorAreaCreate("modify");
   var post_button = $('.btn_post');
