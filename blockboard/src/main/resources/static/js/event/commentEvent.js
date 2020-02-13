@@ -5,7 +5,14 @@
 const COMMENT_PREFIX = {
   length: 7
 };
+$(document).on('click', '.open_attached_file_list', function () {
+  console.log("파일첨부보기 열기");
+  var container = $(this).closest(".commentContainer");
+  var commentID = container.attr("id").substring(COMMENT_PREFIX.length);
+  var fileContainer = $(this).closest(".localCommentContainer").find(".attached_file_list_container_comment");
+  getFileList(0,commentID,fileContainer,updateFileListInCommentUI);
 
+});
 //댓글 추가버튼 누를때
 $(document).on('click', '.btn_openComment', function () {
   var postID = $("#postID").html();
@@ -75,6 +82,7 @@ $(document).on('click', '.commentBtn', function () {
 
 //답글달기 버튼
 $(document).on('click', '.replyBtn', function () {
+  console.log("답글 창 생성");
   var referenceCommentContainer = $(this).closest(".referenceCommentContainer");
   var referenceUserName = $(this).closest(".commentContainer").find(
       ".name").html();
@@ -124,4 +132,6 @@ $(document).on('click', '.btn_close_cmt_input', function () {
       "#reply_input_container" + referenceCommentContainer.attr("data-id"));
   replyInputContainer.html("");
 });
-$('.class_Name').focus();
+
+
+

@@ -340,7 +340,7 @@
                     </div>
                 </div>
                 <!--파일추가 폼-->
-                <div class="form-group row file_attach_form" >
+                <div class="form-group row file_attach_form">
                 </div>
                 <script id="file-attach-form-template" type="text/x-handlebars-template">
                     <div class="col-2">
@@ -392,7 +392,7 @@
                 <p class="h6" align="right">{{postRegisterTime}}</p>
                 <p class="h6" align="right">조회수 {{viewCount}}</p>
                 <hr>
-                <div class="attached_file_list_container">
+                <div class="attached_file_list_container_post">
                     <!--첨부파일 컨테이너 -->
                 </div>
 
@@ -457,9 +457,9 @@
                 <hr>
                 <div class='referenceCommentContainer ' data-id='{{commentID}}'>
 
-                    <div class="row border-left-comment">
+                    <div class="row border-left-comment localCommentContainer">
                         <div></div>
-                        <div class='commentContainer ' id='comment{{commentID}}'
+                        <div class='commentContainer col-8' id='comment{{commentID}}'
                              style="padding-left: 50px">
                             <div class="user"><h5><strong class=name
                                                           data-id={{userID}}>{{userName}}</strong>
@@ -474,21 +474,27 @@
                                 </div>
                                 <div class="btn">
                                     {{#isReplyAble}}
-                                    <a class='text-success text-button text-button font-weight-bold replyBtn'>답글</a>
+                                    <a class='text-success text-button font-weight-bold replyBtn'>답글</a>
                                     {{else}}
                                     {{/isReplyAble}}
 
                                     {{#isSameUser}}
-                                    <a class="text-success text-button text-button font-weight-bold"
+                                    <a class="text-success text-button font-weight-bold"
                                        id='edit_comment'>수정</a>
-                                    <a class="text-success text-button text-button font-weight-bold"
+                                    <a class="text-success text-button font-weight-bold"
                                        id='delete_comment'>삭제</a>
                                     {{else}}
                                     {{/isSameUser}}
+                                    {{#isFileAttachAble}}
+                                    <a class="text-success text-button font-weight-bold open_attached_file_list"
+                                    >첨부파일 보기</a>
+                                    {{else}}
+                                    {{/isFileAttachAble}}
                                 </div>
                             </div>
                         </div>
-
+                        <div class="col-4 attached_file_list_container_comment">
+                        </div>
                     </div>
                     {{#isReplyAble}}
                     <div class='replyContainer' id='reply_container{{commentID}}'
@@ -508,10 +514,10 @@
             <script id="replyList-template" type="text/x-handlebars-template">
                 {{#replies}}
                 <hr>
-                <div class='row '>
+                <div class='row localCommentContainer'>
                     <div class="col-1">
                     </div>
-                    <div class='commentContainer col-11' id='comment{{commentID}}'>
+                    <div class='commentContainer col-7' id='comment{{commentID}}'>
                         <div class="user"><h5><strong class=name
                                                       data-id={{userID}}>{{userName}}</strong>
                         </h5>
@@ -543,7 +549,14 @@
                             >삭제</a>
                             {{else}}
                             {{/isSameUser}}
+                            {{#isFileAttachAble}}
+                            <a class="text-success text-button font-weight-bold open_attached_file_list"
+                            >첨부파일 보기</a>
+                            {{else}}
+                            {{/isFileAttachAble}}
                         </div>
+                    </div>
+                    <div class="col-4 attached_file_list_container_comment">
                     </div>
                 </div>
                 {{/replies}}
@@ -558,7 +571,7 @@
                     {{{tag}}}
                     <textarea class="form-control" id=commentText placeholder='{{type}}을 입력하세요'
                               name=commentTxt></textarea>
-                    <div class="form-group row file_attach_form" >
+                    <div class="form-group row file_attach_form">
                     </div>
                     <div align="right">
                         {{#isFileAttachAble}}

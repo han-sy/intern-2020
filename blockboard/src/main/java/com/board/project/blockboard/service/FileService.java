@@ -87,8 +87,11 @@ public class FileService {
     }
   }
 
-  public List<FileDTO> getFileList(int postID) {
-    return fileMapper.selectFileListByPostID(postID);
+  public List<FileDTO> getFileList(int postID,int commentID) {
+    Map<String, Object> fileAttributes = new HashMap<String, Object>();
+    fileAttributes.put("postID",postID);
+    fileAttributes.put("commentID",commentID);
+    return fileMapper.selectFileListByEditorID(fileAttributes);
   }
 
   public void downloadFile(int fileID, HttpServletResponse response, HttpServletRequest request) {

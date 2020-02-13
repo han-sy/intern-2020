@@ -96,7 +96,7 @@ function getReplyList(boardID, postID, commentID, successFunction) {
 
 //답글 추가
 function insertReply(boardID, postID, commentContent, commentReferencedID,
-    commentReferencedUserID) {
+    commentReferencedUserID,commentID) {////댓글 임시저장 기능이 추가될수도있어 commentID 파라미터 추가해놓음
   //alert(commentReferencedUserID);
   $.ajax({
     type: 'POST',
@@ -112,9 +112,12 @@ function insertReply(boardID, postID, commentContent, commentReferencedID,
       alert('통신실패!');
     },
     success: function (data) {
-      getReplyList(boardID, postID, commentReferencedID, getReplyListUI);//성공하면 댓글목록 갱신
-      $('#reply_input_container' + commentReferencedID).html("");
-      updateCommentsCount(boardID, postID);
+      console.log("commentID : "+data+","+commentID);
+      if(isNullData(commentID)){
+        updateIDToFiles(postID,data,boardID,commentReferencedID);
+      }else{
+        updateIDToFiles(postID,commentID,boardID,commentReferencedID);
+      }
     }
   });
 }
