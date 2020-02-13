@@ -2,6 +2,12 @@
 # Created by https://www.gitignore.io/api/java,gradle,java-web,intellij
 # Edit at https://www.gitignore.io/?templates=java,gradle,java-web,intellij
 
+## AWS Key
+**/key/
+**/key/Key.java
+key/
+**/Key.java
+
 ### Intellij ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and WebStorm
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
