@@ -39,10 +39,10 @@ public class AWSService {
     amazonS3 = new AmazonS3Client(awsCredentials);
   }
 
-  public String upload(String fileName, InputStream inputStream, ObjectMetadata metadata){
+  public String upload(String fileName, InputStream inputStream, ObjectMetadata metadata,String fileDir){
     if(amazonS3!=null)
       try{
-        String fullPath = ConstantData.AWS_FILE_DIR+"/"+fileName;
+        String fullPath = fileDir+"/"+fileName;
         amazonS3.putObject(new PutObjectRequest(ConstantData.BUCKET_NAME, fullPath,inputStream,metadata));
         return amazonS3.generatePresignedUrl(new GeneratePresignedUrlRequest(ConstantData.BUCKET_NAME,fullPath)).toString();
       }catch(AmazonClientException ace){

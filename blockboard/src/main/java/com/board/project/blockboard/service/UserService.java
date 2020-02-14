@@ -4,8 +4,16 @@
  */
 package com.board.project.blockboard.service;
 
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.board.project.blockboard.common.constant.ConstantData;
+import com.board.project.blockboard.common.util.Common;
 import com.board.project.blockboard.dto.UserDTO;
+import com.board.project.blockboard.mapper.FileMapper;
 import com.board.project.blockboard.mapper.UserMapper;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,11 +21,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 @Slf4j
 @Service
 public class UserService {
 
+  @Autowired
+  private FileMapper fileMapper;
   @Autowired
   private UserMapper userMapper;
   @Autowired
@@ -59,5 +71,34 @@ public class UserService {
   public String getUserTypeByUserID(String userID) {
     String type = userMapper.selectUserTypeByUserID(userID);
     return type;
+  }
+
+  public void updateUserImage(MultipartHttpServletRequest multipartRequest, String userID, HttpServletResponse response)
+      throws IOException {
+    String uuid = Common.getNewUUID();
+    log.info("uuid : " + uuid);
+    Iterator<String> itr = multipartRequest.getFileNames();
+
+    String url = "";
+    while (itr.hasNext()) {
+      MultipartFile mpf = multipartRequest.getFile(itr.next());
+
+      String originFileName = mpf.getOriginalFilename(); //파일명
+      String storedFileName = uuid + "_" + originFileName;
+      ObjectMetadata metadata= new ObjectMetadata();
+      AWSService awsService = new AWSService();
+
+      url = awsService.upload(storedFileName,mpf.getInputStream(),metadata,ConstantData.AWS_USER_DIR);
+      log.info("url -->"+url);
+      long fileSize = mpf.getSize();
+      //파일 전체 경로
+      log.info("fileName => " + mpf.getName());
+
+      Map<String, Object> userData = new HashMap<String,Object>();
+      userData.put("userID",userID);
+      userData.put("imageUrl",url);
+      userData.put("imageFileName",storedFileName);
+      userMapper.updateUserImage(userData);
+    }
   }
 }

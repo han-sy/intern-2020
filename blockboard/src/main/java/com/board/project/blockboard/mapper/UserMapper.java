@@ -5,6 +5,7 @@
 package com.board.project.blockboard.mapper;
 
 import com.board.project.blockboard.dto.UserDTO;
+import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -19,4 +20,6 @@ public interface UserMapper {
   String selectUserNameByUserID(String userID);
 
   String selectUserTypeByUserID(String userID);
+
+  void updateUserImage(Map<String, Object> userData);
 }

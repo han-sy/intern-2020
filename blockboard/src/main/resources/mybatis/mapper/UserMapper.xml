@@ -46,4 +46,11 @@
     FROM users
     WHERE user_id = #{userID};
   </select>
+
+  <update id="updateUserImage" parameterType="hashmap" >
+    UPDATE users
+    SET    image_url = #{imageUrl},
+           image_file_name = #{imageFileName}
+    WHERE  user_id = #{userID};
+  </update>
 </mapper>

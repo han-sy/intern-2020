@@ -52,7 +52,7 @@ public class FileService {
     log.info("uuid : " + uuid);
     Iterator<String> itr = multipartRequest.getFileNames();
 
-    //String filePath = ConstantData.ATTACH_FILE_PATH; //설정파일로 뺀다.
+
     String fileName = "";
     String url = "";
     while (itr.hasNext()) {
@@ -63,30 +63,22 @@ public class FileService {
       ObjectMetadata metadata= new ObjectMetadata();
       AWSService awsService = new AWSService();
 
-      url = awsService.upload(storedFileName,mpf.getInputStream(),metadata);
+      url = awsService.upload(storedFileName,mpf.getInputStream(),metadata,ConstantData.AWS_FILE_DIR);
       log.info("url -->"+url);
-     // String fileFullPath = filePath + "/" + storedFileName;
       long fileSize = mpf.getSize();
-      //File file = new File(fileFullPath);
       //파일 전체 경로
 
-      try {
-       // mpf.transferTo(file);
-        log.info("originFileName => " + originFileName);
-       // log.info("fileFullPath => " + fileFullPath);
-        log.info("fileName => " + mpf.getName());
-        fileName = storedFileName;
+      log.info("originFileName => " + originFileName);
 
-        Map<String, Object> fileAttributes = new HashMap<String, Object>();
-        fileAttributes.put("resourceUrl",url);
-        fileAttributes.put("originFileName", originFileName);
-        fileAttributes.put("storedFileName", storedFileName);
-        fileAttributes.put("fileSize", fileSize);
-        fileMapper.insertFile(fileAttributes);
-      } catch (Exception e) {
-        //System.out.println("postTempFile_ERROR======>" + fileFullPath);
-        e.printStackTrace();
-      }
+      log.info("fileName => " + mpf.getName());
+      fileName = storedFileName;
+
+      Map<String, Object> fileAttributes = new HashMap<String, Object>();
+      fileAttributes.put("resourceUrl",url);
+      fileAttributes.put("originFileName", originFileName);
+      fileAttributes.put("storedFileName", storedFileName);
+      fileAttributes.put("fileSize", fileSize);
+      fileMapper.insertFile(fileAttributes);
 
     }
     System.out.println("fileName => " + fileName);

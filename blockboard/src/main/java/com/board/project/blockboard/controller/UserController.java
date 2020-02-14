@@ -9,6 +9,7 @@ import com.board.project.blockboard.dto.UserDTO;
 import com.board.project.blockboard.service.JwtService;
 import com.board.project.blockboard.service.UserService;
 import java.io.File;
+import java.io.IOException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,10 +18,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 @Slf4j
 @Controller
@@ -93,4 +97,13 @@ public class UserController {
   public UserDTO insertUser(HttpServletRequest request, @ModelAttribute UserDTO user) {
     return userService.insertUser(request, user);
   }
+
+
+  @PutMapping("/users/{userid}/Image")
+  public void updateUserImage(MultipartHttpServletRequest multipartRequest, @PathVariable("userid") String userID, HttpServletResponse response)
+      throws IOException {
+
+    userService.updateUserImage(multipartRequest, userID,response);
+  }
+
 }

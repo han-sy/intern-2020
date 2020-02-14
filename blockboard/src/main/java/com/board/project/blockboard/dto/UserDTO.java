@@ -19,6 +19,10 @@ public class UserDTO {
   private String userName;
   private String userPassword;
   private String userType;
+  private String imageUrl;
+  private String imageFileName;
+  private String thumbnailUrl;
+  private String thumbnailFileName;
 
   public UserDTO(String userID, int companyID, String userName,
       String userType) {

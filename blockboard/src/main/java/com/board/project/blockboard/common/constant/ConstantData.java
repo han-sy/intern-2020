@@ -21,6 +21,8 @@ public class ConstantData {
 
   public static final String ATTACH_FILE_PATH = "C:/test";
   public static final String AWS_FILE_DIR = "file";
+  public static final String AWS_USER_DIR = "user";
+  public static final String AWS_INLINE_DIR = "inline";
   public static final String BUCKET_NAME ="block-board";
 
   public static final class FunctionID {
