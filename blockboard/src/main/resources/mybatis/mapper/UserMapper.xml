@@ -53,4 +53,13 @@
            image_file_name = #{imageFileName}
     WHERE  user_id = #{userID};
   </update>
+  <select id="selectUsersByCompanyID" parameterType="int" resultType="com.board.project.blockboard.dto.UserDTO">
+    SELECT user_id AS userID,
+           user_name AS userName,
+           user_type AS userType,
+           company_name AS companyName
+    FROM users users
+        JOIN companies company ON users.company_id = company.company_id
+    WHERE users.company_id=#{companyID};
+  </select>
 </mapper>

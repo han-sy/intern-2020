@@ -6,6 +6,7 @@ package com.board.project.blockboard.mapper;
 
 import com.board.project.blockboard.dto.UserDTO;
 import java.util.Map;
+import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -13,9 +14,11 @@ import org.springframework.stereotype.Repository;
 @Mapper
 public interface UserMapper {
 
-  UserDTO selectUserByID(String userID);
+  List<UserDTO> selectUsersByCompanyID(int companyID);
 
   void insertUser(UserDTO user);
+
+  UserDTO selectUserByID(String userID);
 
   String selectUserNameByUserID(String userID);
 

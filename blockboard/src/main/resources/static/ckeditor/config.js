@@ -53,8 +53,7 @@ CKEDITOR.editorConfig = function (config) {
       + 'panelbutton,'
       + 'button,'
       + 'xml,'
-      + 'ajax,'
-      + 'mentions';
+      + 'ajax';
 
   var func = new FunctionOn();
   if (func.isInlineImageOn()) {
@@ -64,10 +63,14 @@ CKEDITOR.editorConfig = function (config) {
   if (func.isStickerOn()) {
     config.extraPlugins += ",emoji";
   }
-  CKEDITOR.config.mentions = [ { feed: ['Anna', 'Thomas', 'John'], minChars: 0 } ];
+
+  // Mention 부분 ------------------------
+  config.extraPlugins += ",mentions";
+
+  // -------------------------------------
   // The default plugins included in the basic setup define some buttons that
   // are not needed in a basic editor. They are removed here.
-	config.removeButtons = 'Strike,Subscript,Superscript';
+  config.removeButtons = 'Strike,Subscript,Superscript';
 
   // Dialog windows are also simplified.
   config.removeDialogTabs = 'link:advanced';

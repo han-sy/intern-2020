@@ -10,6 +10,7 @@ import com.board.project.blockboard.service.JwtService;
 import com.board.project.blockboard.service.UserService;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -106,4 +107,10 @@ public class UserController {
     userService.updateUserImage(multipartRequest, userID,response);
   }
 
+  @GetMapping("/users")
+  @ResponseBody
+  public List<UserDTO> getUsers(HttpServletRequest request) {
+    int companyID = Integer.parseInt(request.getAttribute("companyID").toString());
+    return userService.selectUsersByCompanyID(companyID);
+  }
 }

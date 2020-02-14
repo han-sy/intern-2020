@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.List;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -62,6 +63,10 @@ public class UserService {
     user.setUserType("일반");
     userMapper.insertUser(user);
     return user;
+  }
+  
+  public List<UserDTO> selectUsersByCompanyID(int companyID) {
+    return userMapper.selectUsersByCompanyID(companyID);
   }
   /**
    * @param userID

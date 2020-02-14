@@ -351,7 +351,8 @@
 
 			editor.fire( 'saveSnapshot' );
 			editor.getSelection().selectRanges( [ this.model.range ] );
-			editor.insertHtml( this.getHtmlToInsert( item ), 'text' );
+			var htmlItem = this.getHtmlToInsert(item);
+			editor.insertHtml( htmlItem, 'unfiltered_html' );
 			editor.fire( 'saveSnapshot' );
 		},
 
