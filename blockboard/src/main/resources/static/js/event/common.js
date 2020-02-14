@@ -92,3 +92,17 @@ function isNullData(data){
   }
   return false;
 }
+
+function loadImage(value) {
+  if(value.files && value.files[0]) {
+    var reader = new FileReader();
+    reader.onload = function (e) {
+      $("#load_user_image").attr('src', e.target.result);
+    };
+    reader.readAsDataURL(value.files[0]);
+  }
+}
+
+$('.modal').on('hidden.bs.modal', function (e) {
+  $(this).find('form')[0].reset();
+});

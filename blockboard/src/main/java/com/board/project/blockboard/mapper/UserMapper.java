@@ -14,7 +14,7 @@ public interface UserMapper {
 
   UserDTO selectUserByID(String userID);
 
-  int selectCompanyIDByUserID(String userID);
+  void insertUser(UserDTO user);
 
   String selectUserNameByUserID(String userID);
 

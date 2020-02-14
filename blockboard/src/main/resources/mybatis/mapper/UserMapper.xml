@@ -18,11 +18,21 @@
     WHERE user_id = #{userID};
   </select>
 
-  <select id="selectCompanyIDByUserID" parameterType="string" resultType="int">
-    SELECT company_id
-    FROM users users
-    WHERE users.user_id = #{userID};
-  </select>
+  <insert id="insertUser" parameterType="com.board.project.blockboard.dto.UserDTO">
+    INSERT INTO
+        users(
+            user_id,
+            company_id,
+            user_name,
+            user_password,
+            user_type)
+    VALUES (#{userID},
+            #{companyID},
+            #{userName},
+            #{userPassword},
+            #{userType});
+  </insert>
+
   <select id="selectUserNameByUserID" parameterType="string" resultType="string">
     SELECT user_name as userName
     FROM users
