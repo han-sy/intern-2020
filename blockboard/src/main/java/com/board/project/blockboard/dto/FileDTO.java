@@ -11,6 +11,7 @@ public class FileDTO {
   private int fileID;
   private int postID;
   private int commentID;
+  private String resourceUrl;
   private String originFileName;
   private String storedFileName;
   private long fileSize;

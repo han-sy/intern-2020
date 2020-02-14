@@ -4,6 +4,8 @@
  */
 package com.board.project.blockboard.service;
 
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.board.project.blockboard.common.constant.ConstantData;
 import com.board.project.blockboard.common.util.Common;
 import com.board.project.blockboard.dto.FileDTO;
@@ -39,38 +41,44 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 @Service
 public class FileService {
 
+
   @Autowired
   private FileMapper fileMapper;
 
   private final String IMAGE_PATH = "/home1/irteam/storage";
 
-  public String uploadFile(MultipartHttpServletRequest multipartRequest) {
+  public String uploadFile(MultipartHttpServletRequest multipartRequest) throws IOException {
     String uuid = Common.getNewUUID();
     log.info("uuid : " + uuid);
     Iterator<String> itr = multipartRequest.getFileNames();
 
-    String filePath = ConstantData.ATTACH_FILE_PATH; //설정파일로 뺀다.
+    //String filePath = ConstantData.ATTACH_FILE_PATH; //설정파일로 뺀다.
     String fileName = "";
-
+    String url = "";
     while (itr.hasNext()) {
       MultipartFile mpf = multipartRequest.getFile(itr.next());
 
       String originFileName = mpf.getOriginalFilename(); //파일명
-
       String storedFileName = uuid + "_" + originFileName;
-      String fileFullPath = filePath + "/" + storedFileName;
+      ObjectMetadata metadata= new ObjectMetadata();
+      AWSService awsService = new AWSService();
+
+      url = awsService.upload(storedFileName,mpf.getInputStream(),metadata);
+      log.info("url -->"+url);
+     // String fileFullPath = filePath + "/" + storedFileName;
       long fileSize = mpf.getSize();
-      File file = new File(fileFullPath);
+      //File file = new File(fileFullPath);
       //파일 전체 경로
 
       try {
-        mpf.transferTo(file);
+       // mpf.transferTo(file);
         log.info("originFileName => " + originFileName);
-        log.info("fileFullPath => " + fileFullPath);
+       // log.info("fileFullPath => " + fileFullPath);
         log.info("fileName => " + mpf.getName());
         fileName = storedFileName;
 
         Map<String, Object> fileAttributes = new HashMap<String, Object>();
+        fileAttributes.put("resourceUrl",url);
         fileAttributes.put("originFileName", originFileName);
         fileAttributes.put("storedFileName", storedFileName);
         fileAttributes.put("fileSize", fileSize);
@@ -104,14 +112,11 @@ public class FileService {
   }
 
   public void downloadFile(int fileID, HttpServletResponse response, HttpServletRequest request) {
-    String filePath = ConstantData.ATTACH_FILE_PATH;
+
     FileDTO fileData = fileMapper.selectFileByFileID(fileID);
-    File file = new File(filePath + "/", fileData.getStoredFileName());
+
     String browser = request.getHeader("User-Agent");//브라우저 종류 가져옴.
     String downName = null;
-
-    FileInputStream fileInputStream = null;
-    ServletOutputStream servletOutputStream = null;
 
     try {
       if (browser.contains("MSIE") || browser.contains("Trident") || browser.contains("Chrome")) {
@@ -124,21 +129,21 @@ public class FileService {
       e.printStackTrace();
     }
     response.setHeader("Content-Disposition", "attachment;filename=\"" + downName + "\"");
-
     response.setContentType("application/octer-stream");
     response.setHeader("Content-Transfer-Encoding", "binary;");
 
     try {
       OutputStream os = response.getOutputStream();
-      FileInputStream fis = new FileInputStream(filePath + "/" + fileData.getStoredFileName());
 
+      AWSService awsService =new AWSService();
+      S3ObjectInputStream s3is = awsService.download(ConstantData.AWS_FILE_DIR+"/"+fileData.getStoredFileName());
       int ncount = 0;
       byte[] bytes = new byte[512];
 
-      while ((ncount = fis.read(bytes)) != -1) {
+      while ((ncount = s3is.read(bytes)) != -1) {
         os.write(bytes, 0, ncount);
       }
-      fis.close();
+      s3is.close();
       os.close();
     } catch (FileNotFoundException ex) {
       System.out.println("FileNotFoundException");

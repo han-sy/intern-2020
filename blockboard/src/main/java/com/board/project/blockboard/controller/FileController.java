@@ -34,7 +34,7 @@ public class FileController {
    * 드래그앤 드랍후 파일을 바로 업로드
    */
   @PostMapping(value = "/files")
-  public String uploadFile(MultipartHttpServletRequest multipartRequest) {
+  public String uploadFile(MultipartHttpServletRequest multipartRequest) throws IOException {
     return fileService.uploadFile(multipartRequest);
 
   }
