@@ -20,7 +20,9 @@ public class WebConfig implements WebMvcConfigurer {
       "/boards/**",
       "/functions/**",
       "/functions",
-      "/boards"
+      "/boards",
+      "/users",
+      "/userinfo"
   };
   private static final String[] EXCLUDE_PATHS = {
       "/",

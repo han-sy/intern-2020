@@ -8,7 +8,7 @@ For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
 	position: absolute;
 	display: none;
 	box-sizing: border-box;
-	width: 200px;
+	width: 300px;
 	max-height: 300px;
 	overflow: auto;
 	padding: 0;
@@ -18,7 +18,7 @@ For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
 	border: 1px solid #b6b6b6;
 	border-bottom-color: #999;
 	border-radius: 3px;
-	font: 12px Arial, Helvetica, Tahoma, Verdana, Sans-Serif;
+	font: 10px Arial, Helvetica, Tahoma, Verdana, Sans-Serif;
 }
 .cke_autocomplete_opened
 {
@@ -26,7 +26,7 @@ For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
 }
 .cke_autocomplete_panel > li
 {
-	padding: 5px;
+	padding: 8px;
 }
 .cke_autocomplete_panel > li:hover
 {
@@ -34,5 +34,19 @@ For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
 }
 .cke_autocomplete_selected, .cke_autocomplete_panel > li:hover
 {
-	background-color: #EFF0EF;
+	background-color: #dce6fa;
+}
+.mentions_list_top
+{
+	font-size: 14px;
+	font-weight: bold;
+}
+.mentions_list_bottom
+{
+	font-size: 10px;
+	color: #4d4d4d;
+}
+.mentions_tag
+{
+	text-decoration: none;
 }

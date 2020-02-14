@@ -6,6 +6,7 @@ package com.board.project.blockboard.service;
 
 import com.board.project.blockboard.dto.UserDTO;
 import com.board.project.blockboard.mapper.UserMapper;
+import java.util.List;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +45,9 @@ public class UserService {
     return userMapper.selectUserNameByUserID(userID);
   }
 
+  public List<UserDTO> selectUsersByCompanyID(int companyID) {
+    return userMapper.selectUsersByCompanyID(companyID);
+  }
   /**
    * @param userID
    * @return

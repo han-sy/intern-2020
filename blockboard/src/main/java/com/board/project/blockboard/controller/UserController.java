@@ -8,6 +8,7 @@ import com.board.project.blockboard.common.util.CookieUtils;
 import com.board.project.blockboard.dto.UserDTO;
 import com.board.project.blockboard.service.JwtService;
 import com.board.project.blockboard.service.UserService;
+import java.util.List;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -83,5 +84,12 @@ public class UserController {
   @ResponseBody
   public UserDTO info(HttpServletRequest request) {
     return new UserDTO(request);
+  }
+
+  @GetMapping("/users")
+  @ResponseBody
+  public List<UserDTO> getUsers(HttpServletRequest request) {
+    int companyID = Integer.parseInt(request.getAttribute("companyID").toString());
+    return userService.selectUsersByCompanyID(companyID);
   }
 }
