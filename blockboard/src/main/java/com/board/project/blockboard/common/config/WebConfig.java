@@ -22,6 +22,7 @@ public class WebConfig implements WebMvcConfigurer {
       "/functions",
       "/boards",
       "/users",
+      "/users/**",
       "/userinfo"
   };
   private static final String[] EXCLUDE_PATHS = {
