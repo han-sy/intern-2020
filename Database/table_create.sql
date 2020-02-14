@@ -20,6 +20,10 @@ create table users(
     user_name varchar(30) not null,
     user_password varchar(100) not null,
     user_type varchar(20) not null,
+    image_url text,
+    image_file_name text,
+    thumbnail_url text,
+    thumbnail_file_name text,
     foreign key(company_id) references companies(company_id),
     primary key(user_id,company_id)
 )ENGINE =InnoDB DEFAULT charset= utf8;
@@ -84,6 +88,7 @@ create table files(
 	file_id int(9) not null auto_increment,
     post_id int(9) ,
     comment_id int(9),
+    resource_url varchar(500) not null,
     origin_file_name varchar(200) not null,
     stored_file_name varchar(200) not null,
     file_size int(11) NULL default null,
@@ -104,9 +109,9 @@ insert into boards (company_id,board_name) values(2,"공지사항");
 insert into boards (company_id,board_name) values(2,"건의사항");
 insert into boards (company_id,board_name) values(1,"자유게시판");
 
-insert into users values(1,1,'김동욱','123','관리자');
-insert into users values(2,1,'전우혁','123','사원');
-insert into users values(3,2,'곽대훈','123','관리자');
+insert into users (user_id,company_id,user_name,user_password,user_type) values(1,1,'김동욱','123','관리자');
+insert into users (user_id,company_id,user_name,user_password,user_type) values(2,1,'전우혁','123','사원');
+insert into users (user_id,company_id,user_name,user_password,user_type) values(3,2,'곽대훈','123','관리자');
 
 insert into functions values(1,'댓글');
 insert into functions values(2,'대댓글');
@@ -171,6 +176,9 @@ from posts;
 update posts
 set company_id = 1
 where company_id = 2;
+update users
+set image_url = "aaa" ,image_file_name = "aaa"
+where user_id = 1;
 
 select if(count(function_id)>0,true,false)
 from functions_check
@@ -205,4 +213,7 @@ upload_time as uploadTime
 from files
 where post_id = 131;
 
+select * from files;
+
 select * from posts;
+select * from users;
