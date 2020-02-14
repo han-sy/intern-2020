@@ -7,6 +7,7 @@ package com.board.project.blockboard.service;
 import com.board.project.blockboard.dto.UserDTO;
 import com.board.project.blockboard.mapper.UserMapper;
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.StringUtils;
@@ -44,6 +45,12 @@ public class UserService {
     return userMapper.selectUserNameByUserID(userID);
   }
 
+  public UserDTO insertUser(HttpServletRequest request, UserDTO user) {
+    user.setCompanyID(Integer.parseInt(request.getAttribute("companyID").toString()));
+    user.setUserType("일반");
+    userMapper.insertUser(user);
+    return user;
+  }
   /**
    * @param userID
    * @return
