@@ -72,13 +72,15 @@ public class UserService {
     String type = userMapper.selectUserTypeByUserID(userID);
     return type;
   }
-
+  /**
+   * 유저 이미지 업로드 & 디비와 매핑
+   * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+   */
   public void updateUserImage(MultipartHttpServletRequest multipartRequest, String userID, HttpServletResponse response)
       throws IOException {
     String uuid = Common.getNewUUID();
-    log.info("uuid : " + uuid);
-    Iterator<String> itr = multipartRequest.getFileNames();
 
+    Iterator<String> itr = multipartRequest.getFileNames();
     String url = "";
     while (itr.hasNext()) {
       MultipartFile mpf = multipartRequest.getFile(itr.next());

@@ -146,19 +146,13 @@ public class FileService {
   }
 
   public void deleteFile(String storedFileName) {
-
-    File file = new File(ConstantData.ATTACH_FILE_PATH + "/", storedFileName);
-    if(file.exists()){
-      if(file.delete()){
-        log.info("파일삭제 성공");
-        fileMapper.deleteFileByStoredFileName(storedFileName);
-      }else{
-          log.info("파일삭제 실패");
-          //TODO 파일삭제 실패에 대한 에러처리
-      }
+    AWSService awsService = new AWSService();
+    if(awsService.deleteFile(storedFileName)){
+      log.info("파일삭제 성공");
+      fileMapper.deleteFileByStoredFileName(storedFileName);
     }else{
-      log.info("파일 존재하지 않음");
-      //TODO 존재하지 않는 파일을 삭제하려고 할시에 대한 에러처리
+      log.info("파일삭제 실패");
+      //TODO 파일삭제 실패에 대한 에러처리
     }
   }
 
@@ -177,20 +171,14 @@ public class FileService {
         if (file.getContentType().toLowerCase().startsWith("image/")) {
           try {
             String fileName = file.getName();
-            byte[] bytes = file.getBytes();
-            String uploadPath = IMAGE_PATH + ("/img");
-            File uploadFile = new File(uploadPath);
-            if (!uploadFile.exists()) {
-              uploadFile.mkdirs();
-            }
-            fileName = UUID.randomUUID().toString();
-            uploadPath = uploadPath + "/" + fileName;
-            out = new FileOutputStream(new File(uploadPath));
-            out.write(bytes);
+            ObjectMetadata metadata= new ObjectMetadata();
+            AWSService awsService = new AWSService();
+            fileName = Common.getNewUUID();
+            String fileUrl = awsService.upload(fileName,file.getInputStream(),metadata,ConstantData.AWS_INLINE_DIR);
             printWriter = response.getWriter();
             response.setContentType("text/html;charset=utf-8");
             response.setCharacterEncoding("utf-8");
-            String fileUrl = "img/" + fileName;
+
 
             json.addProperty("uploaded", 1);
             json.addProperty("fileName", fileName);
@@ -200,9 +188,6 @@ public class FileService {
           } catch (IOException e) {
             e.printStackTrace();
           } finally {
-            if (out != null) {
-              out.close();
-            }
             if (printWriter != null) {
               printWriter.close();
             }

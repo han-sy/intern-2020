@@ -69,6 +69,25 @@ public class AWSService {
     return null;
   }
 
+  public boolean deleteFile(String fileName){
+    if(amazonS3!=null){
+      try {
+        String fullName = ConstantData.AWS_FILE_DIR+"/"+fileName;
+        amazonS3.deleteObject(ConstantData.BUCKET_NAME, fullName);
+        if(amazonS3.doesObjectExist(ConstantData.BUCKET_NAME,fullName))
+          return false;
+        return true;
+      } catch (AmazonServiceException e) {
+        System.err.println(e.getErrorMessage());
+        System.exit(1);
+        return false;
+      } finally {
+        amazonS3 = null;
+      }
+    }
+    return false;
+  }
+
 
 
 
