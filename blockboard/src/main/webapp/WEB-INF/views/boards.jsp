@@ -166,7 +166,7 @@
                         <div class="modal-body-userInfo" style="padding: 15px 10px 10px 10px">
                             <div class="row">
                                 <div class="col">
-                                    <img id="modal_userImage">
+                                    <img id="modal_userImage" width="150">
                                 </div>
                                 <div class="col">
                                     <p>회원 이름: <a id="modal_userName">전우혁</a></p>
