@@ -81,7 +81,7 @@ public class UserService {
    * 유저 이미지 업로드 & 디비와 매핑
    * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
    */
-  public void updateUserImage(MultipartHttpServletRequest multipartRequest, String userID, HttpServletResponse response)
+  public void updateUserImage(MultipartHttpServletRequest multipartRequest, String userID, HttpServletResponse response,HttpServletRequest request)
       throws IOException {
     String uuid = Common.getNewUUID();
 
@@ -91,21 +91,26 @@ public class UserService {
       MultipartFile mpf = multipartRequest.getFile(itr.next());
 
       String originFileName = mpf.getOriginalFilename(); //파일명
-      String storedFileName = uuid + "_" + originFileName;
+      String storedFileName = userID + originFileName.substring(originFileName.indexOf("."));
+      //zzzzString storedFileName = uuid + "_" + originFileName;
       ObjectMetadata metadata= new ObjectMetadata();
-      AWSService awsService = new AWSService();
+      AmazonS3Service amazonS3Service = new AmazonS3Service();
 
-      url = awsService.upload(storedFileName,mpf.getInputStream(),metadata,ConstantData.AWS_USER_DIR);
+      url = amazonS3Service.upload(storedFileName,ConstantData.BUCKET_USER,mpf.getInputStream(),metadata,"",userID);
+
       log.info("url -->"+url);
-      long fileSize = mpf.getSize();
       //파일 전체 경로
-      log.info("fileName => " + mpf.getName());
+      //log.info("fileName => " + mpf.getName());
 
       Map<String, Object> userData = new HashMap<String,Object>();
       userData.put("userID",userID);
       userData.put("imageUrl",url);
       userData.put("imageFileName",storedFileName);
       userMapper.updateUserImage(userData);
+      if(url!=null){
+        AmazonRekognitionService amazonRekognitionService = new AmazonRekognitionService();
+        amazonRekognitionService.registerImageToCollection(storedFileName,ConstantData.BUCKET_USER,userID);
+      }
     }
   }
 }

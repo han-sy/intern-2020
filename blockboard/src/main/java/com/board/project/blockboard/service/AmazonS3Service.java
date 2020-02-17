@@ -1,3 +1,7 @@
+/**
+ * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+ * @file AWSService.java
+ */
 package com.board.project.blockboard.service;
 
 import com.amazonaws.AmazonClientException;
@@ -5,6 +9,12 @@ import com.amazonaws.AmazonServiceException;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.auth.profile.ProfileCredentialsProvider;
+import com.amazonaws.services.rekognition.AmazonRekognition;
+import com.amazonaws.services.rekognition.AmazonRekognitionClient;
+import com.amazonaws.services.rekognition.AmazonRekognitionClientBuilder;
+import com.amazonaws.services.rekognition.model.CreateCollectionRequest;
+import com.amazonaws.services.rekognition.model.CreateCollectionResult;
+import com.amazonaws.services.rekognition.model.Image;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
@@ -24,39 +34,44 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.bcel.Const;
 import org.springframework.stereotype.Service;
 
-/**
- * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
- * @file AWSService.java
- */
+
 
 @Slf4j
 @Service
-public class AWSService {
+public class AmazonS3Service {
+
   private AmazonS3 amazonS3;
 
-  public AWSService(){
-    AWSCredentials awsCredentials = new BasicAWSCredentials(Key.ACCESS_KEY,Key.SECRET_KEY);
+
+  public AmazonS3Service() {
+    AWSCredentials awsCredentials = new BasicAWSCredentials(Key.ACCESS_KEY, Key.SECRET_KEY);
     amazonS3 = new AmazonS3Client(awsCredentials);
   }
 
-  public String upload(String fileName, InputStream inputStream, ObjectMetadata metadata,String fileDir){
-    if(amazonS3!=null)
-      try{
-        String fullPath = fileDir+"/"+fileName;
-        amazonS3.putObject(new PutObjectRequest(ConstantData.BUCKET_NAME, fullPath,inputStream,metadata));
-        return amazonS3.generatePresignedUrl(new GeneratePresignedUrlRequest(ConstantData.BUCKET_NAME,fullPath)).toString();
-      }catch(AmazonClientException ace){
+  public String upload(String fileName, String bucket,InputStream inputStream, ObjectMetadata metadata,
+      String fileDir,String userID) {
+
+    if (amazonS3 != null) {
+      try {
+        String fullPath = getFilePath(bucket,fileName,fileDir);
+        amazonS3.putObject(
+            new PutObjectRequest(bucket, fullPath, inputStream, metadata));
+
+        return amazonS3.generatePresignedUrl(
+            new GeneratePresignedUrlRequest(bucket, fullPath)).toString();
+      } catch (AmazonClientException ace) {
         ace.printStackTrace();
       } finally {
         amazonS3 = null;
       }
+    }
     return null;
   }
 
-  public S3ObjectInputStream download(String fileName) {
+  public S3ObjectInputStream download(String fileName, String bucket) {
     if (amazonS3 != null) {
       try {
-        S3Object o = amazonS3.getObject(ConstantData.BUCKET_NAME, fileName);
+        S3Object o = amazonS3.getObject(ConstantData.BUCKET_FILE, fileName);
         S3ObjectInputStream s3is = o.getObjectContent();
         return s3is;
       } catch (AmazonServiceException e) {
@@ -69,13 +84,14 @@ public class AWSService {
     return null;
   }
 
-  public boolean deleteFile(String fileName){
-    if(amazonS3!=null){
+  public boolean deleteFile(String fileName, String bucket) {
+    if (amazonS3 != null) {
       try {
-        String fullName = ConstantData.AWS_FILE_DIR+"/"+fileName;
-        amazonS3.deleteObject(ConstantData.BUCKET_NAME, fullName);
-        if(amazonS3.doesObjectExist(ConstantData.BUCKET_NAME,fullName))
+        String fullName = ConstantData.AWS_FILE_DIR + "/" + fileName;
+        amazonS3.deleteObject(ConstantData.BUCKET_FILE, fullName);
+        if (amazonS3.doesObjectExist(ConstantData.BUCKET_FILE, fullName)) {
           return false;
+        }
         return true;
       } catch (AmazonServiceException e) {
         System.err.println(e.getErrorMessage());
@@ -88,8 +104,13 @@ public class AWSService {
     return false;
   }
 
-
-
+  public static String getFilePath(String bucket,String fileName, String fileDir){
+    if(bucket.equals(ConstantData.BUCKET_USER)){
+      return fileName;
+    }else{
+      return fileDir + "/" + fileName;
+    }
+  }
 
 
 }

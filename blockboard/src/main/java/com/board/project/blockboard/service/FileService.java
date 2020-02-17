@@ -11,10 +11,8 @@ import com.board.project.blockboard.common.util.Common;
 import com.board.project.blockboard.dto.FileDTO;
 import com.board.project.blockboard.mapper.FileMapper;
 import com.google.gson.JsonObject;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -25,8 +23,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -61,9 +57,9 @@ public class FileService {
       String originFileName = mpf.getOriginalFilename(); //파일명
       String storedFileName = uuid + "_" + originFileName;
       ObjectMetadata metadata= new ObjectMetadata();
-      AWSService awsService = new AWSService();
+      AmazonS3Service amazonS3Service = new AmazonS3Service();
 
-      url = awsService.upload(storedFileName,mpf.getInputStream(),metadata,ConstantData.AWS_FILE_DIR);
+      url = amazonS3Service.upload(storedFileName,ConstantData.BUCKET_FILE,mpf.getInputStream(),metadata,ConstantData.AWS_FILE_DIR,"");
       log.info("url -->"+url);
       long fileSize = mpf.getSize();
       //파일 전체 경로
@@ -127,8 +123,8 @@ public class FileService {
     try {
       OutputStream os = response.getOutputStream();
 
-      AWSService awsService =new AWSService();
-      S3ObjectInputStream s3is = awsService.download(ConstantData.AWS_FILE_DIR+"/"+fileData.getStoredFileName());
+      AmazonS3Service amazonS3Service =new AmazonS3Service();
+      S3ObjectInputStream s3is = amazonS3Service.download(ConstantData.AWS_FILE_DIR+"/"+fileData.getStoredFileName(),ConstantData.BUCKET_FILE);
       int ncount = 0;
       byte[] bytes = new byte[512];
 
@@ -146,8 +142,8 @@ public class FileService {
   }
 
   public void deleteFile(String storedFileName) {
-    AWSService awsService = new AWSService();
-    if(awsService.deleteFile(storedFileName)){
+    AmazonS3Service amazonS3Service = new AmazonS3Service();
+    if(amazonS3Service.deleteFile(storedFileName,ConstantData.BUCKET_FILE)){
       log.info("파일삭제 성공");
       fileMapper.deleteFileByStoredFileName(storedFileName);
     }else{
@@ -172,9 +168,10 @@ public class FileService {
           try {
             String fileName = file.getName();
             ObjectMetadata metadata= new ObjectMetadata();
-            AWSService awsService = new AWSService();
+            AmazonS3Service amazonS3Service = new AmazonS3Service();
             fileName = Common.getNewUUID();
-            String fileUrl = awsService.upload(fileName,file.getInputStream(),metadata,ConstantData.AWS_INLINE_DIR);
+            String fileUrl = amazonS3Service
+                .upload(fileName,ConstantData.BUCKET_FILE,file.getInputStream(),metadata,ConstantData.AWS_INLINE_DIR,"");
             printWriter = response.getWriter();
             response.setContentType("text/html;charset=utf-8");
             response.setCharacterEncoding("utf-8");
@@ -184,7 +181,12 @@ public class FileService {
             json.addProperty("fileName", fileName);
             json.addProperty("url", fileUrl);
 
+            AmazonRekognitionService amazonRekognitionService = new AmazonRekognitionService();
+            List<String> detectedUsers = amazonRekognitionService.searchFaceMatchingImageCollection(ConstantData.BUCKET_FILE,fileName,ConstantData.AWS_INLINE_DIR );
+            log.info(detectedUsers+"");
+            //json.addProperty("detectedUser",detectedUsers.toString()); //TODO detectedUser에 감지된 얼굴정보 들어있음.
             printWriter.println(json);
+            return detectedUsers.toString();
           } catch (IOException e) {
             e.printStackTrace();
           } finally {

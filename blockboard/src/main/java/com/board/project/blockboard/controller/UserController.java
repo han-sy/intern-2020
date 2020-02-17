@@ -101,10 +101,10 @@ public class UserController {
 
 
   @PutMapping("/users/{userid}/Image")
-  public void updateUserImage(MultipartHttpServletRequest multipartRequest, @PathVariable("userid") String userID, HttpServletResponse response)
+  public void updateUserImage(MultipartHttpServletRequest multipartRequest, @PathVariable("userid") String userID, HttpServletResponse response,HttpServletRequest request)
       throws IOException {
 
-    userService.updateUserImage(multipartRequest, userID,response);
+    userService.updateUserImage(multipartRequest, userID,response,request);
   }
 
   @GetMapping("/users")

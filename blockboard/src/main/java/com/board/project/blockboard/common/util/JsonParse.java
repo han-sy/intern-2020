@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
@@ -57,7 +58,7 @@ public class JsonParse {
    * @author Woohyeok Jun <woohyeok.jun@worksmobile.com>
    */
   public static Map<String, Object> getMapFromJsonString(String json) {
-    Map<String, Object> map = null;
+    Map<String, Object> map = new HashMap<String,Object>();
     try {
       ObjectMapper mapper = new ObjectMapper();
       mapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
