@@ -18,10 +18,8 @@
     post_title,
     post_content,
     post_register_time,
-    post_content_except_htmltag
-    <if test="isTemp">
-      ,post_status
-    </if>
+    post_content_except_htmltag,
+    post_status
     )
     VALUES (
     <if test='postID != 0'>
@@ -33,10 +31,8 @@
     #{postTitle},
     #{postContent},
     NOW(),
-    #{postContentExceptHTMLTag}
-    <if test="isTemp">
-      ,json_object('isTemp', true)
-    </if>
+    #{postContentExceptHTMLTag},
+    #{postStatus}
     )
     ON DUPLICATE KEY UPDATE
     board_id=#{boardID},
@@ -44,14 +40,7 @@
     post_content=#{postContent},
     post_content_except_htmltag=#{postContentExceptHTMLTag},
     post_register_time=NOW(),
-    <choose>
-      <when test="isTemp">
-        post_status=json_set(post_status, '$.isTemp', true);
-      </when>
-      <otherwise>
-        post_status=json_remove(post_status, '$.isTemp');
-      </otherwise>
-    </choose>
+    post_status=#{postStatus}
     <selectKey keyProperty="postID" resultType="int" order="AFTER">
       <if test='postID != 0'>
         SELECT #{postID};
@@ -93,21 +82,20 @@
     FROM posts post
     JOIN boards board ON post.board_id = board.board_id
     JOIN users users ON post.user_id = users.user_id
-    WHERE   (json_extract(post.post_status, '$.isTemp') IS NULL AND
-    json_extract(post.post_status, '$.isRecycle') IS NULL)
+    WHERE post.post_status = "normal"
     <include refid="searchOption"/>
     ORDER BY postRegisterTime DESC;
   </select>
 
   <update id="temporaryDeletePost" parameterType="com.board.project.blockboard.dto.PostDTO">
     UPDATE posts
-    SET post_status=json_object('isRecycle', true)
+    SET post_status="recycle"
     WHERE post_id=#{postID};
   </update>
 
   <update id="restorePost" parameterType="com.board.project.blockboard.dto.PostDTO">
     UPDATE posts
-    SET post_status=json_remove(post_status, '$.isRecycle')
+    SET post_status="normal"
     WHERE post_id=#{postID};
   </update>
 
@@ -129,8 +117,7 @@
            JOIN users users ON post.user_id = users.user_id
            JOIN boards board ON post.board_id = board.board_id
     WHERE  post.user_id = #{user.userID} AND
-           (json_extract(post.post_status, '$.isTemp') IS NULL AND
-                json_extract(post.post_status, '$.isRecycle') IS NULL)
+           post.post_status = "normal"
     ORDER  BY post.post_register_time DESC
     LIMIT  #{startIndex},#{pageSize};
   </select>
@@ -152,8 +139,7 @@
        JOIN  boards board ON post.board_id = board.board_id
        JOIN  comments comment ON post.post_id = comment.post_id
     WHERE  comment.user_id = #{user.userID} AND
-           (json_extract(post.post_status, '$.isTemp') IS NULL AND
-                json_extract(post.post_status, '$.isRecycle') IS NULL)
+           post.post_status = "normal"
     ORDER BY post.post_register_time DESC
     LIMIT  #{startIndex},#{pageSize};
   </select>
@@ -169,14 +155,14 @@
             post.post_content AS postContent,
             post.post_register_time AS postRegisterTime,
             users.user_name AS userName,
-            json_extract(post.post_status, '$.isRecycle') AS isRecycle
+            post.post_status AS postStatus
     FROM    posts post
        JOIN users users ON post.user_id = users.user_id
        JOIN boards board ON post.board_id = board.board_id
     WHERE
             post.user_id=#{user.userID} AND
             post.company_id=#{user.companyID} AND
-            json_extract(post.post_status, '$.isRecycle') = true
+            post.post_status="recycle"
     ORDER BY postRegisterTime DESC
     LIMIT  #{startIndex},#{pageSize};
   </select>
@@ -192,7 +178,7 @@
         post.post_register_time AS postRegisterTime,
         users.user_name AS userName,
         board.board_name AS boardName,
-        json_extract(post.post_status, '$.isTemp') AS isTemp
+        post.post_status AS postStatus
     FROM   posts post
            JOIN users users
             ON post.user_id = users.user_id
@@ -200,7 +186,7 @@
             ON post.board_id = board.board_id
     WHERE
         post.user_id=#{user.userID} AND
-        json_extract(post.post_status, '$.isTemp') = true
+        post.post_status="temp"
     ORDER BY
         postRegisterTime DESC
     LIMIT  #{startIndex}, #{pageSize};
@@ -223,8 +209,7 @@
        JOIN boards board ON post.board_id = board.board_id
     WHERE  DATE(post.post_register_time) >= DATE(SUBDATE(NOW(), INTERVAL 30 DAY)) AND
            post.company_id = #{user.companyID} AND
-           (json_extract(post.post_status, '$.isTemp') IS NULL AND
-                json_extract(post.post_status, '$.isRecycle') IS NULL)
+           post.post_status = "normal"
     ORDER BY post.post_register_time DESC
     LIMIT  #{startIndex},#{pageSize};
   </select>
@@ -234,8 +219,7 @@
     SELECT Count(post_id)
     FROM   posts
     WHERE  user_id = #{userID} AND
-           (json_extract(post_status, '$.isTemp') IS NULL AND
-                json_extract(post_status, '$.isRecycle') IS NULL)
+           post_status = "normal"
   </select>
 
   <select id="getPostsCountIncludeMyReplies"
@@ -245,8 +229,7 @@
     FROM   posts post
         JOIN comments comment ON post.post_id = comment.post_id
     WHERE  comment.user_id = #{userID} AND
-           (json_extract(post.post_status, '$.isTemp') IS NULL AND
-                json_extract(post.post_status, '$.isRecycle') IS NULL)
+           post_status = "normal"
   </select>
 
   <select id="getMyTempPostsCount" parameterType="com.board.project.blockboard.dto.UserDTO"
@@ -254,8 +237,7 @@
     SELECT Count(post_id)
     FROM   posts
     WHERE  user_id = #{userID} AND
-           (json_extract(post_status, '$.isTemp') = true AND
-                json_extract(post_status, '$.isRecycle') IS NULL);
+           post_status = "temp"
   </select>
 
   <select id="getMyRecyclePostsCount" parameterType="com.board.project.blockboard.dto.UserDTO"
@@ -263,8 +245,7 @@
     SELECT Count(post_id)
     FROM   posts
     WHERE  user_id = #{userID} AND
-           (json_extract(post_status, '$.isTemp') IS NULL AND
-                json_extract(post_status, '$.isRecycle') = true);
+           post_status = "recycle"
   </select>
 
   <select id="getRecentPostsCount" parameterType="int" resultType="int">
@@ -272,8 +253,7 @@
     FROM   posts
     WHERE  DATE(post_register_time) >= DATE(SUBDATE(NOW(), INTERVAL 30 DAY)) AND
            company_id = #{companyID} AND
-           (json_extract(post_status, '$.isTemp') IS NULL AND
-                json_extract(post_status, '$.isRecycle') IS NULL)
+           post_status = "normal"
   </select>
 
   <sql id="searchOption">
@@ -318,8 +298,7 @@
            JOIN users users ON post.user_id = users.user_id
            JOIN boards board ON post.board_id = board.board_id
     WHERE  post.board_id = #{boardID} AND
-           (json_extract(post.post_status, '$.isTemp') IS NULL AND
-                json_extract(post.post_status, '$.isRecycle') IS NULL)
+           post.post_status = "normal"
     ORDER  BY post.post_register_time DESC
     LIMIT  #{startIndex}, #{pageSize};
   </select>
@@ -377,8 +356,7 @@
            JOIN boards boards
              ON post.board_id = boards.board_id
     WHERE  post.company_id = #{companyID} AND
-           (json_extract(post.post_status, '$.isTemp') IS NULL AND
-                json_extract(post.post_status, '$.isRecycle') IS NULL)
+           post.post_status = "normal"
     ORDER  BY post.view_count DESC
     LIMIT  0, 10;
   </select>
@@ -387,7 +365,6 @@
     SELECT Count(post_id)
     FROM   posts
     WHERE  company_id = #{companyID} AND
-           (json_extract(post_status, '$.isTemp') IS NULL AND
-                json_extract(post_status, '$.isRecycle') IS NULL)
+           post_status = "normal"
   </select>
 </mapper>

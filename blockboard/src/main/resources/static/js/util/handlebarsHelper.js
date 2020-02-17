@@ -61,7 +61,7 @@ Handlebars.registerHelper('isReply', function (options) {
  * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
  */
 Handlebars.registerHelper('isTemp', function (option) {
-  if (this.isTemp == true) {
+  if (this.postStatus == "temp") {
     return option.fn(this);
   } else {
     return option.inverse(this);
@@ -125,7 +125,7 @@ Handlebars.registerHelper('printFileSize', function (option) {
  * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
  */
 Handlebars.registerHelper('isRecycle', function (option) {
-  if (this.isRecycle == true) {
+  if (this.postStatus == "recycle") {
     return option.fn(this);
   } else {
     return option.inverse(this);

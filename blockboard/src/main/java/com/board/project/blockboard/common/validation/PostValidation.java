@@ -4,7 +4,6 @@
  */
 package com.board.project.blockboard.common.validation;
 
-import com.board.project.blockboard.common.util.JsonParse;
 import com.board.project.blockboard.dto.PostDTO;
 import com.board.project.blockboard.dto.UserDTO;
 import java.io.IOException;
@@ -21,8 +20,7 @@ public class PostValidation {
 
   public boolean isTempSavedPost(PostDTO post, HttpServletResponse response) {
     try {
-      JsonParse.setPostStatusFromJsonString(post);
-      if (post.getIsTemp()) {
+      if (StringUtils.equals(post.getPostStatus(), "temp")) {
         return true;
       }
       response.sendError(HttpServletResponse.SC_CONFLICT, "이미 저장된 게시물입니다.");
@@ -75,7 +73,8 @@ public class PostValidation {
       HttpServletResponse response) {
     try {
       if (!StringUtils.equals(post.getUserID(), user.getUserID())) {
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "게시물 변경 권한이 없습니다.");
+        response.sendError(HttpServletResponse.SC_CONFLICT, "게시물 변경 권한이 없습니다.");
+        return false;
       }
     } catch (IOException e) {
       e.printStackTrace();
@@ -83,17 +82,13 @@ public class PostValidation {
     return true;
   }
 
-  public boolean isValidRestore(PostDTO post, UserDTO user, HttpServletResponse response) {
+  public boolean isValidRestore(PostDTO post, HttpServletResponse response) {
     try {
-      JsonParse.setPostStatusFromJsonString(post);
-      if (!StringUtils.equals(post.getUserID(), user.getUserID())) {
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "복구 권한이 없습니다.");
-      } else {
-        if (!post.getIsRecycle()) {
-          response.sendError(HttpServletResponse.SC_CONFLICT, "휴지통에 존재하지 않습니다.");
-        }
+      if (!StringUtils.equals(post.getPostStatus(), "recycle")) {
+        response.sendError(HttpServletResponse.SC_CONFLICT, "휴지통에 존재하지 않습니다.");
       }
-    } catch (IOException e) {
+    } catch (
+        IOException e) {
       e.printStackTrace();
     }
     return true;
