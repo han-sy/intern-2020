@@ -6,6 +6,7 @@ package com.board.project.blockboard.service;
 
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.board.project.blockboard.common.constant.ConstantData;
+import com.board.project.blockboard.common.firebase.FCMService;
 import com.board.project.blockboard.common.util.Common;
 import com.board.project.blockboard.dto.UserDTO;
 import com.board.project.blockboard.mapper.FileMapper;
@@ -30,7 +31,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 public class UserService {
 
   @Autowired
-  private FileMapper fileMapper;
+  private FCMService fcmService;
   @Autowired
   private UserMapper userMapper;
   @Autowired

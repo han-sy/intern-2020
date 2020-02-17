@@ -20,6 +20,7 @@ public class PostValidation {
   public enum searchOptions {title, writer, content, titleAndContent}
 
   public boolean isTempSavedPost(PostDTO post, HttpServletResponse response) {
+    log.info(post.getPostStatus().toString());
     try {
       JsonParse.setPostStatusFromJsonString(post);
       if (post.getIsTemp()) {
