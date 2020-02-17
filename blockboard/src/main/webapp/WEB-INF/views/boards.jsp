@@ -862,6 +862,29 @@
 <script src="/static/js/updateUI/fileUI.js"></script>
 <script src="/static/js/util/windowLoad.js"></script>
 
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.8.2/firebase-app.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/7.8.2/firebase-analytics.js"></script>
+
+<script>
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyBPEizI-HNUtdAw1avCjibFOsoLMvTxHPE",
+    authDomain: "blockboard-a2fb8.firebaseapp.com",
+    databaseURL: "https://blockboard-a2fb8.firebaseio.com",
+    projectId: "blockboard-a2fb8",
+    storageBucket: "blockboard-a2fb8.appspot.com",
+    messagingSenderId: "324864218271",
+    appId: "1:324864218271:web:b2d5e4445f27b67ff8beaa",
+    measurementId: "G-BJF8KC3TSL"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+</script>
 </body>
 
 </html>
