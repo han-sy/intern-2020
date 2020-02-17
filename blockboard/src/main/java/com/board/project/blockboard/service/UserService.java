@@ -107,10 +107,6 @@ public class UserService {
       userData.put("imageUrl",url);
       userData.put("imageFileName",storedFileName);
       userMapper.updateUserImage(userData);
-      if(url!=null){
-        AmazonRekognitionService amazonRekognitionService = new AmazonRekognitionService();
-        amazonRekognitionService.registerImageToCollection(storedFileName,ConstantData.BUCKET_USER,userID);
-      }
     }
   }
 }

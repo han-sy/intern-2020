@@ -9,7 +9,9 @@ import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.board.project.blockboard.common.constant.ConstantData;
 import com.board.project.blockboard.common.util.Common;
 import com.board.project.blockboard.dto.FileDTO;
+import com.board.project.blockboard.dto.UserDTO;
 import com.board.project.blockboard.mapper.FileMapper;
+import com.board.project.blockboard.mapper.UserMapper;
 import com.google.gson.JsonObject;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -19,6 +21,7 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -37,6 +40,8 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 @Service
 public class FileService {
 
+  @Autowired
+  private UserMapper userMapper;
 
   @Autowired
   private FileMapper fileMapper;
@@ -45,9 +50,7 @@ public class FileService {
 
   public String uploadFile(MultipartHttpServletRequest multipartRequest) throws IOException {
     String uuid = Common.getNewUUID();
-    log.info("uuid : " + uuid);
     Iterator<String> itr = multipartRequest.getFileNames();
-
 
     String fileName = "";
     String url = "";
@@ -56,11 +59,12 @@ public class FileService {
 
       String originFileName = mpf.getOriginalFilename(); //파일명
       String storedFileName = uuid + "_" + originFileName;
-      ObjectMetadata metadata= new ObjectMetadata();
+      ObjectMetadata metadata = new ObjectMetadata();
       AmazonS3Service amazonS3Service = new AmazonS3Service();
 
-      url = amazonS3Service.upload(storedFileName,ConstantData.BUCKET_FILE,mpf.getInputStream(),metadata,"");
-      log.info("url -->"+url);
+      url = amazonS3Service
+          .upload(storedFileName, ConstantData.BUCKET_FILE, mpf.getInputStream(), metadata, "");
+      log.info("url -->" + url);
       long fileSize = mpf.getSize();
       //파일 전체 경로
 
@@ -70,32 +74,33 @@ public class FileService {
       fileName = storedFileName;
 
       Map<String, Object> fileAttributes = new HashMap<String, Object>();
-      fileAttributes.put("resourceUrl",url);
+      fileAttributes.put("resourceUrl", url);
       fileAttributes.put("originFileName", originFileName);
       fileAttributes.put("storedFileName", storedFileName);
       fileAttributes.put("fileSize", fileSize);
       fileMapper.insertFile(fileAttributes);
 
     }
-    System.out.println("fileName => " + fileName);
+    log.info("fileName => " + fileName);
     return fileName;
   }
 
   public void updateIDs(List<FileDTO> fileList) {
     for (FileDTO file : fileList) {
       Map<String, Object> fileAttributes = new HashMap<String, Object>();
-      log.info("fileInfo : "+file.getPostID()+","+file.getCommentID()+","+file.getStoredFileName());
+      log.info("fileInfo : " + file.getPostID() + "," + file.getCommentID() + "," + file
+          .getStoredFileName());
       fileAttributes.put("postID", file.getPostID());
-      fileAttributes.put("commentID",file.getCommentID());
+      fileAttributes.put("commentID", file.getCommentID());
       fileAttributes.put("storedFileName", file.getStoredFileName());
       fileMapper.updateIDsByStoredFileName(fileAttributes);
     }
   }
 
-  public List<FileDTO> getFileList(int postID,int commentID) {
+  public List<FileDTO> getFileList(int postID, int commentID) {
     Map<String, Object> fileAttributes = new HashMap<String, Object>();
-    fileAttributes.put("postID",postID);
-    fileAttributes.put("commentID",commentID);
+    fileAttributes.put("postID", postID);
+    fileAttributes.put("commentID", commentID);
     return fileMapper.selectFileListByEditorID(fileAttributes);
   }
 
@@ -123,8 +128,9 @@ public class FileService {
     try {
       OutputStream os = response.getOutputStream();
 
-      AmazonS3Service amazonS3Service =new AmazonS3Service();
-      S3ObjectInputStream s3is = amazonS3Service.download(fileData.getStoredFileName(),ConstantData.BUCKET_FILE);
+      AmazonS3Service amazonS3Service = new AmazonS3Service();
+      S3ObjectInputStream s3is = amazonS3Service
+          .download(fileData.getStoredFileName(), ConstantData.BUCKET_FILE);
       int ncount = 0;
       byte[] bytes = new byte[512];
 
@@ -134,19 +140,19 @@ public class FileService {
       s3is.close();
       os.close();
     } catch (FileNotFoundException ex) {
-      System.out.println("FileNotFoundException");
+      log.info("FileNotFoundException");
     } catch (IOException ex) {
-      System.out.println("IOException");
+      log.info("IOException");
     }
 
   }
 
   public void deleteFile(String storedFileName) {
     AmazonS3Service amazonS3Service = new AmazonS3Service();
-    if(amazonS3Service.deleteFile(storedFileName,ConstantData.BUCKET_FILE)){
+    if (amazonS3Service.deleteFile(storedFileName, ConstantData.BUCKET_FILE)) {
       log.info("파일삭제 성공");
       fileMapper.deleteFileByStoredFileName(storedFileName);
-    }else{
+    } else {
       log.info("파일삭제 실패");
       //TODO 파일삭제 실패에 대한 에러처리
     }
@@ -157,7 +163,8 @@ public class FileService {
    */
   // TODO 추후 디비 저장 & 삭제 구현할 것 ( 로컬 or AWS S3)
   public String uploadImage(HttpServletResponse response,
-      MultipartHttpServletRequest multiFile) throws Exception {
+      MultipartHttpServletRequest multiFile, HttpServletRequest request) throws Exception {
+    int companyID = Integer.parseInt(request.getAttribute("companyID").toString());
     JsonObject json = new JsonObject();
     PrintWriter printWriter = null;
     OutputStream out = null;
@@ -167,23 +174,25 @@ public class FileService {
         if (file.getContentType().toLowerCase().startsWith("image/")) {
           try {
             String fileName = file.getName();
-            ObjectMetadata metadata= new ObjectMetadata();
+            ObjectMetadata metadata = new ObjectMetadata();
             AmazonS3Service amazonS3Service = new AmazonS3Service();
             fileName = Common.getNewUUID();
             String fileUrl = amazonS3Service
-                .upload(fileName,ConstantData.BUCKET_INLINE,file.getInputStream(),metadata,"");
+                .upload(fileName, ConstantData.BUCKET_INLINE, file.getInputStream(), metadata, "");
             printWriter = response.getWriter();
             response.setContentType("text/html;charset=utf-8");
             response.setCharacterEncoding("utf-8");
-
 
             json.addProperty("uploaded", 1);
             json.addProperty("fileName", fileName);
             json.addProperty("url", fileUrl);
 
-            AmazonRekognitionService amazonRekognitionService = new AmazonRekognitionService();
-            List<String> detectedUsers = amazonRekognitionService.searchFaceMatchingImageCollection(ConstantData.BUCKET_INLINE,fileName );
-            log.info(detectedUsers+"");
+            List<String> detectedUsers = detectedUserList(fileName, companyID);
+            
+            //TODO detectedUsers에 식별된 유저 id 목록 들어있음. 이걸 반환해서 게시글에 태그로 뿌려줘야됨
+            log.info("!!!!!태그하셈" + detectedUsers
+                .toString());
+
             //json.addProperty("detectedUser",detectedUsers.toString()); //TODO detectedUser에 감지된 얼굴정보 들어있음.
             printWriter.println(json);
             //return detectedUsers.toString();
@@ -198,6 +207,33 @@ public class FileService {
       }
     }
     return null;
+  }
+
+  public List<String> detectedUserList(String fileName, int companyID) throws IOException {
+    String collectionID = Common.getNewUUID();
+    AmazonRekognitionService amazonRekognitionService = new AmazonRekognitionService();
+    //collection 등록
+    amazonRekognitionService.registerCollection(collectionID);
+    //collection에 이미지 등록
+    amazonRekognitionService
+        .registerImageToCollection(fileName, ConstantData.BUCKET_INLINE, collectionID);
+    //
+    List<String> detectedUsers = new ArrayList<>();
+    List<UserDTO> userList = userMapper.selectUsersByCompanyID(companyID);
+    for (UserDTO user : userList) {
+
+      if (user.getImageFileName() != null) {
+        boolean result = amazonRekognitionService
+            .searchFaceMatchingImageCollection(ConstantData.BUCKET_USER, user.getImageFileName(),
+                collectionID);
+        if (result) {
+          detectedUsers.add(user.getUserID());
+        }
+      }
+    }
+    amazonRekognitionService.deleteCollection(collectionID);
+
+    return detectedUsers;
   }
 
   /**

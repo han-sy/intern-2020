@@ -15,7 +15,6 @@ public class AuthorityValidation {
 
   public static boolean isValidateUserData(UserDTO frontEndUserData, UserDTO validatedUserData,
       HttpServletResponse response) {
-    log.info("!@#user: " + frontEndUserData);
     boolean isValid = frontEndUserData.equals(validatedUserData);
     try {
       if (!isValid) {
@@ -30,7 +29,6 @@ public class AuthorityValidation {
   }
 
   public static boolean isAdmin(UserDTO frontEndUserData, HttpServletResponse response) {
-    log.info("!@#user: " + frontEndUserData.getUserID() + "," + frontEndUserData.getUserType());
     boolean isValid = frontEndUserData.getUserType().equals("관리자");
     try {
       if (!isValid) {

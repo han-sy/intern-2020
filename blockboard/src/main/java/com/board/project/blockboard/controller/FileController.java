@@ -27,6 +27,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 @RestController
 @RequestMapping("")
 public class FileController {
+
   @Autowired
   private FileService fileService;
 
@@ -43,25 +44,24 @@ public class FileController {
    * 파일 테이블에 postID 업데이트 최종으로 리스트에 추가된 목록을 기준으로
    */
   @PutMapping(value = "/files")
-  public void updateIdToFile(@RequestBody List<FileDTO> fileList ){
-    log.info("!!!"+fileList.toString());
+  public void updateIdToFile(@RequestBody List<FileDTO> fileList) {
     fileService.updateIDs(fileList);
   }
 
   /**
-   *  게시물 id를 가지고 게시물 첨부파일 리스트 가져오기
+   * 게시물 id를 가지고 게시물 첨부파일 리스트 가져오기
    */
   @GetMapping(value = "/files")
-    public List<FileDTO> getFileList(@RequestParam int postID,@RequestParam int commentID){
+  public List<FileDTO> getFileList(@RequestParam int postID, @RequestParam int commentID) {
 
-    return fileService.getFileList(postID,commentID);
+    return fileService.getFileList(postID, commentID);
   }
+
   /**
    * 파일 삭제
    */
   @DeleteMapping(value = "/files")
-  public void deleteFile(@RequestParam String storedFileName){
-    log.info("storedFileName : "+storedFileName);
+  public void deleteFile(@RequestParam String storedFileName) {
     fileService.deleteFile(storedFileName);
   }
 
@@ -70,17 +70,18 @@ public class FileController {
    */
   @GetMapping(value = "/files/{fileid}")
   public void downloadFile(@PathVariable("fileid") int fileID, HttpServletResponse response,
-      HttpServletRequest request){
-    fileService.downloadFile(fileID,response,request);
+      HttpServletRequest request) {
+    fileService.downloadFile(fileID, response, request);
   }
 
   /**
    * @author Woohyeok Jun <woohyeok.jun@worksmobile.com>
    */
   @PostMapping("/imageUpload")
-  public String uploadImage(HttpServletResponse response, MultipartHttpServletRequest multiFile)
+  public String uploadImage(HttpServletResponse response, MultipartHttpServletRequest multiFile,
+      HttpServletRequest request)
       throws Exception {
-    return fileService.uploadImage(response, multiFile);
+    return fileService.uploadImage(response, multiFile, request);
   }
 
   /**

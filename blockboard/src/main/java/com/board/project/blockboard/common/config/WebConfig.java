@@ -22,7 +22,10 @@ public class WebConfig implements WebMvcConfigurer {
       "/functions",
       "/boards",
       "/users",
-      "/userinfo"
+      "/userinfo",
+      "/imageUpload",
+      "/files/**",
+      "/img/**"
   };
   private static final String[] EXCLUDE_PATHS = {
       "/",
