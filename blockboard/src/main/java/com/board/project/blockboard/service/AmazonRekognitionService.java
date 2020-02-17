@@ -66,7 +66,7 @@ public class AmazonRekognitionService {
     IndexFacesRequest indexFacesRequest = new IndexFacesRequest()
         .withImage(image)
         .withQualityFilter(QualityFilter.AUTO)
-        .withMaxFaces(1)
+        .withMaxFaces(5)
         .withCollectionId(ConstantData.COLLECTION_ID)
         .withExternalImageId(userID)
         .withDetectionAttributes("DEFAULT");
@@ -114,16 +114,14 @@ public class AmazonRekognitionService {
     rekognitionClient = null;
   }
 
-  public List<String> searchFaceMatchingImageCollection(String bucket, String fileName,String fileDir)
+  public List<String> searchFaceMatchingImageCollection(String bucket, String fileName)
       throws IOException {
 
-
-    String photo = AmazonS3Service.getFilePath(bucket,fileName,fileDir);
     // Get an image object from S3 bucket.
     Image image=new Image()
         .withS3Object(new S3Object()
             .withBucket(bucket)
-            .withName(photo));
+            .withName(fileName));
     log.info(""+image);
 
     // Search collection for faces similar to the largest face in the image.
@@ -138,7 +136,7 @@ public class AmazonRekognitionService {
     SearchFacesByImageResult searchFacesByImageResult =
         rekognitionClient.searchFacesByImage(searchFacesByImageRequest);
     log.info(""+searchFacesByImageResult);
-    System.out.println("Faces matching largest face in image from" + photo);
+    System.out.println("Faces matching largest face in image from" + fileName);
     List <FaceMatch> faceImageMatches = searchFacesByImageResult.getFaceMatches();
     List<String> detectedUser = new ArrayList<String>();
     for (FaceMatch face: faceImageMatches) {

@@ -48,17 +48,15 @@ public class AmazonS3Service {
     amazonS3 = new AmazonS3Client(awsCredentials);
   }
 
-  public String upload(String fileName, String bucket,InputStream inputStream, ObjectMetadata metadata,
-      String fileDir,String userID) {
+  public String upload(String fileName, String bucket,InputStream inputStream, ObjectMetadata metadata, String userID) {
 
     if (amazonS3 != null) {
       try {
-        String fullPath = getFilePath(bucket,fileName,fileDir);
         amazonS3.putObject(
-            new PutObjectRequest(bucket, fullPath, inputStream, metadata));
+            new PutObjectRequest(bucket, fileName, inputStream, metadata));
 
         return amazonS3.generatePresignedUrl(
-            new GeneratePresignedUrlRequest(bucket, fullPath)).toString();
+            new GeneratePresignedUrlRequest(bucket, fileName)).toString();
       } catch (AmazonClientException ace) {
         ace.printStackTrace();
       } finally {
@@ -87,9 +85,9 @@ public class AmazonS3Service {
   public boolean deleteFile(String fileName, String bucket) {
     if (amazonS3 != null) {
       try {
-        String fullName = ConstantData.AWS_FILE_DIR + "/" + fileName;
-        amazonS3.deleteObject(ConstantData.BUCKET_FILE, fullName);
-        if (amazonS3.doesObjectExist(ConstantData.BUCKET_FILE, fullName)) {
+
+        amazonS3.deleteObject(ConstantData.BUCKET_FILE, fileName);
+        if (amazonS3.doesObjectExist(ConstantData.BUCKET_FILE, fileName)) {
           return false;
         }
         return true;
@@ -104,13 +102,6 @@ public class AmazonS3Service {
     return false;
   }
 
-  public static String getFilePath(String bucket,String fileName, String fileDir){
-    if(bucket.equals(ConstantData.BUCKET_USER)){
-      return fileName;
-    }else{
-      return fileDir + "/" + fileName;
-    }
-  }
 
 
 }

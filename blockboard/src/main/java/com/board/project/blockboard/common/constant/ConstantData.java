@@ -20,11 +20,12 @@ public class ConstantData {
   public static final int BOARD_POPULAR = -6;
 
   public static final String ATTACH_FILE_PATH = "C:/test";
-  public static final String AWS_FILE_DIR = "file";
-  public static final String AWS_INLINE_DIR = "inline";
+/*  public static final String AWS_FILE_DIR = "file";
+  public static final String AWS_INLINE_DIR = "inline";*/
   public static final String BUCKET_FILE ="block-board";
   public static final String BUCKET_USER = "block-board-user";
   public static final String COLLECTION_ID = "collectionUser";
+  public static final String BUCKET_INLINE ="block-board-inline";
 
   public static final class FunctionID {
 

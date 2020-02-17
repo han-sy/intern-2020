@@ -96,7 +96,7 @@ public class UserService {
       ObjectMetadata metadata= new ObjectMetadata();
       AmazonS3Service amazonS3Service = new AmazonS3Service();
 
-      url = amazonS3Service.upload(storedFileName,ConstantData.BUCKET_USER,mpf.getInputStream(),metadata,"",userID);
+      url = amazonS3Service.upload(storedFileName,ConstantData.BUCKET_USER,mpf.getInputStream(),metadata,userID);
 
       log.info("url -->"+url);
       //파일 전체 경로

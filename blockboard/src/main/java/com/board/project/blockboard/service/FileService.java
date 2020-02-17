@@ -59,7 +59,7 @@ public class FileService {
       ObjectMetadata metadata= new ObjectMetadata();
       AmazonS3Service amazonS3Service = new AmazonS3Service();
 
-      url = amazonS3Service.upload(storedFileName,ConstantData.BUCKET_FILE,mpf.getInputStream(),metadata,ConstantData.AWS_FILE_DIR,"");
+      url = amazonS3Service.upload(storedFileName,ConstantData.BUCKET_FILE,mpf.getInputStream(),metadata,"");
       log.info("url -->"+url);
       long fileSize = mpf.getSize();
       //파일 전체 경로
@@ -124,7 +124,7 @@ public class FileService {
       OutputStream os = response.getOutputStream();
 
       AmazonS3Service amazonS3Service =new AmazonS3Service();
-      S3ObjectInputStream s3is = amazonS3Service.download(ConstantData.AWS_FILE_DIR+"/"+fileData.getStoredFileName(),ConstantData.BUCKET_FILE);
+      S3ObjectInputStream s3is = amazonS3Service.download(fileData.getStoredFileName(),ConstantData.BUCKET_FILE);
       int ncount = 0;
       byte[] bytes = new byte[512];
 
@@ -171,7 +171,7 @@ public class FileService {
             AmazonS3Service amazonS3Service = new AmazonS3Service();
             fileName = Common.getNewUUID();
             String fileUrl = amazonS3Service
-                .upload(fileName,ConstantData.BUCKET_FILE,file.getInputStream(),metadata,ConstantData.AWS_INLINE_DIR,"");
+                .upload(fileName,ConstantData.BUCKET_INLINE,file.getInputStream(),metadata,"");
             printWriter = response.getWriter();
             response.setContentType("text/html;charset=utf-8");
             response.setCharacterEncoding("utf-8");
@@ -182,11 +182,11 @@ public class FileService {
             json.addProperty("url", fileUrl);
 
             AmazonRekognitionService amazonRekognitionService = new AmazonRekognitionService();
-            List<String> detectedUsers = amazonRekognitionService.searchFaceMatchingImageCollection(ConstantData.BUCKET_FILE,fileName,ConstantData.AWS_INLINE_DIR );
+            List<String> detectedUsers = amazonRekognitionService.searchFaceMatchingImageCollection(ConstantData.BUCKET_INLINE,fileName );
             log.info(detectedUsers+"");
             //json.addProperty("detectedUser",detectedUsers.toString()); //TODO detectedUser에 감지된 얼굴정보 들어있음.
             printWriter.println(json);
-            return detectedUsers.toString();
+            //return detectedUsers.toString();
           } catch (IOException e) {
             e.printStackTrace();
           } finally {
