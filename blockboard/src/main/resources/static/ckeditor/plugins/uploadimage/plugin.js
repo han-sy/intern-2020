@@ -83,7 +83,6 @@
 					var $img = this.parts.img.$,
 						width = upload.responseData.width || $img.naturalWidth,
 						height = upload.responseData.height || $img.naturalHeight;
-
 					// Set width and height to prevent blinking.
 					this.replaceWith( '<img src="' + upload.url + '" ' +
 						'width="' + width + '" ' +

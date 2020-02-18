@@ -35,7 +35,6 @@ CKEDITOR.dialog.add( 'image2', function( editor ) {
 				lockButtonId: lockButtonId,
 				resetButtonId: resetButtonId
 			} ),
-
 		helpers = CKEDITOR.plugins.image2,
 
 		// Editor instance configuration.
@@ -426,12 +425,13 @@ CKEDITOR.dialog.add( 'image2', function( editor ) {
 					{
 						id: 'alt',
 						type: 'text',
+						style: 'display:none;',
 						label: lang.alt,
 						setup: function( widget ) {
 							this.setValue( widget.data.alt );
 						},
 						commit: function( widget ) {
-							widget.setData( 'alt', this.getValue() );
+							widget.setData('alt', this.getValue());
 						},
 						validate: editor.config.image2_altRequired === true ? CKEDITOR.dialog.validate.notEmpty( lang.altMissing ) : null
 					},

@@ -333,7 +333,7 @@
 
 								loader.on( 'uploaded', function( evt ) {
 									var response = evt.sender.responseData;
-									setUrl.call( evt.sender.editor, response.url, response.message );
+									setUrl.call( evt.sender.editor, response.url, response.message, response.detectedUser );
 								} );
 
 								// Return non-false value will disable fileButton in dialogui,
@@ -373,7 +373,7 @@
 	//
 	// @param {String}
 	//            url The url of a file.
-	function updateTargetElement( url, sourceElement ) {
+	function updateTargetElement( url, sourceElement, detectedUser ) {
 		var dialog = sourceElement.getDialog();
 		var targetElement = sourceElement.filebrowser.target || null;
 
@@ -381,9 +381,13 @@
 		if ( targetElement ) {
 			var target = targetElement.split( ':' );
 			var element = dialog.getContentElement( target[ 0 ], target[ 1 ] );
+			var element2 = dialog.getContentElement( target[ 0 ], "alt" );
 			if ( element ) {
 				element.setValue( url );
 				dialog.selectPage( target[ 0 ] );
+			}
+			if( element2 && detectedUser) {
+				element2.setValue(JSON.stringify(detectedUser));
 			}
 		}
 	}
@@ -410,7 +414,7 @@
 		return ( elementFileBrowser && elementFileBrowser.url );
 	}
 
-	function setUrl( fileUrl, data ) {
+	function setUrl( fileUrl, data, detectedUser ) {
 		var dialog = this._.filebrowserSe.getDialog(),
 			targetInput = this._.filebrowserSe[ 'for' ],
 			onSelect = this._.filebrowserSe.filebrowser.onSelect;
@@ -429,7 +433,7 @@
 			alert( data ); // jshint ignore:line
 
 		if ( fileUrl )
-			updateTargetElement( fileUrl, this._.filebrowserSe );
+			updateTargetElement( fileUrl, this._.filebrowserSe, detectedUser );
 	}
 
 	CKEDITOR.plugins.add( 'filebrowser', {

@@ -183,7 +183,6 @@
 					filesCount = dataTransfer.getFilesCount(),
 					loadMethod = def.loadMethod || 'loadAndUpload',
 					file, i;
-
 				if ( data.dataValue || !filesCount ) {
 					return;
 				}
@@ -334,7 +333,6 @@
 				if ( wasSelected ) {
 					bookmark = range.createBookmark();
 				}
-
 				editable.insertHtmlIntoRange( data, range, mode );
 
 				editor.widgets.checkWidgets( { initOnlyNew: true } );

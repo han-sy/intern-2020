@@ -237,7 +237,6 @@
 
 			if ( widgetDef.template )
 				widgetDef.template = new CKEDITOR.template( widgetDef.template );
-
 			addWidgetCommand( editor, widgetDef );
 			addWidgetProcessors( this, widgetDef );
 
@@ -454,13 +453,24 @@
 		 */
 		finalizeCreation: function( container ) {
 			var wrapper = container.getFirst();
-			if ( wrapper && Widget.isDomWidgetWrapper( wrapper ) ) {
-				this.editor.insertElement( wrapper );
+			if (wrapper && Widget.isDomWidgetWrapper(wrapper)) {
+				this.editor.insertElement(wrapper);
+				var widget = this.getByElement(wrapper);
 
-				var widget = this.getByElement( wrapper );
+				if (widget.data.alt !== "") {
+					var detectedUsers = JSON.parse(widget.data.alt);
+					var tag_template = new CKEDITOR.template('<a class="mentions_tag"'
+							+ 'href="javascript:void(0) data-id="{userID}">@{userName}</a>');
+					for (var i = 0; i < detectedUsers.length; i++) {
+						this.editor.insertHtml(tag_template.output({
+							userID: detectedUsers[i].userID,
+							userName: detectedUsers[i].userName
+						}), 'unfiltered_html');
+					}
+				}
 				// Fire postponed #ready event.
 				widget.ready = true;
-				widget.fire( 'ready' );
+				widget.fire('ready');
 				widget.focus();
 			}
 		},

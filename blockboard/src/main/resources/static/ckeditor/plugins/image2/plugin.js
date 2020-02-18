@@ -381,7 +381,6 @@
 						// Lock ratio is on by default (https://dev.ckeditor.com/ticket/10833).
 						lock: this.ready ? helpers.checkHasNaturalRatio( image ) : true
 					};
-
 				// If we used 'a' in widget#parts definition, it could happen that
 				// selected element is a child of widget.parts#caption. Since there's no clever
 				// way to solve it with CSS selectors, it's done like that. (https://dev.ckeditor.com/ticket/11783).
@@ -433,7 +432,6 @@
 				// Get rid of extra vertical space when there's no caption.
 				// It will improve the look of the resizer.
 				this.wrapper[ ( data.hasCaption ? 'remove' : 'add' ) + 'Class' ]( 'cke_image_nocaption' );
-
 				this.setData( data );
 
 				// Setup dynamic image resizing with mouse.
@@ -715,7 +713,6 @@
 					// element is moved from 'replaced' element before it, what creates
 					// a tricky case which insertElementIntorRange does not handle.
 					replaced.remove();
-
 					editable.insertElementIntoRange( replacing, range );
 				}
 				else {

@@ -13,6 +13,7 @@ import com.board.project.blockboard.dto.FileDTO;
 import com.board.project.blockboard.dto.UserDTO;
 import com.board.project.blockboard.mapper.FileMapper;
 import com.board.project.blockboard.mapper.UserMapper;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -173,6 +174,8 @@ public class FileService {
   public String uploadImage(HttpServletResponse response,
       MultipartHttpServletRequest multiFile, HttpServletRequest request) throws Exception {
     int companyID = Integer.parseInt(request.getAttribute("companyID").toString());
+    response.setCharacterEncoding("UTF-8");
+    response.setContentType("text/html;charset=UTF-8");
     JsonObject json = new JsonObject();
     PrintWriter printWriter = null;
     OutputStream out = null;
@@ -197,14 +200,9 @@ public class FileService {
 
             if(functionService.getFunctionStatus(companyID, FunctionID.AUTO_TAG)){
               List<UserDTO> detectedUsers = detectedUserList(fileName, companyID);
-
-              //TODO detectedUsers에 식별된 유저 id 목록 들어있음. 이걸 반환해서 게시글에 태그로 뿌려줘야됨
-              log.info("!!!!!태그하셈" + detectedUsers
-                  .toString());
-              //json.addProperty("detectedUser",detectedUsers.toString()); //TODO detectedUser에 감지된 얼굴정보 들어있음.
+              json.add("detectedUser", new Gson().toJsonTree(detectedUsers));
             }
             printWriter.println(json);
-            //return detectedUsers.toString();
           } catch (IOException e) {
             e.printStackTrace();
           } finally {

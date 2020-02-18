@@ -638,6 +638,11 @@
 						valuesToCopy = [ 'message', 'fileName', 'url' ],
 						success = loader.editor.fire( 'fileUploadResponse', data );
 
+					// 만약 자동 태그 on 이면, key 값 추가
+					if (document.getElementById("functionAble7").getAttribute("value") === "on") {
+						valuesToCopy.push('detectedUsers');
+					}
+					console.log("data = ", data);
 					for ( var i = 0; i < valuesToCopy.length; i++ ) {
 						var key = valuesToCopy[ i ];
 						if ( typeof data[ key ] === 'string' ) {
