@@ -120,6 +120,7 @@ public class FileService {
     if(!functionValidation.isFunctionOn(companyID, FunctionID.ATTACH_FILE,response)){
       return;
     }
+
     FileDTO fileData = fileMapper.selectFileByFileID(fileID);
 
     String browser = request.getHeader("User-Agent");//브라우저 종류 가져옴.
@@ -144,7 +145,7 @@ public class FileService {
 
       AmazonS3Service amazonS3Service = new AmazonS3Service();
       S3ObjectInputStream s3is = amazonS3Service
-          .download(fileData.getStoredFileName(), ConstantData.BUCKET_FILE);
+          .download(fileData.getStoredFileName(), ConstantData.BUCKET_FILE,response);
       int ncount = 0;
       byte[] bytes = new byte[512];
 
@@ -168,7 +169,7 @@ public class FileService {
       return;
     }
     AmazonS3Service amazonS3Service = new AmazonS3Service();
-    if (amazonS3Service.deleteFile(storedFileName, ConstantData.BUCKET_FILE)) {
+    if (amazonS3Service.deleteFile(storedFileName, ConstantData.BUCKET_FILE,response)) {
       log.info("파일삭제 성공");
       fileMapper.deleteFileByStoredFileName(storedFileName);
     } else {
