@@ -196,7 +196,7 @@ public class FileService {
             json.addProperty("url", fileUrl);
 
             if(functionService.getFunctionStatus(companyID, FunctionID.AUTO_TAG)){
-              List<String> detectedUsers = detectedUserList(fileName, companyID);
+              List<UserDTO> detectedUsers = detectedUserList(fileName, companyID);
 
               //TODO detectedUsers에 식별된 유저 id 목록 들어있음. 이걸 반환해서 게시글에 태그로 뿌려줘야됨
               log.info("!!!!!태그하셈" + detectedUsers
@@ -218,7 +218,7 @@ public class FileService {
     return null;
   }
 
-  public List<String> detectedUserList(String fileName, int companyID) throws IOException {
+  public List<UserDTO> detectedUserList(String fileName, int companyID) throws IOException {
     String collectionID = Common.getNewUUID();
     AmazonRekognitionService amazonRekognitionService = new AmazonRekognitionService();
     //collection 등록
@@ -227,7 +227,7 @@ public class FileService {
     amazonRekognitionService
         .registerImageToCollection(fileName, ConstantData.BUCKET_INLINE, collectionID);
     //
-    List<String> detectedUsers = new ArrayList<>();
+    List<UserDTO> detectedUsers = new ArrayList<>();
     List<UserDTO> userList = userMapper.selectUsersByCompanyID(companyID);
     DetectThread detectThread = null;
     for (UserDTO user : userList) {
@@ -266,9 +266,9 @@ public class FileService {
     private String collectionID;
     private AmazonRekognitionService amazonRekognitionService;
     private boolean detected;
-    private List<String> detectedUsers;
+    private List<UserDTO> detectedUsers;
 
-    DetectThread(UserDTO user, String collectionID, AmazonRekognitionService amazonRekognitionService, List<String> detectedUsers){
+    DetectThread(UserDTO user, String collectionID, AmazonRekognitionService amazonRekognitionService, List<UserDTO> detectedUsers){
       this.user = user;
       this.collectionID = collectionID;
       this.amazonRekognitionService = amazonRekognitionService;
@@ -285,7 +285,7 @@ public class FileService {
                   user.getImageFileName(),
                   collectionID);
           if(detected){
-            detectedUsers.add(user.getUserID());
+            detectedUsers.add(user);
           }
         } catch (IOException e) {
           e.printStackTrace();
