@@ -24,7 +24,7 @@ public class FileValidation {
         throw new FileValidException("존재하지 않는 파일입니다.");
       }
     }catch (FileValidException fve){
-      fve.sendError(response,"존재하지 않는 파일입니다. 로그인 화면으로 돌아갑니다.");
+      fve.sendError(response,"존재하지 않는 파일입니다. ");
     }finally {
       return isValid;
     }
