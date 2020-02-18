@@ -9,6 +9,7 @@ import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.board.project.blockboard.common.constant.ConstantData;
 import com.board.project.blockboard.common.constant.ConstantData.FunctionID;
 import com.board.project.blockboard.common.util.Common;
+import com.board.project.blockboard.common.validation.FileValidation;
 import com.board.project.blockboard.common.validation.FunctionValidation;
 import com.board.project.blockboard.dto.FileDTO;
 import com.board.project.blockboard.dto.UserDTO;
@@ -51,11 +52,15 @@ public class FileService {
   @Autowired
   FunctionValidation functionValidation;
 
-  public String uploadFile(MultipartHttpServletRequest multipartRequest,HttpServletRequest request,HttpServletResponse response) throws IOException {
+  @Autowired
+  FileValidation fileValidation;
+
+  public String uploadFile(MultipartHttpServletRequest multipartRequest, HttpServletRequest request,
+      HttpServletResponse response) throws IOException {
     int companyID = Integer.parseInt(request.getAttribute("companyID").toString());
     String uuid = Common.getNewUUID();
     Iterator<String> itr = multipartRequest.getFileNames();
-    if(!functionValidation.isFunctionOn(companyID, FunctionID.ATTACH_FILE,response)){
+    if (!functionValidation.isFunctionOn(companyID, FunctionID.ATTACH_FILE, response)) {
       return null;
     }
     String fileName = "";
@@ -94,7 +99,7 @@ public class FileService {
   public void updateIDs(List<FileDTO> fileList, HttpServletRequest request,
       HttpServletResponse response) {
     int companyID = Integer.parseInt(request.getAttribute("companyID").toString());
-    if(!functionValidation.isFunctionOn(companyID, FunctionID.ATTACH_FILE,response)){
+    if (!functionValidation.isFunctionOn(companyID, FunctionID.ATTACH_FILE, response)) {
       return;
     }
     for (FileDTO file : fileList) {
@@ -117,7 +122,7 @@ public class FileService {
 
   public void downloadFile(int fileID, HttpServletResponse response, HttpServletRequest request) {
     int companyID = Integer.parseInt(request.getAttribute("companyID").toString());
-    if(!functionValidation.isFunctionOn(companyID, FunctionID.ATTACH_FILE,response)){
+    if (!functionValidation.isFunctionOn(companyID, FunctionID.ATTACH_FILE, response)) {
       return;
     }
 
@@ -145,7 +150,7 @@ public class FileService {
 
       AmazonS3Service amazonS3Service = new AmazonS3Service();
       S3ObjectInputStream s3is = amazonS3Service
-          .download(fileData.getStoredFileName(), ConstantData.BUCKET_FILE,response);
+          .download(fileData.getStoredFileName(), ConstantData.BUCKET_FILE, response);
       int ncount = 0;
       byte[] bytes = new byte[512];
 
@@ -165,11 +170,12 @@ public class FileService {
   public void deleteFile(String storedFileName, HttpServletRequest request,
       HttpServletResponse response) {
     int companyID = Integer.parseInt(request.getAttribute("companyID").toString());
-    if(!functionValidation.isFunctionOn(companyID, FunctionID.ATTACH_FILE,response)){
+    if (!functionValidation.isFunctionOn(companyID, FunctionID.ATTACH_FILE, response)
+        || !fileValidation.isExistFileInDatabase(storedFileName, response)) {
       return;
     }
     AmazonS3Service amazonS3Service = new AmazonS3Service();
-    if (amazonS3Service.deleteFile(storedFileName, ConstantData.BUCKET_FILE,response)) {
+    if (amazonS3Service.deleteFile(storedFileName, ConstantData.BUCKET_FILE, response)) {
       log.info("파일삭제 성공");
       fileMapper.deleteFileByStoredFileName(storedFileName);
     } else {
@@ -185,7 +191,7 @@ public class FileService {
   public String uploadImage(HttpServletResponse response,
       MultipartHttpServletRequest multiFile, HttpServletRequest request) throws Exception {
     int companyID = Integer.parseInt(request.getAttribute("companyID").toString());
-    if(!functionValidation.isFunctionOn(companyID, FunctionID.ATTACH_FILE,response)){
+    if (!functionValidation.isFunctionOn(companyID, FunctionID.ATTACH_FILE, response)) {
       return null;
     }
     JsonObject json = new JsonObject();
@@ -210,7 +216,7 @@ public class FileService {
             json.addProperty("fileName", fileName);
             json.addProperty("url", fileUrl);
 
-            if(functionService.getFunctionStatus(companyID, FunctionID.AUTO_TAG)){
+            if (functionService.getFunctionStatus(companyID, FunctionID.AUTO_TAG)) {
               List<UserDTO> detectedUsers = detectedUserList(fileName, companyID);
 
               //TODO detectedUsers에 식별된 유저 id 목록 들어있음. 이걸 반환해서 게시글에 태그로 뿌려줘야됨
@@ -246,48 +252,53 @@ public class FileService {
     List<UserDTO> userList = userMapper.selectUsersByCompanyID(companyID);
     DetectThread detectThread = null;
     for (UserDTO user : userList) {
-      detectThread = new DetectThread(user,collectionID,amazonRekognitionService,detectedUsers);
+      detectThread = new DetectThread(user, collectionID, amazonRekognitionService, detectedUsers);
       detectThread.start();
-
     }
     try {
       detectThread.join();
     } catch (InterruptedException e) {
       e.printStackTrace();
-    }
-    finally {
+    } finally {
       log.info("종료");
-      if(collectionID!=null)
+      if (collectionID != null) {
         amazonRekognitionService.deleteCollection(collectionID);
+      }
       return detectedUsers;
     }
   }
 
+  public boolean isExistFile(String fileName) {
+    return fileMapper.selectFileCheckByFileName(fileName);
+  }
 
-  class DetectThread extends Thread{
+
+  class DetectThread extends Thread {
+
     private UserDTO user;
     private String collectionID;
     private AmazonRekognitionService amazonRekognitionService;
     private boolean detected;
     private List<UserDTO> detectedUsers;
 
-    DetectThread(UserDTO user, String collectionID, AmazonRekognitionService amazonRekognitionService, List<UserDTO> detectedUsers){
+    DetectThread(UserDTO user, String collectionID,
+        AmazonRekognitionService amazonRekognitionService, List<UserDTO> detectedUsers) {
       this.user = user;
       this.collectionID = collectionID;
       this.amazonRekognitionService = amazonRekognitionService;
-      this.detected =false;
+      this.detected = false;
       this.detectedUsers = detectedUsers;
     }
 
     @Override
-    public void run(){
+    public void run() {
       if (user.getImageFileName() != null) {
         try {
           detected = amazonRekognitionService
               .searchFaceMatchingImageCollection(ConstantData.BUCKET_USER,
                   user.getImageFileName(),
                   collectionID);
-          if(detected){
+          if (detected) {
             detectedUsers.add(user);
           }
         } catch (IOException e) {

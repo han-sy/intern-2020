@@ -23,4 +23,6 @@ public interface FileMapper {
   FileDTO selectFileByFileID(int fileID);
 
   void deleteFileByStoredFileName(String storedFileName);
+
+  boolean selectFileCheckByFileName(String fileName);
 }

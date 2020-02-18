@@ -60,6 +60,12 @@
     WHERE  file_id = #{fileID};
   </select>
 
+  <select id="selectFileCheckByFileName" parameterType="int" resultType="boolean">
+    SELECT IF(Count(file_id) > 0, TRUE, FALSE)
+    FROM files
+    WHERE file_name = #{fileName};
+  </select>
+
   <delete id="deleteFileByStoredFileName" parameterType="string">
     DELETE FROM files
     WHERE  stored_file_name = #{storedFileName};

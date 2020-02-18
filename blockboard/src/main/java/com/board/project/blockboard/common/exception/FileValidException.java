@@ -18,7 +18,7 @@ public class FileValidException extends Exception {
   public void sendError(HttpServletResponse response, String msg){
 
     try {
-      response.sendError(HttpServletResponse.SC_FORBIDDEN,msg);
+      response.sendError(HttpServletResponse.SC_CONFLICT,msg);
       this.printStackTrace();
     } catch (IOException e) {
       e.printStackTrace();
