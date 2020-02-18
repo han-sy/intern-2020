@@ -35,8 +35,9 @@ public class FileController {
    * 드래그앤 드랍후 파일을 바로 업로드
    */
   @PostMapping(value = "/files")
-  public String uploadFile(MultipartHttpServletRequest multipartRequest) throws IOException {
-    return fileService.uploadFile(multipartRequest);
+  public String uploadFile(MultipartHttpServletRequest multipartRequest, HttpServletRequest request,
+      HttpServletResponse response) throws IOException {
+    return fileService.uploadFile(multipartRequest, request, response);
 
   }
 
@@ -44,8 +45,9 @@ public class FileController {
    * 파일 테이블에 postID 업데이트 최종으로 리스트에 추가된 목록을 기준으로
    */
   @PutMapping(value = "/files")
-  public void updateIdToFile(@RequestBody List<FileDTO> fileList) {
-    fileService.updateIDs(fileList);
+  public void updateIdToFile(@RequestBody List<FileDTO> fileList, HttpServletRequest request,
+      HttpServletResponse response) {
+    fileService.updateIDs(fileList,request,response);
   }
 
   /**
@@ -61,8 +63,9 @@ public class FileController {
    * 파일 삭제
    */
   @DeleteMapping(value = "/files")
-  public void deleteFile(@RequestParam String storedFileName) {
-    fileService.deleteFile(storedFileName);
+  public void deleteFile(@RequestParam String storedFileName, HttpServletRequest request,
+      HttpServletResponse response) {
+    fileService.deleteFile(storedFileName,request,response);
   }
 
   /**
@@ -84,12 +87,5 @@ public class FileController {
     return fileService.uploadImage(response, multiFile, request);
   }
 
-  /**
-   * @author Woohyeok Jun <woohyeok.jun@worksmobile.com>
-   */
-  @GetMapping("/img/{fileName}")
-  public byte[] getImage(@PathVariable("fileName") String fileName)
-      throws IOException {
-    return fileService.getImage(fileName);
-  }
+
 }

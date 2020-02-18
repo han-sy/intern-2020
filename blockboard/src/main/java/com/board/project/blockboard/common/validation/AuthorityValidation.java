@@ -7,11 +7,16 @@ package com.board.project.blockboard.common.validation;
 
 import com.board.project.blockboard.common.exception.UserValidException;
 import com.board.project.blockboard.dto.UserDTO;
+import com.board.project.blockboard.service.FunctionService;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Slf4j
 public class AuthorityValidation {
+
+  @Autowired
+  private FunctionService functionService;
 
   public static boolean isValidateUserData(UserDTO frontEndUserData, UserDTO validatedUserData,
       HttpServletResponse response) {
@@ -40,6 +45,8 @@ public class AuthorityValidation {
       return isValid;
     }
   }
+
+
 
 
 }

@@ -9,32 +9,26 @@ import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.board.project.blockboard.common.constant.ConstantData;
 import com.board.project.blockboard.common.constant.ConstantData.FunctionID;
 import com.board.project.blockboard.common.util.Common;
+import com.board.project.blockboard.common.validation.FunctionValidation;
 import com.board.project.blockboard.dto.FileDTO;
 import com.board.project.blockboard.dto.UserDTO;
 import com.board.project.blockboard.mapper.FileMapper;
 import com.board.project.blockboard.mapper.UserMapper;
 import com.google.gson.JsonObject;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.io.IOUtils;
 import org.jsoup.internal.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,12 +48,16 @@ public class FileService {
   @Autowired
   private FileMapper fileMapper;
 
-  private final String IMAGE_PATH = "/home1/irteam/storage";
+  @Autowired
+  FunctionValidation functionValidation;
 
-  public String uploadFile(MultipartHttpServletRequest multipartRequest) throws IOException {
+  public String uploadFile(MultipartHttpServletRequest multipartRequest,HttpServletRequest request,HttpServletResponse response) throws IOException {
+    int companyID = Integer.parseInt(request.getAttribute("companyID").toString());
     String uuid = Common.getNewUUID();
     Iterator<String> itr = multipartRequest.getFileNames();
-
+    if(!functionValidation.isFunctionOn(companyID, FunctionID.ATTACH_FILE,response)){
+      return null;
+    }
     String fileName = "";
     String url = "";
     while (itr.hasNext()) {
@@ -93,7 +91,12 @@ public class FileService {
     return fileName;
   }
 
-  public void updateIDs(List<FileDTO> fileList) {
+  public void updateIDs(List<FileDTO> fileList, HttpServletRequest request,
+      HttpServletResponse response) {
+    int companyID = Integer.parseInt(request.getAttribute("companyID").toString());
+    if(!functionValidation.isFunctionOn(companyID, FunctionID.ATTACH_FILE,response)){
+      return;
+    }
     for (FileDTO file : fileList) {
       Map<String, Object> fileAttributes = new HashMap<String, Object>();
       log.info("fileInfo : " + file.getPostID() + "," + file.getCommentID() + "," + file
@@ -113,7 +116,10 @@ public class FileService {
   }
 
   public void downloadFile(int fileID, HttpServletResponse response, HttpServletRequest request) {
-
+    int companyID = Integer.parseInt(request.getAttribute("companyID").toString());
+    if(!functionValidation.isFunctionOn(companyID, FunctionID.ATTACH_FILE,response)){
+      return;
+    }
     FileDTO fileData = fileMapper.selectFileByFileID(fileID);
 
     String browser = request.getHeader("User-Agent");//브라우저 종류 가져옴.
@@ -155,7 +161,12 @@ public class FileService {
 
   }
 
-  public void deleteFile(String storedFileName) {
+  public void deleteFile(String storedFileName, HttpServletRequest request,
+      HttpServletResponse response) {
+    int companyID = Integer.parseInt(request.getAttribute("companyID").toString());
+    if(!functionValidation.isFunctionOn(companyID, FunctionID.ATTACH_FILE,response)){
+      return;
+    }
     AmazonS3Service amazonS3Service = new AmazonS3Service();
     if (amazonS3Service.deleteFile(storedFileName, ConstantData.BUCKET_FILE)) {
       log.info("파일삭제 성공");
@@ -173,6 +184,9 @@ public class FileService {
   public String uploadImage(HttpServletResponse response,
       MultipartHttpServletRequest multiFile, HttpServletRequest request) throws Exception {
     int companyID = Integer.parseInt(request.getAttribute("companyID").toString());
+    if(!functionValidation.isFunctionOn(companyID, FunctionID.ATTACH_FILE,response)){
+      return null;
+    }
     JsonObject json = new JsonObject();
     PrintWriter printWriter = null;
     OutputStream out = null;
@@ -248,18 +262,6 @@ public class FileService {
     }
   }
 
-  /**
-   * @author Woohyeok Jun <woohyeok.jun@worksmobile.com>
-   */
-  public byte[] getImage(String fileName)
-      throws IOException {
-    String path = IMAGE_PATH + ("/img/") + fileName;
-    log.info(path);
-    InputStream in = new FileInputStream(path);
-    byte[] imageByteArray = IOUtils.toByteArray(in);
-    in.close();
-    return imageByteArray;
-  }
 
   class DetectThread extends Thread{
     private UserDTO user;
