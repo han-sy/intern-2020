@@ -110,6 +110,7 @@ public class AmazonRekognitionService {
           rekognitionClient.searchFacesByImage(searchFacesByImageRequest);
       List<FaceMatch> faceImageMatches = searchFacesByImageResult.getFaceMatches();
       if (faceImageMatches.size() > 0) {
+        log.info("감지 : "+fileName);
         return true;
       }
       return false;

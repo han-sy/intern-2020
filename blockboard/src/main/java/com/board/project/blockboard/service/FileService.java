@@ -22,10 +22,14 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -188,7 +192,7 @@ public class FileService {
             json.addProperty("url", fileUrl);
 
             List<String> detectedUsers = detectedUserList(fileName, companyID);
-            
+
             //TODO detectedUsers에 식별된 유저 id 목록 들어있음. 이걸 반환해서 게시글에 태그로 뿌려줘야됨
             log.info("!!!!!태그하셈" + detectedUsers
                 .toString());
@@ -220,20 +224,22 @@ public class FileService {
     //
     List<String> detectedUsers = new ArrayList<>();
     List<UserDTO> userList = userMapper.selectUsersByCompanyID(companyID);
+    DetectThread detectThread = null;
     for (UserDTO user : userList) {
+      detectThread = new DetectThread(user,collectionID,amazonRekognitionService,detectedUsers);
+      detectThread.start();
 
-      if (user.getImageFileName() != null) {
-        boolean result = amazonRekognitionService
-            .searchFaceMatchingImageCollection(ConstantData.BUCKET_USER, user.getImageFileName(),
-                collectionID);
-        if (result) {
-          detectedUsers.add(user.getUserID());
-        }
-      }
     }
-    amazonRekognitionService.deleteCollection(collectionID);
-
-    return detectedUsers;
+    try {
+      detectThread.join();
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+    finally {
+      log.info("종료");
+      amazonRekognitionService.deleteCollection(collectionID);
+      return detectedUsers;
+    }
   }
 
   /**
@@ -247,6 +253,39 @@ public class FileService {
     byte[] imageByteArray = IOUtils.toByteArray(in);
     in.close();
     return imageByteArray;
+  }
+
+  class DetectThread extends Thread{
+    private UserDTO user;
+    private String collectionID;
+    private AmazonRekognitionService amazonRekognitionService;
+    private boolean detected;
+    private List<String> detectedUsers;
+
+    DetectThread(UserDTO user, String collectionID, AmazonRekognitionService amazonRekognitionService, List<String> detectedUsers){
+      this.user = user;
+      this.collectionID = collectionID;
+      this.amazonRekognitionService = amazonRekognitionService;
+      this.detected =false;
+      this.detectedUsers = detectedUsers;
+    }
+
+    @Override
+    public void run(){
+      if (user.getImageFileName() != null) {
+        try {
+          detected = amazonRekognitionService
+              .searchFaceMatchingImageCollection(ConstantData.BUCKET_USER,
+                  user.getImageFileName(),
+                  collectionID);
+          if(detected){
+            detectedUsers.add(user.getUserID());
+          }
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
+    }
   }
 }
 
