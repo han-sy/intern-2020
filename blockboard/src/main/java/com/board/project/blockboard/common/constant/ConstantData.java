@@ -35,6 +35,7 @@ public class ConstantData {
     public static final int INLINE_IMAGE = 4;
     public static final int TEMP_SAVE = 5;
     public static final int STICKER = 6;
+    public static final int AUTO_TAG = 7;
   }
 
 }

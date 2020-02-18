@@ -7,6 +7,7 @@ package com.board.project.blockboard.service;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.board.project.blockboard.common.constant.ConstantData;
+import com.board.project.blockboard.common.constant.ConstantData.FunctionID;
 import com.board.project.blockboard.common.util.Common;
 import com.board.project.blockboard.dto.FileDTO;
 import com.board.project.blockboard.dto.UserDTO;
@@ -43,6 +44,9 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 @Slf4j
 @Service
 public class FileService {
+
+  @Autowired
+  private FunctionService functionService;
 
   @Autowired
   private UserMapper userMapper;
@@ -191,13 +195,14 @@ public class FileService {
             json.addProperty("fileName", fileName);
             json.addProperty("url", fileUrl);
 
-            List<String> detectedUsers = detectedUserList(fileName, companyID);
+            if(functionService.getFunctionStatus(companyID, FunctionID.AUTO_TAG)){
+              List<String> detectedUsers = detectedUserList(fileName, companyID);
 
-            //TODO detectedUsers에 식별된 유저 id 목록 들어있음. 이걸 반환해서 게시글에 태그로 뿌려줘야됨
-            log.info("!!!!!태그하셈" + detectedUsers
-                .toString());
-
-            //json.addProperty("detectedUser",detectedUsers.toString()); //TODO detectedUser에 감지된 얼굴정보 들어있음.
+              //TODO detectedUsers에 식별된 유저 id 목록 들어있음. 이걸 반환해서 게시글에 태그로 뿌려줘야됨
+              log.info("!!!!!태그하셈" + detectedUsers
+                  .toString());
+              //json.addProperty("detectedUser",detectedUsers.toString()); //TODO detectedUser에 감지된 얼굴정보 들어있음.
+            }
             printWriter.println(json);
             //return detectedUsers.toString();
           } catch (IOException e) {
@@ -237,7 +242,8 @@ public class FileService {
     }
     finally {
       log.info("종료");
-      amazonRekognitionService.deleteCollection(collectionID);
+      if(collectionID!=null)
+        amazonRekognitionService.deleteCollection(collectionID);
       return detectedUsers;
     }
   }
