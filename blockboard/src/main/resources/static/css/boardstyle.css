@@ -222,3 +222,54 @@
   margin: 3px;
   vertical-align: center;
 }
+
+.dropdown-alarm {
+  color: white;
+}
+
+.alarm-items {
+  font-size: 11px;
+  height: 250px;
+  width: 400px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+}
+
+.btn-alarm-delete {
+  background-color: white;
+  color: dimgray;
+  border: 1px solid dimgray;
+  padding: 6px;
+  font-size: 6px;
+}
+
+.btn-alarm-delete-all {
+  background-color: white;
+  color: dimgray;
+  border: 1px solid dimgray;
+  font-size: 10px;
+  padding: 15px;
+}
+
+.btn-alarm-delete-all:hover {
+  background-color: dimgray;
+  color: white;
+}
+
+#alarmCount {
+  border-radius: 50%;
+  background-color: orangered;
+  color: white;
+  font-size: 10px;
+  position: relative;
+  left: -15px;
+  top: 5px;
+}
+
+a.alarm-item:link {
+  color: black;
+}
+
+a.alarm-item:visited {
+  color: #908f90;
+}

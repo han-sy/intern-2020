@@ -6,14 +6,18 @@ package com.board.project.blockboard.service;
 
 import com.board.project.blockboard.common.constant.ConstantData;
 import com.board.project.blockboard.common.util.LengthCheckUtils;
+import com.board.project.blockboard.common.util.TagCheckUtils;
 import com.board.project.blockboard.common.validation.PostValidation;
+import com.board.project.blockboard.dto.AlarmDTO;
 import com.board.project.blockboard.dto.PaginationDTO;
 import com.board.project.blockboard.dto.PostDTO;
 import com.board.project.blockboard.dto.UserDTO;
+import com.board.project.blockboard.mapper.AlarmMapper;
 import com.board.project.blockboard.mapper.PostMapper;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -31,6 +35,8 @@ public class PostService {
   private PostMapper postMapper;
   @Autowired
   private CommentService commentService;
+  @Autowired
+  private AlarmService alarmService;
   @Autowired
   private PostValidation postValidation;
 
@@ -54,6 +60,10 @@ public class PostService {
           postMapper.insertPost(receivePost);
         }
       }
+    }
+    // 일반 게시물에 삽입이 되면 태그된 유저 알람에 등록
+    if (StringUtils.equals(receivePost.getPostStatus(), "normal")) {
+      alarmService.insertAlarm(receivePost);
     }
     return receivePost.getPostID();
   }

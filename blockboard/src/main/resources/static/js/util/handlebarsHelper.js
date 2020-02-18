@@ -166,3 +166,15 @@ Handlebars.registerHelper('isTempSaveAble', function (options) {
   }
   return options.inverse(this);//false
 });
+
+/**
+ * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
+ */
+Handlebars.registerHelper('isPostAlarm', function (options) {
+  this.registerTime = this.registerTime.substring(0,
+      this.registerTime.length - 3);
+  if (this.postID != 0) {
+    return options.fn(this); // 게시물 태그 알람
+  }
+  return options.inverse(this);// 댓글 태그 알람
+});

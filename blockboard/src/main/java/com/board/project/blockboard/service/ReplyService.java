@@ -1,9 +1,13 @@
 package com.board.project.blockboard.service;
 
+import com.board.project.blockboard.common.util.TagCheckUtils;
+import com.board.project.blockboard.dto.AlarmDTO;
 import com.board.project.blockboard.dto.CommentDTO;
+import com.board.project.blockboard.mapper.AlarmMapper;
 import com.board.project.blockboard.mapper.ReplyMapper;
 import com.board.project.blockboard.mapper.UserMapper;
 import java.util.List;
+import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +25,8 @@ public class ReplyService {
   private ReplyMapper replyMapper;
   @Autowired
   private UserMapper userMapper;
+  @Autowired
+  private AlarmService alarmService;
 
   /**
    * 댓글 id 를 통해 답글 리스트 get
@@ -44,6 +50,7 @@ public class ReplyService {
     reply.setCommentReferencedUserID(commentReferencedUserID);
     reply.setCommentReferencedUserName(userMapper.selectUserNameByUserID(commentReferencedUserID));
     replyMapper.insertNewReplyByCommentInfo(reply);
+    alarmService.insertAlarm(reply);
     return reply.getCommentID();
   }
 }
