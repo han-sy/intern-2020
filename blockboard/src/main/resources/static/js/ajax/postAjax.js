@@ -11,7 +11,7 @@ function insertPost(postID,boardID, postTitle, postContent) {
     data: {
       postTitle: postTitle,
       postContent: postContent,
-      postStatus: `{"isTemp": false}`
+      postStatus: "normal"
     },
     error: function (xhr) {
       errorFunction(xhr);
@@ -27,7 +27,7 @@ function insertPost(postID,boardID, postTitle, postContent) {
   });
 }
 
-function insertTempPost(boardID, postID, temp_title, temp_content, is_temp) {
+function insertTempPost(boardID, postID, temp_title, temp_content, post_status) {
   $.ajax({
     type: 'POST',
     url: `/boards/${boardID}/posts`,
@@ -36,7 +36,7 @@ function insertTempPost(boardID, postID, temp_title, temp_content, is_temp) {
       postID: postID,
       postTitle: temp_title,
       postContent: temp_content,
-      postStatus: `{"isTemp":${is_temp}}`
+      postStatus: post_status
     },
     error: function (xhr) {
       errorFunction(xhr);
@@ -44,7 +44,7 @@ function insertTempPost(boardID, postID, temp_title, temp_content, is_temp) {
       refreshPostList();
     },
     success: function (data) {
-      if (is_temp) {
+      if (post_status == "temp") {
         addPostInfoToEditor(data, boardID);
         if(isNullData(postID)){
           updateIDToFiles(data,"");

@@ -5,20 +5,24 @@
 package com.board.project.blockboard.service;
 
 import com.board.project.blockboard.common.constant.ConstantData;
-import com.board.project.blockboard.common.util.JsonParse;
 import com.board.project.blockboard.common.util.LengthCheckUtils;
+import com.board.project.blockboard.common.util.TagCheckUtils;
 import com.board.project.blockboard.common.validation.PostValidation;
+import com.board.project.blockboard.dto.AlarmDTO;
 import com.board.project.blockboard.dto.PaginationDTO;
 import com.board.project.blockboard.dto.PostDTO;
 import com.board.project.blockboard.dto.UserDTO;
+import com.board.project.blockboard.mapper.AlarmMapper;
 import com.board.project.blockboard.mapper.PostMapper;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.codec.binary.StringUtils;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +36,8 @@ public class PostService {
   @Autowired
   private CommentService commentService;
   @Autowired
+  private AlarmService alarmService;
+  @Autowired
   private PostValidation postValidation;
 
   public int insertPost(PostDTO receivePost, int boardID, HttpServletRequest request,
@@ -43,8 +49,7 @@ public class PostService {
       receivePost.setUserName(request.getAttribute("userName").toString());
       receivePost.setCompanyID(Integer.parseInt(request.getAttribute("companyID").toString()));
       receivePost.setPostContentExceptHTMLTag(Jsoup.parse(receivePost.getPostContent()).text());
-      JsonParse.setPostStatusFromJsonString(receivePost);
-      // '글쓰기' -> '저장'or'임시저장' 버튼을 누른 경우에는 html 안에 postID가 존재하지 않아 바로 insert
+      // '글쓰기' -> '저장'or'임시저장' 버튼을 누른 경우에는 html 안에 postID가 존재하지 않아 바로 inse
       if (receivedPostID == 0) {
         postMapper.insertPost(receivePost);
       } else {
@@ -52,10 +57,13 @@ public class PostService {
         PostDTO receivePostInDatabase = postMapper.selectPostByPostID(receivedPostID);
         if (postValidation.isExistPost(receivePostInDatabase, boardID, response) &&
             postValidation.isTempSavedPost(receivePostInDatabase, response)) {
-          log.info(receivePost.getPostStatus().toString());
           postMapper.insertPost(receivePost);
         }
       }
+    }
+    // 일반 게시물에 삽입이 되면 태그된 유저 알람에 등록
+    if (StringUtils.equals(receivePost.getPostStatus(), "normal")) {
+      alarmService.insertAlarm(receivePost);
     }
     return receivePost.getPostID();
   }
@@ -66,8 +74,7 @@ public class PostService {
     UserDTO user = new UserDTO(request);
     if (postValidation.isExistPost(post, boardID, response) &&
         postValidation.isValidChange(post, user, response)) {
-      JsonParse.setPostStatusFromJsonString(post); // post_status json -> PostDTO Binding
-      if (post.getIsRecycle() || post.getIsTemp()) {
+      if (StringUtils.equals(post.getPostStatus(), "recycle")) {
         postMapper.deletePostByPostID(postID);
       } else {
         postMapper.temporaryDeletePost(post);
@@ -100,7 +107,6 @@ public class PostService {
       HttpServletResponse response) {
     PostDTO post = postMapper.selectPostByPostID(postID);
     if (postValidation.isExistPost(post, boardID, response)) {
-      JsonParse.setPostStatusFromJsonString(post);
       updateViewCnt(postID, request, response);//조회수 업데이트 알고리즘
       return post;
     }
@@ -117,7 +123,8 @@ public class PostService {
   public void restorePost(int postID, HttpServletRequest request, HttpServletResponse response) {
     UserDTO user = new UserDTO(request);
     PostDTO post = postMapper.selectPostByPostID(postID);
-    if (postValidation.isValidRestore(post, user, response)) {
+    if (postValidation.isValidChange(post, user, response) && postValidation
+        .isValidRestore(post, response)) {
       postMapper.restorePost(post);
     }
   }

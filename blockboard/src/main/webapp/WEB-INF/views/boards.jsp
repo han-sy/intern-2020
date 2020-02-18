@@ -12,6 +12,8 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>BLOCK BOARD</title>
+    <script src="https://use.fontawesome.com/releases/v5.12.1/js/all.js"
+            data-auto-replace-svg="nest"></script>
     <link rel="stylesheet" href="/webjars/bootstrap/4.4.1/dist/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="/static/css/boardstyle.css">
     <link href="https://fonts.googleapis.com/css?family=Noto+Sans+JP|Roboto&display=swap"
@@ -114,6 +116,43 @@
                        value='on'>{{functionName}}</a>
                 {{/isAbleFunction}}
             {{/functions}}
+        </script>
+
+        <div class="nav-item dropleft">
+            <a class="nav-link dropdown-alarm" href="#" id="dropdown04" style="color:white"
+               data-toggle="dropdown"
+               aria-haspopup="false" aria-expanded="false">
+                <i class="far fa-bell fa-2x" id="alarm_icon"></i>
+            </a>
+            <div class="dropdown-menu alarm-items" id="alarmcontent" aria-labelledby="dropdown04">
+            </div>
+        </div>
+        <script id="alarm-count-template" type="text/x-handlebars-template">
+            <button type="button btn-alarm-count" id="alarmCount">{{alarmCount}}</button>
+        </script>
+        <script id="alarmList-template" type="text/x-handlebars-template">
+            <div class="row">
+                <button type="button" class="btn-alarm-delete-all">모두 삭제
+                </button>
+            </div>
+            {{#alarms}}
+                <li class="dropdown-item">
+                    <button type="button" class="btn-alarm-delete"
+                            onclick="">x
+                    </button>
+                    <a href="/alarms/{{alarmID}}" data-id="{{alarmID}}" target="_self"
+                       class="alarm-item">
+                        {{userName}}님이
+                        {{#isPostAlarm}}
+                            게시글에서 회원님을 언급했습니다.
+                        {{else}}
+                            댓글에서 회원님을 언급했습니다:<br>
+                            {{alarmContent}}
+                        {{/isPostAlarm}}
+                        <span>{{registerTime}}</span>
+                    </a>
+                </li>
+            {{/alarms}}
         </script>
         <a class="nav-link text-white" id="current_user_info" style="nav-right: auto"
            data-id="${userID}" data-type="${userType}">${userName}</a>
@@ -840,6 +879,7 @@
 <script src="/static/js/event/commentEvent.js"></script>
 <script src="/static/js/event/functionEvent.js"></script>
 <script src="/static/js/event/paginationEvent.js"></script>
+<script src="/static/js/event/alarmEvent.js"></script>
 <script src="/static/js/event/common.js"></script>
 <script src="/static/js/event/mentionEvent.js"></script>
 <script src="/static/js/event/fileEvent.js"></script>
@@ -850,6 +890,7 @@
 <script src="/static/js/ajax/paginationAjax.js"></script>
 <script src="/static/js/ajax/fileAjax.js"></script>
 <script src="/static/js/ajax/userAjax.js"></script>
+<script src="/static/js/ajax/alarmAjax.js"></script>
 <script src="/static/ckeditor/ckeditor.js"></script>
 <script src="/static/ckeditor/adapters/jquery.js"></script>
 <script src="/static/js/util/handlebarsHelper.js"></script>
@@ -860,6 +901,7 @@
 <script src="/static/js/updateUI/paginationUI.js"></script>
 <script src="/static/js/updateUI/postUI.js"></script>
 <script src="/static/js/updateUI/fileUI.js"></script>
+<script src="/static/js/updateUI/alarmUI.js"></script>
 <script src="/static/js/util/windowLoad.js"></script>
 
 <!-- The core Firebase JS SDK is always required and must be listed first -->

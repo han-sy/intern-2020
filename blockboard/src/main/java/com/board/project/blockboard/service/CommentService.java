@@ -22,6 +22,8 @@ public class CommentService {
   @Autowired
   private FunctionService functionService;
   @Autowired
+  private AlarmService alarmService;
+  @Autowired
   private CommentMapper commentMapper;
   @Autowired
   private UserMapper userMapper;
@@ -40,6 +42,7 @@ public class CommentService {
     comment.setUserID(userID);
     comment.setCompanyID(companyID);
     commentMapper.insertNewCommentByCommentInfo(comment);
+    alarmService.insertAlarm(comment);
     return comment.getCommentID();
   }
 

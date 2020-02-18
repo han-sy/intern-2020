@@ -37,7 +37,7 @@ $(document).on('click', '.btn_tempSave', function () {
   var boardID = $('#selectedBoardIDinEditor option:selected').attr('data-tab');
   // 제목 & 내용 비었는지 검사
   if (checkEmpty()) {
-    insertTempPost(boardID, postID, postTitle, postContent, true);
+    insertTempPost(boardID, postID, postTitle, postContent, "temp");
     refreshPostList();
   }
 });
@@ -58,7 +58,7 @@ $(document).on('click', '.btn_post', function () {
     }
     // 임시 or 자동 저장된 글을 한번 더 '저장' 버튼을 누를 때
     else {
-      insertTempPost(boardID, postID, postTitle, postContent, false);
+      insertTempPost(boardID, postID, postTitle, postContent, "normal");
       getPageList(1, getCurrentBoardID(), updatePageList);
     }
     editorClear();
