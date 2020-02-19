@@ -33,7 +33,7 @@ function getCommentInputHtml(type, buttonName, tag, className, buttonSelector,
 
   var func = new FunctionOn();
 
-  var add_on = "";
+  var add_on = ",mentions";
   if (func.isStickerOn()) {
     add_on += ",emoji";
   }
