@@ -346,9 +346,9 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div class="modal-body-changeFunctions">
+                        <ul class="modal-body-changeFunctions" style="list-style:none;">
 
-                        </div>
+                        </ul>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">
                                 Close
@@ -365,7 +365,7 @@
             <script id="changeFunctionInfo-template" type="text/x-handlebars-template">
                 {{#functions}}
                     {{#isAbleFunction}}
-                        <div class="btn-group-toggle" data-toggle="buttons"
+                        <li class="btn-group-toggle {{isCommentFunction}}" data-toggle="buttons"
                              style="padding: 3px 1px 1px 10px;">
                             <label class="btn btn-default _function-switch">
                                 <span>{{functionName}}</span>
@@ -373,9 +373,9 @@
                                        value={{functionID}}>
                                 <span class='_switch'>OFF</span>
                             </label>
-                        </div>
+                        </li>
                     {{else}}
-                        <div class="btn-group-toggle" data-toggle="buttons"
+                        <li class="btn-group-toggle {{isCommentFunction}}" data-toggle="buttons"
                              style="padding: 3px 1px 1px 10px;">
                             <label class="btn btn-success _function-switch">
                                 <span>{{functionName}}</span>
@@ -383,7 +383,7 @@
                                        value={{functionID}} checked>
                                 <span class='_switch'>ON</span>
                             </label>
-                        </div>
+                        </li>
                     {{/isAbleFunction}}
                 {{/functions}}
             </script>

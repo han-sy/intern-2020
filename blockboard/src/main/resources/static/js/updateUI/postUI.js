@@ -17,7 +17,8 @@ function editorAreaCreate(method) {
   // 게시글 작성시에만(수정 X) 자동저장 & 임시저장 기능 작동
   if (method == "insert") {
     $('#btn_temp').attr('style', 'visibility:visible');
-    if ($('#functionAble5').attr("value") == "on") {
+    var functionOn = new FunctionOn();
+    if (functionOn.postTempSave) {
       on_autosave();
     }
   } else {
