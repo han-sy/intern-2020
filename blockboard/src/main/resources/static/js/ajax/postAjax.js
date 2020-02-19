@@ -17,10 +17,13 @@ function insertPost(postID,boardID, postTitle, postContent) {
       errorFunction(xhr);
     },
     success: function (data) {
-      if(isNullData(postID)){
-        updateIDToFiles(data,"");
-      }else{
-        updateIDToFiles(postID,"");
+      var functionData = new FunctionOn();
+      if(functionData.isFileAttachOn()){
+        if(isNullData(postID)){
+          updateIDToFiles(data,"");
+        }else{
+          updateIDToFiles(postID,"");
+        }
       }
       refreshPostList();
     }
@@ -46,10 +49,13 @@ function insertTempPost(boardID, postID, temp_title, temp_content, post_status) 
     success: function (data) {
       if (post_status == "temp") {
         addPostInfoToEditor(data, boardID);
-        if(isNullData(postID)){
-          updateIDToFiles(data,"");
-        }else{
-          updateIDToFiles(postID,"");
+        var functionData = new FunctionOn();
+        if(functionData.isFileAttachOn()){
+          if(isNullData(postID)){
+            updateIDToFiles(data,"");
+          }else{
+            updateIDToFiles(postID,"");
+          }
         }
         alert("임시저장 되었습니다.")
       } else {

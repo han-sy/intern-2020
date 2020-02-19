@@ -42,12 +42,18 @@ function insertComment(boardID, postID, commentText,commentID) {//댓글 임시�
     success: function (data) {
 
       console.log("insertComment cid = ", commentID);
-      if(isNullData(commentID)){
-        updateIDToFiles(postID,data,boardID);
-      }else{
-        console.log("여기");
-        updateIDToFiles(postID,commentID,boardID);
+      var functionData = new FunctionOn();
+      if(functionData.isFileAttachOn()){
+        if(isNullData(commentID)){
+          updateIDToFiles(postID,data,boardID);
+        }else{
+          console.log("여기");
+          updateIDToFiles(postID,commentID,boardID);
+        }
       }
+      getCommentList(boardID, postID, updateCommentListUI);//성공하면 댓글목록 갱신
+      updateCommentsCount(boardID, postID);
+      CKEDITOR.instances['commentText'].setData("");
 
     }
   });
@@ -116,11 +122,17 @@ function insertReply(boardID, postID, commentContent, commentReferencedID,
     },
     success: function (data) {
       console.log("commentID : "+data+","+commentID);
-      if(isNullData(commentID)){
-        updateIDToFiles(postID,data,boardID,commentReferencedID);
-      }else{
-        updateIDToFiles(postID,commentID,boardID,commentReferencedID);
+      var functionData = new FunctionOn();
+      if(functionData.isFileAttachOn()){
+        if(isNullData(commentID)){
+          updateIDToFiles(postID,data,boardID,commentReferencedID);
+        }else{
+          updateIDToFiles(postID,commentID,boardID,commentReferencedID);
+        }
       }
+      getReplyList(boardID, postID, commentReferencedID, getReplyListUI);
+      updateCommentsCount(boardID, postID);
+      CKEDITOR.instances['commentText'].setData("");
     }
   });
 }

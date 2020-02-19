@@ -6,7 +6,7 @@ const COMMENT_PREFIX = {
   length: 7
 };
 
-//댓글 추가버튼 누를때
+//댓글 입력버튼 누를때
 $(document).on('click', '.btn_openComment', function () {
   var postID = $("#postID").html();
   var boardID = $("#boardIdInPost").html();
@@ -60,7 +60,11 @@ $(document).on('click', '.btn_edit_comment_complete', function () {
   var isAcceptance = confirm("댓글을 수정 하시겠습니까?");
   if (isAcceptance) {
     $(function () {
-      updateIDToFiles("",commentID);
+      var functionOn = new FunctionOn();
+      if (functionOn.isFileAttachOn()) {
+        updateIDToFiles("",commentID);
+      }
+
       editComment(postID, boardID, commentID, newComment);
     });
   }
