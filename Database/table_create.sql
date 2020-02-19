@@ -170,3 +170,5 @@ set image_url = "aaa" ,image_file_name = "aaa"
 where user_id = "1";
 
 select * from posts;
+
+select * from functions;

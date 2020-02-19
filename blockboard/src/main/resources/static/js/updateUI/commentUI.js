@@ -9,7 +9,8 @@ function updateCommentListUI(data) {
   var comments = {comments: data};
   var itemList = template(comments);
   $('.comment_list_container').html(itemList);
-  if ($('#functionAble2').attr("value") == "on") { //대댓글 기능 on 일때
+  var functionOn = new FunctionOn();
+  if (functionOn.reply) { //대댓글 기능 on 일때
     getAllReplyList(data);
   }
 }

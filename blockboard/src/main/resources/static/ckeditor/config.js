@@ -60,7 +60,7 @@ CKEDITOR.editorConfig = function (config) {
     config.extraPlugins += ",image2";
   }
 
-  if (func.isStickerOn()) {
+  if (func.postSticker) {
     config.extraPlugins += ",emoji";
   }
 

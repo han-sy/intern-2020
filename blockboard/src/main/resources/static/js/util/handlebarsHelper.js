@@ -170,7 +170,8 @@ Handlebars.registerHelper('isRecycleBin', function (option) {
  * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
  */
 Handlebars.registerHelper('isTempSaveAble', function (options) {
-  if ($('#functionAble5').attr("value") == "on") {
+  var functionOn = new FunctionOn();
+  if (functionOn.postTempSave) {
     return options.fn(this); //true
   }
   return options.inverse(this);//false
