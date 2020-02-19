@@ -18,6 +18,22 @@
     WHERE user_id = #{userID};
   </select>
 
+  <select id="selectUserByUserIdAndCompanyID" parameterType="com.board.project.blockboard.dto.UserDTO"
+    resultType="com.board.project.blockboard.dto.UserDTO">
+    SELECT users.user_id       as userID,
+           users.company_id    as companyID,
+           users.user_name     as userName,
+           users.user_password as userPassword,
+           users.user_type     as userType,
+           users.image_url     as imageURL,
+           users.thumbnail_url as thumbnailURL,
+           company.company_name  as companyName
+    FROM users users
+        JOIN companies company ON users.company_id = company.company_id
+    WHERE users.user_id = #{userID} AND
+          users.company_id = #{companyID};
+  </select>
+
   <insert id="insertUser" parameterType="com.board.project.blockboard.dto.UserDTO">
     INSERT INTO
         users(

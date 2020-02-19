@@ -7,6 +7,7 @@ package com.board.project.blockboard.dto;
 import javax.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -40,5 +41,10 @@ public class UserDTO {
     this.userName = request.getAttribute("userName").toString();
     this.userType = request.getAttribute("userType").toString();
     this.companyID = Integer.parseInt(request.getAttribute("companyID").toString());
+  }
+
+  public UserDTO(String userID, int companyID) {
+    this.userID = userID;
+    this.companyID = companyID;
   }
 }

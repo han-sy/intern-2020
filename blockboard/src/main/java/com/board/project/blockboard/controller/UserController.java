@@ -113,4 +113,11 @@ public class UserController {
     int companyID = Integer.parseInt(request.getAttribute("companyID").toString());
     return userService.selectUsersByCompanyID(companyID);
   }
+
+  @GetMapping("/users/{userid}")
+  @ResponseBody
+  public UserDTO getUser(HttpServletRequest request, @PathVariable("userid") String userID) {
+    int companyID = Integer.parseInt(request.getAttribute("companyID").toString());
+    return userService.selectUserByUserIdAndCompanyId(userID, companyID);
+  }
 }

@@ -191,7 +191,38 @@
             </script>
         </div>
         <div class="border-left border-success col">
-
+            <!-- 태그 이름 클릭 -> 회원 정보 Modal -->
+            <div class="modal" id="tagUserInfoModal" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title text-success">회원 정보</h5>
+                            <button type="button" class="close" data-dismiss="modal"
+                                    aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body-userInfo" style="padding: 15px 10px 10px 10px">
+                            <div class="row">
+                                <div class="col">
+                                    <img id="modal_userImage" width="150">
+                                </div>
+                                <div class="col">
+                                    <p>회원 이름: <a id="modal_userName">전우혁</a></p>
+                                    <p>회원 ID : <a id="modal_userID"></a></p>
+                                    <p>회원 유형: <a id="modal_userType"></a></p>
+                                    <p>회사명 : <a id="modal_companyName"></a></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                닫기
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!-- 게시판 추가 Modal -->
             <div class="modal" id="addBoardModal" tabindex="-1" role="dialog">
                 <div class="modal-dialog" role="document">
@@ -850,6 +881,7 @@
 <script src="/static/js/event/paginationEvent.js"></script>
 <script src="/static/js/event/alarmEvent.js"></script>
 <script src="/static/js/event/common.js"></script>
+<script src="/static/js/event/mentionEvent.js"></script>
 <script src="/static/js/event/fileEvent.js"></script>
 <script src="/static/js/ajax/functionAjax.js"></script>
 <script src="/static/js/ajax/commentAjax.js"></script>

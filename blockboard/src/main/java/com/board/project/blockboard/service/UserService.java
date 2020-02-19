@@ -68,6 +68,11 @@ public class UserService {
   public List<UserDTO> selectUsersByCompanyID(int companyID) {
     return userMapper.selectUsersByCompanyID(companyID);
   }
+
+  public UserDTO selectUserByUserIdAndCompanyId(String userID, int companyID) {
+    UserDTO user = new UserDTO(userID, companyID);
+    return userMapper.selectUserByUserIdAndCompanyID(user);
+  }
   /**
    * @param userID
    * @return

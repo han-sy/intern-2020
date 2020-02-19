@@ -26,7 +26,8 @@ public class WebConfig implements WebMvcConfigurer {
       "/imageUpload",
       "/files/**",
       "/img/**",
-      "/alarms"
+      "/alarms",
+      "/users/**"
   };
   private static final String[] EXCLUDE_PATHS = {
       "/",

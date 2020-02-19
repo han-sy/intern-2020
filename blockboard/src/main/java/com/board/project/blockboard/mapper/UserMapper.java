@@ -20,6 +20,8 @@ public interface UserMapper {
 
   UserDTO selectUserByID(String userID);
 
+  UserDTO selectUserByUserIdAndCompanyID(UserDTO user);
+
   String selectUserNameByUserID(String userID);
 
   String selectUserTypeByUserID(String userID);
