@@ -42,6 +42,12 @@
       AND comment_referenced_id IS NULL;
   </select>
 
+  <select id="selectUserIDByCommentID" parameterType="int" resultType="string">
+    SELECT user_id
+    FROM comments
+    WHERE comment_id = #{commentID};
+  </select>
+
   <insert id="insertNewCommentByCommentInfo" parameterType="hashmap">
     INSERT INTO comments
     (post_id,

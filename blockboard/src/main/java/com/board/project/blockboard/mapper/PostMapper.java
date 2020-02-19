@@ -47,6 +47,8 @@ public interface PostMapper {
 
   void updateViewCnt(int postID);
 
+  String selectUserIDByPostID(int postId);
+
   int selectPostCountByBoardID(int boardID);
 
   int getMyPostsCount(UserDTO user);
@@ -60,4 +62,6 @@ public interface PostMapper {
   int getRecentPostsCount(int companyID);
 
   int getPopularPostsCount(int companyID);
+
+
 }

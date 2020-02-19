@@ -120,6 +120,9 @@ function deleteFile(storedFileName, obj, successFunction) {
     url: `/files`,
     data: {storedFileName: storedFileName},
     error: function (error, msg) {  //통신 실패시
+      if(error.status==409){
+        obj.remove();
+      }
       errorFunction(error);
     },
     success: function () {

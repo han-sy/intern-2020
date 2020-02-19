@@ -94,8 +94,8 @@ function getPostDataAfterPostClick(postID, boardID) {
         btn_deletePost.attr('style', 'visibility:visible');
         btn_updatePost.attr('style', 'visibility:visible');
       } else {
-        btn_deletePost.attr('style', 'visibility:hidden');
-        btn_updatePost.attr('style', 'visibility:hidden');
+        btn_deletePost.attr('style', 'display:none');
+        btn_updatePost.attr('style', 'display:none');
       }
       var postContentHtml = "";
 

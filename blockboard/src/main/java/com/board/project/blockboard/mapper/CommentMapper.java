@@ -24,9 +24,13 @@ public interface CommentMapper {
 
   void deleteCommentByCommentReferencedID(int commentID);
 
+  String selectUserIDByCommentID(int commentID);
+
   int insertNewCommentByCommentInfo(CommentDTO commentInfo);
 
   int getAllCommentsCountByPostID(int postID);
 
   int getOnlyCommentsCountByPostID(int postID);
+
+
 }

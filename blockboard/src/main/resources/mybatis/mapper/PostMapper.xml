@@ -351,6 +351,12 @@
     WHERE  board_id = #{boardID};
   </select>
 
+  <select id="selectUserIDByPostID" resultType="string" parameterType="int">
+    SELECT user_id
+    FROM posts
+    WHERE post_id = #{postID};
+  </select>
+
   <update id="updateViewCnt" parameterType="int">
     UPDATE posts
     SET    view_count = view_count + 1
