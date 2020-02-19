@@ -16,15 +16,10 @@
            comments.company_id            AS companyID,
            comments.comment_content       AS commentContent,
            comments.comment_register_time AS commentRegisterTime,
-           comments.comment_referenced_id AS commentReferencedID,
-           referenced_user.user_id        AS commentReferencedUserID,
-           referenced_user.user_name      AS commentReferencedUserName
+           comments.comment_referenced_id AS commentReferencedID
     FROM comments comments
            LEFT OUTER JOIN users users
                            ON comments.user_id = users.user_id
-           LEFT OUTER JOIN users referenced_user
-                           ON comments.comment_referenced_user_id =
-                              referenced_user.user_id
     WHERE comments.post_id = #{postID}
       AND comments.comment_referenced_id IS NULL;
   </select>
@@ -54,11 +49,13 @@
      user_id,
      company_id,
      comment_content,
+     comment_content_except_htmltag,
      comment_referenced_id)
     VALUES (#{postID},
             #{userID},
             #{companyID},
             #{commentContent},
+            #{commentContentExceptHTMLTag},
             NULL);
     <selectKey keyProperty="commentID" resultType="int" order="AFTER">
       <if test='commentID != 0'>

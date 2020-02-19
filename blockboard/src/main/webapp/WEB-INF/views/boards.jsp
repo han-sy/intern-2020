@@ -124,34 +124,36 @@
                aria-haspopup="false" aria-expanded="false">
                 <i class="far fa-bell fa-2x" id="alarm_icon"></i>
             </a>
-            <div class="dropdown-menu alarm-items" id="alarmcontent" aria-labelledby="dropdown04">
+            <div class="dropdown-menu alarm-items" aria-labelledby="dropdown04">
+                <button type="button" style="float: right" class="btn-alarm-delete-all">모두 삭제
+                </button>
+                <br><br>
+                <div id="alarmcontent">
+                </div>
             </div>
         </div>
         <script id="alarm-count-template" type="text/x-handlebars-template">
             <button type="button btn-alarm-count" id="alarmCount">{{alarmCount}}</button>
         </script>
         <script id="alarmList-template" type="text/x-handlebars-template">
-            <div class="row">
-                <button type="button" class="btn-alarm-delete-all">모두 삭제
-                </button>
-            </div>
             {{#alarms}}
-                <li class="dropdown-item">
-                    <button type="button" class="btn-alarm-delete"
-                            onclick="">x
-                    </button>
-                    <a href="/alarms/{{alarmID}}" data-id="{{alarmID}}" target="_self"
-                       class="alarm-item">
-                        {{userName}}님이
-                        {{#isPostAlarm}}
-                            게시글에서 회원님을 언급했습니다.
-                        {{else}}
-                            댓글에서 회원님을 언급했습니다:<br>
-                            {{alarmContent}}
-                        {{/isPostAlarm}}
-                        <span>{{registerTime}}</span>
-                    </a>
-                </li>
+                <div>
+                    <li class="dropdown-item">
+                        <button type="button" class="btn-alarm-delete">X</button>
+                        <a href="/alarms/{{alarmID}}" data-id="{{alarmID}}" target="_self"
+                           class="alarm-item">
+                            {{userName}}님이
+                            {{#isPostAlarm}}
+                                게시글에서 회원님을 언급했습니다.
+                            {{else}}
+                                댓글에서 회원님을 언급했습니다:<br>
+                                {{alarmContent}}
+                            {{/isPostAlarm}}
+                            <span style="float: right">{{registerTime}}</span>
+                        </a>
+
+                    </li>
+                </div>
             {{/alarms}}
         </script>
         <a class="nav-link text-white" id="current_user_info" style="nav-right: auto"
@@ -678,8 +680,7 @@
             <script id="commentInputForm-template" type="text/x-handlebars-template">
                 {{#attribute}}
                     <br>
-                    <div style='width: 100%' class=commentHtml {{isReplyInput}}>
-                        {{{tag}}}
+                    <div style='width: 100%' class='commentHtml {{isReplyInput}}'>
                         <textarea class="form-control" id=commentText placeholder='{{type}}을 입력하세요'
                                   name=commentTxt></textarea>
                         <div class="form-group row file_attach_form">

@@ -48,12 +48,10 @@ public class ReplyController {
   public int insertReply(@RequestParam("postID") int postID,
       @RequestParam("commentContent") String commentContent,
       @RequestParam("commentReferencedID") int commentReferencedID,
-      @RequestParam("commentReferencedUserID") String commentReferencedUserID,
       HttpServletRequest request) {
     UserDTO userData = new UserDTO(request);
     return replyService
         .writeReplyWithUserInfo(userData.getUserID(), userData.getCompanyID(), postID,
-            commentContent, commentReferencedID,
-            commentReferencedUserID);
+            commentContent, commentReferencedID);
   }
 }
