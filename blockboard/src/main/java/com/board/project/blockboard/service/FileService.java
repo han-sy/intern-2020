@@ -8,12 +8,16 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.board.project.blockboard.common.constant.ConstantData;
 import com.board.project.blockboard.common.constant.ConstantData.FunctionID;
+import com.board.project.blockboard.common.exception.UserValidException;
 import com.board.project.blockboard.common.util.Common;
+import com.board.project.blockboard.common.validation.AuthorityValidation;
 import com.board.project.blockboard.common.validation.FileValidation;
 import com.board.project.blockboard.common.validation.FunctionValidation;
 import com.board.project.blockboard.dto.FileDTO;
 import com.board.project.blockboard.dto.UserDTO;
+import com.board.project.blockboard.mapper.CommentMapper;
 import com.board.project.blockboard.mapper.FileMapper;
+import com.board.project.blockboard.mapper.PostMapper;
 import com.board.project.blockboard.mapper.UserMapper;
 import com.google.gson.JsonObject;
 import java.io.FileNotFoundException;
@@ -30,6 +34,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.User;
 import org.jsoup.internal.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,6 +52,12 @@ public class FileService {
   private UserMapper userMapper;
 
   @Autowired
+  private PostMapper postMapper;
+
+  @Autowired
+  private CommentMapper commentMapper;
+
+  @Autowired
   private FileMapper fileMapper;
 
   @Autowired
@@ -54,6 +65,9 @@ public class FileService {
 
   @Autowired
   FileValidation fileValidation;
+
+  @Autowired
+  AuthorityValidation authorityValidation;
 
   public String uploadFile(MultipartHttpServletRequest multipartRequest, HttpServletRequest request,
       HttpServletResponse response) throws IOException {
@@ -121,12 +135,12 @@ public class FileService {
   }
 
   public void downloadFile(int fileID, HttpServletResponse response, HttpServletRequest request) {
-    int companyID = Integer.parseInt(request.getAttribute("companyID").toString());
-    if (!functionValidation.isFunctionOn(companyID, FunctionID.ATTACH_FILE, response)) {
+    UserDTO userData = new UserDTO(request);
+    if (!functionValidation.isFunctionOn(userData.getCompanyID(), FunctionID.ATTACH_FILE, response)) {
       return;
     }
-
     FileDTO fileData = fileMapper.selectFileByFileID(fileID);
+
 
     String browser = request.getHeader("User-Agent");//브라우저 종류 가져옴.
     String downName = null;
@@ -167,11 +181,25 @@ public class FileService {
 
   }
 
+
+  public String getFileWriterUserID(FileDTO fileData) {
+    if(fileData.getPostID()>0){//post의 첨부파일일때
+      return postMapper.selectUserIDByPostID(fileData.getPostID());
+    } else if(fileData.getCommentID()>0){//댓글의 첨부파일일때
+      return commentMapper.selectUserIDByCommentID(fileData.getCommentID());
+    }
+    return null;
+  }
+
   public void deleteFile(String storedFileName, HttpServletRequest request,
       HttpServletResponse response) {
-    int companyID = Integer.parseInt(request.getAttribute("companyID").toString());
-    if (!functionValidation.isFunctionOn(companyID, FunctionID.ATTACH_FILE, response)
+    UserDTO userData = new UserDTO(request);
+    if (!functionValidation.isFunctionOn(userData.getCompanyID(), FunctionID.ATTACH_FILE, response)
         || !fileValidation.isExistFileInDatabase(storedFileName, response)) {
+      return;
+    }
+    FileDTO fileData = fileMapper.selectFileByStoredFileName(storedFileName);
+    if(!authorityValidation.isWriter(fileData,userData,response)){
       return;
     }
     AmazonS3Service amazonS3Service = new AmazonS3Service();
