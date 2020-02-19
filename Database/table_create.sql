@@ -1,4 +1,5 @@
 use block_board;
+drop table alarms;
 drop table files;
 drop table comments;
 drop table posts;
@@ -96,9 +97,20 @@ create table files(
     primary key(file_id)
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
+create table alarms(
+	alarm_id int(9) not null auto_increment,
+    tagged_user_id varchar(20) not null,
+    post_id int(9),
+    comment_id int(9),
+	foreign key(post_id) references posts(post_id) ON DELETE CASCADE ,
+	foreign key(comment_id) references comments(comment_id) ON DELETE CASCADE,
+    primary key(alarm_id)
+)ENGINE =InnoDB DEFAULT charset= utf8;
+
 alter table boards auto_increment=1;
 alter table posts auto_increment=1;
 alter table comments auto_increment=1;
+alter table alarms auto_increment=1;
 
 insert into companies values(1,'WORKS MOBILE');
 insert into companies values(2,'naver');
