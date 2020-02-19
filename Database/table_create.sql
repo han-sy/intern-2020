@@ -1,4 +1,5 @@
 use block_board;
+drop table alarms;
 drop table files;
 drop table comments;
 drop table posts;
@@ -61,7 +62,7 @@ create table posts(
 	post_content_except_htmltag longtext character set utf8mb4 collate utf8mb4_unicode_ci not null,
     post_register_time datetime not null,
     post_last_update_time datetime null,
-    post_status json null,
+    post_status varchar(50) not null default "normal",
     view_count int(9) default 0,
 	foreign key(user_id) references users(user_id) ON DELETE CASCADE,
 	foreign key(board_id) references boards(board_id) ON DELETE CASCADE,
@@ -96,9 +97,20 @@ create table files(
     primary key(file_id)
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
+create table alarms(
+	alarm_id int(9) not null auto_increment,
+    tagged_user_id varchar(20) not null,
+    post_id int(9),
+    comment_id int(9),
+	foreign key(post_id) references posts(post_id) ON DELETE CASCADE ,
+	foreign key(comment_id) references comments(comment_id) ON DELETE CASCADE,
+    primary key(alarm_id)
+)ENGINE =InnoDB DEFAULT charset= utf8;
+
 alter table boards auto_increment=1;
 alter table posts auto_increment=1;
 alter table comments auto_increment=1;
+alter table alarms auto_increment=1;
 
 insert into companies values(1,'WORKS MOBILE');
 insert into companies values(2,'naver');
@@ -144,76 +156,12 @@ INSERT INTO `Posts` (`user_id`,`board_id`,`company_id`,`post_title`,`post_conten
 INSERT INTO `Posts` (`user_id`,`board_id`,`company_id`,`post_title`,`post_content`,`post_content_except_htmltag`,`post_register_time`) VALUES (1,1,2,"penatibus et","sollicitudin adipiscing","orci tincidunt adipiscing. Mauris molestie pharetra nibh.","2020-01-27 02:56:05"),(1,1,1,"lorem ut aliquam iaculis,","et malesuada fames ac turpis","malesuada vel, convallis in,","2019-10-12 00:23:52"),(1,1,2,"Morbi","dictum eu, eleifend","mauris erat eget ipsum. Suspendisse sagittis.","2019-08-22 02:26:57"),(2,1,2,"posuere cubilia Curae; Donec","vel sapien","eget nisi dictum augue malesuada malesuada.","2019-05-10 11:54:27"),(1,1,1,"arcu eu odio","sagittis augue, eu tempor erat neque non","blandit enim consequat purus. Maecenas libero est, congue a, aliquet","2018-09-02 23:02:48"),(1,1,1,"urna. Vivamus","luctus sit amet, faucibus ut,","Aenean gravida nunc sed pede. Cum sociis natoque penatibus","2019-01-10 22:44:44"),(2,1,2,"sodales","Proin","at arcu. Vestibulum ante ipsum primis in","2019-02-02 06:13:41"),(2,1,1,"auctor quis, tristique ac,","ornare tortor at risus. Nunc","sem magna nec quam. Curabitur vel lectus. Cum","2018-06-13 06:50:41"),(2,1,1,"blandit viverra. Donec","Proin ultrices. Duis volutpat nunc sit","Donec tempus, lorem fringilla ornare","2019-10-31 07:24:25"),(1,1,1,"eu","diam dictum sapien.","placerat, augue. Sed molestie. Sed","2019-10-31 12:26:15");
 INSERT INTO `Posts` (`user_id`,`board_id`,`company_id`,`post_title`,`post_content`,`post_content_except_htmltag`,`post_register_time`) VALUES (1,1,1,"cursus a, enim. Suspendisse","erat. Sed nunc est,","ac mi","2019-08-17 01:47:19"),(1,1,1,"Proin non massa non","Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros.","eu, accumsan sed, facilisis vitae, orci.","2019-04-27 11:58:44"),(1,1,2,"eleifend","arcu. Vivamus sit amet risus.","rhoncus id, mollis nec, cursus a, enim.","2018-10-11 14:01:36"),(1,1,2,"amet","risus. In mi pede, nonummy ut, molestie","malesuada fames ac turpis egestas. Fusce aliquet magna a","2020-01-06 19:58:52"),(1,1,2,"posuere","odio sagittis","interdum enim non nisi. Aenean","2018-04-17 17:47:55"),(2,1,2,"Aenean eget metus.","hendrerit. Donec porttitor tellus non","aptent taciti","2018-05-06 04:41:02"),(1,1,2,"Donec est","scelerisque dui. Suspendisse ac","aliquet libero. Integer in magna. Phasellus dolor","2018-11-15 04:08:41"),(2,1,1,"Cras vehicula aliquet","id magna et ipsum cursus","magna, malesuada","2019-08-03 00:02:07"),(2,1,2,"vel","eros. Nam consequat dolor vitae","aliquet odio. Etiam ligula tortor, dictum","2019-11-20 18:38:32"),(2,1,2,"mi lorem, vehicula","ligula tortor, dictum","felis eget varius","2019-08-24 12:39:21");
 
-
-
-SELECT post.post_id               AS postID,
-               post.user_id               AS userID,
-               users.user_name            AS userName,
-               post.board_id              AS boardID,
-               post.company_id            AS companyID,
-               post.post_title            AS postTitle,
-               post.post_content          AS postContent,
-               post.post_register_time    AS postRegisterTime,
-               post.post_last_update_time AS postLastUpdateTime,
-               post.post_status           AS postStatus,
-               count(comments.comment_id) AS commentsCount,
-               post.view_count			  AS viewCount
-        FROM   posts post
-               JOIN users users
-                 ON post.user_id = users.user_id
-                 JOIN comments comments
-                    ON post.post_id = comments.post_id
-        WHERE  post.board_id = 1 AND
-               (json_extract(post.post_status, '$.isTemp') = false AND
-                    json_extract(post.post_status, '$.isTrash') = false)
-					AND comment_referenced_id IS NULL
-        ORDER  BY post.post_register_time DESC
-        LIMIT  0,10;
-        
-select *
-from posts;
-
 update posts
 set company_id = 1
 where company_id = 2;
+
 update users
 set image_url = "aaa" ,image_file_name = "aaa"
-where user_id = 1;
-
-select if(count(function_id)>0,true,false)
-from functions_check
-where company_id = 1
-AND function_id = 1;
-
-select * 
-FROM   comments
-        WHERE  post_id = 1
-        AND comment_referenced_id is NULL; 
-SELECT Count(comment_id)
-        FROM   comments
-        WHERE  post_id = 1
-        AND comment_referenced_id is null; 
-        
-
+where user_id = "1";
 
 select * from posts;
-insert into posts (user_id, board_id, company_id, post_title, post_content, post_content_except_htmltag, post_register_time) values (1,5,1,'자유2','<p>22222</p>','22222',now());
-SELECT LAST_INSERT_ID();
-select max(post_id)
-from posts;
-select 1;
-
-select file_id as fileID,
-post_id as postID,
-comment_id as commentID,
-origin_file_name as originFileName,
-stored_file_name as storedFileName,
-file_size as fileSize,
-upload_time as uploadTime
-from files
-where post_id = 131;
-
-select * from files;
-
-select * from posts;
-select * from users;

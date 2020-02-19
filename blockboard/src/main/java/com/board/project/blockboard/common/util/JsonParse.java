@@ -88,30 +88,4 @@ public class JsonParse {
     }
     return jsonObject;
   }
-
-  /**
-   * Object 형태의 'postStatus'의 Key List 를 PostDTO 에 Binding 한다.
-   *
-   * @param post PostDTO 객체
-   * @return postStatus 의 Key 들이 Binding 된 PostDTO
-   * @author Woohyeok Jun <woohyeok.jun@worksmobile.com>
-   */
-  public static void setPostStatusFromJsonString(PostDTO post) {
-    if (post.getPostStatus() == null) {
-      post.setIsTemp(false);
-      post.setIsRecycle(false);
-      return;
-    }
-    Map<String, Object> map = getMapFromJsonString(post.getPostStatus().toString());
-    if (map.get("isTemp") == null) {
-      post.setIsTemp(false);
-    } else {
-      post.setIsTemp(map.get("isTemp").toString().equals("true"));
-    }
-    if (map.get("isRecycle") == null) {
-      post.setIsRecycle(false);
-    } else {
-      post.setIsRecycle(map.get("isRecycle").toString().equals("true"));
-    }
-  }
 }

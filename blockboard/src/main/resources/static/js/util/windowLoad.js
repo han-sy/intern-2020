@@ -5,6 +5,7 @@
 
 window.onload = function () {
   getBoardList(updateTab);
+  getAlarms();
 };
 
 

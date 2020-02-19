@@ -61,7 +61,7 @@ Handlebars.registerHelper('isReply', function (options) {
  * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
  */
 Handlebars.registerHelper('isTemp', function (option) {
-  if (this.isTemp == true) {
+  if (this.postStatus == "temp") {
     return option.fn(this);
   } else {
     return option.inverse(this);
@@ -125,7 +125,7 @@ Handlebars.registerHelper('printFileSize', function (option) {
  * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
  */
 Handlebars.registerHelper('isRecycle', function (option) {
-  if (this.isRecycle == true) {
+  if (this.postStatus == "recycle") {
     return option.fn(this);
   } else {
     return option.inverse(this);
@@ -165,4 +165,16 @@ Handlebars.registerHelper('isTempSaveAble', function (options) {
     return options.fn(this); //true
   }
   return options.inverse(this);//false
+});
+
+/**
+ * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
+ */
+Handlebars.registerHelper('isPostAlarm', function (options) {
+  this.registerTime = this.registerTime.substring(0,
+      this.registerTime.length - 3);
+  if (this.postID != 0) {
+    return options.fn(this); // 게시물 태그 알람
+  }
+  return options.inverse(this);// 댓글 태그 알람
 });
