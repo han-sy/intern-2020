@@ -7,10 +7,12 @@ package com.board.project.blockboard.service;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.board.project.blockboard.common.constant.ConstantData;
 import com.board.project.blockboard.common.util.Common;
+import com.board.project.blockboard.common.util.Thumbnail;
 import com.board.project.blockboard.dto.UserDTO;
 import com.board.project.blockboard.mapper.FileMapper;
 import com.board.project.blockboard.mapper.UserMapper;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -92,6 +94,7 @@ public class UserService {
 
     Iterator<String> itr = multipartRequest.getFileNames();
     String url = "";
+    String thumbnailUrl = "";
     while (itr.hasNext()) {
       MultipartFile mpf = multipartRequest.getFile(itr.next());
 
@@ -99,11 +102,21 @@ public class UserService {
       String storedFileName = userID + originFileName.substring(originFileName.indexOf("."));
       //zzzzString storedFileName = uuid + "_" + originFileName;
       ObjectMetadata metadata= new ObjectMetadata();
-      AmazonS3Service amazonS3Service = new AmazonS3Service();
+      AmazonS3Service originalS3 = new AmazonS3Service();
+      AmazonS3Service thumbnailS3 = new AmazonS3Service();
+      String fileExt = Common.getFileExt(storedFileName);
 
-      url = amazonS3Service.upload(storedFileName,ConstantData.BUCKET_USER,mpf.getInputStream(),metadata,userID);
+
+      try {
+        url = originalS3.upload(storedFileName,ConstantData.BUCKET_USER,mpf.getInputStream(),metadata,userID);
+        InputStream thumbnailInputStream = Thumbnail.makeThumbnail(mpf,storedFileName,fileExt);
+        thumbnailUrl = thumbnailS3.upload(storedFileName,ConstantData.BUCKET_USER_THUMBNAIL,thumbnailInputStream,metadata,userID);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
 
       log.info("url -->"+url);
+      log.info("thumbnailUrl -->"+thumbnailUrl);
       //파일 전체 경로
       //log.info("fileName => " + mpf.getName());
 
@@ -111,6 +124,8 @@ public class UserService {
       userData.put("userID",userID);
       userData.put("imageUrl",url);
       userData.put("imageFileName",storedFileName);
+      userData.put("thumbnailUrl",thumbnailUrl);
+      userData.put("thumbnailFileName",storedFileName);
       userMapper.updateUserImage(userData);
     }
   }

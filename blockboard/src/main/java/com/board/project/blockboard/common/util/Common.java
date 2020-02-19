@@ -21,4 +21,15 @@ public class Common {
     return prefix;
 
   }
+
+  public static String getFileName(String originalFileName){
+    int index = originalFileName.lastIndexOf(".");
+    String fileName = originalFileName.substring(0, index);
+    return fileName;
+  }
+  public static String getFileExt(String originalFileName){
+    int index = originalFileName.lastIndexOf(".");
+    String fileExt = originalFileName.substring(index + 1);
+    return fileExt;
+  }
 }

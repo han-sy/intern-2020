@@ -66,7 +66,9 @@
   <update id="updateUserImage" parameterType="hashmap">
     UPDATE users
     SET    image_url = #{imageUrl},
-           image_file_name = #{imageFileName}
+           image_file_name = #{imageFileName},
+           thumbnail_url = #{thumbnailUrl},
+           thumbnail_file_name = #{thumbnailFileName}
     WHERE  user_id = #{userID};
   </update>
   <select id="selectUsersByCompanyID" parameterType="int"

@@ -26,6 +26,7 @@ public class ConstantData {
   public static final String BUCKET_USER = "block-board-user";
   public static final String COLLECTION_ID = "collectionUser";
   public static final String BUCKET_INLINE ="block-board-inline";
+  public static final String BUCKET_USER_THUMBNAIL = "block-board-user-thumbnail";
 
   public static final class FunctionID {
 
