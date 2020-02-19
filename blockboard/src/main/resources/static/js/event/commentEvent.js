@@ -61,7 +61,7 @@ $(document).on('click', '.btn_edit_comment_complete', function () {
   if (isAcceptance) {
     $(function () {
       var functionOn = new FunctionOn();
-      if (functionOn.postFileAttach) {
+      if (functionOn.commentFileAttach) {
         updateIDToFiles("",commentID);
       }
 

@@ -31,10 +31,19 @@ Handlebars.registerHelper('isReplyAble', function (options) {
   return options.inverse(this);//false
 });
 
-//답글기능 on인지 체크
-Handlebars.registerHelper('isFileAttachAble', function (options) {
+//게시글 파일 첨부기능 on인지
+Handlebars.registerHelper('isPostFileAttachAble', function (options) {
   var functionOn = new FunctionOn();
   if (functionOn.postFileAttach) {
+    return options.fn(this); //true
+  }
+  return options.inverse(this);//false
+});
+
+//댓글 답글
+Handlebars.registerHelper('isCommentFileAttachAble', function (options) {
+  var functionOn = new FunctionOn();
+  if (functionOn.commentFileAttach) {
     return options.fn(this); //true
   }
   return options.inverse(this);//false

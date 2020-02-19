@@ -598,11 +598,11 @@
                                                id='delete_comment'>삭제</a>
                                         {{else}}
                                         {{/isSameUser}}
-                                        {{#isFileAttachAble}}
+                                        {{#isCommentFileAttachAble}}
                                             <a class="text-success text-button font-weight-bold open_attached_file_list"
                                             >첨부파일 보기</a>
                                         {{else}}
-                                        {{/isFileAttachAble}}
+                                        {{/isCommentFileAttachAble}}
                                     </div>
                                 </div>
                             </div>
@@ -662,11 +662,11 @@
                                     >삭제</a>
                                 {{else}}
                                 {{/isSameUser}}
-                                {{#isFileAttachAble}}
+                                {{#isCommentFileAttachAble}}
                                     <a class="text-success text-button font-weight-bold open_attached_file_list"
                                     >첨부파일 보기</a>
                                 {{else}}
-                                {{/isFileAttachAble}}
+                                {{/isCommentFileAttachAble}}
                             </div>
                         </div>
                         <div class="col-4 attached_file_list_container_comment">
@@ -686,11 +686,11 @@
                         <div class="form-group row file_attach_form">
                         </div>
                         <div align="right">
-                            {{#isFileAttachAble}}
+                            {{#isCommentFileAttachAble}}
                                 <a class="text-success text-button font-weight-bold open_file_form_btn"
                                 >파일첨부</a>
                             {{else}}
-                            {{/isFileAttachAble}}
+                            {{/isCommentFileAttachAble}}
                             {{#isReply}}
                                 <a class="text-success text-button font-weight-bold {{{buttonSelector}}}"
                                 >{{buttonName}}</a>
@@ -717,11 +717,11 @@
                             <div class="form-group row file_attach_form">
                             </div>
                             <div align="right">
-                                {{#isFileAttachAble}}
+                                {{#isCommentFileAttachAble}}
                                     <a class="text-success text-button font-weight-bold open_edit_file_form_btn"
                                     >파일첨부 수정</a>
                                 {{else}}
-                                {{/isFileAttachAble}}
+                                {{/isCommentFileAttachAble}}
                                 <a class="text-success text-button font-weight-bold btn_edit_comment_complete"
                                 >수정하기</a>
                             </div>
