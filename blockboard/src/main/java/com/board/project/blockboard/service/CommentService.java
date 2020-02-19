@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
+import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +38,7 @@ public class CommentService {
       int postID) {
     CommentDTO comment = new CommentDTO();
     comment.setCommentContent(commentContent);
+    comment.setCommentContentExceptHTMLTag(Jsoup.parse(commentContent).text());
     comment.setUserName(userMapper.selectUserNameByUserID(userID));
     comment.setPostID(postID);
     comment.setUserID(userID);
@@ -54,7 +56,8 @@ public class CommentService {
   public void updateComment(int commentID, String newComment) {
     Map<String, Object> commentAttribute = new HashMap<String, Object>();
     commentAttribute.put("commentID", commentID);
-    commentAttribute.put("newComment", newComment);
+    commentAttribute.put("commentContent", newComment);
+    commentAttribute.put("commentContentExceptHTMLTag", Jsoup.parse(newComment).text());
     commentMapper.updateComment(commentAttribute);
   }
 

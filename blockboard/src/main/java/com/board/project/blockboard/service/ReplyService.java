@@ -9,6 +9,10 @@ import com.board.project.blockboard.mapper.UserMapper;
 import java.util.List;
 import java.util.Set;
 import lombok.extern.slf4j.Slf4j;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,16 +43,15 @@ public class ReplyService {
    * 답글 insert
    */
   public int writeReplyWithUserInfo(String userID, int companyID, int postID,
-      String commentContent, int commentReferencedID, String commentReferencedUserID) {
+      String commentContent, int commentReferencedID) {
     CommentDTO reply = new CommentDTO();
     reply.setUserID(userID);
     reply.setCommentContent(commentContent);
+    reply.setCommentContentExceptHTMLTag(Jsoup.parse(commentContent).text());
     reply.setCompanyID(companyID);
     reply.setPostID(postID);
     reply.setUserName(userMapper.selectUserNameByUserID(userID));
     reply.setCommentReferencedID(commentReferencedID);
-    reply.setCommentReferencedUserID(commentReferencedUserID);
-    reply.setCommentReferencedUserName(userMapper.selectUserNameByUserID(commentReferencedUserID));
     replyMapper.insertNewReplyByCommentInfo(reply);
     alarmService.insertAlarm(reply);
     return reply.getCommentID();

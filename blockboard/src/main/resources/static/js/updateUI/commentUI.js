@@ -34,20 +34,32 @@ function getCommentInputHtml(type, buttonName, tag, className, buttonSelector,
 
   var func = new FunctionOn();
 
-  var add_on = "";
+
+  var add_on = ",mentions";
   if (func.postSticker) {
+
     add_on += ",emoji";
   }
   if (func.postInlineImage) {
     add_on += ",image2";
   }
+
   var original_config = CKEDITOR.config.plugins;
+
   CKEDITOR.replace('commentText', {
-    height: 150,
+    height: 200,
     toolbarLocation: 'bottom',
     toolbarGroups: [{name: 'insert'}],
-    plugins: original_config + add_on
-  });
+    plugins: original_config + add_on,
+    on: {
+      instanceReady: function () {
+        if (type === "답글") {
+          CKEDITOR.instances['commentText'].insertHtml(tag, 'unfiltered_html');
+        }
+      }
+    }
+  }
+  );
 }
 
 //TODO 댓글과 답글을 분리해도 될것같다.

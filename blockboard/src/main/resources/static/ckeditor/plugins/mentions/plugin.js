@@ -46,7 +46,7 @@
             + '</div>'
             + '</div>'
             + '</div>',
-        outputTemplate: `<a class="mentions_tag" href="javascript:void(0)" data-id="{userID}">{TagName}</a>`
+        outputTemplate: `<a class="mentions_tag" href="javascript:void(0)" data-id="{userID}"><strong>{TagName}</strong></a>&nbsp;`
       }];
     },
     init: function (editor) {
