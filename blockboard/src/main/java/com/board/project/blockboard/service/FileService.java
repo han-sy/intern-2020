@@ -137,11 +137,11 @@ public class FileService {
 
   public void downloadFile(int fileID, HttpServletResponse response, HttpServletRequest request) {
     UserDTO userData = new UserDTO(request);
-    if (!functionValidation.isFunctionOn(userData.getCompanyID(), FunctionID.POST_ATTACH_FILE, response)) {
+    if (!functionValidation
+        .isFunctionOn(userData.getCompanyID(), FunctionID.POST_ATTACH_FILE, response)) {
       return;
     }
     FileDTO fileData = fileMapper.selectFileByFileID(fileID);
-
 
     String browser = request.getHeader("User-Agent");//브라우저 종류 가져옴.
     String downName = null;
@@ -184,9 +184,9 @@ public class FileService {
 
 
   public String getFileWriterUserID(FileDTO fileData) {
-    if(fileData.getPostID()>0){//post의 첨부파일일때
+    if (fileData.getPostID() > 0) {//post의 첨부파일일때
       return postMapper.selectUserIDByPostID(fileData.getPostID());
-    } else if(fileData.getCommentID()>0){//댓글의 첨부파일일때
+    } else if (fileData.getCommentID() > 0) {//댓글의 첨부파일일때
       return commentMapper.selectUserIDByCommentID(fileData.getCommentID());
     }
     return null;
@@ -195,12 +195,13 @@ public class FileService {
   public void deleteFile(String storedFileName, HttpServletRequest request,
       HttpServletResponse response) {
     UserDTO userData = new UserDTO(request);
-    if (!functionValidation.isFunctionOn(userData.getCompanyID(), FunctionID.POST_ATTACH_FILE, response)
+    if (!functionValidation
+        .isFunctionOn(userData.getCompanyID(), FunctionID.POST_ATTACH_FILE, response)
         || !fileValidation.isExistFileInDatabase(storedFileName, response)) {
       return;
     }
     FileDTO fileData = fileMapper.selectFileByStoredFileName(storedFileName);
-    if(!authorityValidation.isWriter(fileData,userData,response)){
+    if (!authorityValidation.isWriter(fileData, userData, response)) {
       return;
     }
     AmazonS3Service amazonS3Service = new AmazonS3Service();
@@ -220,7 +221,9 @@ public class FileService {
   public String uploadImage(HttpServletResponse response,
       MultipartHttpServletRequest multiFile, HttpServletRequest request) throws Exception {
     int companyID = Integer.parseInt(request.getAttribute("companyID").toString());
-    if (!functionValidation.isFunctionOn(companyID, FunctionID.POST_ATTACH_FILE, response)) {
+    if (!(functionValidation
+        .isFunctionOn(companyID, FunctionID.POST_INLINE_IMAGE, FunctionID.COMMENT_INLINE_IMAGE,
+            response))) {
       return null;
     }
     response.setCharacterEncoding("UTF-8");
