@@ -76,9 +76,9 @@ create table comments(
 	user_id varchar(20) not null,
 	company_id int(9) not null,
     comment_content longtext character set utf8mb4 collate utf8mb4_unicode_ci not null,
+	comment_content_except_htmltag longtext character set utf8mb4 collate utf8mb4_unicode_ci not null,
     comment_register_time timestamp not null,
     comment_referenced_id int(9),
-    comment_referenced_user_id varchar(20),
 	foreign key(post_id) references posts(post_id) ON DELETE CASCADE ,
 	foreign key(user_id) references users(user_id) ON DELETE CASCADE,
 	foreign key(company_id) references companies(company_id) ON DELETE CASCADE,
@@ -142,8 +142,8 @@ insert into posts (user_id, board_id, company_id, post_title, post_content, post
 insert into posts (user_id, board_id, company_id, post_title, post_content, post_content_except_htmltag, post_register_time) values (1,5,1,'자유1','<p>1111</p>','1111',now());
 insert into posts (user_id, board_id, company_id, post_title, post_content, post_content_except_htmltag, post_register_time) values (1,5,1,'자유2','<p>22222</p>','22222',now());
 
-insert into comments values(1,1,1,1,'첫 댓글',now(),null,null);
-insert into comments values(2,1,1,1,'첫 답글',now(),1,1);
+insert into comments values(1,1,1,1,'첫 댓글',now(),null);
+insert into comments values(2,1,1,1,'첫 답글',now(),1);
 select * from posts;
 INSERT INTO `Posts` (`user_id`,`board_id`,`company_id`,`post_title`,`post_content`,`post_content_except_htmltag`,`post_register_time`) VALUES (1,1,2,"Suspendisse","vel nisl. Quisque fringilla euismod enim. Etiam gravida molestie","mauris eu","2019-12-09 00:37:22"),(1,1,1,"sapien, cursus","dictum. Proin eget odio. Aliquam vulputate ullamcorper magna.","Nullam nisl. Maecenas malesuada fringilla est. Mauris","2018-12-27 01:33:59"),(2,1,2,"turpis nec","lacus. Nulla","sapien. Nunc pulvinar arcu et pede. Nunc sed","2018-04-29 06:34:13"),(1,1,2,"adipiscing lobortis risus. In","molestie dapibus ligula.","cursus luctus, ipsum leo elementum","2019-05-02 07:01:31"),(2,1,2,"dictum mi, ac mattis","dictum eu, eleifend nec, malesuada ut,","aliquet. Phasellus fermentum convallis ligula. Donec","2018-05-01 08:46:10"),(1,1,1,"dignissim","pede et risus. Quisque libero lacus, varius et, euismod","feugiat metus sit","2019-07-20 20:42:00"),(2,1,1,"penatibus et","amet ultricies sem magna nec quam. Curabitur","sagittis. Duis gravida. Praesent eu nulla at sem molestie sodales.","2019-06-06 13:10:15"),(2,1,2,"mollis. Duis sit","a nunc. In at pede. Cras vulputate velit","ultrices","2019-08-07 17:11:57"),(1,1,2,"Nunc mauris.","habitant morbi tristique senectus et netus et malesuada fames ac","ipsum","2019-08-15 14:51:38"),(1,1,2,"tempor","ornare,","Fusce dolor quam, elementum at, egestas a,","2018-08-26 11:07:15");
 INSERT INTO `Posts` (`user_id`,`board_id`,`company_id`,`post_title`,`post_content`,`post_content_except_htmltag`,`post_register_time`) VALUES (2,1,1,"sem, consequat","Sed eget lacus. Mauris non","laoreet lectus quis massa.","2019-10-18 02:16:51"),(1,1,1,"gravida. Praesent","Proin vel nisl.","dolor, tempus non, lacinia at, iaculis quis, pede. Praesent","2018-10-15 12:44:08"),(2,1,1,"justo nec","a, aliquet","a mi fringilla mi lacinia mattis. Integer eu lacus. Quisque","2018-05-16 01:16:10"),(1,1,1,"orci,","molestie in, tempus eu, ligula. Aenean euismod","vel lectus. Cum sociis natoque penatibus et","2019-04-30 11:35:28"),(1,1,2,"ipsum","taciti sociosqu ad litora torquent per conubia nostra, per","tincidunt, nunc ac mattis ornare, lectus","2019-07-13 01:33:16"),(1,1,2,"Donec tincidunt. Donec vitae","nec, cursus a, enim. Suspendisse aliquet, sem","Curabitur consequat, lectus sit amet luctus vulputate,","2018-08-18 12:09:11"),(2,1,1,"id, erat.","dui. Fusce aliquam, enim nec tempus scelerisque,","convallis convallis dolor. Quisque tincidunt","2019-04-13 05:40:45"),(2,1,1,"libero","blandit at, nisi. Cum","purus ac tellus. Suspendisse sed dolor. Fusce mi lorem,","2018-09-15 16:00:21"),(2,1,2,"metus. Aliquam erat volutpat.","risus. Morbi metus. Vivamus euismod urna. Nullam lobortis quam a","nulla magna, malesuada vel, convallis","2019-01-04 09:27:17"),(2,1,2,"Aliquam nisl. Nulla","purus gravida sagittis.","Mauris magna. Duis dignissim tempor arcu. Vestibulum ut eros non","2019-03-04 06:15:57");
