@@ -15,8 +15,7 @@ public class CommentDTO {
   private String userID;
   private String userName;
   private String commentContent;
+  private String commentContentExceptHTMLTag;
   private String commentRegisterTime;
   private int commentReferencedID;
-  private String commentReferencedUserID;
-  private String commentReferencedUserName;
 }

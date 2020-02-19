@@ -80,14 +80,13 @@ function getPostDataAfterPostClick(postID, boardID) {
 
       //게시글 내용 출력
       loadPostContent(data);
-      if(functionOn.isFileAttachOn()){
+      if(functionOn.postFileAttach){
         var container = $("#postcontent").find(".attached_file_list_container_post");
         getFileList(postID,0,container,updateFileListInPostUI);
       }
 
 
       // 작성글의 userID와 현재 로그인한 userID가 같으면 삭제버튼 표시
-      var commentAbleObj = $('#functionAble1');
       var btn_deletePost = $('.btn_delete');
       var btn_updatePost = $('.btn_modify');
       if (data.userID == userID) {

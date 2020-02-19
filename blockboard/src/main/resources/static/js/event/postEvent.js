@@ -23,7 +23,7 @@ $(document).on("click", "#btn_write", function () {
   editorAreaCreate("insert");
   initBoardIdOptionInEditor(getCurrentBoardID());
   var funcionOn = new FunctionOn();
-  if (funcionOn.isFileAttachOn()) {
+  if (funcionOn.postFileAttach) {
     console.log("파일 첨부 on");
     openFileAttachForm();
   }
@@ -98,7 +98,7 @@ $(document).on('click', '.btn_update', function () {
   var postContent = CKEDITOR.instances.editor.getData();
   var boardID = $('#selectedBoardIDinEditor option:selected').attr('data-tab');
   var functionData = new FunctionOn();
-  if(functionData.isFileAttachOn()){
+  if(functionData.postFileAttach){
     updateIDToFiles(postID,"");
   }
   updatePost(boardID, originalBoardID, postID, postTitle, postContent);

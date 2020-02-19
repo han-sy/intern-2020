@@ -1,4 +1,6 @@
-
+.display_none{
+  display: none;
+}
 .checkbox {
   padding-left: 20px;
 }
@@ -228,7 +230,7 @@
 }
 
 .alarm-items {
-  font-size: 11px;
+  font-size: 13px;
   height: 250px;
   width: 400px;
   overflow-x: hidden;
@@ -237,23 +239,35 @@
 
 .btn-alarm-delete {
   background-color: white;
-  color: dimgray;
-  border: 1px solid dimgray;
-  padding: 6px;
-  font-size: 6px;
+  color: darkgray;
+  border: none;
+  padding: 4px;
+  float: right;
+  position: relative;
+  left: 20px;
+  top: 7px;
+  font-size: 13px;
+}
+
+.btn-alarm-delete:hover {
+  background-color: white;
+  color: #1a1a1a;
 }
 
 .btn-alarm-delete-all {
   background-color: white;
   color: dimgray;
   border: 1px solid dimgray;
-  font-size: 10px;
-  padding: 15px;
+  font-size: 13px;
+  float: right;
+  padding: 8px;
 }
 
 .btn-alarm-delete-all:hover {
   background-color: dimgray;
   color: white;
+  float: right;
+  padding: 8px;
 }
 
 #alarmCount {
@@ -272,4 +286,8 @@ a.alarm-item:link {
 
 a.alarm-item:visited {
   color: #908f90;
+}
+
+.modal-open {
+  overflow-y: scroll;
 }

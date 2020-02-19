@@ -43,7 +43,7 @@ function insertComment(boardID, postID, commentText,commentID) {//댓글 임시�
 
       console.log("insertComment cid = ", commentID);
       var functionData = new FunctionOn();
-      if(functionData.isFileAttachOn()){
+      if(functionData.postFileAttach){
         if(isNullData(commentID)){
           updateIDToFiles(postID,data,boardID);
         }else{
@@ -104,8 +104,7 @@ function getReplyList(boardID, postID, commentID, successFunction) {
 }
 
 //답글 추가
-function insertReply(boardID, postID, commentContent, commentReferencedID,
-    commentReferencedUserID,commentID) {////댓글 임시저장 기능이 추가될수도있어 commentID 파라미터 추가해놓음
+function insertReply(boardID, postID, commentContent, commentReferencedID,commentID) {////댓글 임시저장 기능이 추가될수도있어 commentID 파라미터 추가해놓음
   //alert(commentReferencedUserID);
   $.ajax({
     type: 'POST',
@@ -114,8 +113,7 @@ function insertReply(boardID, postID, commentContent, commentReferencedID,
       boardID: boardID,
       postID: postID,
       commentContent: commentContent,
-      commentReferencedID: commentReferencedID,
-      commentReferencedUserID: commentReferencedUserID
+      commentReferencedID: commentReferencedID
     },
     error: function () {  //통신 실패시
       alert('통신실패!');
@@ -123,7 +121,7 @@ function insertReply(boardID, postID, commentContent, commentReferencedID,
     success: function (data) {
       console.log("commentID : "+data+","+commentID);
       var functionData = new FunctionOn();
-      if(functionData.isFileAttachOn()){
+      if(functionData.postFileAttach){
         if(isNullData(commentID)){
           updateIDToFiles(postID,data,boardID,commentReferencedID);
         }else{

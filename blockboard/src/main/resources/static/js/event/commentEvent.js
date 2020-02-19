@@ -61,7 +61,7 @@ $(document).on('click', '.btn_edit_comment_complete', function () {
   if (isAcceptance) {
     $(function () {
       var functionOn = new FunctionOn();
-      if (functionOn.isFileAttachOn()) {
+      if (functionOn.postFileAttach) {
         updateIDToFiles("",commentID);
       }
 
@@ -92,9 +92,9 @@ $(document).on('click', '.replyBtn', function () {
   replyFormClear(); //답글창 하나만 유지하기위해 다 클리어
 
   getCommentInputHtml("답글", "입력",
-      "To <strong class =tag style ='cursor:pointer;' data-id="
-      + referenceUserID + " >" + referenceUserName + "</strong>",
-      "#" + inputID, "btn_openReply","is_reply_input");
+      `<a class="mentions_tag" style="cursor:pointer; text-decoration: none;" href="javascript:void(0)"`
+      + ` data-id="${referenceUserID}"><strong>@${referenceUserName}</strong></a>&nbsp;`,
+      "#" + inputID, "btn_openReply", "is_reply_input");
 
   fileFormClear();
   var offset = $("#" + inputID).offset().top - $(window).height() / 2;
@@ -108,16 +108,13 @@ $(document).on('click', '.btn_openReply', function () {
   var commentText = CKEDITOR.instances['commentText'].getData();
   var commentReferencedID = $(this).closest(".referenceCommentContainer").attr(
       "data-id");
-  var commentReferencedUserID = $(this).closest(".commentHtml").find(
-      ".tag").attr("data-id");
   //alert("commentText ("+commentReferencedID+"): "+ commentText);
   if (commentText == "") {
     alert("내용을 입력하세요.");
     return;
   }
   $(function () {
-    insertReply(boardID, postID, commentText, commentReferencedID,
-        commentReferencedUserID);
+    insertReply(boardID, postID, commentText, commentReferencedID);
   });
 });
 

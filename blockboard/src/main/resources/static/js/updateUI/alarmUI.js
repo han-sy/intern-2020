@@ -21,5 +21,6 @@ function updateAlarmUI(data, alarmCount) {
 
 function emptyAlarmUI() {
   $("#alarmCount").remove();
-  $('#alarmcontent').html("표시할 알람이 없습니다.");
+  $('#alarmcontent').html(
+      '<p align="center" style="font-size:16px; color: dimgrey">표시할 알람이 없습니다.</p>');
 }
