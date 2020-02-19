@@ -32,22 +32,20 @@ function getCommentInputHtml(type, buttonName, tag, className, buttonSelector,
   $(className).html(itemList + "</div>");
 
   var func = new FunctionOn();
-  var add_on = "mentions";
+
+  var add_on = "";
   if (func.isStickerOn()) {
-    add_on = "emoji";
+    add_on += ",emoji";
   }
   if (func.isInlineImageOn()) {
-    add_on = "image2";
+    add_on += ",image2";
   }
-  if (func.isInlineImageOn() && func.isStickerOn()) {
-    add_on = "image2, emoji";
-  }
-
+  var original_config = CKEDITOR.config.plugins;
   CKEDITOR.replace('commentText', {
     height: 150,
     toolbarLocation: 'bottom',
     toolbarGroups: [{name: 'insert'}],
-    extraPlugins: add_on
+    plugins: original_config + add_on
   });
 }
 

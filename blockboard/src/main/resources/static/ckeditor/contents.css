@@ -2,6 +2,9 @@
 Copyright (c) 2003-2019, CKSource - Frederico Knabben. All rights reserved.
 For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
 */
+html {
+	height: 100%;
+}
 
 body
 {
@@ -9,7 +12,7 @@ body
 	/* Emoji fonts are added to visualise them nicely in Internet Explorer. */
 	font-family: sans-serif, Arial, Verdana, "Trebuchet MS", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 	font-size: 12px;
-
+	height: 100%;
 	/* Text color */
 	color: #333;
 

@@ -23,6 +23,8 @@ function editorAreaCreate(method) {
   } else {
     $('#btn_temp').attr('style', 'visibility:hidden');
   }
+
+  console.log(CKEDITOR.instances.editor.config);
 }
 
 // 작성 폼 초기화
