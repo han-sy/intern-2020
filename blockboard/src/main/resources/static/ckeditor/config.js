@@ -53,19 +53,8 @@ CKEDITOR.editorConfig = function (config) {
       + 'panelbutton,'
       + 'button,'
       + 'xml,'
-      + 'ajax';
-
-  var func = new FunctionOn();
-  if (func.postInlineImage) {
-    config.extraPlugins += ",image2";
-  }
-
-  if (func.postSticker) {
-    config.extraPlugins += ",emoji";
-  }
-
-  // Mention 부분 ------------------------
-  config.extraPlugins += ",mentions";
+      + 'ajax,'
+      + 'mentions';
 
   // -------------------------------------
   // The default plugins included in the basic setup define some buttons that

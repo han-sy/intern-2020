@@ -33,14 +33,11 @@ function getCommentInputHtml(type, buttonName, tag, className, buttonSelector,
   $(className).html(itemList + "</div>");
 
   var func = new FunctionOn();
-
-
-  var add_on = ",mentions";
-  if (func.postSticker) {
-
+  var add_on = "";
+  if (func.commentSticker) {
     add_on += ",emoji";
   }
-  if (func.postInlineImage) {
+  if (func.commentInlineImage) {
     add_on += ",image2";
   }
 
