@@ -36,6 +36,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.catalina.User;
+import org.apache.commons.codec.binary.StringUtils;
 import org.jsoup.internal.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -219,13 +220,19 @@ public class FileService {
    */
   // TODO 추후 디비 저장 & 삭제 구현할 것 ( 로컬 or AWS S3)
   public String uploadImage(HttpServletResponse response,
-      MultipartHttpServletRequest multiFile, HttpServletRequest request) throws Exception {
+      MultipartHttpServletRequest multiFile, HttpServletRequest request, String editorName)
+      throws Exception {
     int companyID = Integer.parseInt(request.getAttribute("companyID").toString());
-    if (!(functionValidation
-        .isFunctionOn(companyID, FunctionID.POST_INLINE_IMAGE, FunctionID.COMMENT_INLINE_IMAGE,
-            response))) {
-      return null;
+    if (StringUtils.equals(editorName, "editor")) {
+      if (!(functionValidation.isFunctionOn(companyID, FunctionID.POST_INLINE_IMAGE, response))) {
+        return null;
+      }
+    } else {
+      if (!(functionValidation.isFunctionOn(companyID, FunctionID.COMMENT_INLINE_IMAGE, response))) {
+        return null;
+      }
     }
+
     response.setCharacterEncoding("UTF-8");
     response.setContentType("text/html;charset=UTF-8");
     JsonObject json = new JsonObject();
@@ -250,9 +257,16 @@ public class FileService {
             json.addProperty("fileName", fileName);
             json.addProperty("url", fileUrl);
 
-            if (functionService.getFunctionStatus(companyID, FunctionID.POST_AUTO_TAG)) {
-              List<UserDTO> detectedUsers = detectedUserList(fileName, companyID);
-              json.add("detectedUser", new Gson().toJsonTree(detectedUsers));
+            if (StringUtils.equals(editorName, "editor")) {
+              if (functionService.getFunctionStatus(companyID, FunctionID.POST_AUTO_TAG)) {
+                List<UserDTO> detectedUsers = detectedUserList(fileName, companyID);
+                json.add("detectedUser", new Gson().toJsonTree(detectedUsers));
+              }
+            } else {
+              if (functionService.getFunctionStatus(companyID, FunctionID.COMMENT_AUTO_TAG)) {
+                List<UserDTO> detectedUsers = detectedUserList(fileName, companyID);
+                json.add("detectedUser", new Gson().toJsonTree(detectedUsers));
+              }
             }
             printWriter.println(json);
           } catch (IOException e) {

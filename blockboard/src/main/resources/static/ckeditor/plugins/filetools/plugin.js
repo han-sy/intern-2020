@@ -65,13 +65,12 @@
 				}
 				// Append token preventing CSRF attacks.
 				$formData.append( 'ckCsrfToken', CKEDITOR.tools.getCsrfToken() );
-
+				$formData.append('editorName', editor.name);
 				if ( configXhrHeaders ) {
 					for ( header in configXhrHeaders ) {
 						fileLoader.xhr.setRequestHeader( header, configXhrHeaders[ header ] );
 					}
 				}
-
 				fileLoader.xhr.send( $formData );
 			}, null, null, 999 );
 
@@ -564,7 +563,6 @@
 
 				this.xhr = new XMLHttpRequest();
 				this.attachRequestListeners();
-
 				if ( this.editor.fire( 'fileUploadRequest', { fileLoader: this, requestData: requestData } ) ) {
 					this.changeStatus( 'uploading' );
 				}

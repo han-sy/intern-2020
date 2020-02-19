@@ -7,6 +7,7 @@ package com.board.project.blockboard.controller;
 import com.board.project.blockboard.dto.FileDTO;
 import com.board.project.blockboard.service.FileService;
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -82,9 +83,9 @@ public class FileController {
    */
   @PostMapping("/imageUpload")
   public String uploadImage(HttpServletResponse response, MultipartHttpServletRequest multiFile,
-      HttpServletRequest request)
+      HttpServletRequest request, @RequestParam("editorName") String editorName)
       throws Exception {
-    return fileService.uploadImage(response, multiFile, request);
+    return fileService.uploadImage(response, multiFile, request, editorName);
   }
 
 
