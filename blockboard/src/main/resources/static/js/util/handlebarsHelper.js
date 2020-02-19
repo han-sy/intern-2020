@@ -13,7 +13,7 @@ Handlebars.registerHelper('isAbleFunction', function (options) {
 //댓글기능 on인지 체크
 Handlebars.registerHelper('isCommentAble', function (options) {
   var functionOn = new FunctionOn();
-  if (functionOn.isCommentOn()) {
+  if (functionOn.comment) {
     var boardID = getCurrentBoardID();
     if (boardID > 0 || boardID == BOARD_ID.POPULAR) {
       return options.fn(this);
@@ -25,7 +25,7 @@ Handlebars.registerHelper('isCommentAble', function (options) {
 //답글기능 on인지 체크
 Handlebars.registerHelper('isReplyAble', function (options) {
   var functionOn = new FunctionOn();
-  if (functionOn.isReplyOn()) {
+  if (functionOn.reply) {
     return options.fn(this); //true
   }
   return options.inverse(this);//false
@@ -34,7 +34,7 @@ Handlebars.registerHelper('isReplyAble', function (options) {
 //답글기능 on인지 체크
 Handlebars.registerHelper('isFileAttachAble', function (options) {
   var functionOn = new FunctionOn();
-  if (functionOn.isFileAttachOn()) {
+  if (functionOn.postFileAttach) {
     return options.fn(this); //true
   }
   return options.inverse(this);//false
@@ -115,6 +115,15 @@ Handlebars.registerHelper('isPopular', function (option) {
     return option.fn(this);
   } else {
     return option.inverse(this);
+  }
+});
+Handlebars.registerHelper('isCommentFunction', function (option) {
+  var isCommentFunction = (this.functionID%2)
+  console.log(this.functionID +" : "+isCommentFunction );
+  if (isCommentFunction == 0) {
+    return "comment_function";
+  } else {
+    return "";
   }
 });
 Handlebars.registerHelper('printFileSize', function (option) {

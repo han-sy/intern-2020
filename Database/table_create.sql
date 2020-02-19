@@ -127,10 +127,15 @@ insert into users (user_id,company_id,user_name,user_password,user_type) values(
 
 insert into functions values(1,'댓글');
 insert into functions values(2,'대댓글');
-insert into functions values(3,'파일첨부');
-insert into functions values(4,'inline 이미지');
-insert into functions values(5,'임시저장');
-insert into functions values(6,'스티커');
+insert into functions values(3,'게시물 파일첨부');
+insert into functions values(4,'댓글/답글 파일첨부');
+insert into functions values(5,'게시물 inline 이미지');
+insert into functions values(6,'댓글/답글 inline 이미지');
+insert into functions values(7,'임시저장');
+insert into functions values(9,'게시물 스티커');
+insert into functions values(10,'댓글/답글 스티커');
+insert into functions values(11,'게시물 자동태그');
+insert into functions values(12,'댓글/답글 자동태그');
 
 insert into functions_check values(1,1,null);
 insert into functions_check values(2,4,null);

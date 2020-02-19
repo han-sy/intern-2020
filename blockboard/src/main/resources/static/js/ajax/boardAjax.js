@@ -80,7 +80,7 @@ function getPostDataAfterPostClick(postID, boardID) {
 
       //게시글 내용 출력
       loadPostContent(data);
-      if(functionOn.isFileAttachOn()){
+      if(functionOn.postFileAttach){
         var container = $("#postcontent").find(".attached_file_list_container_post");
         getFileList(postID,0,container,updateFileListInPostUI);
       }

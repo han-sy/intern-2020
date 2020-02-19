@@ -31,11 +31,15 @@ public class ConstantData {
 
     public static final int COMMENT = 1;
     public static final int REPLY = 2;
-    public static final int ATTACH_FILE = 3;
-    public static final int INLINE_IMAGE = 4;
-    public static final int TEMP_SAVE = 5;
-    public static final int STICKER = 6;
-    public static final int AUTO_TAG = 7;
+    public static final int POST_ATTACH_FILE = 3;
+    public static final int COMMENT_ATTACH_FILE =4;
+    public static final int POST_INLINE_IMAGE =5;
+    public static final int COMMENT_INLINE_IMAGE =6;
+    public static final int POST_TEMP_SAVE = 7;
+    public static final int POST_STICKER = 9;
+    public static final int COMMENT_STICKER = 10;
+    public static final int POST_AUTO_TAG = 11;
+    public static final int COMMENT_AUTO_TAG = 12;
   }
 
 }

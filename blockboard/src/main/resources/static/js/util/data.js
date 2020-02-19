@@ -34,71 +34,132 @@ class User {
 class FunctionOn{
   constructor(){
     if($('#functionAble1').attr("value") == "on"){
-      this.comment = true;
+      this._comment = true;
     } else if($('#functionAble1').attr("value") == "off"){
-      this.comment = false;
+      this._comment = false;
     }else{
       changedDataError();
     }
 
     if($('#functionAble2').attr("value") == "on"){
-      this.reply = true;
+      this._reply = true;
     } else if($('#functionAble2').attr("value") == "off"){
-      this.reply =false;
+      this._reply =false;
     }else{
       changedDataError();
     }
 
     if($('#functionAble3').attr("value") == "on"){
-      this.fileAttach = true;
+      this._postFileAttach = true;
     }else if($('#functionAble3').attr("value") == "off"){
-      this.fileAttach =false;
+      this._postFileAttach =false;
     }else{
       changedDataError();
     }
-
     if($('#functionAble4').attr("value") == "on"){
-      this.inlineImage=true;
+      this._commentFileAttach = true;
     }else if($('#functionAble4').attr("value") == "off"){
-      this.inlineImage=false;
+      this._commentFileAttach =false;
     }else{
       changedDataError();
     }
 
     if($('#functionAble5').attr("value") == "on"){
-      this.tempSave = true;
+      this._postInlineImage=true;
     }else if($('#functionAble5').attr("value") == "off"){
-      this.tempSave = false;
+      this._postInlineImage=false;
     }else{
       changedDataError();
     }
-
     if($('#functionAble6').attr("value") == "on"){
-      this.sticker = true;
+      this._commentInlineImage=true;
     }else if($('#functionAble6').attr("value") == "off"){
-      this.sticker = false;
+      this._commentInlineImage=false;
+    }else{
+      changedDataError();
+    }
+
+    if($('#functionAble7').attr("value") == "on"){
+      this._postTempSave = true;
+    }else if($('#functionAble7').attr("value") == "off"){
+      this._postTempSave = false;
+    }else{
+      changedDataError();
+    }
+
+    if($('#functionAble9').attr("value") == "on"){
+      this._postSticker = true;
+    }else if($('#functionAble9').attr("value") == "off"){
+      this._postSticker = false;
+    }else{
+      changedDataError();
+    }
+    if($('#functionAble10').attr("value") == "on"){
+      this._commentSticker = true;
+    }else if($('#functionAble10').attr("value") == "off"){
+      this._commentSticker = false;
+    }else{
+      changedDataError();
+    }
+    if($('#functionAble11').attr("value") == "on"){
+      this._postAutoTag = true;
+    }else if($('#functionAble11').attr("value") == "off"){
+      this._postAutoTag = false;
+    }else{
+      changedDataError();
+    }
+    if($('#functionAble12').attr("value") == "on"){
+      this._commentAutoTag = true;
+    }else if($('#functionAble12').attr("value") == "off"){
+      this._commentAutoTag = false;
     }else{
       changedDataError();
     }
   }
 
-  isCommentOn(){
-    return this.comment;
+  get comment() {
+    return this._comment;
   }
-  isReplyOn(){
-    return this.reply;
+
+  get reply() {
+    return this._reply;
   }
-  isFileAttachOn(){
-    return this.fileAttach;
+
+  get postFileAttach() {
+    return this._postFileAttach;
   }
-  isInlineImageOn(){
-    return this.inlineImage;
+
+  get commentFileAttach() {
+    return this._commentFileAttach;
   }
-  isTempSaveOn(){
-    return this.tempSave;
+
+  get postInlineImage() {
+    return this._postInlineImage;
   }
-  isStickerOn(){
-    return this.sticker;
+
+  get commentInlineImage() {
+    return this._commentInlineImage;
   }
+
+  get postTempSave() {
+    return this._postTempSave;
+  }
+
+  get postSticker() {
+    return this._postSticker;
+  }
+
+  get commentSticker() {
+    return this._commentSticker;
+  }
+
+  get postAutoTag() {
+    return this._postAutoTag;
+  }
+
+  get commentAutoTag() {
+    return this._commentAutoTag;
+  }
+
 }
 

@@ -22,4 +22,8 @@ function getFunctionCheckList(data) {
   var functions = {functions: data};
   var itemList = template(functions);
   $('.modal-body-changeFunctions').html(itemList);
+  //alert($('.btn-group-toggle').first().html());
+  //alert($('.btn-group-toggle').first().find(".function_checkbox").attr("value"));
+  $('.btn-group-toggle').first().addClass("first_function");
+  ChangeFunctionListUI($(".first_function").find("._function-switch"));
 }

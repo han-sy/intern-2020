@@ -18,7 +18,7 @@ function insertPost(postID,boardID, postTitle, postContent) {
     },
     success: function (data) {
       var functionData = new FunctionOn();
-      if(functionData.isFileAttachOn()){
+      if(functionData.postFileAttach){
         if(isNullData(postID)){
           updateIDToFiles(data,"");
         }else{
@@ -50,7 +50,7 @@ function insertTempPost(boardID, postID, temp_title, temp_content, post_status) 
       if (post_status == "temp") {
         addPostInfoToEditor(data, boardID);
         var functionData = new FunctionOn();
-        if(functionData.isFileAttachOn()){
+        if(functionData.postFileAttach){
           if(isNullData(postID)){
             updateIDToFiles(data,"");
           }else{

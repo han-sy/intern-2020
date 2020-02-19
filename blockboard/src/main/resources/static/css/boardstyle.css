@@ -1,4 +1,6 @@
-
+.display_none{
+  display: none;
+}
 .checkbox {
   padding-left: 20px;
 }

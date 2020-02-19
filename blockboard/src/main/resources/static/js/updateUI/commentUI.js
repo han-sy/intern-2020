@@ -34,10 +34,10 @@ function getCommentInputHtml(type, buttonName, tag, className, buttonSelector,
   var func = new FunctionOn();
 
   var add_on = "";
-  if (func.isStickerOn()) {
+  if (func.postSticker) {
     add_on += ",emoji";
   }
-  if (func.isInlineImageOn()) {
+  if (func.postInlineImage) {
     add_on += ",image2";
   }
   var original_config = CKEDITOR.config.plugins;

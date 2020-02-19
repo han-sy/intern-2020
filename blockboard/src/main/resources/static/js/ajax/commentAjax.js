@@ -43,7 +43,7 @@ function insertComment(boardID, postID, commentText,commentID) {//댓글 임시�
 
       console.log("insertComment cid = ", commentID);
       var functionData = new FunctionOn();
-      if(functionData.isFileAttachOn()){
+      if(functionData.postFileAttach){
         if(isNullData(commentID)){
           updateIDToFiles(postID,data,boardID);
         }else{
@@ -123,7 +123,7 @@ function insertReply(boardID, postID, commentContent, commentReferencedID,
     success: function (data) {
       console.log("commentID : "+data+","+commentID);
       var functionData = new FunctionOn();
-      if(functionData.isFileAttachOn()){
+      if(functionData.postFileAttach){
         if(isNullData(commentID)){
           updateIDToFiles(postID,data,boardID,commentReferencedID);
         }else{

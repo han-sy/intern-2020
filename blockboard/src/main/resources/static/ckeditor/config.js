@@ -56,7 +56,7 @@ CKEDITOR.editorConfig = function (config) {
       + 'ajax';
 
   var func = new FunctionOn();
-  if (func.isInlineImageOn()) {
+  if (func.postInlineImage) {
     config.extraPlugins += ",image2";
   }
 

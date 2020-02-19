@@ -75,7 +75,7 @@ public class FileService {
     int companyID = Integer.parseInt(request.getAttribute("companyID").toString());
     String uuid = Common.getNewUUID();
     Iterator<String> itr = multipartRequest.getFileNames();
-    if (!functionValidation.isFunctionOn(companyID, FunctionID.ATTACH_FILE, response)) {
+    if (!functionValidation.isFunctionOn(companyID, FunctionID.POST_ATTACH_FILE, response)) {
       return null;
     }
     String fileName = "";
@@ -114,7 +114,7 @@ public class FileService {
   public void updateIDs(List<FileDTO> fileList, HttpServletRequest request,
       HttpServletResponse response) {
     int companyID = Integer.parseInt(request.getAttribute("companyID").toString());
-    if (!functionValidation.isFunctionOn(companyID, FunctionID.ATTACH_FILE, response)) {
+    if (!functionValidation.isFunctionOn(companyID, FunctionID.POST_ATTACH_FILE, response)) {
       return;
     }
     for (FileDTO file : fileList) {
@@ -137,7 +137,7 @@ public class FileService {
 
   public void downloadFile(int fileID, HttpServletResponse response, HttpServletRequest request) {
     UserDTO userData = new UserDTO(request);
-    if (!functionValidation.isFunctionOn(userData.getCompanyID(), FunctionID.ATTACH_FILE, response)) {
+    if (!functionValidation.isFunctionOn(userData.getCompanyID(), FunctionID.POST_ATTACH_FILE, response)) {
       return;
     }
     FileDTO fileData = fileMapper.selectFileByFileID(fileID);
@@ -195,7 +195,7 @@ public class FileService {
   public void deleteFile(String storedFileName, HttpServletRequest request,
       HttpServletResponse response) {
     UserDTO userData = new UserDTO(request);
-    if (!functionValidation.isFunctionOn(userData.getCompanyID(), FunctionID.ATTACH_FILE, response)
+    if (!functionValidation.isFunctionOn(userData.getCompanyID(), FunctionID.POST_ATTACH_FILE, response)
         || !fileValidation.isExistFileInDatabase(storedFileName, response)) {
       return;
     }
@@ -220,7 +220,7 @@ public class FileService {
   public String uploadImage(HttpServletResponse response,
       MultipartHttpServletRequest multiFile, HttpServletRequest request) throws Exception {
     int companyID = Integer.parseInt(request.getAttribute("companyID").toString());
-    if (!functionValidation.isFunctionOn(companyID, FunctionID.ATTACH_FILE, response)) {
+    if (!functionValidation.isFunctionOn(companyID, FunctionID.POST_ATTACH_FILE, response)) {
       return null;
     }
     response.setCharacterEncoding("UTF-8");
@@ -247,7 +247,7 @@ public class FileService {
             json.addProperty("fileName", fileName);
             json.addProperty("url", fileUrl);
 
-            if (functionService.getFunctionStatus(companyID, FunctionID.AUTO_TAG)) {
+            if (functionService.getFunctionStatus(companyID, FunctionID.POST_AUTO_TAG)) {
               List<UserDTO> detectedUsers = detectedUserList(fileName, companyID);
               json.add("detectedUser", new Gson().toJsonTree(detectedUsers));
             }
