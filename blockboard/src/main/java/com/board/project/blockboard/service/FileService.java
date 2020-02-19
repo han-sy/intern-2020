@@ -75,7 +75,7 @@ public class FileService {
     int companyID = Integer.parseInt(request.getAttribute("companyID").toString());
     String uuid = Common.getNewUUID();
     Iterator<String> itr = multipartRequest.getFileNames();
-    if (!functionValidation.isFunctionOn(companyID, FunctionID.POST_ATTACH_FILE, response)) {
+    if (!functionValidation.isFunctionOn(companyID, FunctionID.POST_ATTACH_FILE,FunctionID.COMMENT_ATTACH_FILE, response)) {
       return null;
     }
     String fileName = "";
@@ -114,7 +114,7 @@ public class FileService {
   public void updateIDs(List<FileDTO> fileList, HttpServletRequest request,
       HttpServletResponse response) {
     int companyID = Integer.parseInt(request.getAttribute("companyID").toString());
-    if (!functionValidation.isFunctionOn(companyID, FunctionID.POST_ATTACH_FILE, response)) {
+    if (!functionValidation.isFunctionOn(companyID, FunctionID.POST_ATTACH_FILE,FunctionID.COMMENT_ATTACH_FILE, response)) {
       return;
     }
     for (FileDTO file : fileList) {
@@ -138,7 +138,7 @@ public class FileService {
   public void downloadFile(int fileID, HttpServletResponse response, HttpServletRequest request) {
     UserDTO userData = new UserDTO(request);
     if (!functionValidation
-        .isFunctionOn(userData.getCompanyID(), FunctionID.POST_ATTACH_FILE, response)) {
+        .isFunctionOn(userData.getCompanyID(), FunctionID.POST_ATTACH_FILE,FunctionID.COMMENT_ATTACH_FILE, response)) {
       return;
     }
     FileDTO fileData = fileMapper.selectFileByFileID(fileID);
@@ -196,7 +196,7 @@ public class FileService {
       HttpServletResponse response) {
     UserDTO userData = new UserDTO(request);
     if (!functionValidation
-        .isFunctionOn(userData.getCompanyID(), FunctionID.POST_ATTACH_FILE, response)
+        .isFunctionOn(userData.getCompanyID(), FunctionID.POST_ATTACH_FILE,FunctionID.COMMENT_ATTACH_FILE, response)
         || !fileValidation.isExistFileInDatabase(storedFileName, response)) {
       return;
     }
