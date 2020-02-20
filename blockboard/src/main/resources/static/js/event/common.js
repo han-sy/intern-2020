@@ -103,6 +103,6 @@ function loadImage(value) {
   }
 }
 
-$('.modal').on('hidden.bs.modal', function (e) {
+$('.modal-body-addUser').on('hidden.bs.modal', function (e) {
   $(this).find('form')[0].reset();
 });

@@ -7,6 +7,7 @@ package com.board.project.blockboard.service;
 
 import com.board.project.blockboard.dto.ViewRecordDTO;
 import com.board.project.blockboard.mapper.ViewRecordMapper;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,5 +26,11 @@ public class ViewRecordService {
   public boolean isReadPostByUser(String userID, int postID){
     ViewRecordDTO record = new ViewRecordDTO(postID,userID);
     return viewRecordMapper.selectRecordExist(record);
+  }
+
+
+  public List<ViewRecordDTO> getViewRecords(int postID, String userID) {
+    ViewRecordDTO record = new ViewRecordDTO(postID,userID);
+    return viewRecordMapper.selectViewRecordsByPostID(postID);
   }
 }

@@ -500,9 +500,9 @@
             <script id="postcontent-template" type="text/x-handlebars-template">
                 {{#post}}
                     <p class="h4">{{postTitle}}</p>
-                    <p class="h6" align="right">{{userName}}</p>
+                    <p class="h6 writer_info" align="right" data-id="{{userID}}">{{userName}}</p>
                     <p class="h6" align="right">{{postRegisterTime}}</p>
-                    <p class="h6" align="right">조회수 {{viewCount}}</p>
+                    <p align="right"><a class="h6 read_check" data-toggle="modal" data-target="#check_read_user" align="right">읽음 {{viewCount}}</a></p>
                     <hr>
                     <div class="attached_file_list_container_post">
                         <!--첨부파일 컨테이너 -->
@@ -534,6 +534,45 @@
                 {{else}}
                     </div>
                 {{/isCommentAble}}
+            </script>
+
+            <!--기독 모달-->
+            <div class="modal" id="check_read_user" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title text-success">게시글 조회 유저 확인</h5>
+                            <button type="button" class="close" data-dismiss="modal"
+                                    aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <ul class="modal-body-viewRecordList-container" style="list-style:none;">
+                            <!--사용자 목록-->
+                        </ul>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--기독 리스트 템플릿-->
+            <script id="view_record-list-template" type="text/x-handlebars-template">
+                {{#records}}
+                    <li>
+                        <div class ="row">
+                            <div class="col-1">
+                                <img class = "profile" name ="profile" width="50px" height="50px" src='{{thumbnailUrl}}'>
+                            </div>
+                            <div class="col">
+                                <a style="padding-left: 30px; padding-top: 15px"><strong class=name
+                                           data-id='{{userID}}'>{{userName}}</strong>({{userID}})</a>
+                            </div>
+                        </div>
+                    </li>
+                {{/records}}
             </script>
             <!--첨부파일 리스트 템플릿-->
             <script id="attached-file-list-template" type="text/x-handlebars-template">
@@ -889,6 +928,7 @@
 <script src="/static/js/event/common.js"></script>
 <script src="/static/js/event/mentionEvent.js"></script>
 <script src="/static/js/event/fileEvent.js"></script>
+<script src="/static/js/event/viewRecordEvent.js"></script>
 <script src="/static/js/ajax/functionAjax.js"></script>
 <script src="/static/js/ajax/commentAjax.js"></script>
 <script src="/static/js/ajax/postAjax.js"></script>
@@ -897,6 +937,7 @@
 <script src="/static/js/ajax/fileAjax.js"></script>
 <script src="/static/js/ajax/userAjax.js"></script>
 <script src="/static/js/ajax/alarmAjax.js"></script>
+<script src="/static/js/ajax/viewRecordAjax.js"></script>
 <script src="/static/ckeditor/ckeditor.js"></script>
 <script src="/static/ckeditor/adapters/jquery.js"></script>
 <script src="/static/js/util/handlebarsHelper.js"></script>
@@ -905,6 +946,7 @@
 <script src="/static/js/updateUI/commentUI.js"></script>
 <script src="/static/js/updateUI/functionUI.js"></script>
 <script src="/static/js/updateUI/paginationUI.js"></script>
+<script src="/static/js/updateUI/viewRecordUI.js"></script>
 <script src="/static/js/updateUI/postUI.js"></script>
 <script src="/static/js/updateUI/fileUI.js"></script>
 <script src="/static/js/updateUI/alarmUI.js"></script>

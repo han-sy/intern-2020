@@ -13,10 +13,25 @@
                 #{userID});
   </insert>
 
-  <select id="selectRecordExist" parameterType="com.board.project.blockboard.dto.ViewRecordDTO" resultType="boolean" >
+  <select id="selectRecordExist" parameterType="com.board.project.blockboard.dto.ViewRecordDTO"
+    resultType="boolean">
     SELECT IF(Count(post_id) > 0, TRUE, FALSE)
     FROM   view_records
     WHERE  post_id = #{postID}
            AND user_id = #{userID};
+  </select>
+
+  <select id="selectViewRecordsByPostID"
+    parameterType="int"
+    resultType="com.board.project.blockboard.dto.ViewRecordDTO">
+
+    SELECT view_records.post_id AS postID,
+           view_records.user_id AS userID,
+           users.user_name      AS userName,
+           users.thumbnail_url  AS thumbnailUrl
+    FROM   view_records view_records
+           LEFT OUTER JOIN users users
+                        ON view_records.user_id = users.user_id
+    WHERE  view_records.post_id = #{postID};
   </select>
 </mapper>

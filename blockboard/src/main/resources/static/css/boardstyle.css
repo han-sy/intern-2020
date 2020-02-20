@@ -1,6 +1,11 @@
 .name{
   cursor:pointer;
 }
+.read_check{
+  cursor: pointer;
+  color:blue;
+  font-weight:bold;
+}
 .display_none{
   display: none;
 }

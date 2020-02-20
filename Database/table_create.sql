@@ -190,3 +190,4 @@ insert into users values('seulgi', '1', '슬기', '123', '일반', 'https://bloc
 insert into users values('wendy', '1', '웬디', '123', '일반', 'https://block-board-user.s3.amazonaws.com/wendy.png', 'wendy.png', 'https://block-board-user-thumbnail.s3.amazonaws.com/wendy.png', 'wendy.png');
 insert into users values('yeri', '1', '예리', '123', '일반', 'https://block-board-user.s3.amazonaws.com/yeri.jpg', 'yeri.jpg', 'https://block-board-user-thumbnail.s3.amazonaws.com/yeri.jpg', 'yeri.jpg');
 
+select * from view_records;
