@@ -130,8 +130,14 @@ insert into boards (company_id,board_name) values(2,"공지사항");
 insert into boards (company_id,board_name) values(2,"건의사항");
 insert into boards (company_id,board_name) values(1,"자유게시판");
 
-insert into users (user_id,company_id,user_name,user_password,user_type) values(1,1,'관리자','123','관리자');
-insert into users (user_id,company_id,user_name,user_password,user_type) values(2,1,'전우혁','123','사원');
+insert into users values('admin', '1', '관리자', '123', '관리자', 'https://block-board-user.s3.amazonaws.com/admin.png', 'admin.png', 'https://block-board-user-thumbnail.s3.amazonaws.com/admin.png', 'admin.png');
+insert into users values(1, '1', '김동욱', '123', '관리자', 'https://block-board-user.s3.amazonaws.com/dongwook.jpg', 'dongwook.jpg', 'https://block-board-user-thumbnail.s3.amazonaws.com/dongwook.jpg', 'dongwook.jpg');
+insert into users values(2, '1', '전우혁', '123', '관리자', 'https://block-board-user.s3.amazonaws.com/woohyuk.jpg', 'woohyuk.jpg', 'https://block-board-user-thumbnail.s3.amazonaws.com/woohyuk.jpg', 'woohyuk.jpg');
+insert into users values('irene', '1', '아이린', '123', '일반', 'https://block-board-user.s3.amazonaws.com/irene.jpg', 'irene.jpg', 'https://block-board-user-thumbnail.s3.amazonaws.com/irene.jpg', 'irene.jpg');
+insert into users values('joy', '1', '조이', '123', '일반', 'https://block-board-user.s3.amazonaws.com/joy.jpg', 'joy.jpg', 'https://block-board-user-thumbnail.s3.amazonaws.com/joy.jpg', 'joy.jpg');
+insert into users values('seulgi', '1', '슬기', '123', '일반', 'https://block-board-user.s3.amazonaws.com/seulgi.jpg', 'seulgi.jpg', 'https://block-board-user-thumbnail.s3.amazonaws.com/seulgi.jpg', 'seulgi.jpg');
+insert into users values('wendy', '1', '웬디', '123', '일반', 'https://block-board-user.s3.amazonaws.com/wendy.png', 'wendy.png', 'https://block-board-user-thumbnail.s3.amazonaws.com/wendy.png', 'wendy.png');
+insert into users values('yeri', '1', '예리', '123', '일반', 'https://block-board-user.s3.amazonaws.com/yeri.jpg', 'yeri.jpg', 'https://block-board-user-thumbnail.s3.amazonaws.com/yeri.jpg', 'yeri.jpg');
 
 
 insert into functions values(1,'댓글');
@@ -172,9 +178,6 @@ update posts
 set company_id = 1
 where company_id = 2;
 
-update users
-set user_name = "관리자"
-where user_id = "1";
 
 select * from posts;
 select * from alarms;
@@ -184,10 +187,15 @@ select * from users;
 
 
 # user_id, company_id, user_name, user_password, user_type, image_url, image_file_name, thumbnail_url, thumbnail_file_name
-insert into users values('irene', '1', '아이린', '123', '일반', 'https://block-board-user.s3.amazonaws.com/irene.jpg', 'irene.jpg', 'https://block-board-user-thumbnail.s3.amazonaws.com/irene.jpg', 'irene.jpg');
-insert into users values('joy', '1', '조이', '123', '일반', 'https://block-board-user.s3.amazonaws.com/joy.jpg', 'joy.jpg', 'https://block-board-user-thumbnail.s3.amazonaws.com/joy.jpg', 'joy.jpg');
-insert into users values('seulgi', '1', '슬기', '123', '일반', 'https://block-board-user.s3.amazonaws.com/seulgi.jpg', 'seulgi.jpg', 'https://block-board-user-thumbnail.s3.amazonaws.com/seulgi.jpg', 'seulgi.jpg');
-insert into users values('wendy', '1', '웬디', '123', '일반', 'https://block-board-user.s3.amazonaws.com/wendy.png', 'wendy.png', 'https://block-board-user-thumbnail.s3.amazonaws.com/wendy.png', 'wendy.png');
-insert into users values('yeri', '1', '예리', '123', '일반', 'https://block-board-user.s3.amazonaws.com/yeri.jpg', 'yeri.jpg', 'https://block-board-user-thumbnail.s3.amazonaws.com/yeri.jpg', 'yeri.jpg');
+
+
 
 select * from view_records;
+select 
+view_records.post_id as postID,
+view_records.user_id as userID,
+users.user_name as userName,
+users.thumbnail_url as thumbnailUrl
+from view_records view_records left outer join users users
+on view_records.user_id = users.user_id
+WHERE view_records.post_id = 1;
