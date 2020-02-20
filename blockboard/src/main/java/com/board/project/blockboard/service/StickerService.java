@@ -27,61 +27,72 @@ public class StickerService {
 
   private final String STICKER_PATH = "/home1/irteam/storage/sticker";
 
-  private final Map<String, Object> cache_stickerList = new HashMap<>();
-
-  private final ArrayList<String> cache_groupNames = new ArrayList<>();
+  private final int MAX_GROUP_PER_PAGE = 6;
 
   long start, end;
 
-  public JSONObject getStickers(HttpServletRequest request) {
-    start = System.nanoTime();
-    if (cache_stickerList.isEmpty() || this.isModify()) {
-      JSONArray stickers = new JSONArray();
-      JSONArray groups = new JSONArray();
-      ArrayList<String> groupNames = new ArrayList<>();
-      int count = -1;
-      // 하위 디렉토리
-      for (File info : Objects.requireNonNull(new File(STICKER_PATH).listFiles())) {
-        if (info.isDirectory()) {
-          String newPath = STICKER_PATH + "/" + info.getName();
-          JSONObject group = new JSONObject();
-          JSONObject position = new JSONObject();
-          position.put("x", (count--) * 21);
-          position.put("y", 0);
-          group.put("groupName", info.getName());
-          groupNames.add(info.getName());
-          group.put("position", position);
-          for (File sub_info : Objects.requireNonNull(new File(newPath).listFiles())) {
-            if (sub_info.isFile() && !sub_info.getName().startsWith("nav")) {
-              JSONObject sticker = new JSONObject();
-              sticker.put("groupName", info.getName());
-              sticker.put("id", sub_info.getName());
-              sticker.put("src",
-                  request.getContextPath() + "/sticker/" + info.getName() + "/" + sub_info
-                      .getName());
-              stickers.add(sticker);
-            } else if (sub_info.getName().startsWith("nav")) {
-              group.put("navsrc",
-                  request.getContextPath() + "/sticker/" + info.getName() + "/" + sub_info
-                      .getName());
-            }
-          }
-          groups.add(group);
-        }
-      }
+  public JSONObject getStickers(HttpServletRequest request, int pageNum) {
+    Map<String, Object> stickerList = new HashMap<>();
 
-      JSONObject result = new JSONObject();
-      result.put("groups", groups);
-      result.put("items", stickers);
-      cache_stickerList.putAll(result);
-      cache_groupNames.addAll(groupNames);
-      end = System.nanoTime();
-      log.info("getStickers: " + (end - start) / 1000000.0);
-      return result;
+    log.info("요청온 페이지 = " + pageNum);
+    start = System.nanoTime();
+    int groupIndex = -1;
+    int totalGroupCount = 0;
+
+    JSONArray stickers = new JSONArray();
+    JSONArray groups = new JSONArray();
+
+    int count = -1;
+    // 하위 디렉토리
+    for (File info : Objects.requireNonNull(new File(STICKER_PATH).listFiles())) {
+      if (info.isDirectory()) {
+        totalGroupCount++;
+        groupIndex++;
+        log.info("index = " + groupIndex);
+        if (groupIndex < (pageNum - 1) * MAX_GROUP_PER_PAGE) {
+          log.info("다음꺼 검사");
+          continue;
+        }
+        if (groupIndex >= pageNum * MAX_GROUP_PER_PAGE) {
+          log.info("여기까지");
+          break;
+        }
+        log.info("스티커 저장 시작! + " + groupIndex);
+        String newPath = STICKER_PATH + "/" + info.getName();
+        JSONObject group = new JSONObject();
+        JSONObject position = new JSONObject();
+        position.put("x", (count--) * 25);
+        position.put("y", 0);
+        group.put("groupName", info.getName());
+        group.put("position", position);
+        for (File sub_info : Objects.requireNonNull(new File(newPath).listFiles())) {
+          if (sub_info.isFile() && !sub_info.getName().startsWith("nav")) {
+            JSONObject sticker = new JSONObject();
+            sticker.put("groupName", info.getName());
+            sticker.put("id", sub_info.getName());
+            sticker.put("src",
+                request.getContextPath() + "/sticker/" + info.getName() + "/" + sub_info
+                    .getName());
+            stickers.add(sticker);
+          } else if (sub_info.getName().startsWith("nav")) {
+            group.put("navsrc",
+                request.getContextPath() + "/sticker/" + info.getName() + "/" + sub_info
+                    .getName());
+          }
+        }
+        groups.add(group);
+      }
     }
+    log.info("총 디렉토리 수 = " + totalGroupCount);
+    JSONObject result = new JSONObject();
+    result.put("groups", groups);
+    result.put("items", stickers);
+    result.put("totalGroupCount", totalGroupCount);
+    stickerList.putAll(result);
     end = System.nanoTime();
     log.info("getStickers: " + (end - start) / 1000000.0);
-    return JsonParse.getJsonStringFromMap(cache_stickerList);
+    log.info(result.toJSONString());
+    return result;
   }
 
   public byte[] getSticker(String dirName, String fileName) throws IOException {
@@ -94,22 +105,4 @@ public class StickerService {
     return imageByteArray;
   }
 
-  public boolean isModify() {
-    int directoryCount = 0;
-
-    for (File info : Objects.requireNonNull(new File(STICKER_PATH).listFiles())) {
-      if(info.isDirectory()) {
-        directoryCount++;
-        if (!cache_groupNames.contains(info.getName())) {
-          cache_groupNames.clear();
-          cache_stickerList.clear();
-          return true;
-        }
-      }
-    }
-    if (directoryCount != cache_groupNames.size()) {
-      return true;
-    }
-    return false;
-  }
 }

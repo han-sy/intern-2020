@@ -22,9 +22,9 @@ public class StickerController {
   @Autowired
   private StickerService stickerService;
 
-  @GetMapping("/sticker")
-  public JSONObject getStickers(HttpServletRequest request) {
-    return stickerService.getStickers(request);
+  @GetMapping("/sticker/{pageNum}")
+  public JSONObject getStickers(HttpServletRequest request, @PathVariable("pageNum") int pageNum) {
+    return stickerService.getStickers(request, pageNum);
   }
 
   @GetMapping(value = "/sticker/{directory}/{fileName}", produces = MediaType.IMAGE_PNG_VALUE)
