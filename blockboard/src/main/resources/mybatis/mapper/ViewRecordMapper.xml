@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+ * @file ViewRecordMapper.xml
+-->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.board.project.blockboard.mapper.ViewRecordMapper">
+  <insert id="insertViewRecord" parameterType="com.board.project.blockboard.dto.ViewRecordDTO">
+    INSERT INTO view_records
+    VALUES     (#{postID},
+                #{userID});
+  </insert>
+
+  <select id="selectRecordExist" parameterType="com.board.project.blockboard.dto.ViewRecordDTO" resultType="boolean" >
+    SELECT IF(Count(post_id) > 0, TRUE, FALSE)
+    FROM   view_records
+    WHERE  post_id = #{postID}
+           AND user_id = #{userID};
+  </select>
+</mapper>

@@ -22,15 +22,19 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.User;
 import org.apache.commons.codec.binary.StringUtils;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
 public class PostService {
 
+  @Autowired
+  private ViewRecordService viewRecordService;
   @Autowired
   private PostMapper postMapper;
   @Autowired
@@ -105,9 +109,13 @@ public class PostService {
    */
   public PostDTO selectPostByPostID(int postID, int boardID, HttpServletRequest request,
       HttpServletResponse response) {
+    UserDTO userData = new UserDTO(request);
     PostDTO post = postMapper.selectPostByPostID(postID);
     if (postValidation.isExistPost(post, boardID, response)) {
-      updateViewCnt(postID, request, response);//조회수 업데이트 알고리즘
+      if(!viewRecordService.isReadPostByUser(userData.getUserID(),postID)){//안읽은경우
+        updateViewCnt(postID, request, response);//조회수 업데이트
+        post.setViewCount(post.getViewCount()+1);//반환도 1증가
+      }
       return post;
     }
     return null;
@@ -240,25 +248,12 @@ public class PostService {
    * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
    */
   //TODO 휴지통인경우 임시저장함인경우는 따로 구분해서 조회수 증가 안되도록 해야됨. 1번방법 : 임시저장이나 휴지통인 경우 제외 ,2번방법 : 작성자 조회수증가에서 제외.
-  public synchronized void updateViewCnt(int postID, HttpServletRequest request,
+  @Transactional
+  public void updateViewCnt(int postID, HttpServletRequest request,
       HttpServletResponse response) {
     UserDTO userData = new UserDTO(request);
-    boolean isOpened = false;
-    Cookie[] cookies = request.getCookies();
-    if (cookies != null) { //쿠키가 없을때
-      for (Cookie cookie : cookies) {
-        if (cookie.getName().equals(userData.getUserID() + "view" + postID)) {
-          cookie.setMaxAge(5 * 60);//5분으로 다시
-          isOpened = true;
-        }
-      }
-      if (!isOpened) {
-        postMapper.updateViewCnt(postID);
-        Cookie newCookie = new Cookie(userData.getUserID() + "view" + postID, postID + "");
-        newCookie.setMaxAge(5 * 60);//5분저장
-        response.addCookie(newCookie);
-      }
-    }
+    viewRecordService.readPostByUser(userData.getUserID(),postID);
+    postMapper.updateViewCnt(postID);
   }
 
   public List<PostDTO> getPopularPostList(int companyID) {

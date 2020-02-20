@@ -1,4 +1,5 @@
 use block_board;
+drop table view_records;
 drop table alarms;
 drop table files;
 drop table comments;
@@ -25,7 +26,7 @@ create table users(
     image_file_name text,
     thumbnail_url text,
     thumbnail_file_name text,
-    foreign key(company_id) references companies(company_id),
+    foreign key(company_id) references companies(company_id) ON DELETE CASCADE ,
     primary key(user_id,company_id)
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
@@ -39,8 +40,8 @@ create table functions_check(
 	company_id int(9) not null,
     function_id int(9) not null,
     function_data varchar(300),
-    foreign key(company_id) references companies(company_id),
-    foreign key(function_id) references functions(function_id),
+    foreign key(company_id) references companies(company_id) ON DELETE CASCADE ,
+    foreign key(function_id) references functions(function_id) ON DELETE CASCADE ,
     primary key(company_id,function_id)
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
@@ -48,7 +49,7 @@ create table boards(
 	board_id int(9) not null AUTO_INCREMENT,
     company_id int(9) not null,
     board_name varchar(150) not null,
-	foreign key(company_id) references companies(company_id),
+	foreign key(company_id) references companies(company_id) ON DELETE CASCADE ,
     primary key(board_id)
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
@@ -107,6 +108,14 @@ create table alarms(
     primary key(alarm_id)
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
+create table view_records(
+	post_id int(9) not null,
+    user_id varchar(20) not null,
+    foreign key(post_id) references posts(post_id) ON DELETE CASCADE ,
+    foreign key(user_id) references users(user_id) ON DELETE CASCADE ,
+    primary key(post_id,user_id)
+)ENGINE =InnoDB DEFAULT charset= utf8;
+
 alter table boards auto_increment=1;
 alter table posts auto_increment=1;
 alter table comments auto_increment=1;
@@ -121,9 +130,9 @@ insert into boards (company_id,board_name) values(2,"공지사항");
 insert into boards (company_id,board_name) values(2,"건의사항");
 insert into boards (company_id,board_name) values(1,"자유게시판");
 
-insert into users (user_id,company_id,user_name,user_password,user_type) values(1,1,'김동욱','123','관리자');
+insert into users (user_id,company_id,user_name,user_password,user_type) values(1,1,'관리자','123','관리자');
 insert into users (user_id,company_id,user_name,user_password,user_type) values(2,1,'전우혁','123','사원');
-insert into users (user_id,company_id,user_name,user_password,user_type) values(3,2,'곽대훈','123','관리자');
+
 
 insert into functions values(1,'댓글');
 insert into functions values(2,'대댓글');
@@ -164,11 +173,20 @@ set company_id = 1
 where company_id = 2;
 
 update users
-set image_url = "aaa" ,image_file_name = "aaa"
+set user_name = "관리자"
 where user_id = "1";
 
 select * from posts;
-select * from users;
+select * from alarms;
 select * from functions;
+select * from users;
 
-delete from users where user_id="irin";
+
+
+# user_id, company_id, user_name, user_password, user_type, image_url, image_file_name, thumbnail_url, thumbnail_file_name
+insert into users values('irene', '1', '아이린', '123', '일반', 'https://block-board-user.s3.amazonaws.com/irene.jpg', 'irene.jpg', 'https://block-board-user-thumbnail.s3.amazonaws.com/irene.jpg', 'irene.jpg');
+insert into users values('joy', '1', '조이', '123', '일반', 'https://block-board-user.s3.amazonaws.com/joy.jpg', 'joy.jpg', 'https://block-board-user-thumbnail.s3.amazonaws.com/joy.jpg', 'joy.jpg');
+insert into users values('seulgi', '1', '슬기', '123', '일반', 'https://block-board-user.s3.amazonaws.com/seulgi.jpg', 'seulgi.jpg', 'https://block-board-user-thumbnail.s3.amazonaws.com/seulgi.jpg', 'seulgi.jpg');
+insert into users values('wendy', '1', '웬디', '123', '일반', 'https://block-board-user.s3.amazonaws.com/wendy.png', 'wendy.png', 'https://block-board-user-thumbnail.s3.amazonaws.com/wendy.png', 'wendy.png');
+insert into users values('yeri', '1', '예리', '123', '일반', 'https://block-board-user.s3.amazonaws.com/yeri.jpg', 'yeri.jpg', 'https://block-board-user-thumbnail.s3.amazonaws.com/yeri.jpg', 'yeri.jpg');
+
