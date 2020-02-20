@@ -92,7 +92,7 @@ $(document).on('click', '.replyBtn', function () {
   replyFormClear(); //답글창 하나만 유지하기위해 다 클리어
 
   getCommentInputHtml("답글", "입력",
-      `<a class="mentions_tag" style="cursor:pointer; text-decoration: none;" href="javascript:void(0)"`
+      `<a class="mentions_tag name" style="cursor:pointer; text-decoration: none;" href="javascript:void(0)"`
       + ` data-id="${referenceUserID}"><strong>@${referenceUserName}</strong></a>&nbsp;`,
       "#" + inputID, "btn_openReply", "is_reply_input");
 

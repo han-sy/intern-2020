@@ -104,6 +104,7 @@
     SELECT post.post_id               AS postID,
            post.user_id               AS userID,
            users.user_name            AS userName,
+           users.thumbnail_url        AS thumbnailUrl,
            post.board_id              AS boardID,
            board.board_name           AS boardName,
            post.company_id            AS companyID,
@@ -132,6 +133,7 @@
             post.post_content AS postContent,
             post.post_register_time AS postRegisterTime,
             users.user_name AS userName,
+            users.thumbnail_url AS thumbnailUrl,
             board.board_name AS boardName,
             post.view_count AS viewCount
     FROM    posts post
@@ -155,6 +157,7 @@
             post.post_content AS postContent,
             post.post_register_time AS postRegisterTime,
             users.user_name AS userName,
+            users.thumbnail_url AS thumbnailUrl,
             post.post_status AS postStatus
     FROM    posts post
        JOIN users users ON post.user_id = users.user_id
@@ -177,6 +180,7 @@
         post.post_content AS postContent,
         post.post_register_time AS postRegisterTime,
         users.user_name AS userName,
+        users.thumbnail_url AS thumbnailUrl,
         board.board_name AS boardName,
         post.post_status AS postStatus
     FROM   posts post
@@ -203,6 +207,7 @@
         post.post_content AS postContent,
         post.post_register_time AS postRegisterTime,
         users.user_name AS userName,
+        users.thumbnail_url AS thumbnailUrl,
         post.view_count AS viewCount
     FROM    posts post
        JOIN users users ON post.user_id = users.user_id
@@ -285,6 +290,7 @@
     SELECT post.post_id               AS postID,
            post.user_id               AS userID,
            users.user_name            AS userName,
+           users.thumbnail_url        AS thumbnailUrl,
            post.board_id              AS boardID,
            board.board_name           AS boardName,
            post.company_id            AS companyID,
@@ -307,20 +313,21 @@
   <!--@author Dongwook Kim <dongwook.kim1211@worksmobile.com>-->
   <select id="selectPostByPostID" parameterType="int"
     resultType="com.board.project.blockboard.dto.PostDTO">
-    SELECT post.post_id            AS postID,
-           post.user_id            AS userID,
-           users.user_name         AS userName,
-           post.board_id           AS boardID,
-           post.company_id         AS companyID,
-           post.post_title         AS postTitle,
-           post.post_content       AS postContent,
-           post.post_register_time AS postRegisterTime,
+    SELECT post.post_id               AS postID,
+           post.user_id               AS userID,
+           users.user_name            AS userName,
+           users.thumbnail_url        AS thumbnailUrl,
+           post.board_id              AS boardID,
+           post.company_id            AS companyID,
+           post.post_title            AS postTitle,
+           post.post_content          AS postContent,
+           post.post_register_time    AS postRegisterTime,
            post.post_last_update_time AS postLastUpdateTime,
-           post.post_status        AS postStatus,
+           post.post_status           AS postStatus,
            post.view_count            AS viewCount
     FROM   posts post
            JOIN users users
-            ON post.user_id = users.user_id
+             ON post.user_id = users.user_id
     WHERE  post.post_id = #{postID}
   </select>
 
@@ -347,6 +354,7 @@
     SELECT post.post_id               AS postID,
            post.user_id               AS userID,
            users.user_name            AS userName,
+           users.thumbnail_url        AS thumbnailUrl,
            post.board_id              AS boardID,
            boards.board_name          AS boardName,
            post.company_id            AS companyID,

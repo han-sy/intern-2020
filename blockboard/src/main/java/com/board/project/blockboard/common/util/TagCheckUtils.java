@@ -40,8 +40,10 @@ public class TagCheckUtils {
     for (int i = 0; i < body.size(); i++) {
       Element tagItem = body.get(i);
       String userID = tagItem.dataset().get("id");
+      log.info(userID);
       taggedUsers.add(userID);
     }
+    log.info(taggedUsers.toString());
     return taggedUsers;
   }
 }

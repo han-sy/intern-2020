@@ -111,6 +111,7 @@ public class UserService {
         url = originalS3.upload(storedFileName,ConstantData.BUCKET_USER,mpf.getInputStream(),metadata,userID);
         InputStream thumbnailInputStream = Thumbnail.makeThumbnail(mpf,storedFileName,fileExt);
         thumbnailUrl = thumbnailS3.upload(storedFileName,ConstantData.BUCKET_USER_THUMBNAIL,thumbnailInputStream,metadata,userID);
+        Thumbnail.deleteSubFile(storedFileName);
       } catch (Exception e) {
         e.printStackTrace();
       }

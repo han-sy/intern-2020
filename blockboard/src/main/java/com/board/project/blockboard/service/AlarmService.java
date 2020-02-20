@@ -13,9 +13,11 @@ import com.board.project.blockboard.mapper.AlarmMapper;
 import java.util.List;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class AlarmService {
 
@@ -38,6 +40,7 @@ public class AlarmService {
 
   public void insertAlarm(CommentDTO comment) {
     Set<String> taggedUsers = tagCheckUtils.getTaggedUsers(comment);
+    log.info(taggedUsers.toString());
     if (taggedUsers != null) {
       for (String taggedUserID : taggedUsers) {
         AlarmDTO alarm = new AlarmDTO();

@@ -168,5 +168,7 @@ set image_url = "aaa" ,image_file_name = "aaa"
 where user_id = "1";
 
 select * from posts;
-
+select * from users;
 select * from functions;
+
+delete from users where user_id="irin";

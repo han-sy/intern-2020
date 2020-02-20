@@ -25,7 +25,7 @@ public class Thumbnail {
     BufferedImage srcImg = ImageIO.read(convertFile);
     log.info("srcImg ="+srcImg);
     fos.close();
-    int dest_width = 150, dest_height = 150;
+    int dest_width = 100, dest_height = 100;
     int origin_width = srcImg.getWidth();
     int origin_height = srcImg.getHeight();
 
@@ -51,5 +51,14 @@ public class Thumbnail {
     InputStream inputStream = new FileInputStream(thumbFile);
     log.info("inputStream ="+inputStream);
     return inputStream;
+  }
+
+  public static void deleteSubFile(String fileNmae){
+    File file = new File(fileNmae);
+    if(file.exists()){
+      if(file.delete()){
+        log.info("파일삭제");
+      }
+    }
   }
 }

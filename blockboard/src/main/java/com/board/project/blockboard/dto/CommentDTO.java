@@ -14,6 +14,7 @@ public class CommentDTO {
   private int companyID;
   private String userID;
   private String userName;
+  private String thumbnailUrl;
   private String commentContent;
   private String commentContentExceptHTMLTag;
   private String commentRegisterTime;

@@ -207,7 +207,7 @@
                         <div class="modal-body-userInfo" style="padding: 15px 10px 10px 10px">
                             <div class="row">
                                 <div class="col">
-                                    <img id="modal_userImage" width="150">
+                                    <img id="modal_userImage" width="100">
                                 </div>
                                 <div class="col">
                                     <p>회원 이름: <a id="modal_userName">전우혁</a></p>
@@ -571,7 +571,9 @@
                     <div class='referenceCommentContainer ' data-id='{{commentID}}'>
 
                         <div class="row border-left-comment localCommentContainer">
-                            <div></div>
+                            <div class="col-1">
+                                <img class = "profile" name ="profile" width="75px" height="75px" src='{{thumbnailUrl}}'>
+                            </div>
                             <div class='commentContainer col-8' id='comment{{commentID}}'
                                  style="padding-left: 50px">
                                 <div class="user"><h5><strong class=name
@@ -606,7 +608,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-4 attached_file_list_container_comment">
+                            <div class="col-3 attached_file_list_container_comment">
                             </div>
                         </div>
                         {{#isReplyAble}}
@@ -630,7 +632,10 @@
                     <div class='row localCommentContainer'>
                         <div class="col-1">
                         </div>
-                        <div class='commentContainer col-7' id='comment{{commentID}}'>
+                        <div class="col-1" style="padding-right: 10px">
+                            <img class = "profile" name ="profile" width="75px" height="75px" src='{{thumbnailUrl}}'>
+                        </div>
+                        <div class='commentContainer col-7' id='comment{{commentID}}' style="padding-left: 30px">
                             <div class="user"><h5><strong class=name
                                                           data-id={{userID}}>{{userName}}</strong>
                             </h5>
@@ -669,7 +674,7 @@
                                 {{/isCommentFileAttachAble}}
                             </div>
                         </div>
-                        <div class="col-4 attached_file_list_container_comment">
+                        <div class="col-3 attached_file_list_container_comment">
                         </div>
                     </div>
                 {{/replies}}
