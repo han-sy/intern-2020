@@ -928,6 +928,7 @@
 <script src="/static/js/event/common.js"></script>
 <script src="/static/js/event/mentionEvent.js"></script>
 <script src="/static/js/event/fileEvent.js"></script>
+<script src="/static/js/event/modalEvent.js"></script>
 <script src="/static/js/event/viewRecordEvent.js"></script>
 <script src="/static/js/ajax/functionAjax.js"></script>
 <script src="/static/js/ajax/commentAjax.js"></script>
