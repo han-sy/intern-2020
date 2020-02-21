@@ -6,6 +6,13 @@
 (function () {
   'use strict';
   let groupList = [];
+  let emojiList;
+  let currentPage;
+  let totalGroupCount;
+  let groupPerPage = 6;
+  let origin_block;
+  let thisElement;
+  let isExistThis = false;
   var stylesLoaded = false,
       arrTools = CKEDITOR.tools.array,
       htmlEncode = CKEDITOR.tools.htmlEncode,
@@ -42,7 +49,7 @@
 
             onBlock: function (panel, block) {
               var keys = block.keys;
-
+              origin_block = block;
               keys[39] = 'next'; // ARROW-RIGHT
               keys[40] = 'next'; // ARROW-DOWN
               keys[9] = 'next'; // TAB
@@ -52,7 +59,7 @@
               keys[32] = 'click'; // SPACE
 
               self.blockElement = block.element;
-              self.emojiList = self.editor._.emoji.list;
+              emojiList = self.editor._.emoji.list;
               self.addEmojiToGroups();
 
               block.element.getAscendant('html').addClass('cke_emoji');
@@ -96,20 +103,21 @@
             output.push(this.createGroupsNavigation());
             output.push(this.createEmojiListBlock());
 
-            return '<div class="cke_emoji-inner_panel">' + output.join('')
+            return '<div class="cke_emoji-inner_panel" id="emoji_panel">'
+                + output.join('')
                 + '</div>';
           },
           createGroupsNavigation: function () {
             var itemTemplate,
-                items,
-                imgUrl;
+                items;
 
-            imgUrl = "https://storep-phinf.pstatic.net/linesweet_01/original_m_tab_on.png?type=m48_37";
             // 스티커 카테고리 추가 부분
             itemTemplate = new CKEDITOR.template(
-                '<li class="cke_emoji-navigation_item" data-cke-emoji-group="{group}">' +
+                '<li class="cke_emoji-navigation_item" data-cke-emoji-group="{group}">'
+                +
                 '<a draggable="false" title="{group}">' +
-                '<span style="background-image:url({navSRC});background-size: cover;' +
+                '<span style="background-image:url({navSRC});background-size: cover;'
+                +
                 'background-repeat:no-repeat;"></span>' +
                 '</a></li>'
             );
@@ -126,8 +134,12 @@
                 });
               }
             }, '');
+            if (!isExistThis) {
+              isExistThis = true;
+              thisElement = this;
+            }
             this.listeners.push({
-              selector: 'nav',
+              selector: '.cke_emoji-navigation_item',
               event: 'click',
               listener: function (event) {
                 var activeElement = event.data.getTarget().getAscendant('li',
@@ -139,7 +151,7 @@
                 arrTools.forEach(this.elements.navigationItems.toArray(),
                     function (node, index) {
                       if (node.equals(activeElement)) {
-                        refreshItems = groupList[index];
+                        refreshItems = groupList[index - 1];
                         node.addClass('active');
                       } else {
                         node.removeClass('active');
@@ -152,8 +164,32 @@
                 this.registerListeners();
               }
             });
-
-            return '<nav><ul>' + items + '</ul></nav>';
+            this.listeners.push({
+              selector: '.prev',
+              event: 'click',
+              listener: function () {
+                if (currentPage <= 1) {
+                  return;
+                }
+                currentPage--;
+                this.reloadStickerPage();
+              }
+            });
+            this.listeners.push({
+              selector: '.next',
+              event: 'click',
+              listener: function (event) {
+                var limitPage = parseInt(totalGroupCount / groupPerPage) + 1;
+                if (currentPage >= limitPage) {
+                  return;
+                }
+                currentPage++;
+                this.reloadStickerPage();
+              }
+            });
+            var icon_path = this.plugin.path + 'icons/';
+            return '<nav><ul><li class="prev sticker-arrow" style="float: left"><img src=' + icon_path + "prev.png" + '></li>' + items
+                + '<li class="next sticker-arrow" style="float: right"><img src=' + icon_path + "next.png" + '></li></ul></nav>';
           },
           createEmojiListBlock: function () {
             var self = this;
@@ -187,7 +223,7 @@
           },
           getEmojiListGroup: function (items) {
             var emojiTpl = new CKEDITOR.template('<li class="cke_emoji-item">' +
-                '<img class="sticker" width="120" height="auto" draggable="false" '
+                '<img class="sticker" width="121" height="auto" draggable="false" '
                 + 'data-cke-emoji-group="{groupName}" src="{src}"></li>');
 
             return arrTools.reduce(
@@ -235,7 +271,7 @@
 
             arrTools.forEach(this.elements.navigationItems.toArray(),
                 function (node) {
-                  if(!groupName) {
+                  if (!groupName) {
                     return;
                   }
                   if (node.data('cke-emoji-group') === groupName) {
@@ -246,23 +282,24 @@
                 });
             this.moveFocus(groupName);
           },
-          moveFocus: function( groupName ) {
-            var firstSectionItem = this.blockElement.findOne( 'a[data-cke-emoji-group="' + htmlEncode( groupName ) + '"]' ),
+          moveFocus: function (groupName) {
+            var firstSectionItem = this.blockElement.findOne(
+                'a[data-cke-emoji-group="' + htmlEncode(groupName) + '"]'),
                 itemIndex;
 
-            if ( !firstSectionItem ) {
+            if (!firstSectionItem) {
               return;
             }
 
-            itemIndex = this.getItemIndex( this.items, firstSectionItem );
+            itemIndex = this.getItemIndex(this.items, firstSectionItem);
             //firstSectionItem.focus( true );
             //firstSectionItem.getAscendant( 'section' ).getFirst().scrollIntoView( true );
-            this.blockObject._.markItem( itemIndex );
+            this.blockObject._.markItem(itemIndex);
           },
-          getItemIndex: function( nodeList, item ) {
-            return arrTools.indexOf( nodeList.toArray(), function( element ) {
-              return element.equals( item );
-            } );
+          getItemIndex: function (nodeList, item) {
+            return arrTools.indexOf(nodeList.toArray(), function (element) {
+              return element.equals(item);
+            });
           },
           addEmojiToGroups: function () {
             var groupObj = {};
@@ -270,9 +307,51 @@
               groupObj[group.groupName] = group.items;
             }, this);
 
-            arrTools.forEach(this.emojiList, function (emojiObj) {
+            arrTools.forEach(emojiList, function (emojiObj) {
               groupObj[emojiObj.groupName].push(emojiObj);
             }, this);
+
+          },
+          reloadStickerPage: function () {
+            var url = `/sticker/${currentPage}`;
+            var editor = this.editor;
+            var plugin = this.plugin;
+            var addEmojiToGroups = this.addEmojiToGroups;
+            CKEDITOR.ajax.load(CKEDITOR.getUrl(url), function (data) {
+              if (data === null) {
+                return;
+              }
+              var json = JSON.parse(data);
+              editor._.emoji = {};
+              groupList = json.groups;
+              $.each(groupList, function (index) {
+                groupList[index].items = [];
+              });
+              // onBlock과 똑같은 구조로
+              thisElement.listeners = [];
+
+              thisElement.blockElement = origin_block.element;
+              emojiList = json.items;
+              thisElement.addEmojiToGroups();
+
+              origin_block.element.setHtml(thisElement.createEmojiBlock());
+              thisElement.items = origin_block._.getItems();
+              thisElement.blockObject = origin_block;
+              thisElement.elements.emojiItems = origin_block.element.find(
+                  '.cke_emoji-outer_emoji_block li > img');
+              thisElement.elements.emojiBlock = origin_block.element.findOne(
+                  '.cke_emoji-outer_emoji_block');
+              thisElement.elements.navigationItems = origin_block.element.find('nav li');
+              arrTools.forEach(thisElement.elements.navigationItems.toArray(),
+                  function (node, index) {
+                    if (index === 1) {
+                      node.addClass('active');
+                    }
+                  });
+              thisElement.elements.sections = origin_block.element.find('section');
+              thisElement.registerListeners();
+              thisElement.openReset();
+            });
           }
         }
       });
@@ -300,8 +379,8 @@
       if (!this.isSupportedEnvironment()) {
         return;
       }
-
-      var stickerListUrl = '/sticker';
+      currentPage = 1;
+      var stickerListUrl = '/sticker/' + currentPage;
       var plugin = this;
 
       CKEDITOR.ajax.load(CKEDITOR.getUrl(stickerListUrl), function (data) {
@@ -313,11 +392,13 @@
         }
 
         if (editor._.emoji.list === undefined) {
-          groupList = JSON.parse(data).groups;
+          var json = JSON.parse(data);
+          groupList = json.groups;
+          totalGroupCount = json.totalGroupCount;
           $.each(groupList, function (index) {
             groupList[index].items = [];
           });
-          editor._.emoji.list = JSON.parse(data).items;
+          editor._.emoji.list = json.items;
         }
 
         if (editor.plugins.toolbar) {
