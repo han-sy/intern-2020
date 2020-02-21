@@ -2,7 +2,10 @@
  * @license Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
-
+/**
+ * @customAuthor Woohyeok Jun <woohyeok.jun@worksmobile.com>
+ * @file ckeditor/emoji/plugin.js
+ */
 (function () {
   'use strict';
   let groupList = [];
@@ -10,10 +13,10 @@
   let currentPage;
   let totalGroupCount;
   let groupPerPage = 6;
-  let origin_block;
-  let thisElement;
+  let cloneOfBlock; // 50번째 line 의 block 객체의 clone
+  let cloneOfThis;  // EmojiDropdown proto 함수를 사용하기 위해 this 를 clone
   let isExistThis = false;
-  var stylesLoaded = false,
+  let stylesLoaded = false,
       arrTools = CKEDITOR.tools.array,
       htmlEncode = CKEDITOR.tools.htmlEncode,
       EmojiDropdown = CKEDITOR.tools.createClass({
@@ -49,7 +52,7 @@
 
             onBlock: function (panel, block) {
               var keys = block.keys;
-              origin_block = block;
+              cloneOfBlock = block;
               keys[39] = 'next'; // ARROW-RIGHT
               keys[40] = 'next'; // ARROW-DOWN
               keys[9] = 'next'; // TAB
@@ -78,13 +81,19 @@
               self.elements.navigationItems = block.element.find('nav li');
               self.elements.sections = block.element.find('section');
               self.registerListeners();
-
+              self.cloneProto();
             },
 
             onOpen: self.openReset()
           });
         },
         proto: {
+          cloneProto: function () {
+            if (!isExistThis) {
+              isExistThis = true;
+              cloneOfThis = this;
+            }
+          },
           registerListeners: function () {
             arrTools.forEach(this.listeners, function (item) {
               var root = this.blockElement,
@@ -116,52 +125,42 @@
                 '<li class="cke_emoji-navigation_item" data-cke-emoji-group="{group}">'
                 +
                 '<a draggable="false" title="{group}">' +
-                '<span style="background-image:url({navSRC});background-size: cover;'
+                '<span style="background-image:url({navIconSrc});background-size: cover;'
                 +
                 'background-repeat:no-repeat;"></span>' +
                 '</a></li>'
             );
 
             items = arrTools.reduce(groupList, function (acc, item) {
-              if (!item.items.length) {
-                return acc;
-              } else {
-                return acc + itemTemplate.output({
-                  group: htmlEncode(item.groupName),
-                  positionX: item.position.x,
-                  positionY: item.position.y,
-                  navSRC: item.navsrc
-                });
-              }
+              return acc + itemTemplate.output({
+                group: htmlEncode(item.groupName),
+                positionX: item.position.x,
+                positionY: item.position.y,
+                navIconSrc: item.navIconSrc
+              });
             }, '');
-            if (!isExistThis) {
-              isExistThis = true;
-              thisElement = this;
-            }
             this.listeners.push({
               selector: '.cke_emoji-navigation_item',
               event: 'click',
               listener: function (event) {
-                var activeElement = event.data.getTarget().getAscendant('li',
+                let activeElement = event.data.getTarget().getAscendant('li',
                     true);
-                var refreshItems;
                 if (!activeElement) {
                   return;
                 }
                 arrTools.forEach(this.elements.navigationItems.toArray(),
                     function (node, index) {
                       if (node.equals(activeElement)) {
-                        refreshItems = groupList[index - 1];
-                        node.addClass('active');
+                        let groupName = groupList[index - 1].groupName;
+                        loadStickersByGroupName(groupName).then(
+                            function (data) {
+                              refreshStickerSection(JSON.parse(data));
+                              node.addClass('active');
+                            });
                       } else {
                         node.removeClass('active');
                       }
                     });
-                // 선택한 스티커 그룹으로 목록 갱신
-                var newHTML = this.getEmojiSection(refreshItems);
-                this.elements.emojiBlock.setHtml(newHTML);
-                this.elements.emojiBlock.$.scrollTop = 0;
-                this.registerListeners();
               }
             });
             this.listeners.push({
@@ -188,8 +187,10 @@
               }
             });
             var icon_path = this.plugin.path + 'icons/';
-            return '<nav><ul><li class="prev sticker-arrow" style="float: left"><img src=' + icon_path + "prev.png" + '></li>' + items
-                + '<li class="next sticker-arrow" style="float: right"><img src=' + icon_path + "next.png" + '></li></ul></nav>';
+            return '<nav><ul><li class="prev sticker-arrow" style="float: left"><img src='
+                + icon_path + "prev.png" + '></li>' + items
+                + '<li class="next sticker-arrow" style="float: right"><img src='
+                + icon_path + "next.png" + '></li></ul></nav>';
           },
           createEmojiListBlock: function () {
             var self = this;
@@ -225,10 +226,7 @@
             var emojiTpl = new CKEDITOR.template('<li class="cke_emoji-item">' +
                 '<img class="sticker" width="121" height="auto" draggable="false" '
                 + 'data-cke-emoji-group="{groupName}" src="{src}"></li>');
-
-            return arrTools.reduce(
-                items,
-                function (acc, item) {
+            return arrTools.reduce(items, function (acc, item) {
                   addEncodedName(item);
                   return acc + emojiTpl.output({
                     src: htmlEncode(item.src),
@@ -292,8 +290,9 @@
             }
 
             itemIndex = this.getItemIndex(this.items, firstSectionItem);
-            //firstSectionItem.focus( true );
-            //firstSectionItem.getAscendant( 'section' ).getFirst().scrollIntoView( true );
+            firstSectionItem.focus(true);
+            firstSectionItem.getAscendant('section').getFirst().scrollIntoView(
+                true);
             this.blockObject._.markItem(itemIndex);
           },
           getItemIndex: function (nodeList, item) {
@@ -312,46 +311,21 @@
             }, this);
 
           },
+          // '이전', '다음' 클릭시 Navigation Items 갱신
           reloadStickerPage: function () {
-            var url = `/sticker/${currentPage}`;
-            var editor = this.editor;
-            var plugin = this.plugin;
-            var addEmojiToGroups = this.addEmojiToGroups;
-            CKEDITOR.ajax.load(CKEDITOR.getUrl(url), function (data) {
-              if (data === null) {
-                return;
-              }
-              var json = JSON.parse(data);
-              editor._.emoji = {};
-              groupList = json.groups;
-              $.each(groupList, function (index) {
-                groupList[index].items = [];
+            let url = `/sticker/${currentPage}`;
+            let editor = this.editor;
+            let plugin = this.plugin;
+
+            let stickerDataInSessionStorage = sessionStorage.getItem(url);
+            if (stickerDataInSessionStorage == null) {
+              CKEDITOR.ajax.load(CKEDITOR.getUrl(url), function (data) {
+                reloadNavigationItems(editor, data);
+                sessionStorage.setItem(url, data);
               });
-              // onBlock과 똑같은 구조로
-              thisElement.listeners = [];
-
-              thisElement.blockElement = origin_block.element;
-              emojiList = json.items;
-              thisElement.addEmojiToGroups();
-
-              origin_block.element.setHtml(thisElement.createEmojiBlock());
-              thisElement.items = origin_block._.getItems();
-              thisElement.blockObject = origin_block;
-              thisElement.elements.emojiItems = origin_block.element.find(
-                  '.cke_emoji-outer_emoji_block li > img');
-              thisElement.elements.emojiBlock = origin_block.element.findOne(
-                  '.cke_emoji-outer_emoji_block');
-              thisElement.elements.navigationItems = origin_block.element.find('nav li');
-              arrTools.forEach(thisElement.elements.navigationItems.toArray(),
-                  function (node, index) {
-                    if (index === 1) {
-                      node.addClass('active');
-                    }
-                  });
-              thisElement.elements.sections = origin_block.element.find('section');
-              thisElement.registerListeners();
-              thisElement.openReset();
-            });
+            } else {
+              reloadNavigationItems(editor, stickerDataInSessionStorage);
+            }
           }
         }
       });
@@ -380,31 +354,20 @@
         return;
       }
       currentPage = 1;
-      var stickerListUrl = '/sticker/' + currentPage;
-      var plugin = this;
+      let stickerListUrl = '/sticker/' + currentPage;
+      let plugin = this;
+      let stickerDataInSessionStorage = sessionStorage.getItem(stickerListUrl);
 
-      CKEDITOR.ajax.load(CKEDITOR.getUrl(stickerListUrl), function (data) {
-        if (data === null) {
-          return;
-        }
-        if (editor._.emoji === undefined) {
-          editor._.emoji = {};
-        }
-
-        if (editor._.emoji.list === undefined) {
-          var json = JSON.parse(data);
-          groupList = json.groups;
-          totalGroupCount = json.totalGroupCount;
-          $.each(groupList, function (index) {
-            groupList[index].items = [];
-          });
-          editor._.emoji.list = json.items;
-        }
-
-        if (editor.plugins.toolbar) {
-          new EmojiDropdown(editor, plugin);
-        }
-      });
+      // 모든 아이템 값 설정
+      // sessionStorage 를 검사 후 서버로 요청을 보낼지 결정 
+      if (stickerDataInSessionStorage == null) {
+        CKEDITOR.ajax.load(CKEDITOR.getUrl(stickerListUrl), function (data) {
+          setAllVariableOfSticker(editor, data, plugin);
+          sessionStorage.setItem(stickerListUrl, data);
+        });
+      } else {
+        setAllVariableOfSticker(editor, stickerDataInSessionStorage, plugin);
+      }
 
       editor.addCommand('insertSticker', {
         exec: function (editor, data) {
@@ -424,6 +387,103 @@
 
     }
   });
+
+  // 스티커 구성에 필요한 값 setting
+  function setAllVariableOfSticker(editor, data, plugin) {
+    if (data === null) {
+      return;
+    }
+    if (editor._.emoji === undefined) {
+      editor._.emoji = {};
+    }
+    if (editor._.emoji.list === undefined) {
+      var json = JSON.parse(data);
+      groupList = json.groups;
+      totalGroupCount = json.totalGroupCount;
+      $.each(groupList, function (index) {
+        groupList[index].items = [];
+      });
+      editor._.emoji.list = json.items;
+    }
+    if (editor.plugins.toolbar) {
+      new EmojiDropdown(editor, plugin);
+    }
+  }
+
+  // 스티커 구성에 필요한 모든 값 초기화
+  function initializeAllVariableOfSticker(data) {
+    editor._.emoji = {};
+    groupList = data.groups;
+    $.each(groupList, function (index) {
+      groupList[index].items = [];
+    });
+  }
+
+  // 50번째 line 은 plugin 이 add 될 때 실행되는 거라 재사용이 불가하여
+  // 똑같은 로직을 가진 함수를 새로 생성하였다.
+  function cloneOfonBlock(data) {
+    cloneOfThis.listeners = [];
+    cloneOfThis.blockElement = cloneOfBlock.element;
+    emojiList = data.items;
+    cloneOfThis.addEmojiToGroups();
+    cloneOfBlock.element.setHtml(cloneOfThis.createEmojiBlock());
+    cloneOfThis.items = cloneOfBlock._.getItems();
+    cloneOfThis.blockObject = cloneOfBlock;
+    cloneOfThis.elements.emojiItems = cloneOfBlock.element.find(
+        '.cke_emoji-outer_emoji_block li > img');
+    cloneOfThis.elements.emojiBlock = cloneOfBlock.element.findOne(
+        '.cke_emoji-outer_emoji_block');
+    cloneOfThis.elements.navigationItems = cloneOfBlock.element.find('nav li');
+    cloneOfThis.elements.sections = cloneOfBlock.element.find('section');
+    cloneOfThis.registerListeners();
+    cloneOfThis.openReset();
+  }
+
+  // Navigation Items 을 갱신한다.
+  function reloadNavigationItems(editor, data) {
+    if (data === null) {
+      return;
+    }
+    let json = JSON.parse(data);
+    initializeAllVariableOfSticker(json);
+    cloneOfonBlock(json);
+    showStickerAtFirstInNavigation();
+  }
+
+  // Navigation 중 첫번째 카테고리 스티커를 보여준다.
+  function showStickerAtFirstInNavigation() {
+    arrTools.forEach(cloneOfThis.elements.navigationItems.toArray(),
+        function (node, index) {
+          if (index === 1) {
+            node.addClass('active');
+          }
+        });
+  }
+
+  // GroupName 에 해당하는 스티커들을 불러온다.
+  function loadStickersByGroupName(groupName) {
+    let url = `/sticker/groups/${groupName}`;
+    return new Promise(function (resolve, reject) {
+      let stickerDataInSessionStorage = sessionStorage.getItem(url);
+      if (stickerDataInSessionStorage == null) {
+        CKEDITOR.ajax.load(CKEDITOR.getUrl(url), function (response) {
+          console.log(response);
+          sessionStorage.setItem(url, response);
+          resolve(response);
+        });
+      } else {
+        resolve(stickerDataInSessionStorage);
+      }
+    });
+  }
+
+  // 스티커 창 새로고침
+  function refreshStickerSection(data) {
+    let newHTML = cloneOfThis.getEmojiSection(data);
+    cloneOfThis.elements.emojiBlock.setHtml(newHTML);
+    cloneOfThis.elements.emojiBlock.$.scrollTop = 0;
+    cloneOfThis.registerListeners();
+  }
 
   function addEncodedName(item) {
     if (!item.name) {
