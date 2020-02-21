@@ -32,10 +32,10 @@ function getCommentInputHtml(type, buttonName, tag, className, buttonSelector,
   $(className).html(itemList + "</div>");
 
   var add_on = "";
-  if (functionOncommentSticker) {
+  if (functionOn.commentSticker) {
     add_on += ",emoji";
   }
-  if (functionOncommentInlineImage) {
+  if (functionOn.commentInlineImage) {
     add_on += ",image2";
   }
 

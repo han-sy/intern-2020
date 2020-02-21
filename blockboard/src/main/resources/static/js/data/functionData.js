@@ -17,19 +17,6 @@ function isFunctionTagValueOn(functionID){
 
 class FunctionOn{
 
-  /*constructor(){
-    this._comments = isFunctionTagValueOn(1);
-    this._reply = isFunctionTagValueOn(2);
-    this._postFileAttach = isFunctionTagValueOn(3);
-    this._commentFileAttach= isFunctionTagValueOn(4);
-    this._postInlineImage= isFunctionTagValueOn(5);
-    this._commentInlineImage= isFunctionTagValueOn(6);
-    this._postTempSave= isFunctionTagValueOn(7);
-    this._postSticker= isFunctionTagValueOn(9);
-    this._commentSticker= isFunctionTagValueOn(10);
-    this._postAutoTag= isFunctionTagValueOn(11);
-  }*/
-
   set comments(functionID) {
     this._comments = isFunctionTagValueOn(functionID);
   }

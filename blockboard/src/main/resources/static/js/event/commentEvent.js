@@ -44,7 +44,6 @@ $(document).on('click', '.btn_edit_comment_complete', function () {
       '#commentText').val().replace(/\n/g,
       "<br>");
   var commentID = getCommentIDInCommentContainer.call(this);
-  console.log("commentID");
   var postID = getPostIDInPost();
   var boardID = getBoardIDInPost();
   console.log(postID + "<-pid bid->" + boardID);
@@ -53,7 +52,6 @@ $(document).on('click', '.btn_edit_comment_complete', function () {
     if (functionOn.commentFileAttach) {
       updateIDToFiles("", commentID);
     }
-
     editComment(postID, boardID, commentID, newComment);
   }
 });
@@ -129,12 +127,13 @@ $(document).on('click', '.open_edit_file_form_btn', function () {
   openFileAttachForm("", commentID, $(this).closest(".commentHtml"));
 });
 
-$(document).on('click', '.open_reply_list_btn'), function () {
+$(document).on('click', '.open_reply_list_btn', function () {
   var commentID = getCommentIDInCommentContainer.call(this);
   var boardID = getBoardIDInPost();
   var postID = getPostIDInPost();
-  getReplyList(boardID, postID, commentID, getReplyListUI);
-}
+  var switchText = $(this);
+  switchReplyListOpenAndClose(switchText,boardID,postID,commentID);
+});
 
 function moveToInputID(inputID) {
   var offset = $("#" + inputID).offset().top - $(window).height() / 2;
@@ -151,4 +150,20 @@ function switchAttachFileOpenAndClose(switchText, commentID, fileContainer) {
   } else {
     changedDataError();
   }
+}
+
+function switchReplyListOpenAndClose(switchText,boardID,postID,commentID) {
+  if(switchText.html() =="답글 보기"){
+    getReplyList(boardID, postID, commentID, getReplyListUI);
+    switchText.html("답글 닫기");
+  }else if("답글 닫기"){
+    replyContainerClear(commentID);
+    switchText.html("답글 보기");
+  }else{
+    changedDataError();
+  }
+}
+
+function replyContainerClear(commentID) {
+  $("#reply_container" + commentID).html("");
 }

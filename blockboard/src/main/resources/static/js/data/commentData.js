@@ -16,6 +16,7 @@ function getCommentReferencedIDInReplyContainer() {
  * comment Container에서 commentID 반환
  */
 function getCommentIDInCommentContainer() {
+  console.log("getCommentIDInCommentContainer");
   return $(this).closest(".commentContainer").attr("id").substring(
       COMMENT_PREFIX.length);
 }

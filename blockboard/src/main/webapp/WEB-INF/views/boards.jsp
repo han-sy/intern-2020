@@ -74,7 +74,7 @@
                 <a class="nav-link dropdown-toggle active" href="#" id="dropdown03"
                    data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">사용중인 기능</a>
-                <div class="dropdown-menu" id="functionListContainer"
+                <div class="dropdown-menu" id="fuctionListContainer"
                      aria-labelledby="dropdown03">
                     <c:if test="${userType=='관리자'}">
                         <a class="dropdown-item text-success" id='changeFuncBtn' data-toggle="modal"
