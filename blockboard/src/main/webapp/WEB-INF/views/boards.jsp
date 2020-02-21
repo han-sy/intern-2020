@@ -547,9 +547,12 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <ul class="modal-body-viewRecordList-container" style="list-style:none;">
-                            <!--사용자 목록-->
-                        </ul>
+                        <div class ="modal-read-user-container" scroll=auto; >
+                            <ul class="modal-body-viewRecordList-container" style="list-style:none;">
+                                <!--사용자 목록-->
+                            </ul>
+                        </div>
+
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">
                                 Close
