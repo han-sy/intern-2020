@@ -24,7 +24,7 @@
             font-family: 'Noto Sans JP', sans-serif;
         }
     </style>
-    <script src="/static/js/util/data.js"></script>
+
 </head>
 
 <body>
@@ -74,7 +74,7 @@
                 <a class="nav-link dropdown-toggle active" href="#" id="dropdown03"
                    data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">사용중인 기능</a>
-                <div class="dropdown-menu" id="fuctionListContainer"
+                <div class="dropdown-menu" id="functionListContainer"
                      aria-labelledby="dropdown03">
                     <c:if test="${userType=='관리자'}">
                         <a class="dropdown-item text-success" id='changeFuncBtn' data-toggle="modal"
@@ -526,7 +526,7 @@
                             <strong class="c">댓글 </strong>
                         (<span id=commentCount></span>)
                         </span>
-                            <a class=' commentBtn text-success font-weight-bold text-button'
+                            <a class=' comment_btn text-success font-weight-bold text-button'
                             >댓글 달기</a>
                         </div>
                         <div class=comment_list_container></div>
@@ -631,7 +631,8 @@
                                     </div>
                                     <div class="btn">
                                         {{#isReplyAble}}
-                                            <a class='text-success text-button font-weight-bold replyBtn'>답글</a>
+                                            <a class='text-success text-button font-weight-bold reply_btn'>답글 달기</a>
+                                            <a class='text-success text-button font-weight-bold open_reply_list_btn'>답글 보기</a>
                                         {{else}}
                                         {{/isReplyAble}}
 
@@ -696,7 +697,7 @@
                             </div>
                             <div class=btn>
                                 {{#isReplyAble}}
-                                    <a class='text-success text-button font-weight-bold replyBtn'
+                                    <a class='text-success text-button font-weight-bold reply_btn'
                                     >답글</a>
                                 {{else}}
                                 {{/isReplyAble}}
@@ -917,7 +918,11 @@
         </div>
     </div>
 </div>
-
+<script src="/static/js/data/userData.js"></script>
+<script src="/static/js/data/commentData.js"></script>
+<script src="/static/js/data/functionData.js"></script>
+<script src="/static/js/data/postData.js"></script>
+<script src="/static/js/data/boardData.js"></script>
 <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
 <script src="/webjars/bootstrap/4.4.1/dist/js/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>

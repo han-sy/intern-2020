@@ -9,10 +9,9 @@ function updateCommentListUI(data) {
   var comments = {comments: data};
   var itemList = template(comments);
   $('.comment_list_container').html(itemList);
-  var functionOn = new FunctionOn();
-  if (functionOn.reply) { //대댓글 기능 on 일때
+  /*if (functionOn.reply) { //대댓글 기능 on 일때
     getAllReplyList(data);
-  }
+  }*/
 }
 
 //댓글 inputform 받아오기
@@ -32,12 +31,11 @@ function getCommentInputHtml(type, buttonName, tag, className, buttonSelector,
   var itemList = template(attribute);
   $(className).html(itemList + "</div>");
 
-  var func = new FunctionOn();
   var add_on = "";
-  if (func.commentSticker) {
+  if (functionOncommentSticker) {
     add_on += ",emoji";
   }
-  if (func.commentInlineImage) {
+  if (functionOncommentInlineImage) {
     add_on += ",image2";
   }
 
@@ -64,7 +62,7 @@ function getCommentInputHtml(type, buttonName, tag, className, buttonSelector,
 function getCommentAllContents(data) {
   updateCommentListUI(data);
   getCommentInputHtml("댓글", "입력", "", ".comment_input_container",
-      "btn_openComment");
+      "btn_open_comment");
   fileFormClear();
 }
 
@@ -90,11 +88,11 @@ function getReplyListUI(commentID, data) {
 }
 
 //답글전체 받아오기
-function getAllReplyList(data) {
-  $.each(data, function (key, value) {
-    getReplyList(value.boardID, value.postID, value.commentID, getReplyListUI);
-  });
-}
+// function getAllReplyList(data) {
+//   $.each(data, function (key, value) {
+//     getReplyList(value.boardID, value.postID, value.commentID, getReplyListUI);
+//   });
+// }
 
 function replyFormClear() {
   $('.is_reply_input').html("");

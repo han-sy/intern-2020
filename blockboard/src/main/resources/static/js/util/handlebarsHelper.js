@@ -12,8 +12,7 @@ Handlebars.registerHelper('isAbleFunction', function (options) {
 
 //댓글기능 on인지 체크
 Handlebars.registerHelper('isCommentAble', function (options) {
-  var functionOn = new FunctionOn();
-  if (functionOn.comment) {
+  if (functionOn.comments) {
     var boardID = getCurrentBoardID();
     if (boardID > 0 || boardID == BOARD_ID.POPULAR) {
       return options.fn(this);
@@ -24,7 +23,6 @@ Handlebars.registerHelper('isCommentAble', function (options) {
 
 //답글기능 on인지 체크
 Handlebars.registerHelper('isReplyAble', function (options) {
-  var functionOn = new FunctionOn();
   if (functionOn.reply) {
     return options.fn(this); //true
   }
@@ -33,7 +31,6 @@ Handlebars.registerHelper('isReplyAble', function (options) {
 
 //게시글 파일 첨부기능 on인지
 Handlebars.registerHelper('isPostFileAttachAble', function (options) {
-  var functionOn = new FunctionOn();
   if (functionOn.postFileAttach) {
     return options.fn(this); //true
   }
@@ -42,7 +39,6 @@ Handlebars.registerHelper('isPostFileAttachAble', function (options) {
 
 //댓글 답글
 Handlebars.registerHelper('isCommentFileAttachAble', function (options) {
-  var functionOn = new FunctionOn();
   if (functionOn.commentFileAttach) {
     return options.fn(this); //true
   }
@@ -179,7 +175,6 @@ Handlebars.registerHelper('isRecycleBin', function (option) {
  * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
  */
 Handlebars.registerHelper('isTempSaveAble', function (options) {
-  var functionOn = new FunctionOn();
   if (functionOn.postTempSave) {
     return options.fn(this); //true
   }

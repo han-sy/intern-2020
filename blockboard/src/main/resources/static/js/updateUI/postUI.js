@@ -12,12 +12,11 @@ function editorAreaCreate(method) {
   $('#btn_deletePost').attr('style', 'visibility:hidden');
   $('#btn_updatePost').attr('style', 'visibility:hidden');
   // textarea에 CKEditor 적용
-  var func = new FunctionOn();
   var add_on = "";
-  if (func.postSticker) {
+  if (functionOn.postSticker) {
     add_on += ",emoji";
   }
-  if (func.postInlineImage) {
+  if (functionOn.postInlineImage) {
     add_on += ",image2";
   }
   var original_config = CKEDITOR.config.plugins;
@@ -28,7 +27,6 @@ function editorAreaCreate(method) {
   // 게시글 작성시에만(수정 X) 자동저장 & 임시저장 기능 작동
   if (method == "insert") {
     $('#btn_temp').attr('style', 'visibility:visible');
-    var functionOn = new FunctionOn();
     if (functionOn.postTempSave) {
       on_autosave();
     }

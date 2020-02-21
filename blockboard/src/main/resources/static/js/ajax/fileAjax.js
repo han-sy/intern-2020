@@ -84,7 +84,7 @@ function updateIDToFiles(postID, commentID, boardID, commentReferencedID) {
       }
 
       getCommentInputHtml("댓글", "입력", "", ".comment_input_container",
-          "btn_openComment");
+          "btn_open_comment");
       updateCommentsCount(boardID, postID);
       fileFormClear();
     }

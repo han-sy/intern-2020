@@ -66,7 +66,6 @@ function getBoardList(successFunction) {
 //게시물 클릭후 게시물 데이터 받아오기
 function getPostDataAfterPostClick(postID, boardID) {
   var userID = $('#current_user_info').attr('data-id');
-  var functionOn = new FunctionOn();
   postClear();
   $.ajax({
     type: 'GET',
@@ -98,7 +97,7 @@ function getPostDataAfterPostClick(postID, boardID) {
       }
       var postContentHtml = "";
 
-      if (functionOn.comment) {
+      if (functionOn.comments) {
         $(function () {
           getCommentList(boardID, postID, getCommentAllContents); //삭제이후 tab에 게시판목록 업데이트 //CommentAjax.js 에 있음
 
