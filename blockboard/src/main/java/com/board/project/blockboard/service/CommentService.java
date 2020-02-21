@@ -63,8 +63,8 @@ public class CommentService {
 
 
   public int getCommentCountByPostID(int postID, int companyID) {
-    boolean isCommentOn = functionService.idUseFunction(companyID, FunctionID.COMMENT);
-    boolean isReplyOn = functionService.idUseFunction(companyID, FunctionID.REPLY);
+    boolean isCommentOn = functionService.isUseFunction(companyID, FunctionID.COMMENT);
+    boolean isReplyOn = functionService.isUseFunction(companyID, FunctionID.REPLY);
     if (isCommentOn) {//댓글ON
       if (isReplyOn) {//답글ON
         return commentMapper.getAllCommentsCountByPostID(postID);
