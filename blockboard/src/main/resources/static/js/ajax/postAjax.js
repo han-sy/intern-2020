@@ -120,7 +120,7 @@ function deletePost(boardID, postID) {
 function refreshPostList() {
   var boardID = getCurrentBoardID();
   postClear();
-  getPageList(1, boardID, updatePageList)
+  getPageList(1, boardID,0, updatePostPageList)
 }
 
 function searchPost(option, keyword) {

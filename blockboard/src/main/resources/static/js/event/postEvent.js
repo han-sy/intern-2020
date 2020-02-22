@@ -58,7 +58,7 @@ $(document).on('click', '.btn_post', function () {
     // 임시 or 자동 저장된 글을 한번 더 '저장' 버튼을 누를 때
     else {
       insertTempPost(boardID, postID, postTitle, postContent, "normal");
-      getPageList(1, getCurrentBoardID(), updatePageList);
+      getPageList(1, getCurrentBoardID(),0, updatePostPageList);
     }
     editorClear();
   }
@@ -162,8 +162,8 @@ function off_autosave() {
 
 // 임시저장 게시물 클릭 이벤트
 $(document).on('click', '.temp_post_click', function () {
-  var postID = $(this).attr("data-post");
-  var boardID = $(this).attr("data-board");
+  var postID = getPostIDInPostList.call(this);
+  var boardID = getBoardIDInPostList.call(this);
   postClear();
   editorAreaCreate("insert");
   var btn_cancel = $('.btn_cancel');

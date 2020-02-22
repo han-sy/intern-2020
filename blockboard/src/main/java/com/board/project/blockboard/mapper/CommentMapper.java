@@ -14,7 +14,6 @@ import org.springframework.stereotype.Repository;
 @Mapper
 public interface CommentMapper {
 
-  List<CommentDTO> selectCommentsByPostID(int postID);
 
   void deleteCommentByCommentID(int commentID);
 
@@ -32,5 +31,5 @@ public interface CommentMapper {
 
   int getOnlyCommentsCountByPostID(int postID);
 
-
+  List<CommentDTO> selectCommentsByPostID(int postID, int startIndex, int pageSize);
 }

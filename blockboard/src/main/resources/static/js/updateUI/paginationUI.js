@@ -4,15 +4,30 @@
  */
 
 //페이지 리스트 업데이트
-function updatePageList(data, pageList) {
+function updatePostPageList(data, pageList) {
+  console.info("data : ",data);
   var source = $('#pageList-template').html();
   var template = Handlebars.compile(source);
   var pagesInfo = {pagesInfo: data, pageList: pageList};
   var item = template(pagesInfo);
-  $('#pagination_content').html(item);
-  $('#page' + data.currentPage).css('color', '#28A745');
-  $('#page' + data.currentPage).css('font-weight', 'bold');
-  $('#page' + data.currentPage).css('font-size', '110%');
+  $('#post_pagination_content').html(item);
+  $('#post_page' + data.currentPage).css('color', '#28A745');
+  $('#post_page' + data.currentPage).css('font-weight', 'bold');
+  $('#post_page' + data.currentPage).css('font-size', '110%');
   var boardID = parseInt(getCurrentBoardID());
   getPostListByPageNum(data.currentPage, boardID);
+}
+
+function updateCommentPageList(data, pageList) {
+  var source = $('#pageList-template').html();
+  var template = Handlebars.compile(source);
+  var pagesInfo = {pagesInfo: data, pageList: pageList};
+  var item = template(pagesInfo);
+  $('.comments_pagination_content').html(item);
+  $('#comments_page' + data.currentPage).css('color', '#28A745');
+  $('#comments_page' + data.currentPage).css('font-weight', 'bold');
+  $('#comments_page' + data.currentPage).css('font-size', '110%');
+  var boardID = getBoardIDInPost();
+  var postID = getPostIDInPost();
+  getCommentListByPageNum(data.currentPage,boardID, postID, updateCommentListUI);//성공하면 댓글목록 갱신
 }

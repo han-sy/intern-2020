@@ -61,9 +61,7 @@ function getCommentInputHtml(type, buttonName, tag, className, buttonSelector,
 //댓글 컨텐츠 모두 불러오기
 function getCommentAllContents(data) {
   updateCommentListUI(data);
-  getCommentInputHtml("댓글", "입력", "", ".comment_input_container",
-      "btn_open_comment");
-  fileFormClear();
+
 }
 
 //댓글수정모드

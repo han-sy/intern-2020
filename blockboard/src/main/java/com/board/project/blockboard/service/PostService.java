@@ -6,23 +6,17 @@ package com.board.project.blockboard.service;
 
 import com.board.project.blockboard.common.constant.ConstantData;
 import com.board.project.blockboard.common.util.LengthCheckUtils;
-import com.board.project.blockboard.common.util.TagCheckUtils;
 import com.board.project.blockboard.common.validation.PostValidation;
-import com.board.project.blockboard.dto.AlarmDTO;
 import com.board.project.blockboard.dto.PaginationDTO;
 import com.board.project.blockboard.dto.PostDTO;
 import com.board.project.blockboard.dto.UserDTO;
-import com.board.project.blockboard.mapper.AlarmMapper;
 import com.board.project.blockboard.mapper.PostMapper;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.User;
 import org.apache.commons.codec.binary.StringUtils;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -189,11 +183,11 @@ public class PostService {
 
   public Map<String, Object> makeMapUserAndPageInfo(UserDTO user, int pageCount, int pageNumber) {
     Map<String, Object> map = new HashMap<>();
-    PaginationDTO pageInfo = new PaginationDTO(pageCount, pageNumber, ConstantData.PAGE_SIZE,
-        ConstantData.RANGE_SIZE);
+    PaginationDTO pageInfo = new PaginationDTO("posts",pageCount, pageNumber, ConstantData.POST_PAGE_SIZE,
+        ConstantData.POST_RANGE_SIZE);
     map.put("user", user);
     map.put("startIndex", pageInfo.getStartIndex());
-    map.put("pageSize", ConstantData.PAGE_SIZE);
+    map.put("pageSize", ConstantData.POST_PAGE_SIZE);
     return map;
   }
 
@@ -204,10 +198,10 @@ public class PostService {
    */
   public List<PostDTO> getPostListByBoardID(int boardID, int pageNumber, int companyID) {
     int pageCount = getPostsCountByBoardID(boardID);
-    PaginationDTO pageInfo = new PaginationDTO(pageCount, pageNumber, ConstantData.PAGE_SIZE,
-        ConstantData.RANGE_SIZE);
+    PaginationDTO pageInfo = new PaginationDTO("posts",pageCount, pageNumber, ConstantData.POST_PAGE_SIZE,
+        ConstantData.POST_RANGE_SIZE);
     List<PostDTO> postList = postMapper
-        .selectPostByBoardID(boardID, pageInfo.getStartIndex(), ConstantData.PAGE_SIZE);
+        .selectPostByBoardID(boardID, pageInfo.getStartIndex(), ConstantData.POST_PAGE_SIZE);
 
     for (PostDTO post : postList) {
       int commentsCount = commentService.getCommentCountByPostID(post.getPostID(), companyID);

@@ -123,7 +123,7 @@ Handlebars.registerHelper('isPopular', function (option) {
   }
 });
 Handlebars.registerHelper('isCommentFunction', function (option) {
-  var isCommentFunction = (this.functionID%2)
+  var isCommentFunction = (this.functionID%2);
   console.log(this.functionID +" : "+isCommentFunction );
   if (isCommentFunction == 0) {
     return "comment_function";
@@ -131,6 +131,16 @@ Handlebars.registerHelper('isCommentFunction', function (option) {
     return "";
   }
 });
+
+Handlebars.registerHelper('isPostPage', function (option) {
+  if (this.pageType == "posts") {
+    return option.fn(this);
+  } else {
+    return option.inverse(this);
+  }
+});
+
+
 Handlebars.registerHelper('printFileSize', function (option) {
   return getFileSize(this.fileSize);
 });

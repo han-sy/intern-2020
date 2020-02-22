@@ -4,8 +4,10 @@
  */
 package com.board.project.blockboard.service;
 
+import com.board.project.blockboard.common.constant.ConstantData;
 import com.board.project.blockboard.common.constant.ConstantData.FunctionID;
 import com.board.project.blockboard.dto.CommentDTO;
+import com.board.project.blockboard.dto.PaginationDTO;
 import com.board.project.blockboard.mapper.CommentMapper;
 import com.board.project.blockboard.mapper.UserMapper;
 import java.util.HashMap;
@@ -30,8 +32,11 @@ public class CommentService {
   private UserMapper userMapper;
 
 
-  public List<CommentDTO> getCommentListByPostID(int postID) {
-    return commentMapper.selectCommentsByPostID(postID);
+  public List<CommentDTO> getCommentListByPostID(int postID,int pageNumber,int companyID) {
+    int pageCount = getCommentCountByPostID(postID,companyID);
+    PaginationDTO pageInfo = new PaginationDTO("comments",pageCount,pageNumber,
+        ConstantData.COMMENT_PAGE_SIZE,ConstantData.COMMENT_RANGE_SIZE);
+    return commentMapper.selectCommentsByPostID(postID,pageInfo.getStartIndex(),ConstantData.COMMENT_PAGE_SIZE);
   }
 
   public int writeCommentWithUserInfo(String userID, String commentContent, int companyID,
@@ -67,11 +72,19 @@ public class CommentService {
     boolean isReplyOn = functionService.idUseFunction(companyID, FunctionID.REPLY);
     if (isCommentOn) {//댓글ON
       if (isReplyOn) {//답글ON
-        return commentMapper.getAllCommentsCountByPostID(postID);
+        return getAllCommentsCountByPostID(postID);
       } else {//답글 OFF
-        return commentMapper.getOnlyCommentsCountByPostID(postID);
+        return getOnlyCommentsCountByPostID(postID);
       }
     }
     return 0;//댓글OFF
+  }
+
+  public int getOnlyCommentsCountByPostID(int postID) {
+    return commentMapper.getOnlyCommentsCountByPostID(postID);
+  }
+
+  public int getAllCommentsCountByPostID(int postID) {
+    return commentMapper.getAllCommentsCountByPostID(postID);
   }
 }

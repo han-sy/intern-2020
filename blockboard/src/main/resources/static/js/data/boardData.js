@@ -7,3 +7,7 @@ function getBoardIDInPost() {
   console.log("getBoardIDInPost");
   return $('#boardIdInPost').html();
 }
+
+function getBoardIDInPostList() {
+  return $(this).attr("data-board");
+}

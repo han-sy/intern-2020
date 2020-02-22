@@ -530,6 +530,7 @@
                             >댓글 달기</a>
                         </div>
                         <div class=comment_list_container></div>
+                        <ul class="pagination comments_pagination_content"></ul>
                         <div class=comment_input_container></div>
                 {{else}}
                     </div>
@@ -876,7 +877,7 @@
                 </div>
                 <div class="pagination_container">
                     <nav aria-label="Page navigation example">
-                        <ul class="pagination" id="pagination_content">
+                        <ul class="pagination" id="post_pagination_content">
 
                         </ul>
                     </nav>
@@ -886,29 +887,39 @@
                     {{#pagesInfo}}
                         {{#isFirstPage}}
                         {{else}}
-                            <li class="page-item"><a class="page-link"
-                                                     style="cursor: pointer;" data-page="1">처음</a>
+                            <li class='{{pageType}}-page-item' ><a class='page-link'
+                                                     style='cursor: pointer;' data-page='1'>처음</a>
                             </li>
                         {{/isFirstPage}}
                         {{#isFirstRange}}
                         {{else}}
-                            <li class="page-item"><a class="page-link" style="cursor: pointer;"
+                            <li class='{{pageType}}-page-item' ><a class='page-link' style='cursor: pointer;'
                                                      data-page='{{prevPage}}'>이전</a></li>
                         {{/isFirstRange}}
-                        {{#each pageList}}
-                            <li class="page-item" id="page{{this}}"><a class="page-link page-index"
-                                                                       style="cursor: pointer;"
-                                                                       data-page='{{this}}'>{{this}}</a>
+                        {{#isPostPage}}
+                            {{#each pageList}}
+                            <li class='posts-page-item' id='post_page{{this}}'><a class='page-link page-index'
+                                                                               style='cursor: pointer;'
+                                                                               data-page='{{this}}'>{{this}}</a>
                             </li>
-                        {{/each}}
+                            {{/each}}
+                        {{else}}
+                            {{#each pageList}}
+                            <li class='comments-page-item' id='comments_page{{this}}'><a class='page-link page-index'
+                                                                               style='cursor: pointer;'
+                                                                               data-page='{{this}}'>{{this}}</a>
+                            </li>
+                            {{/each}}
+                        {{/isPostPage}}
+
                         {{#isLastRange}}
                         {{else}}
-                            <li class="page-item"><a class="page-link" style="cursor: pointer;"
+                            <li class='{{pageType}}-page-item' ><a class='page-link' style='cursor: pointer;'
                                                      data-page='{{nextPage}}'>다음</a></li>
                         {{/isLastRange}}
                         {{#isLastPage}}
                         {{else}}
-                            <li class="page-item"><a class="page-link" style="cursor: pointer;"
+                            <li class='{{pageType}}-page-item' ><a class='page-link' style='cursor: pointer;'
                                                      data-page='{{pageCount}}'>마지막</a></li>
                         {{/isLastPage}}
                     {{/pagesInfo}}
@@ -923,6 +934,7 @@
 <script src="/static/js/data/functionData.js"></script>
 <script src="/static/js/data/postData.js"></script>
 <script src="/static/js/data/boardData.js"></script>
+<script src="/static/js/data/const.js"></script>
 <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
 <script src="/webjars/bootstrap/4.4.1/dist/js/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>

@@ -79,32 +79,11 @@ function getPostDataAfterPostClick(postID, boardID) {
 
       //게시글 내용 출력
       loadPostContent(data);
-      if(functionOn.postFileAttach){
-        var container = $("#postcontent").find(".attached_file_list_container_post");
-        getFileList(postID,0,container,updateFileListInPostUI);
-      }
-
-
+      showAttachFileContents(postID);
       // 작성글의 userID와 현재 로그인한 userID가 같으면 삭제버튼 표시
-      var btn_deletePost = $('.btn_delete');
-      var btn_updatePost = $('.btn_modify');
-      if (data.userID == userID) {
-        btn_deletePost.attr('style', 'visibility:visible');
-        btn_updatePost.attr('style', 'visibility:visible');
-      } else {
-        btn_deletePost.attr('style', 'display:none');
-        btn_updatePost.attr('style', 'display:none');
-      }
-      var postContentHtml = "";
+      showEditAndDeleteButtonInPost(data, userID);
 
-      if (functionOn.comments) {
-        $(function () {
-          getCommentList(boardID, postID, getCommentAllContents); //삭제이후 tab에 게시판목록 업데이트 //CommentAjax.js 에 있음
-
-          updateCommentsCount(boardID, postID);
-          fileFormClear();
-        });
-      }
+      showCommentContents(boardID, postID);
     }
   });
 }

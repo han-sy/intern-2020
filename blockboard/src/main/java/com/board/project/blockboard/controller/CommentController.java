@@ -32,8 +32,9 @@ public class CommentController {
    * postID 일치하는 댓글 목록 리턴 ( 대댓글은 반환하지 않는다.)
    */
   @GetMapping("")
-  public List<CommentDTO> getCommentsByPost(@PathVariable("postid") int postID) {
-    List<CommentDTO> commentList = commentService.getCommentListByPostID(postID);
+  public List<CommentDTO> getCommentsByPost(@PathVariable("postid") int postID,@RequestParam int pageNumber,HttpServletRequest request) {
+    UserDTO userData = new UserDTO(request);
+    List<CommentDTO> commentList = commentService.getCommentListByPostID(postID,pageNumber,userData.getCompanyID());
     return commentList;
   }
 

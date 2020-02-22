@@ -77,7 +77,8 @@ function updateIDToFiles(postID, commentID, boardID, commentReferencedID) {
         boardID = getCurrentBoardID();
       }
       if (isNullData(commentReferencedID)) {
-        getCommentList(boardID, postID, updateCommentListUI);//성공하면 댓글목록 갱신
+        getPageList(1,0,postID,updateCommentPageList);
+
       } else {
         getReplyList(boardID, postID, commentReferencedID, getReplyListUI);//성공하면 댓글목록 갱신
         $('#reply_input_container' + commentReferencedID).html("");

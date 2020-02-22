@@ -17,10 +17,13 @@ function updateCommentsCount(boardID, postID) {
 }
 
 //댓글리스트 받아오기
-function getCommentList(boardID, postID, successFunction) {
+function getCommentListByPageNum(pageNum,boardID, postID, successFunction) {
   $.ajax({
     type: 'GET',
     url: `/boards/${boardID}/posts/${postID}/comments`,
+    data: {
+      pageNumber:pageNum
+    },
     error: function (error) {  //통신 실패시
       alert('통신실패!' + error);
     },
@@ -50,7 +53,8 @@ function insertComment(boardID, postID, commentText,commentID) {//댓글 임시�
           updateIDToFiles(postID,commentID,boardID);
         }
       }
-      getCommentList(boardID, postID, updateCommentListUI);//성공하면 댓글목록 갱신
+      getPageList(1,0,postID,updateCommentPageList);
+      //getCommentListByPageNum(1,boardID, postID, updateCommentListUI);//성공하면 댓글목록 갱신
       updateCommentsCount(boardID, postID);
       CKEDITOR.instances['commentText'].setData("");
 
@@ -67,7 +71,8 @@ function deleteCommentByCommentID(postID, boardID, commentID) {
       alert('통신실패!');
     },
     success: function (data) {
-      getCommentList(boardID, postID, updateCommentListUI);//성공하면 댓글목록 갱신
+      getPageList(1,0,postID,updateCommentPageList);
+      //getCommentListByPageNum(1,boardID, postID, updateCommentListUI);//성공하면 댓글목록 갱신
       updateCommentsCount(boardID, postID);
     }
   });
@@ -83,7 +88,8 @@ function editComment(postID, boardID, commentID, newComment) {
       alert('통신실패!수정');
     },
     success: function (data) {
-      getCommentList(boardID, postID, updateCommentListUI);//성공하면 댓글목록 갱신
+      getPageList(1,0,postID,updateCommentPageList);
+      //getCommentListByPageNum(1,boardID, postID, updateCommentListUI);//성공하면 댓글목록 갱신
     }
   });
 }

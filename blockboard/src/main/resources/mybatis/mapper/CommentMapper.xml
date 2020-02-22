@@ -22,7 +22,8 @@
            LEFT OUTER JOIN users users
                            ON comments.user_id = users.user_id
     WHERE comments.post_id = #{postID}
-      AND comments.comment_referenced_id IS NULL;
+      AND comments.comment_referenced_id IS NULL
+    LIMIT  #{startIndex},#{pageSize};
   </select>
 
   <select id="getAllCommentsCountByPostID" parameterType="int" resultType="int">

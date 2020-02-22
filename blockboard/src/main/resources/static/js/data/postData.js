@@ -7,3 +7,7 @@ function getPostIDInPost() {
   console.log("getPostIDInPost");
   return $("#postID").html();
 }
+
+function getPostIDInPostList() {
+  return $(this).attr("data-post");
+}

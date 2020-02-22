@@ -2,9 +2,7 @@
  * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
  * @file commentEvent.js
  */
-const COMMENT_PREFIX = {
-  length: 7
-};
+
 
 //댓글 입력버튼 누를때
 $(document).on('click', '.btn_open_comment', function () {
@@ -78,7 +76,7 @@ $(document).on('click', '.reply_btn', function () {
   getCommentInputHtml("답글", "입력",
       `<a class="mentions_tag name" style="cursor:pointer; text-decoration: none;" href="javascript:void(0)"`
       + ` data-id="${referenceUserID}"><strong>@${referenceUserName}</strong></a>&nbsp;`,
-      "#" + inputID, "btn_openReply", "is_reply_input");
+      "#" + replyInputContainerID, "btn_openReply", "is_reply_input");
 
   fileFormClear();
   moveToInputID(replyInputContainerID);
