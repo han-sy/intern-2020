@@ -17,8 +17,7 @@ function getCommentReferencedIDInReplyContainer() {
  */
 function getCommentIDInCommentContainer() {
   console.log("getCommentIDInCommentContainer");
-  return $(this).closest(".commentContainer").attr("id").substring(
-      COMMENT_PREFIX.length);
+  return $(this).closest(".commentContainer").attr("id").substring(COMMENT_PREFIX.length);
 }
 
 /**

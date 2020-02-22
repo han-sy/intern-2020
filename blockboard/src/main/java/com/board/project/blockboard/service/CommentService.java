@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
@@ -30,15 +31,17 @@ public class CommentService {
   private CommentMapper commentMapper;
   @Autowired
   private UserMapper userMapper;
+  @Autowired PostService postService;
 
 
   public List<CommentDTO> getCommentListByPostID(int postID,int pageNumber,int companyID) {
-    int pageCount = getCommentCountByPostID(postID,companyID);
+    int pageCount = postService.getCommentsCountByPostID(postID);
     PaginationDTO pageInfo = new PaginationDTO("comments",pageCount,pageNumber,
         ConstantData.COMMENT_PAGE_SIZE,ConstantData.COMMENT_RANGE_SIZE);
     return commentMapper.selectCommentsByPostID(postID,pageInfo.getStartIndex(),ConstantData.COMMENT_PAGE_SIZE);
   }
 
+  //TODO 카운트는 비동기로 트랜잭션 처리보다야
   public int writeCommentWithUserInfo(String userID, String commentContent, int companyID,
       int postID) {
     CommentDTO comment = new CommentDTO();
@@ -49,13 +52,28 @@ public class CommentService {
     comment.setUserID(userID);
     comment.setCompanyID(companyID);
     commentMapper.insertNewCommentByCommentInfo(comment);
+    postService.updateCommentCountPlus1(postID);
     alarmService.insertAlarm(comment);
     return comment.getCommentID();
   }
 
+  //TODO 카운트는 비동기로 트랜잭션 처리보다야
   public void deleteComment(int commentID) {
     commentMapper.deleteCommentByCommentReferencedID(commentID);
     commentMapper.deleteCommentByCommentID(commentID);
+    int postID = postService.getPostIDByCommentID(commentID);
+    if(isReply(commentID)){//답글일때
+      postService.updateCommentCountMinus1(postID);
+    } else{//댓글일때
+      updateRepliesCountMinus1(commentID);
+    }
+
+  }
+
+
+
+  private boolean isReply(int commentID) {
+    return commentMapper.selectCommentReferencedIDByCommentID(commentID)>0;
   }
 
   public void updateComment(int commentID, String newComment) {
@@ -66,25 +84,14 @@ public class CommentService {
     commentMapper.updateComment(commentAttribute);
   }
 
-
-  public int getCommentCountByPostID(int postID, int companyID) {
-    boolean isCommentOn = functionService.idUseFunction(companyID, FunctionID.COMMENT);
-    boolean isReplyOn = functionService.idUseFunction(companyID, FunctionID.REPLY);
-    if (isCommentOn) {//댓글ON
-      if (isReplyOn) {//답글ON
-        return getAllCommentsCountByPostID(postID);
-      } else {//답글 OFF
-        return getOnlyCommentsCountByPostID(postID);
-      }
-    }
-    return 0;//댓글OFF
+  public void updateRepliesCountPlus1(int commentID) {
+    commentMapper.updateRepliesCountPlus1(commentID);
+  }
+  private void updateRepliesCountMinus1(int commentID) {
+    commentMapper.updateRepliesCountMinus1(commentID);
   }
 
-  public int getOnlyCommentsCountByPostID(int postID) {
-    return commentMapper.getOnlyCommentsCountByPostID(postID);
-  }
-
-  public int getAllCommentsCountByPostID(int postID) {
-    return commentMapper.getAllCommentsCountByPostID(postID);
+  public int getRepliesCountByCommentReferencedID(int commentReferencedID) {
+    return commentMapper.selectRepliesCountByCommentReferencedID(commentReferencedID);
   }
 }

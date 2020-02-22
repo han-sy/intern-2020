@@ -54,7 +54,7 @@ public class PaginationService {
     return paginationInfo;
   }
   public PaginationDTO getCommentPageListByPageNumberAboutPost(int pageNumber, int postID, UserDTO user) {
-    int commentCount = commentService.getAllCommentsCountByPostID(postID);
+    int commentCount = postService.getCommentsCountByPostID(postID);
     PaginationDTO paginationInfo = new PaginationDTO("comments",commentCount,pageNumber,ConstantData.COMMENT_PAGE_SIZE,ConstantData.COMMENT_RANGE_SIZE);
     paginationInfo.rangeSetting(pageNumber);
     return paginationInfo;

@@ -7,6 +7,7 @@ package com.board.project.blockboard.controller;
 import com.board.project.blockboard.dto.CommentDTO;
 import com.board.project.blockboard.dto.UserDTO;
 import com.board.project.blockboard.service.CommentService;
+import com.board.project.blockboard.service.PostService;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/boards/{boardid}/posts/{postid}/comments")
 public class CommentController {
 
+  @Autowired
+  private PostService postService;
   @Autowired
   private CommentService commentService;
 
@@ -57,10 +60,8 @@ public class CommentController {
    * @return 댓글개수를 반환
    */
   @GetMapping("/counts")
-  public int getCommentsCountSByPostID(@PathVariable("postid") int postID,
-      HttpServletRequest request) {
-    UserDTO userData = new UserDTO(request);
-    int commentCount = commentService.getCommentCountByPostID(postID, userData.getCompanyID());
+  public int getCommentsCountsByPostID(@PathVariable("postid") int postID) {
+    int commentCount = postService.getCommentsCountByPostID(postID);
     return commentCount;
   }
 

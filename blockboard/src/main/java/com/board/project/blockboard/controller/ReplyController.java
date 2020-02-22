@@ -7,6 +7,7 @@ package com.board.project.blockboard.controller;
 
 import com.board.project.blockboard.dto.CommentDTO;
 import com.board.project.blockboard.dto.UserDTO;
+import com.board.project.blockboard.service.CommentService;
 import com.board.project.blockboard.service.ReplyService;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -26,6 +27,8 @@ public class ReplyController {
 
   @Autowired
   private ReplyService replyService;
+  @Autowired
+  private CommentService commentService;
 
   /**
    * 답글 조회
@@ -35,6 +38,15 @@ public class ReplyController {
       @PathVariable("commentid") int commentReferencedID, HttpServletRequest request) {
     List<CommentDTO> replyList = replyService.getReplyListByCommentID(commentReferencedID);
     return replyList;
+  }
+  /**
+   * 답글수 조회
+   */
+  @GetMapping("/counts")
+  public int getRepliesByComment(@PathVariable("postid") int postID,
+      @PathVariable("commentid") int commentReferencedID) {
+    int repliesCount = commentService.getRepliesCountByCommentReferencedID(commentReferencedID);
+    return repliesCount;
   }
 
   /**

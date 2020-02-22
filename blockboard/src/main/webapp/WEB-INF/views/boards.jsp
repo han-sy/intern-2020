@@ -74,7 +74,7 @@
                 <a class="nav-link dropdown-toggle active" href="#" id="dropdown03"
                    data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">사용중인 기능</a>
-                <div class="dropdown-menu" id="fuctionListContainer"
+                <div class="dropdown-menu" id="functionListContainer"
                      aria-labelledby="dropdown03">
                     <c:if test="${userType=='관리자'}">
                         <a class="dropdown-item text-success" id='changeFuncBtn' data-toggle="modal"
@@ -524,7 +524,7 @@
                         <div class="row">
                         <span class="col-2">
                             <strong class="c">댓글 </strong>
-                        (<span id=commentCount></span>)
+                        (<span class='commentCount'></span>)
                         </span>
                             <a class=' comment_btn text-success font-weight-bold text-button'
                             >댓글 달기</a>
@@ -632,7 +632,7 @@
                                     </div>
                                     <div class="btn">
                                         {{#isReplyAble}}
-                                            <a class='text-success text-button font-weight-bold reply_btn'>답글 달기</a>
+                                            <a class='text-success text-button font-weight-bold reply_btn'>답글(<span id="replies_count{{commentID}}">{{repliesCount}}</span>) 달기</a>
                                             <a class='text-success text-button font-weight-bold open_reply_list_btn'>답글 보기</a>
                                         {{else}}
                                         {{/isReplyAble}}
@@ -722,7 +722,8 @@
                         </div>
                     </div>
                 {{/replies}}
-                <div>
+                <div >
+                    <button class="btn btn-success more-replies-btn" data-index ='5' >답글 더보기</button>
                 </div>
             </script>
             <!--댓글 답글 input form 템플릿-->

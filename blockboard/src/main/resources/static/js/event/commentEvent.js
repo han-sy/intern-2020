@@ -14,6 +14,7 @@ $(document).on('click', '.btn_open_comment', function () {
     return;
   }
   insertComment(boardID, postID, commentText);
+
 });
 
 //댓글삭제버튼 누를때
@@ -22,9 +23,10 @@ $(document).on('click', '#delete_comment', function () {
   var postID = getPostIDInPost();
   var boardID = getCurrentBoardID();
   var commentID = getCommentIDInCommentContainer.call(this);
+  var commentReferencedID = getCommentReferencedIDInReplyContainer().call(this);
   var isAcceptance = confirm("선택한 댓글 or 답글을 정말 삭제하시겠습니까?");
   if (isAcceptance) {
-    deleteCommentByCommentID(postID, boardID, commentID);
+    deleteCommentByCommentID(postID, boardID, commentID,commentReferencedID);
   }
 });
 

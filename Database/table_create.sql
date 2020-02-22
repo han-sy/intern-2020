@@ -65,6 +65,7 @@ create table posts(
     post_last_update_time datetime null,
     post_status varchar(50) not null default "normal",
     view_count int(9) default 0,
+    comments_count int(9) default 0,
 	foreign key(user_id) references users(user_id) ON DELETE CASCADE,
 	foreign key(board_id) references boards(board_id) ON DELETE CASCADE,
 	foreign key(company_id) references companies(company_id) ON DELETE CASCADE,
@@ -80,6 +81,7 @@ create table comments(
 	comment_content_except_htmltag longtext character set utf8mb4 collate utf8mb4_unicode_ci not null,
     comment_register_time timestamp not null,
     comment_referenced_id int(9),
+    replies_count int(9),
 	foreign key(post_id) references posts(post_id) ON DELETE CASCADE ,
 	foreign key(user_id) references users(user_id) ON DELETE CASCADE,
 	foreign key(company_id) references companies(company_id) ON DELETE CASCADE,
@@ -199,3 +201,19 @@ users.thumbnail_url as thumbnailUrl
 from view_records view_records left outer join users users
 on view_records.user_id = users.user_id
 WHERE view_records.post_id = 1;
+
+SELECT comments.comment_id            AS commentID,
+           comments.post_id               AS postID,
+           comments.user_id               AS userID,
+           users.user_name                AS userName,
+           users.thumbnail_url            AS thumbnailUrl,
+           comments.company_id            AS companyID,
+           comments.comment_content       AS commentContent,
+           comments.comment_register_time AS commentRegisterTime,
+           comments.comment_referenced_id AS commentReferencedID
+    FROM comments comments
+           LEFT OUTER JOIN users users
+                           ON comments.user_id = users.user_id
+    WHERE comments.post_id = 1
+      AND comments.comment_referenced_id IS NULL
+    LIMIT  5,5;

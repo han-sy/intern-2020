@@ -32,4 +32,13 @@ public interface CommentMapper {
   int getOnlyCommentsCountByPostID(int postID);
 
   List<CommentDTO> selectCommentsByPostID(int postID, int startIndex, int pageSize);
+
+  void updateRepliesCountPlus1(int commentReferencedID);
+
+  void updateRepliesCountMinus1(int commentReferencedID);
+
+  int selectCommentReferencedIDByCommentID(int commentID);
+
+
+  int selectRepliesCountByCommentReferencedID(int commentReferencedID);
 }

@@ -26,6 +26,8 @@ import org.springframework.stereotype.Service;
 public class ReplyService {
 
   @Autowired
+  private CommentService commentService;
+  @Autowired
   private ReplyMapper replyMapper;
   @Autowired
   private UserMapper userMapper;
@@ -53,7 +55,9 @@ public class ReplyService {
     reply.setUserName(userMapper.selectUserNameByUserID(userID));
     reply.setCommentReferencedID(commentReferencedID);
     replyMapper.insertNewReplyByCommentInfo(reply);
+    commentService.updateRepliesCountPlus1(commentReferencedID);
     alarmService.insertAlarm(reply);
     return reply.getCommentID();
   }
+
 }

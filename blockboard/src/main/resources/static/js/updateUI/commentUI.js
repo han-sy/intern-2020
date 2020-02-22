@@ -9,6 +9,11 @@ function updateCommentListUI(data) {
   var comments = {comments: data};
   var itemList = template(comments);
   $('.comment_list_container').html(itemList);
+  var boardID = getBoardIDInPost();
+  var postID = getPostIDInPost();
+  //var commentID = getCommentIDInCommentContainer();
+
+  //updateRepliesCount(boardID,postID,commentID);
   /*if (functionOn.reply) { //대댓글 기능 on 일때
     getAllReplyList(data);
   }*/
@@ -57,12 +62,6 @@ function getCommentInputHtml(type, buttonName, tag, className, buttonSelector,
   );
 }
 
-//TODO 댓글과 답글을 분리해도 될것같다.
-//댓글 컨텐츠 모두 불러오기
-function getCommentAllContents(data) {
-  updateCommentListUI(data);
-
-}
 
 //댓글수정모드
 function editCommentByCommentID(postID, boardID, commentID) {
@@ -83,6 +82,10 @@ function getReplyListUI(commentID, data) {
   var replies = {replies: data};
   var itemList = template(replies);
   $("#reply_container" + commentID).html(itemList);
+  var boardID = getBoardIDInPost();
+  var postID = getPostIDInPost();
+
+  updateRepliesCount(boardID,postID,commentID);
 }
 
 //답글전체 받아오기
@@ -94,4 +97,14 @@ function getReplyListUI(commentID, data) {
 
 function replyFormClear() {
   $('.is_reply_input').html("");
+}
+
+function updateCommentsCountUI(data) {
+  console.log("commentsCount : " + data);
+  $(".commentCount").html(data);
+}
+
+function updateRepliesCountUI(data,commentReferencedID) {
+  console.log("repliesCount : " + data);
+  $('#replies_count'+data).html(data);
 }

@@ -203,10 +203,10 @@ public class PostService {
     List<PostDTO> postList = postMapper
         .selectPostByBoardID(boardID, pageInfo.getStartIndex(), ConstantData.POST_PAGE_SIZE);
 
-    for (PostDTO post : postList) {
+    /*for (PostDTO post : postList) {
       int commentsCount = commentService.getCommentCountByPostID(post.getPostID(), companyID);
       post.setCommentsCount(commentsCount);
-    }
+    }*/
     return postList;
   }
 
@@ -242,7 +242,7 @@ public class PostService {
    * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
    */
   //TODO 휴지통인경우 임시저장함인경우는 따로 구분해서 조회수 증가 안되도록 해야됨. 1번방법 : 임시저장이나 휴지통인 경우 제외 ,2번방법 : 작성자 조회수증가에서 제외.
-  @Transactional
+  //TODO 카운트는 비동기로 트랜잭션 처리보다야
   public void updateViewCnt(int postID, HttpServletRequest request,
       HttpServletResponse response) {
     UserDTO userData = new UserDTO(request);
@@ -253,8 +253,8 @@ public class PostService {
   public List<PostDTO> getPopularPostList(int companyID) {
     List<PostDTO> postList = postMapper.selectPopularPostListByCompanyID(companyID);
     for (PostDTO post : postList) {
-      int commentsCount = commentService.getCommentCountByPostID(post.getPostID(), companyID);
-      post.setCommentsCount(commentsCount);
+      /*int commentsCount = commentService.getCommentCountByPostID(post.getPostID(), companyID);
+      post.setCommentsCount(commentsCount);*/
       post.setIsPopular(true);
     }
     return postList;
@@ -262,6 +262,21 @@ public class PostService {
 
   public int getPopularPostsCount(int companyID) {
     return postMapper.getPopularPostsCount(companyID);
+  }
+
+  public void updateCommentCountPlus1(int postID) {
+    postMapper.updateCommentCountPlus1(postID);
+  }
+  public void updateCommentCountMinus1(int postID){
+    postMapper.updateCommentCountMinus1(postID);
+  }
+
+  public int getPostIDByCommentID(int commentID) {
+    return postMapper.selectPostIDByCommentID(commentID);
+  }
+
+  public int getCommentsCountByPostID(int postID) {
+    return postMapper.selectCommentsCountByPostID(postID);
   }
 }
 

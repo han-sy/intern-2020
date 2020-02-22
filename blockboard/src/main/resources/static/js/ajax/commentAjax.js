@@ -2,8 +2,8 @@
  * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
  * @file commentAjax.js
  */
+
 function updateCommentsCount(boardID, postID) {
-  console.log("count 함수 에서 postID : "+postID);
   $.ajax({
     type: 'GET',
     url: `/boards/${boardID}/posts/${postID}/comments/counts`,
@@ -11,10 +11,23 @@ function updateCommentsCount(boardID, postID) {
       alert('통신실패!');
     },
     success: function (data) {    //들어오는 data는 boardDTOlist
-      $("#commentCount").html(data);
+      updateCommentsCountUI(data);
     }
   });
 }
+function updateRepliesCount(boardID, postID,commentID) {
+  $.ajax({
+    type: 'GET',
+    url: `/boards/${boardID}/posts/${postID}/comments/${commentID}/replies/counts`,
+    error: function () {  //통신 실패시
+      alert('통신실패!');
+    },
+    success: function (data) {    //들어오는 data는 boardDTOlist
+      updateRepliesCountUI(data,commentID);
+    }
+  });
+}
+
 
 //댓글리스트 받아오기
 function getCommentListByPageNum(pageNum,boardID, postID, successFunction) {
@@ -57,13 +70,14 @@ function insertComment(boardID, postID, commentText,commentID) {//댓글 임시�
       //getCommentListByPageNum(1,boardID, postID, updateCommentListUI);//성공하면 댓글목록 갱신
       updateCommentsCount(boardID, postID);
       CKEDITOR.instances['commentText'].setData("");
-
+/*      var commentReferencedID = getCommentReferencedIDInReplyContainer();
+      updateRepliesCount(boardID,postID,commentReferencedID);*/
     }
   });
 }
 
 //댓글삭제
-function deleteCommentByCommentID(postID, boardID, commentID) {
+function deleteCommentByCommentID(postID, boardID, commentID,commentReferencedID) {
   $.ajax({
     type: 'DELETE',
     url: `/boards/${boardID}/posts/${postID}/comments/${commentID}`,
@@ -74,6 +88,9 @@ function deleteCommentByCommentID(postID, boardID, commentID) {
       getPageList(1,0,postID,updateCommentPageList);
       //getCommentListByPageNum(1,boardID, postID, updateCommentListUI);//성공하면 댓글목록 갱신
       updateCommentsCount(boardID, postID);
+      if(!isNullData(commentReferencedID)){
+        updateRepliesCount(boardID,postID,commentReferencedID);
+      }
     }
   });
 }
