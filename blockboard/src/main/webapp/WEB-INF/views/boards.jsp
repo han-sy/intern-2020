@@ -398,25 +398,25 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div class="modal-body-addUser">
+                        <div class="modal-body">
                             <form id="userForm" name="userForm" method="post" class="form-group"
                                   style="padding: 10px 30px 10px 10px;">
-                                <label class="col-form-label">회원 ID (최대 20자)</label>
-                                <input type="text" class="form-control" name="userID"
+                                <label class="col-form-label">회원 ID (최대 20자, 한글 X)</label>
+                                <input type="text" class="form-control" name="userID" id="form-userID"
                                        placeholder="회원 ID (최대 20자)" maxlength="20">
                                 <label class="col-form-label">회원 이름</label>
-                                <input type="text" class="form-control" name="userName"
-                                       placeholder="회원 이름">
-                                <label class="col-form-label">회원 초기 비밀번호</label>
-                                <input type="text" class="form-control" name="userPassword"
-                                       placeholder="회원 초기 비밀번호">
+                                <input type="text" class="form-control" name="userName" id="form-userName"
+                                       placeholder="회원 이름" maxlength="10">
+                                <label class="col-form-label">회원 비밀번호(8~20자), 특수문자 1개 이상포함)</label>
+                                <input type="password" class="form-control" name="userPassword" id="form-userPassword"
+                                       placeholder="회원 비밀번호" maxlength="20">
                                 <label class="col-form-label">회원 사진</label>
                                 <input type="file" class="form-control" name="userImageFile"
                                        id="userImageFile"
                                        accept="image/png, image/jpeg" onchange="loadImage(this)">
                                 <img id="load_user_image" height="300px">
                                 <input type="button" class="form-control btn-success"
-                                       value="Add User" onclick="addUser(); return false">
+                                       value="Add User" onclick="clickAddUser()">
                             </form>
                         </div>
                     </div>
@@ -928,6 +928,7 @@
 <script src="/static/js/event/functionEvent.js"></script>
 <script src="/static/js/event/paginationEvent.js"></script>
 <script src="/static/js/event/alarmEvent.js"></script>
+<script src="/static/js/event/userEvent.js"></script>
 <script src="/static/js/event/common.js"></script>
 <script src="/static/js/event/mentionEvent.js"></script>
 <script src="/static/js/event/fileEvent.js"></script>
