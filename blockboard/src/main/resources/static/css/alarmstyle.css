@@ -1,0 +1,98 @@
+li.alarm-item:hover {
+  background-color: #e0f6ff;
+  text-decoration: black;
+  cursor: pointer;
+}
+
+p.alarm-item > span {
+  float: right;
+}
+
+li.alarm-read {
+  color: #adb1b1 !important;
+  font-weight: normal !important;
+}
+
+.dropdown-alarm {
+  color: white;
+}
+
+.alarm-items {
+  font-size: 13px;
+  height: 250px;
+  width: 400px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  color: black;
+}
+
+.alarm-item {
+  font-weight: bold;
+}
+
+.alarm-item .alarm-read {
+  font-weight: normal;
+}
+
+.alarm-item .alarm-read:hover{
+  font-weight: normal;
+}
+
+.btn-alarm-delete {
+  background-color: white;
+  color: darkgray;
+  border: none;
+  padding: 4px;
+  float: right;
+  position: relative;
+  left: 20px;
+  top: 7px;
+  font-size: 13px;
+}
+
+.btn-alarm-delete:hover {
+  background-color: white;
+  color: #1a1a1a;
+}
+
+.btn-alarm-delete-all {
+  background-color: white;
+  font-weight: bold;
+  color: dimgray;
+  border: 1px solid dimgray;
+  font-size: 13px;
+  float: right;
+  padding: 8px;
+}
+
+.btn-alarm-delete-all:hover {
+  background-color: dimgray;
+  color: white;
+  float: right;
+  padding: 8px;
+}
+
+.btn-alarm-delete-read {
+  background-color: white;
+  font-weight: bold;
+  color: dimgray;
+  border: 1px solid dimgray;
+  font-size: 13px;
+  float: right;
+  padding: 8px;
+}
+
+.btn-alarm-delete-read:hover {
+  background-color: dimgray;
+  color: white;
+}
+
+#alarmCount {
+  border-radius: 50%;
+  background-color: orangered;
+  color: white;
+  font-size: 10px;
+  position: relative;
+  left: -15px;
+  top: 5px;
+}

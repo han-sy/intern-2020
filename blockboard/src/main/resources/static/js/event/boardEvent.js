@@ -191,3 +191,12 @@ $(document).on('click', '._function-switch', function () {
   }
   $(this).removeClass("active");
 });
+
+function clickBoardEventByBoardId(boardID) {
+  $(".tabmenu").each(function (index, item) {
+     if (parseInt(item.dataset.tab) === parseInt(boardID)) {
+       $(item).trigger("click");
+       return false;
+     }
+  });
+}

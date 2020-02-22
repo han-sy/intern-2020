@@ -33,7 +33,7 @@ public interface PostMapper {
 
   PostDTO selectPostByPostID(int postID);
 
-  PostDTO selectRecentTempPost(UserDTO requestUser);
+  PostDTO selectPostByAlarmId(int alarmId);
 
   void temporaryDeletePost(PostDTO post);
 

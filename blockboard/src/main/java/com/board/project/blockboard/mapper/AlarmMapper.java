@@ -19,4 +19,6 @@ public interface AlarmMapper {
   void insertAlarm(AlarmDTO alarm);
 
   void deleteAlarm(int alarmID);
+
+  void readAlarm(int alarmId);
 }

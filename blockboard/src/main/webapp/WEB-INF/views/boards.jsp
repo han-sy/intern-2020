@@ -16,6 +16,7 @@
             data-auto-replace-svg="nest"></script>
     <link rel="stylesheet" href="/webjars/bootstrap/4.4.1/dist/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="/static/css/boardstyle.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/alarmstyle.css">
     <link href="https://fonts.googleapis.com/css?family=Noto+Sans+JP|Roboto&display=swap"
           rel="stylesheet">
     <style>
@@ -118,6 +119,7 @@
             {{/functions}}
         </script>
 
+        <!-- 알람 창 -->
         <div class="nav-item dropleft">
             <a class="nav-link dropdown-alarm" href="#" id="dropdown04" style="color:white"
                data-toggle="dropdown"
@@ -125,11 +127,12 @@
                 <i class="far fa-bell fa-2x" id="alarm_icon"></i>
             </a>
             <div class="dropdown-menu alarm-items" aria-labelledby="dropdown04">
-                <button type="button" style="float: right" class="btn-alarm-delete-all">모두 삭제
-                </button>
-                <br><br>
-                <div id="alarmcontent">
-                </div>
+                <button type="button" class="btn-alarm-delete-read">읽은 알람 삭제
+                    <button type="button" class="btn-alarm-delete-all">모두 삭제
+                    </button>
+                    <br><br>
+                    <div id="alarm-content">
+                    </div>
             </div>
         </div>
         <script id="alarm-count-template" type="text/x-handlebars-template">
@@ -137,23 +140,24 @@
         </script>
         <script id="alarmList-template" type="text/x-handlebars-template">
             {{#alarms}}
-                <div>
-                    <li class="dropdown-item">
-                        <button type="button" class="btn-alarm-delete">X</button>
-                        <a href="/alarms/{{alarmID}}" data-id="{{alarmID}}" target="_self"
-                           class="alarm-item">
-                            {{userName}}님이
-                            {{#isPostAlarm}}
-                                게시글에서 회원님을 언급했습니다.
-                            {{else}}
-                                댓글에서 회원님을 언급했습니다:<br>
-                                {{alarmContent}}
-                            {{/isPostAlarm}}
-                            <span style="float: right">{{registerTime}}</span>
-                        </a>
+                {{#isReadAlarm}}
+                    <li class="dropdown-item alarm-item alarm-read" data-id="{{alarmID}}">
+                {{else}}
+                    <li class="dropdown-item alarm-item" data-id="{{alarmID}}">
+                {{/isReadAlarm}}
 
-                    </li>
-                </div>
+                    <button type="button" class="btn-alarm-delete">X</button>
+                    <p class="alarm-item">
+                        {{userName}}님이
+                        {{#isPostAlarm}}
+                            게시글에서 회원님을 언급했습니다.
+                        {{else}}
+                            댓글에서 회원님을 언급했습니다:<br>
+                            {{alarmContent}}
+                        {{/isPostAlarm}}
+                        <span style="float: right">{{registerTime}}</span>
+                    </p>
+                </li>
             {{/alarms}}
         </script>
         <a class="nav-link text-white" id="current_user_info" style="nav-right: auto"
@@ -366,7 +370,7 @@
                 {{#functions}}
                     {{#isAbleFunction}}
                         <li class="btn-group-toggle {{isCommentFunction}}" data-toggle="buttons"
-                             style="padding: 3px 1px 1px 10px;">
+                            style="padding: 3px 1px 1px 10px;">
                             <label class="btn btn-default _function-switch">
                                 <span>{{functionName}}</span>
                                 <input class='function_checkbox' type='checkbox' name='function'
@@ -376,7 +380,7 @@
                         </li>
                     {{else}}
                         <li class="btn-group-toggle {{isCommentFunction}}" data-toggle="buttons"
-                             style="padding: 3px 1px 1px 10px;">
+                            style="padding: 3px 1px 1px 10px;">
                             <label class="btn btn-success _function-switch">
                                 <span>{{functionName}}</span>
                                 <input class='function_checkbox' type='checkbox' name='function'

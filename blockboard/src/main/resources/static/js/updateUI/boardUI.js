@@ -14,6 +14,7 @@ function updateTab(data) {
   $("#tab_id").children().each(function () {
     if ($(this).attr('data-tab') > 0) {
       $(this).trigger('click');
+      console.log("초기 클릭");
       return;
     }
   });
@@ -26,6 +27,7 @@ function loadPostContent(data) {
   var post = {post: data};
   var item = template(post);
   $('#postcontent').html(item);
+  console.log("게시글 불러오기");
 }
 
 //게시글 목록

@@ -129,6 +129,11 @@ public class PostService {
     }
   }
 
+  public PostDTO selectPostByAlarmId(int alarmId) {
+    log.info("selectPostByAlarmId 호출됨");
+    return postMapper.selectPostByAlarmId(alarmId);
+  }
+
   public List<PostDTO> selectMyPosts(UserDTO user, int pageNumber) {
     int pageCount = postMapper.getMyPostsCount(user);
     Map<String, Object> map = makeMapUserAndPageInfo(user, pageCount, pageNumber);

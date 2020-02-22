@@ -14,21 +14,49 @@ function getAlarms() {
       if(data === "") {
         emptyAlarmUI();
       } else {
-        updateAlarmUI(data, data.length);
+        updateAlarmUI(data);
       }
     }
   });
 }
 
-function removeAlarmItem(alarmID) {
+function removeAlarmItem(alarmId) {
   $.ajax({
     type: 'DELETE',
-    url: `/alarms/${alarmID}`,
+    url: `/alarms/${alarmId}`,
     error: function (xhr) {
       errorFunction(xhr);
+      getAlarms();
     },
     success: function () {
+      getAlarms();
+    }
+  });
+}
 
+function showAlarmContent(alarmId) {
+  $.ajax({
+    type: 'GET',
+    url: '/alarms/' + alarmId,
+    error: function (xhr) {
+      errorFunction(xhr);
+      getAlarms();
+    },
+    success: function (data) {
+      readMarkToAlarmItem(alarmId);
+      getPostDataAfterPostClick(data.postID, data.boardID);
+      getAlarms();
+      clickBoardEventByBoardId(data.boardID);
+    }
+  })
+}
+
+function readMarkToAlarmItem(alarmId) {
+  $.ajax({
+    type: 'PUT',
+    url: `/alarms/${alarmId}`,
+    error: function (xhr) {
+      errorFunction(xhr);
     }
   });
 }
