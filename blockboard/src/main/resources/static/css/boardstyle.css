@@ -1,3 +1,9 @@
+.modal-read-user-container {
+  overflow-x: hidden;
+  height: 500px;
+}
+
+
 .name{
   cursor:pointer;
 }

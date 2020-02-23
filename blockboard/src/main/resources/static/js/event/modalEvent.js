@@ -12,5 +12,5 @@ $(document).on('show.bs.modal', '.modal', function () {
   setTimeout(function() {
     $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
   }, 0);
-  count = count + 1
+  count = count + 1;
 });

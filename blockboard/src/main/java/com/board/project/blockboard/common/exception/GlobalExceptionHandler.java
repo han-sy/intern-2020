@@ -28,7 +28,7 @@ public class GlobalExceptionHandler {
   protected void IllegalArgumentError(HttpServletResponse response, Exception e) {
     try {
       e.printStackTrace();
-      response.sendError(HttpServletResponse.SC_CONFLICT, "유효하지 않은 변수를 요청하였습니다.");
+      response.sendError(HttpServletResponse.SC_CONFLICT, e.getMessage());
     } catch (IOException ie) {
       ie.printStackTrace();
     }

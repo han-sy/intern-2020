@@ -19,4 +19,5 @@ public class CommentDTO {
   private String commentContentExceptHTMLTag;
   private String commentRegisterTime;
   private int commentReferencedID;
+  private int repliesCount;
 }

@@ -2,11 +2,7 @@
  * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
  * @file    common.js
  */
-const UNICODE_3_BYTE = 11;
-const UNICODE_2_BYTE = 7;
-const BYTE_SIZE_3 = 3;
-const BYTE_SIZE_2 = 2;
-const BYTE_SIZE_1 = 1;
+
 
 function returnToLoginPage() {
   redirectLogout();
@@ -102,7 +98,3 @@ function loadImage(value) {
     reader.readAsDataURL(value.files[0]);
   }
 }
-
-$('.modal-body-addUser').on('hidden.bs.modal', function (e) {
-  $(this).find('form')[0].reset();
-});

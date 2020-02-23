@@ -8,7 +8,6 @@ import com.board.project.blockboard.common.util.CookieUtils;
 import com.board.project.blockboard.dto.UserDTO;
 import com.board.project.blockboard.service.JwtService;
 import com.board.project.blockboard.service.UserService;
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.http.Cookie;
@@ -22,9 +21,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 @Slf4j
@@ -87,37 +84,34 @@ public class UserController {
   }
 
 
-  @GetMapping("/userinfo")
-  @ResponseBody
-  public UserDTO info(HttpServletRequest request) {
-    return new UserDTO(request);
-  }
-
   @PostMapping("/users")
   @ResponseBody
   public UserDTO insertUser(HttpServletRequest request, @ModelAttribute UserDTO user) {
     return userService.insertUser(request, user);
   }
 
-
-  @PutMapping("/users/{userid}/Image")
-  public void updateUserImage(MultipartHttpServletRequest multipartRequest, @PathVariable("userid") String userID, HttpServletResponse response,HttpServletRequest request)
-      throws IOException {
-
-    userService.updateUserImage(multipartRequest, userID,response,request);
-  }
-
   @GetMapping("/users")
   @ResponseBody
-  public List<UserDTO> getUsers(HttpServletRequest request) {
+  public List<UserDTO> getAllUserByCompanyId(HttpServletRequest request) {
     int companyID = Integer.parseInt(request.getAttribute("companyID").toString());
     return userService.selectUsersByCompanyID(companyID);
   }
 
   @GetMapping("/users/{userid}")
   @ResponseBody
-  public UserDTO getUser(HttpServletRequest request, @PathVariable("userid") String userID) {
+  public UserDTO getUserByUserIdAndCompanyId(HttpServletRequest request, @PathVariable("userid") String userID) {
     int companyID = Integer.parseInt(request.getAttribute("companyID").toString());
     return userService.selectUserByUserIdAndCompanyId(userID, companyID);
   }
+
+  @PutMapping("/users/{userid}/Image")
+  public void updateUserImage(MultipartHttpServletRequest multipartRequest,
+      @PathVariable("userid") String userID, HttpServletResponse response,
+      HttpServletRequest request)
+      throws IOException {
+
+    userService.updateUserImage(multipartRequest, userID, response, request);
+  }
+
+
 }

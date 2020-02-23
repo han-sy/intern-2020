@@ -637,8 +637,8 @@
 						success = loader.editor.fire( 'fileUploadResponse', data );
 
 					// 만약 자동 태그 on 이면, key 값 추가
-					var func = new FunctionOn();
-					if (func.postAutoTag) {
+
+					if (functionOn.postAutoTag) {
 						valuesToCopy.push('detectedUsers');
 					}
 					console.log("data = ", data);

@@ -4,7 +4,6 @@
  */
 
 function updateFileListInPostUI(data,obj){
-  console.log("updateFileListInPostUI");
   var source = $('#attached-file-list-template').html();
   var template = Handlebars.compile(source);
   var files = {files: data};
@@ -13,8 +12,6 @@ function updateFileListInPostUI(data,obj){
 }
 
 function updateFileListInCommentUI(data,obj){
-  console.log("updateFileListInCommentUI = ", data);
-  console.log(obj.parents().parents().html());
   var source = $('#attached-file-list-template').html();
   var template = Handlebars.compile(source);
   var files = {files: data};
@@ -27,7 +24,6 @@ function deleteStatusbarUI(obj) {
 }
 
 function createStatusbarUI(data,container){
-  console.log(data);
   var source = $('#attached-file-statusbar-template').html();
   var template = Handlebars.compile(source);
   var files = {files: data};
@@ -63,13 +59,10 @@ function openFileAttachForm(postID,commentID,obj) {
     obj.find('.file_attach_form').html(item);
     container = obj.find('.file_attach_form').find(".upload_list_start_point");
   }
-  console.log("파일리스트받아오기 postID = ", postID);
   if(!isNullData(postID)){
-    console.log(postID);
     getFileList(postID,0,container,createStatusbarUI);
   }
   if(!isNullData(commentID)){
-    console.log(commentID);
     getFileList(0,commentID,container,createStatusbarUI);
   }
 }
