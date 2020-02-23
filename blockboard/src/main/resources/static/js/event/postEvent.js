@@ -22,8 +22,7 @@ $(document).on("click", "#btn_write", function () {
   postClear();
   editorAreaCreate("insert");
   initBoardIdOptionInEditor(getCurrentBoardID());
-  var funcionOn = new FunctionOn();
-  if (funcionOn.postFileAttach) {
+  if (functionOn.postFileAttach) {
     console.log("파일 첨부 on");
     openFileAttachForm();
   }
@@ -59,7 +58,7 @@ $(document).on('click', '.btn_post', function () {
     // 임시 or 자동 저장된 글을 한번 더 '저장' 버튼을 누를 때
     else {
       insertTempPost(boardID, postID, postTitle, postContent, "normal");
-      getPageList(1, getCurrentBoardID(), updatePageList);
+      getPageList(1, getCurrentBoardID(),0, updatePostPageList);
     }
     editorClear();
   }
@@ -97,17 +96,17 @@ $(document).on('click', '.btn_update', function () {
   var postTitle = $('#post_title').val();
   var postContent = CKEDITOR.instances.editor.getData();
   var boardID = $('#selectedBoardIDinEditor option:selected').attr('data-tab');
-  var functionData = new FunctionOn();
-  if(functionData.postFileAttach){
+  if(functionOn.postFileAttach){
     updateIDToFiles(postID,"");
   }
   updatePost(boardID, originalBoardID, postID, postTitle, postContent);
 });
 
+
 // 게시글 조회 후 '수정' 버튼 이벤트
 $(document).on('click', '.btn_modify', function () {
-  var postID = $("#postID").html();
-  var boardID = $("#boardIdInPost").html();
+  var postID = getPostIDInPost();
+  var boardID = getBoardIDInPost();
   postClear();
   editorAreaCreate("modify");
   var post_button = $('.btn_post');
@@ -123,7 +122,7 @@ $(document).on('click', '.btn_modify', function () {
 
 // 게시글 조회 후 삭제 버튼 이벤트
 $(document).on('click', '.btn_delete', function () {
-  var postID = $("#postID").html();
+  var postID = getPostIDInPost();
   var boardID = parseInt(getCurrentBoardID());
   if (boardID == BOARD_ID.RECYCLE || boardID == BOARD_ID.TEMP_BOX) {
     if (confirm("영구 삭제됩니다. 삭제하시겠습니까?")) {
@@ -163,8 +162,8 @@ function off_autosave() {
 
 // 임시저장 게시물 클릭 이벤트
 $(document).on('click', '.temp_post_click', function () {
-  var postID = $(this).attr("data-post");
-  var boardID = $(this).attr("data-board");
+  var postID = getPostIDInPostList.call(this);
+  var boardID = getBoardIDInPostList.call(this);
   postClear();
   editorAreaCreate("insert");
   var btn_cancel = $('.btn_cancel');

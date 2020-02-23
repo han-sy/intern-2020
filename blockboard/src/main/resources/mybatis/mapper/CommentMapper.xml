@@ -17,12 +17,14 @@
            comments.company_id            AS companyID,
            comments.comment_content       AS commentContent,
            comments.comment_register_time AS commentRegisterTime,
-           comments.comment_referenced_id AS commentReferencedID
+           comments.comment_referenced_id AS commentReferencedID,
+           comments.replies_count         AS repliesCount
     FROM comments comments
            LEFT OUTER JOIN users users
                            ON comments.user_id = users.user_id
     WHERE comments.post_id = #{postID}
-      AND comments.comment_referenced_id IS NULL;
+      AND comments.comment_referenced_id IS NULL
+    LIMIT  #{startIndex},#{pageSize};
   </select>
 
   <select id="getAllCommentsCountByPostID" parameterType="int" resultType="int">
@@ -91,4 +93,27 @@
     SET comment_content = #{newComment}
     WHERE comment_id = #{commentID};
   </update>
+
+  <update id="updateRepliesCountPlus1" parameterType="int">
+    UPDATE comments
+    SET replies_count = replies_count + 1
+    WHERE comment_id = #{commentReferencedID};
+  </update>
+  <update id="updateRepliesCountMinus1" parameterType="int">
+    UPDATE comments
+    SET replies_count = replies_count - 1
+    WHERE comment_id = #{commentReferencedID};
+  </update>
+
+  <select id="selectCommentReferencedIDByCommentID" parameterType="int" resultType="int">
+    SELECT comment_referenced_id
+    FROM comments
+    WHERE comment_id = #{commentID};
+  </select>
+
+  <select id="selectRepliesCountByCommentReferencedID" parameterType="int" resultType="int">
+    SELECT replies_count
+    FROM comments
+    WHERE comment_id = #{commentReferencedID};
+  </select>
 </mapper>

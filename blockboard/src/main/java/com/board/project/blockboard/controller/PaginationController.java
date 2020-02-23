@@ -20,20 +20,23 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Slf4j
 @Controller
-@RequestMapping("/boards")
+@RequestMapping("/pages")
 public class PaginationController {
 
   @Autowired
   private PaginationService paginationService;
 
-  @GetMapping(value = "/{boardid}/pages")
+  @GetMapping(value = "")
   @ResponseBody
-  public PaginationDTO getPageList(@PathVariable("boardid") int boardID,
-      @RequestParam("pageNumber") int pageNumber, HttpServletRequest request) {
+  public PaginationDTO getPageList(@RequestParam int boardID, @RequestParam int postID,
+      @RequestParam int pageNumber, HttpServletRequest request) {
     UserDTO user = new UserDTO(request);
+
     //게시판 목록
-    PaginationDTO pageInfo = paginationService
-        .getPageListByPageNumber(pageNumber, boardID, user); // select로 받아오기
+
+    PaginationDTO pageInfo = paginationService.getPageList(pageNumber,boardID,postID,user);
+    /*PaginationDTO pageInfo = paginationService
+        .getPostPageListByPageNumberAboutBoard(pageNumber, boardID, user); // select로 받아오기*/
     return pageInfo;
   }
 }
