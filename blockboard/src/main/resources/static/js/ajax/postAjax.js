@@ -18,10 +18,10 @@ function insertPost(postID,boardID, postTitle, postContent) {
     },
     success: function (data) {
       if(functionOn.postFileAttach){
-        if(isNullData(postID)){
-          updateIDToFiles(data,"");
-        }else{
-          updateIDToFiles(postID,"");
+        if(isNullData(postID)){ //postID가 없는경우 일반
+          updateIDToFiles("post",data,"");
+        }else{ //postID가 이미 있는경우 //임시저장
+          updateIDToFiles("post",postID,"");
         }
       }
       refreshPostList();
@@ -50,9 +50,9 @@ function insertTempPost(boardID, postID, temp_title, temp_content, post_status) 
         addPostInfoToEditor(data, boardID);
         if(functionOn.postFileAttach){
           if(isNullData(postID)){
-            updateIDToFiles(data,"");
+            updateIDToFiles("post",data,"");
           }else{
-            updateIDToFiles(postID,"");
+            updateIDToFiles("post",postID,"");
           }
         }
         alert("임시저장 되었습니다.")

@@ -51,7 +51,7 @@ $(document).on('click', '.btn_edit_comment_complete', function () {
   var isAcceptance = confirm("댓글을 수정 하시겠습니까?");
   if (isAcceptance) {
     if (functionOn.commentFileAttach) {
-      updateIDToFiles("", commentID);
+      updateIDToFiles("comment","", commentID);
     }
     editComment(postID, boardID, commentID, newComment);
   }
@@ -96,7 +96,7 @@ $(document).on('click', '.btn_openReply', function () {
     return;
   }
   $(function () {
-    insertReply(boardID, postID, commentText, commentReferencedID, '', editorName);
+    insertReply(boardID, postID, commentText, commentReferencedID, editorName);
   });
 });
 

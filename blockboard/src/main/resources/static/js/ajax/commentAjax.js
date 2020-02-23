@@ -50,7 +50,7 @@ function getCommentListByPageNum(pageNum, boardID, postID, successFunction) {
 }
 
 //댓글 추가
-function insertComment(boardID, postID, commentText, commentID) {//댓글 임시저장 기능이 추가될수도있어 commentID 파라미터 추가해놓음
+function insertComment(boardID, postID, commentText) {//댓글 임시저장 기능이 추가될수도있어 commentID 파라미터 추가해놓음
   $.ajax({
     type: 'POST',
     url: `/boards/${boardID}/posts/${postID}/comments`,
@@ -59,15 +59,8 @@ function insertComment(boardID, postID, commentText, commentID) {//댓글 임시
       alert('통신실패!');
     },
     success: function (data) {
-
-      console.log("insertComment cid = ", commentID);
       if (functionOn.commentFileAttach) {
-        if (isNullData(commentID)) {
-          updateIDToFiles(postID, data, boardID);
-        } else {
-          console.log("여기");
-          updateIDToFiles(postID, commentID, boardID);
-        }
+        updateIDToFiles("comment",postID, data, boardID);
       }
       getPageList(1, 0, postID, updateCommentPageList);
       //getCommentListByPageNum(1,boardID, postID, updateCommentListUI);//성공하면 댓글목록 갱신
@@ -132,7 +125,7 @@ function getReplyList(boardID, postID, commentReferencedID, startIndex, successF
 }
 
 //답글 추가
-function insertReply(boardID, postID, commentContent, commentReferencedID,commentID, editorName) {////댓글 임시저장 기능이 추가될수도있어 commentID 파라미터 추가해놓음
+function insertReply(boardID, postID, commentContent, commentReferencedID, editorName) {
   //alert(commentReferencedUserID);
   $.ajax({
     type: 'POST',
@@ -148,13 +141,8 @@ function insertReply(boardID, postID, commentContent, commentReferencedID,commen
     },
     success: function (data) {
       if (data != null) {
-        console.log("commentID : " + data + "," + commentReferencedID);
         if (functionOn.commentFileAttach) {
-          if (isNullData(commentID)) {
-            updateIDToFiles(postID, data, boardID, commentReferencedID);
-          } else {
-            updateIDToFiles(postID, commentID, boardID, commentReferencedID);
-          }
+          updateIDToFiles("reply",postID, data, boardID, commentReferencedID);
         }
         updateRepliesCount(boardID, postID, commentReferencedID);
       }
