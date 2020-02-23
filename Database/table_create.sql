@@ -81,7 +81,7 @@ create table comments(
 	comment_content_except_htmltag longtext character set utf8mb4 collate utf8mb4_unicode_ci not null,
     comment_register_time timestamp not null,
     comment_referenced_id int(9),
-    replies_count int(9),
+    replies_count int(9) default 0,
 	foreign key(post_id) references posts(post_id) ON DELETE CASCADE ,
 	foreign key(user_id) references users(user_id) ON DELETE CASCADE,
 	foreign key(company_id) references companies(company_id) ON DELETE CASCADE,
@@ -217,3 +217,15 @@ SELECT comments.comment_id            AS commentID,
     WHERE comments.post_id = 1
       AND comments.comment_referenced_id IS NULL
     LIMIT  5,5;
+    
+    select * from comments;
+    
+    SELECT comment_referenced_id
+    FROM comments
+    WHERE comment_id = 6;
+    
+    
+    select * from comments;
+    UPDATE comments
+    SET replies_count = replies_count - 1
+    WHERE comment_id = 2;

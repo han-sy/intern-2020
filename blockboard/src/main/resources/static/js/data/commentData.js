@@ -57,3 +57,10 @@ function getFileContainerInLocalCommentContainer() {
   return $(this).closest(".localCommentContainer").find(
       ".attached_file_list_container_comment");
 }
+
+/**
+ * 출력된 답글개수
+ */
+function getCountPrintedReplies() {
+  return $(".replyItem").length;
+}

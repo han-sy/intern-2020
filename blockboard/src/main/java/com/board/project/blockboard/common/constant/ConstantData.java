@@ -10,6 +10,7 @@ public class ConstantData {
   public static final int ON_TO_OFF = 1;
   public static final int OFF_TO_ON = 2;
   public static final int NO_CHANGE = 0;
+  public static final int REPLY_PAGE_SIZE =5;
   public static final int POST_PAGE_SIZE = 10;
   public static final int COMMENT_PAGE_SIZE = 5;
   public static final int POST_RANGE_SIZE = 10;

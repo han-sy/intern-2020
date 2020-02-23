@@ -21,7 +21,8 @@
     FROM comments comments
            LEFT OUTER JOIN users users
                            ON comments.user_id = users.user_id
-    WHERE comments.comment_referenced_id = #{commentReferencedID};
+    WHERE comments.comment_referenced_id = #{commentReferencedID}
+    LIMIT #{startIndex}, #{pageSize};
   </select>
 
   <insert id="insertNewReplyByCommentInfo" parameterType="hashmap">

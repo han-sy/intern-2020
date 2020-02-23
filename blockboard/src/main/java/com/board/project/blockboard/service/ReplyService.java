@@ -1,5 +1,6 @@
 package com.board.project.blockboard.service;
 
+import com.board.project.blockboard.common.constant.ConstantData;
 import com.board.project.blockboard.common.util.TagCheckUtils;
 import com.board.project.blockboard.dto.AlarmDTO;
 import com.board.project.blockboard.dto.CommentDTO;
@@ -37,8 +38,8 @@ public class ReplyService {
   /**
    * 댓글 id 를 통해 답글 리스트 get
    */
-  public List<CommentDTO> getReplyListByCommentID(int commentReferencedID) {
-    return replyMapper.selectRepliesByCommentID(commentReferencedID);
+  public List<CommentDTO> getReplyListByCommentID(int commentReferencedID,int startIndex) {
+    return replyMapper.selectRepliesByCommentID(commentReferencedID,startIndex, ConstantData.REPLY_PAGE_SIZE);
   }
 
   /**

@@ -656,9 +656,9 @@
                             </div>
                         </div>
                         {{#isReplyAble}}
-                            <div class='replyContainer' id='reply_container{{commentID}}'
-                                 style='padding: 5px 1px 3px 30px;'>
-                            </div>
+                            <ul class='replyContainer' id='reply_container{{commentID}}'
+                                 style='padding: 5px 1px 3px 30px;list-style: none'>
+                            </ul>
                             <div id='reply_input_container{{commentID}}'
                                  style='padding: 5px 1px 3px 30px;'></div>
                         {{else}}
@@ -673,7 +673,7 @@
             <script id="replyList-template" type="text/x-handlebars-template">
                 {{#replies}}
                     <hr>
-                    <div class='row localCommentContainer'>
+                    <li class='row localCommentContainer replyItem'>
                         <div class="col-1">
                         </div>
                         <div class="col-1" style="padding-right: 10px">
@@ -720,12 +720,19 @@
                         </div>
                         <div class="col-3 attached_file_list_container_comment">
                         </div>
-                    </div>
+                    </li>
                 {{/replies}}
-                <div >
-                    <button class="btn btn-success more-replies-btn" data-index ='5' >답글 더보기</button>
+                <div class ="more-replies">
+                    <button class="btn btn-success more-replies-btn" >답글 더보기</button>
                 </div>
             </script>
+            <script id="more-replies-template" type="text/x-handlebars-template">
+              <div class ="more-replies">
+                  <button class="btn btn-success more-replies-btn" >답글 더보기</button>
+              </div>
+            </script>
+
+
             <!--댓글 답글 input form 템플릿-->
             <script id="commentInputForm-template" type="text/x-handlebars-template">
                 {{#attribute}}

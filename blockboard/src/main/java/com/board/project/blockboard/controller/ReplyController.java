@@ -35,8 +35,8 @@ public class ReplyController {
    */
   @GetMapping("")
   public List<CommentDTO> getRepliesByComment(@PathVariable("postid") int postID,
-      @PathVariable("commentid") int commentReferencedID, HttpServletRequest request) {
-    List<CommentDTO> replyList = replyService.getReplyListByCommentID(commentReferencedID);
+      @PathVariable("commentid") int commentReferencedID, @RequestParam int startIndex,HttpServletRequest request) {
+    List<CommentDTO> replyList = replyService.getReplyListByCommentID(commentReferencedID,startIndex);
     return replyList;
   }
   /**

@@ -23,10 +23,8 @@ $(document).on('click', '#delete_comment', function () {
   var postID = getPostIDInPost();
   var boardID = getCurrentBoardID();
   var commentID = getCommentIDInCommentContainer.call(this);
-  console.log(postID+","+boardID+","+commentID);
   var commentReferencedID = $(this).closest(".referenceCommentContainer").attr(
       "data-id");
-  console.log(postID+","+boardID+","+commentID+","+commentReferencedID);
   var isAcceptance = confirm("선택한 댓글 or 답글을 정말 삭제하시겠습니까?");
   if (isAcceptance) {
     deleteCommentByCommentID(postID, boardID, commentID,commentReferencedID);
@@ -49,7 +47,6 @@ $(document).on('click', '.btn_edit_comment_complete', function () {
   var commentID = getCommentIDInCommentContainer.call(this);
   var postID = getPostIDInPost();
   var boardID = getBoardIDInPost();
-  console.log(postID + "<-pid bid->" + boardID);
   var isAcceptance = confirm("댓글을 수정 하시겠습니까?");
   if (isAcceptance) {
     if (functionOn.commentFileAttach) {
@@ -70,7 +67,6 @@ $(document).on('click', '.comment_btn', function () {
 
 //답글달기 버튼
 $(document).on('click', '.reply_btn', function () {
-  console.log("답글 창 생성");
   var referenceCommentContainer = getReferenceCommentContainer.call(this);
   var referenceUserName = getReferenceUserName.call(this);
   var referenceUserID = getReferenceUserID.call(this);
@@ -125,7 +121,6 @@ $(document).on('click', '.open_attached_file_list', function () {
  */
 $(document).on('click', '.open_edit_file_form_btn', function () {
   var commentID = getCommentIDInCommentContainer.call(this);
-  console.log("commentID :" + commentID);
   fileFormClear();
   openFileAttachForm("", commentID, $(this).closest(".commentHtml"));
 });
@@ -136,6 +131,14 @@ $(document).on('click', '.open_reply_list_btn', function () {
   var postID = getPostIDInPost();
   var switchText = $(this);
   switchReplyListOpenAndClose(switchText,boardID,postID,commentID);
+});
+
+$(document).on('click', '.more-replies-btn', function () {
+  var boardID = getBoardIDInPost();
+  var postID = getPostIDInPost();
+  var commentReferencedID = getCommentReferencedIDInReferenceCommentContainer.call(this);
+  var printedRepliesCount =  getCountPrintedReplies();
+  getReplyList(boardID, postID, commentReferencedID,printedRepliesCount,getReplyListUI);
 });
 
 function moveToInputID(inputID) {
@@ -155,18 +158,25 @@ function switchAttachFileOpenAndClose(switchText, commentID, fileContainer) {
   }
 }
 
+
+
 function switchReplyListOpenAndClose(switchText,boardID,postID,commentID) {
   if(switchText.html() =="답글 보기"){
-    getReplyList(boardID, postID, commentID, getReplyListUI);
+    $(".open_reply_list_btn").html("답글 보기");
+    clearAllReplyContainer();
+    var printedRepliesCount =  getCountPrintedReplies();
+    getReplyList(boardID, postID, commentID,printedRepliesCount,getReplyListUI);
     switchText.html("답글 닫기");
   }else if("답글 닫기"){
-    replyContainerClear(commentID);
+    clearReplyContainer(commentID);
     switchText.html("답글 보기");
   }else{
     changedDataError();
   }
 }
-
-function replyContainerClear(commentID) {
+function clearAllReplyContainer() {
+  $(".replyContainer").html("");
+}
+function clearReplyContainer(commentID) {
   $("#reply_container" + commentID).html("");
 }
