@@ -102,7 +102,3 @@ function loadImage(value) {
     reader.readAsDataURL(value.files[0]);
   }
 }
-
-$('.modal-body-addUser').on('hidden.bs.modal', function (e) {
-  $(this).find('form')[0].reset();
-});
