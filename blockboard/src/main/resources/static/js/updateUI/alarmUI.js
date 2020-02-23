@@ -4,23 +4,43 @@
  */
 
 //알람 내용
-function updateAlarmUI(data, alarmCount) {
-  $("#alarmCount").remove();
-  var source = $('#alarmList-template').html();
-  var template = Handlebars.compile(source);
-  var post = {alarms: data};
-  var item = template(post);
-  $('#alarmcontent').html(item);
+function updateAlarmUI(data) {
+  let source = $('#alarmList-template').html();
+  let template = Handlebars.compile(source);
+  let post = {alarms: data};
+  let item = template(post);
+  $('#alarm-content').html(item);
+  updateAlarmCount(data);
+}
 
-  source = $('#alarm-count-template').html();
-  template = Handlebars.compile(source);
-  var count = {alarmCount: alarmCount};
-  item = template(count);
+function updateAlarmCount(data) {
+  $("#alarmCount").remove();
+  let alarmCount = countUnreadAlarm(data);
+  if (alarmCount === 0) {
+    return;
+  }
+  let source = $('#alarm-count-template').html();
+  let template = Handlebars.compile(source);
+  let count = {alarmCount: alarmCount};
+  let item = template(count);
   $("#alarm_icon").append(item);
 }
 
 function emptyAlarmUI() {
   $("#alarmCount").remove();
-  $('#alarmcontent').html(
+  $('#alarm-content').html(
       '<p align="center" style="font-size:16px; color: dimgrey">표시할 알람이 없습니다.</p>');
+}
+
+function showCommentInputModalOfAlarm(data) {
+  $('#comment-alarm-modal').modal('show');
+  let source = $('#click-comment-alarmItem-template').html();
+  let template = Handlebars.compile(source);
+  let comment = {comment: data};
+  let item = template(comment);
+  $('#comment-alarm-input').html(item);
+  getCommentInputHtml("답글", "입력",
+      `<a class="mentions_tag" style="cursor:pointer; text-decoration: none;" href="javascript:void(0)"`
+      + ` data-id="${data.userID}"><strong>@${data.userName}</strong></a>&nbsp;`,
+      "#comment-alarm-container", "btn_openReply", '', "commentTextInAlarm");
 }

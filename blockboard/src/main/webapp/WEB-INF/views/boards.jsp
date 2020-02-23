@@ -16,6 +16,7 @@
             data-auto-replace-svg="nest"></script>
     <link rel="stylesheet" href="/webjars/bootstrap/4.4.1/dist/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="/static/css/boardstyle.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/alarmstyle.css">
     <link href="https://fonts.googleapis.com/css?family=Noto+Sans+JP|Roboto&display=swap"
           rel="stylesheet">
     <style>
@@ -118,6 +119,7 @@
             {{/functions}}
         </script>
 
+        <!-- 알람 창 -->
         <div class="nav-item dropleft">
             <a class="nav-link dropdown-alarm" href="#" id="dropdown04" style="color:white"
                data-toggle="dropdown"
@@ -125,11 +127,12 @@
                 <i class="far fa-bell fa-2x" id="alarm_icon"></i>
             </a>
             <div class="dropdown-menu alarm-items" aria-labelledby="dropdown04">
-                <button type="button" style="float: right" class="btn-alarm-delete-all">모두 삭제
-                </button>
-                <br><br>
-                <div id="alarmcontent">
-                </div>
+                <button type="button" class="btn-alarm-delete-read">읽은 알람 삭제
+                    <button type="button" class="btn-alarm-delete-all">모두 삭제
+                    </button>
+                    <br><br>
+                    <div id="alarm-content">
+                    </div>
             </div>
         </div>
         <script id="alarm-count-template" type="text/x-handlebars-template">
@@ -137,24 +140,69 @@
         </script>
         <script id="alarmList-template" type="text/x-handlebars-template">
             {{#alarms}}
-                <div>
-                    <li class="dropdown-item">
-                        <button type="button" class="btn-alarm-delete">X</button>
-                        <a href="/alarms/{{alarmID}}" data-id="{{alarmID}}" target="_self"
-                           class="alarm-item">
-                            {{userName}}님이
-                            {{#isPostAlarm}}
-                                게시글에서 회원님을 언급했습니다.
-                            {{else}}
-                                댓글에서 회원님을 언급했습니다:<br>
-                                {{alarmContent}}
-                            {{/isPostAlarm}}
-                            <span style="float: right">{{registerTime}}</span>
-                        </a>
+                {{#isReadAlarm}}
+                    <li class="dropdown-item alarm-item alarm-read" data-id="{{alarmID}}">
+                {{else}}
+                    <li class="dropdown-item alarm-item" data-id="{{alarmID}}">
+                {{/isReadAlarm}}
 
-                    </li>
-                </div>
+                    <button type="button" class="btn-alarm-delete">X</button>
+                    <p class="alarm-item">
+                        {{userName}}님이
+                        {{#isPostAlarm}}
+                            게시글에서 회원님을 언급했습니다.
+                        {{else}}
+                            댓글에서 회원님을 언급했습니다:<br>
+                            {{alarmContent}}
+                        {{/isPostAlarm}}
+                        <span style="float: right">{{registerTime}}</span>
+                    </p>
+                </li>
             {{/alarms}}
+        </script>
+        <!-- 댓글 알람 클릭시 댓글 창 Modal -->
+        <div class="modal" id="comment-alarm-modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content" style="width: 1000px">
+                    <div class="modal-header" id="tagged-comment">
+                        <h5 class="modal-title text-success">답글을 달 수 있습니다.</h5>
+                    </div>
+                    <div class="modal-body" id="comment-alarm-input">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script id="click-comment-alarmItem-template" type="text/x-handlebars-template">
+            {{#comment}}
+                <div class='referenceCommentContainer' id='comment-alarm-container' data-id='{{commentReferencedID}}'>
+                    <div class="row border-left-comment localCommentContainer">
+                        <div></div>
+                        <div class='commentContainer col-8' id='comment{{commentID}}'
+                             style="padding-left: 50px">
+                            <div class="user"><h5><strong class=name
+                                                          data-id={{userID}}>{{userName}}</strong>
+                            </h5></div>
+                            <div>
+                                <div>
+                                    <div class="comment_area comment_content" id=translate_area
+                                         style="width: 100%;">{{{commentContent}}}
+                                    </div>
+                                    <br>
+                                    <div class="date text-muted">{{commentRegisterTime}}</div>
+                                </div>
+                                <div class="btn">
+                                    {{#isCommentFileAttachAble}}
+                                        <a class="text-success text-button font-weight-bold open_attached_file_list"
+                                        >첨부파일 보기</a>
+                                    {{else}}
+                                    {{/isCommentFileAttachAble}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4 attached_file_list_container_comment">
+                        </div>
+                    </div>
+            {{/comment}}
         </script>
         <a class="nav-link text-white" id="current_user_info" style="nav-right: auto"
            data-id="${userID}" data-type="${userType}">${userName}</a>
@@ -366,7 +414,7 @@
                 {{#functions}}
                     {{#isAbleFunction}}
                         <li class="btn-group-toggle {{isCommentFunction}}" data-toggle="buttons"
-                             style="padding: 3px 1px 1px 10px;">
+                            style="padding: 3px 1px 1px 10px;">
                             <label class="btn btn-default _function-switch">
                                 <span>{{functionName}}</span>
                                 <input class='function_checkbox' type='checkbox' name='function'
@@ -376,7 +424,7 @@
                         </li>
                     {{else}}
                         <li class="btn-group-toggle {{isCommentFunction}}" data-toggle="buttons"
-                             style="padding: 3px 1px 1px 10px;">
+                            style="padding: 3px 1px 1px 10px;">
                             <label class="btn btn-success _function-switch">
                                 <span>{{functionName}}</span>
                                 <input class='function_checkbox' type='checkbox' name='function'
@@ -681,8 +729,8 @@
                 {{#attribute}}
                     <br>
                     <div style='width: 100%' class='commentHtml {{isReplyInput}}'>
-                        <textarea class="form-control" id=commentText placeholder='{{type}}을 입력하세요'
-                                  name=commentTxt></textarea>
+                        <textarea class="form-control" id="{{editorName}}" placeholder='{{type}}을 입력하세요'
+                                  name=commentText></textarea>
                         <div class="form-group row file_attach_form">
                         </div>
                         <div align="right">
@@ -712,7 +760,7 @@
                     <div style='width: 100%' class=commentHtml>
                 <textarea class="form-control" style='width: 100%' id='commentText'
                           placeholder='댓글을 입력하세요'
-                          name=commentTxt>{{{oldText}}}</textarea>
+                          name=commentText>{{{oldText}}}</textarea>
                         <div>
                             <div class="form-group row file_attach_form">
                             </div>

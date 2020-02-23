@@ -13,6 +13,7 @@ public class AlarmDTO {
   private String taggedUserID;
   private int postID;
   private int commentID;
+  private Boolean isRead;
   private String boardName;
   private String alarmContent;
   private String userName;

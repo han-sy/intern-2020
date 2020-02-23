@@ -16,7 +16,11 @@ public interface AlarmMapper {
 
   List<AlarmDTO> selectAlarmsByUser(UserDTO user);
 
+  AlarmDTO selectAlarmByAlarmId(int alarmId);
+
   void insertAlarm(AlarmDTO alarm);
 
   void deleteAlarm(int alarmID);
+
+  void readAlarm(int alarmId);
 }

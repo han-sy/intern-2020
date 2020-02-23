@@ -225,69 +225,6 @@
   vertical-align: center;
 }
 
-.dropdown-alarm {
-  color: white;
-}
-
-.alarm-items {
-  font-size: 13px;
-  height: 250px;
-  width: 400px;
-  overflow-x: hidden;
-  overflow-y: scroll;
-}
-
-.btn-alarm-delete {
-  background-color: white;
-  color: darkgray;
-  border: none;
-  padding: 4px;
-  float: right;
-  position: relative;
-  left: 20px;
-  top: 7px;
-  font-size: 13px;
-}
-
-.btn-alarm-delete:hover {
-  background-color: white;
-  color: #1a1a1a;
-}
-
-.btn-alarm-delete-all {
-  background-color: white;
-  color: dimgray;
-  border: 1px solid dimgray;
-  font-size: 13px;
-  float: right;
-  padding: 8px;
-}
-
-.btn-alarm-delete-all:hover {
-  background-color: dimgray;
-  color: white;
-  float: right;
-  padding: 8px;
-}
-
-#alarmCount {
-  border-radius: 50%;
-  background-color: orangered;
-  color: white;
-  font-size: 10px;
-  position: relative;
-  left: -15px;
-  top: 5px;
-}
-
-a.alarm-item:link {
-  color: black;
-}
-
-a.alarm-item:visited {
-  color: #908f90;
-}
-
 .modal-open {
   overflow-y: scroll;
 }

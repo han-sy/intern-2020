@@ -102,6 +102,7 @@ create table alarms(
     tagged_user_id varchar(20) not null,
     post_id int(9),
     comment_id int(9),
+    is_read boolean default false,
 	foreign key(post_id) references posts(post_id) ON DELETE CASCADE ,
 	foreign key(comment_id) references comments(comment_id) ON DELETE CASCADE,
     primary key(alarm_id)

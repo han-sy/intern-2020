@@ -17,20 +17,21 @@ function updateCommentListUI(data) {
 
 //댓글 inputform 받아오기
 function getCommentInputHtml(type, buttonName, tag, className, buttonSelector,
-    isReplyInput) {
+    isReplyInput, editorName) {
   data = {
     type: type,
     className,
     buttonName: buttonName,
     tag: tag,
     buttonSelector: buttonSelector,
-    isReplyInput: isReplyInput
+    isReplyInput: isReplyInput,
+    editorName: editorName
   };
   var source = $('#commentInputForm-template').html();
   var template = Handlebars.compile(source);
   var attribute = {attribute: data};
   var itemList = template(attribute);
-  $(className).html(itemList + "</div>");
+  $(className).append(itemList + "</div>");
 
   var func = new FunctionOn();
   var add_on = "";
@@ -42,8 +43,7 @@ function getCommentInputHtml(type, buttonName, tag, className, buttonSelector,
   }
 
   var original_config = CKEDITOR.config.plugins;
-
-  CKEDITOR.replace('commentText', {
+  CKEDITOR.replace(editorName, {
     height: 200,
     toolbarLocation: 'bottom',
     toolbarGroups: [{name: 'insert'}],
@@ -51,7 +51,7 @@ function getCommentInputHtml(type, buttonName, tag, className, buttonSelector,
     on: {
       instanceReady: function () {
         if (type === "답글") {
-          CKEDITOR.instances['commentText'].insertHtml(tag, 'unfiltered_html');
+          CKEDITOR.instances[editorName].insertHtml(tag, 'unfiltered_html');
         }
       }
     }
@@ -64,7 +64,7 @@ function getCommentInputHtml(type, buttonName, tag, className, buttonSelector,
 function getCommentAllContents(data) {
   updateCommentListUI(data);
   getCommentInputHtml("댓글", "입력", "", ".comment_input_container",
-      "btn_openComment");
+      "btn_openComment", '', "commentText");
   fileFormClear();
 }
 
