@@ -5,7 +5,8 @@
 package com.board.project.blockboard.service;
 
 import com.board.project.blockboard.common.constant.ConstantData;
-import com.board.project.blockboard.common.util.JsonParse;
+import com.board.project.blockboard.common.util.LengthCheckUtils;
+import com.board.project.blockboard.common.validation.PostValidation;
 import com.board.project.blockboard.dto.PaginationDTO;
 import com.board.project.blockboard.dto.PostDTO;
 import com.board.project.blockboard.dto.UserDTO;
@@ -13,33 +14,86 @@ import com.board.project.blockboard.mapper.PostMapper;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.json.simple.JSONObject;
+import org.apache.commons.codec.binary.StringUtils;
+import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
 public class PostService {
 
   @Autowired
+  private ViewRecordService viewRecordService;
+  @Autowired
   private PostMapper postMapper;
   @Autowired
   private CommentService commentService;
+  @Autowired
+  private AlarmService alarmService;
+  @Autowired
+  private PostValidation postValidation;
 
-  public void insertPost(PostDTO post) {
-    postMapper.insertPost(post);
+  public int insertPost(PostDTO receivePost, int boardID, HttpServletRequest request,
+      HttpServletResponse response) {
+    if (LengthCheckUtils.isValid(receivePost, response)) {
+      int receivedPostID = receivePost.getPostID();
+      receivePost.setBoardID(boardID);
+      receivePost.setUserID(request.getAttribute("userID").toString());
+      receivePost.setUserName(request.getAttribute("userName").toString());
+      receivePost.setCompanyID(Integer.parseInt(request.getAttribute("companyID").toString()));
+      receivePost.setPostContentExceptHTMLTag(Jsoup.parse(receivePost.getPostContent()).text());
+      // '글쓰기' -> '저장'or'임시저장' 버튼을 누른 경우에는 html 안에 postID가 존재하지 않아 바로 inse
+      if (receivedPostID == 0) {
+        postMapper.insertPost(receivePost);
+      } else {
+        // [임시보관함]의 게시글에서 '저장'or'임시저장' 버튼을 눌렀는데 실제로 임시저장 되어있는 게시물이면 insert(update)
+        PostDTO receivePostInDatabase = postMapper.selectPostByPostID(receivedPostID);
+        if (postValidation.isExistPost(receivePostInDatabase, boardID, response) &&
+            postValidation.isTempSavedPost(receivePostInDatabase, response)) {
+          postMapper.insertPost(receivePost);
+        }
+      }
+    }
+    // 일반 게시물에 삽입이 되면 태그된 유저 알람에 등록
+    if (StringUtils.equals(receivePost.getPostStatus(), "normal")) {
+      alarmService.insertAlarm(receivePost);
+    }
+    return receivePost.getPostID();
   }
 
-  public void deletePost(int postID) {
-    postMapper.deletePostByPostID(postID);
+  public void deletePost(int postID, int boardID, HttpServletRequest request,
+      HttpServletResponse response) {
+    PostDTO post = postMapper.selectPostByPostID(postID);
+    UserDTO user = new UserDTO(request);
+    if (postValidation.isExistPost(post, boardID, response) &&
+        postValidation.isValidChange(post, user, response)) {
+      if (StringUtils.equals(post.getPostStatus(), "recycle")) {
+        postMapper.deletePostByPostID(postID);
+      } else {
+        postMapper.temporaryDeletePost(post);
+      }
+    }
   }
 
-  public void updatePost(PostDTO post) {
-    postMapper.updatePost(post);
+  public void updatePost(PostDTO requestPost, int postID, HttpServletRequest request,
+      HttpServletResponse response) {
+    UserDTO user = new UserDTO(request);
+    PostDTO post = postMapper.selectPostByPostID(postID);
+    if (LengthCheckUtils.isValid(requestPost, response)) {
+      if (postValidation.isExistPost(post, response) && postValidation
+          .isValidChange(post, user, response)) {
+        post.setBoardID(requestPost.getBoardID());
+        post.setPostTitle(requestPost.getPostTitle());
+        post.setPostContent(requestPost.getPostContent());
+        post.setPostContentExceptHTMLTag(Jsoup.parse(requestPost.getPostContent()).text());
+        postMapper.updatePost(post);
+      }
+    }
   }
 
   /**
@@ -47,40 +101,39 @@ public class PostService {
    *
    * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
    */
-  public PostDTO selectPostByPostID(int postID, HttpServletRequest request,
+  public PostDTO selectPostByPostID(int postID, int boardID, HttpServletRequest request,
       HttpServletResponse response) {
-    updateViewCnt(postID, request, response);//조회수 업데이트 알고리즘
-
-    return postMapper.selectPostByPostID(postID);
+    UserDTO userData = new UserDTO(request);
+    PostDTO post = postMapper.selectPostByPostID(postID);
+    if (postValidation.isExistPost(post, boardID, response)) {
+      if(!viewRecordService.isReadPostByUser(userData.getUserID(),postID)){//안읽은경우
+        updateViewCnt(postID, request, response);//조회수 업데이트
+        post.setViewCount(post.getViewCount()+1);//반환도 1증가
+      }
+      return post;
+    }
+    return null;
   }
 
-  public List<PostDTO> searchPost(String option, String keyword) {
-    return postMapper.searchPost(option, keyword);
+  public List<PostDTO> searchPost(String option, String keyword, HttpServletResponse response) {
+    if (postValidation.isValidSearch(option, keyword, response)) {
+      return postMapper.searchPost(option, keyword);
+    }
+    return null;
   }
 
-  public PostDTO selectRecentTemp(UserDTO requestUser) {
-    return postMapper.selectRecentTempPost(requestUser);
+  public void restorePost(int postID, HttpServletRequest request, HttpServletResponse response) {
+    UserDTO user = new UserDTO(request);
+    PostDTO post = postMapper.selectPostByPostID(postID);
+    if (postValidation.isValidChange(post, user, response) && postValidation
+        .isValidRestore(post, response)) {
+      postMapper.restorePost(post);
+    }
   }
 
-  public PostDTO selectTempPost(int postID) {
-    return postMapper.selectPostByPostID(postID);
-  }
-
-  public void movePostToTrash(PostDTO post) {
-    postMapper.temporaryDeletePost(post);
-  }
-
-  public void restorePost(PostDTO post) {
-    postMapper.restorePost(post);
-  }
-
-  public void setPostStatusIsTempAndIsTrash(PostDTO post, boolean isTemp, boolean isTrash) {
-    Map<String, Object> statusMap = new HashMap<>();
-    statusMap.put("isTemp", isTemp);
-    statusMap.put("isRecycle", isTrash);
-
-    JSONObject statusJson = JsonParse.getJsonStringFromMap(statusMap);
-    post.setPostStatus(statusJson.toJSONString());
+  public PostDTO selectPostByAlarmId(int alarmId) {
+    log.info("selectPostByAlarmId 호출됨");
+    return postMapper.selectPostByAlarmId(alarmId);
   }
 
   public List<PostDTO> selectMyPosts(UserDTO user, int pageNumber) {
@@ -135,11 +188,11 @@ public class PostService {
 
   public Map<String, Object> makeMapUserAndPageInfo(UserDTO user, int pageCount, int pageNumber) {
     Map<String, Object> map = new HashMap<>();
-    PaginationDTO pageInfo = new PaginationDTO(pageCount, pageNumber, ConstantData.PAGE_SIZE,
-        ConstantData.RANGE_SIZE);
+    PaginationDTO pageInfo = new PaginationDTO("posts",pageCount, pageNumber, ConstantData.POST_PAGE_SIZE,
+        ConstantData.POST_RANGE_SIZE);
     map.put("user", user);
     map.put("startIndex", pageInfo.getStartIndex());
-    map.put("pageSize", ConstantData.PAGE_SIZE);
+    map.put("pageSize", ConstantData.POST_PAGE_SIZE);
     return map;
   }
 
@@ -150,15 +203,15 @@ public class PostService {
    */
   public List<PostDTO> getPostListByBoardID(int boardID, int pageNumber, int companyID) {
     int pageCount = getPostsCountByBoardID(boardID);
-    PaginationDTO pageInfo = new PaginationDTO(pageCount, pageNumber, ConstantData.PAGE_SIZE,
-        ConstantData.RANGE_SIZE);
+    PaginationDTO pageInfo = new PaginationDTO("posts",pageCount, pageNumber, ConstantData.POST_PAGE_SIZE,
+        ConstantData.POST_RANGE_SIZE);
     List<PostDTO> postList = postMapper
-        .selectPostByBoardID(boardID, pageInfo.getStartIndex(), ConstantData.PAGE_SIZE);
+        .selectPostByBoardID(boardID, pageInfo.getStartIndex(), ConstantData.POST_PAGE_SIZE);
 
-    for (PostDTO post : postList) {
+    /*for (PostDTO post : postList) {
       int commentsCount = commentService.getCommentCountByPostID(post.getPostID(), companyID);
       post.setCommentsCount(commentsCount);
-    }
+    }*/
     return postList;
   }
 
@@ -194,32 +247,19 @@ public class PostService {
    * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
    */
   //TODO 휴지통인경우 임시저장함인경우는 따로 구분해서 조회수 증가 안되도록 해야됨. 1번방법 : 임시저장이나 휴지통인 경우 제외 ,2번방법 : 작성자 조회수증가에서 제외.
-  public synchronized void updateViewCnt(int postID, HttpServletRequest request,
+  //TODO 카운트는 비동기로 트랜잭션 처리보다야
+  public void updateViewCnt(int postID, HttpServletRequest request,
       HttpServletResponse response) {
     UserDTO userData = new UserDTO(request);
-    boolean isOpened = false;
-    Cookie[] cookies = request.getCookies();
-    if (cookies != null) { //쿠키가 없을때
-      for (Cookie cookie : cookies) {
-        if (cookie.getName().equals(userData.getUserID() + "view" + postID)) {
-          cookie.setMaxAge(5 * 60);//5분으로 다시
-          isOpened = true;
-        }
-      }
-      if (!isOpened) {
-        postMapper.updateViewCnt(postID);
-        Cookie newCookie = new Cookie(userData.getUserID() + "view" + postID, postID + "");
-        newCookie.setMaxAge(5 * 60);//5분저장
-        response.addCookie(newCookie);
-      }
-    }
+    viewRecordService.readPostByUser(userData.getUserID(),postID);
+    postMapper.updateViewCnt(postID);
   }
 
   public List<PostDTO> getPopularPostList(int companyID) {
     List<PostDTO> postList = postMapper.selectPopularPostListByCompanyID(companyID);
     for (PostDTO post : postList) {
-      int commentsCount = commentService.getCommentCountByPostID(post.getPostID(), companyID);
-      post.setCommentsCount(commentsCount);
+      /*int commentsCount = commentService.getCommentCountByPostID(post.getPostID(), companyID);
+      post.setCommentsCount(commentsCount);*/
       post.setIsPopular(true);
     }
     return postList;
@@ -227,6 +267,25 @@ public class PostService {
 
   public int getPopularPostsCount(int companyID) {
     return postMapper.getPopularPostsCount(companyID);
+  }
+
+  public void updateCommentCountPlus1(int postID) {
+    log.info("post"+postID+" : plus1");
+    postMapper.updateCommentCountPlus1(postID);
+  }
+  public void updateCommentCountMinus1(int postID){
+    log.info("post"+postID+" : minus1");
+    postMapper.updateCommentCountMinus1(postID);
+  }
+
+  public int getPostIDByCommentID(int commentID) {
+    log.info("!!!commentID : "+ commentID);
+    int postID = postMapper.selectPostIDByCommentID(commentID);
+    return postID;
+  }
+
+  public int getCommentsCountByPostID(int postID) {
+    return postMapper.selectCommentsCountByPostID(postID);
   }
 }
 

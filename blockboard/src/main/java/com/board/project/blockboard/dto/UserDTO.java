@@ -7,18 +7,26 @@ package com.board.project.blockboard.dto;
 import javax.servlet.http.HttpServletRequest;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
 public class UserDTO {
 
   private String userID;
   private int companyID;
+  private String companyName;
   private String userName;
   private String userPassword;
   private String userType;
+  private String imageUrl;
+  private String imageFileName;
+  private String thumbnailUrl;
+  private String thumbnailFileName;
 
   public UserDTO(String userID, int companyID, String userName,
       String userType) {
@@ -33,5 +41,10 @@ public class UserDTO {
     this.userName = request.getAttribute("userName").toString();
     this.userType = request.getAttribute("userType").toString();
     this.companyID = Integer.parseInt(request.getAttribute("companyID").toString());
+  }
+
+  public UserDTO(String userID, int companyID) {
+    this.userID = userID;
+    this.companyID = companyID;
   }
 }

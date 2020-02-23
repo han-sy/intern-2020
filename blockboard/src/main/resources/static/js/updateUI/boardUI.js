@@ -14,7 +14,7 @@ function updateTab(data) {
   $("#tab_id").children().each(function () {
     if ($(this).attr('data-tab') > 0) {
       $(this).trigger('click');
-      return;
+      return false;
     }
   });
 }
@@ -35,7 +35,6 @@ function loadPostList(data) {
   var post = {posts: data};
   var itemList = template(post);
   $('#post_table').html(itemList);
-
 }
 
 //삭제를 위한 UI

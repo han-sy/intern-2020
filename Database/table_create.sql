@@ -1,4 +1,7 @@
 use block_board;
+drop table view_records;
+drop table alarms;
+drop table files;
 drop table comments;
 drop table posts;
 drop table users;
@@ -19,7 +22,11 @@ create table users(
     user_name varchar(30) not null,
     user_password varchar(100) not null,
     user_type varchar(20) not null,
-    foreign key(company_id) references companies(company_id),
+    image_url text,
+    image_file_name text,
+    thumbnail_url text,
+    thumbnail_file_name text,
+    foreign key(company_id) references companies(company_id) ON DELETE CASCADE ,
     primary key(user_id,company_id)
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
@@ -33,8 +40,8 @@ create table functions_check(
 	company_id int(9) not null,
     function_id int(9) not null,
     function_data varchar(300),
-    foreign key(company_id) references companies(company_id),
-    foreign key(function_id) references functions(function_id),
+    foreign key(company_id) references companies(company_id) ON DELETE CASCADE ,
+    foreign key(function_id) references functions(function_id) ON DELETE CASCADE ,
     primary key(company_id,function_id)
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
@@ -42,7 +49,7 @@ create table boards(
 	board_id int(9) not null AUTO_INCREMENT,
     company_id int(9) not null,
     board_name varchar(150) not null,
-	foreign key(company_id) references companies(company_id),
+	foreign key(company_id) references companies(company_id) ON DELETE CASCADE ,
     primary key(board_id)
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
@@ -56,8 +63,9 @@ create table posts(
 	post_content_except_htmltag longtext character set utf8mb4 collate utf8mb4_unicode_ci not null,
     post_register_time datetime not null,
     post_last_update_time datetime null,
-    post_status json null,
+    post_status varchar(50) not null default "normal",
     view_count int(9) default 0,
+    comments_count int(9) default 0,
 	foreign key(user_id) references users(user_id) ON DELETE CASCADE,
 	foreign key(board_id) references boards(board_id) ON DELETE CASCADE,
 	foreign key(company_id) references companies(company_id) ON DELETE CASCADE,
@@ -70,18 +78,51 @@ create table comments(
 	user_id varchar(20) not null,
 	company_id int(9) not null,
     comment_content longtext character set utf8mb4 collate utf8mb4_unicode_ci not null,
+	comment_content_except_htmltag longtext character set utf8mb4 collate utf8mb4_unicode_ci not null,
     comment_register_time timestamp not null,
     comment_referenced_id int(9),
-    comment_referenced_user_id varchar(20),
+    replies_count int(9) default 0,
 	foreign key(post_id) references posts(post_id) ON DELETE CASCADE ,
 	foreign key(user_id) references users(user_id) ON DELETE CASCADE,
 	foreign key(company_id) references companies(company_id) ON DELETE CASCADE,
     primary key(comment_id)
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
+create table files(
+	file_id int(9) not null auto_increment,
+    post_id int(9) ,
+    comment_id int(9),
+    resource_url varchar(500) not null,
+    origin_file_name varchar(200) not null,
+    stored_file_name varchar(200) not null,
+    file_size int(11) NULL default null,
+    upload_time timestamp not null,
+    primary key(file_id)
+)ENGINE =InnoDB DEFAULT charset= utf8;
+
+create table alarms(
+	alarm_id int(9) not null auto_increment,
+    tagged_user_id varchar(20) not null,
+    post_id int(9),
+    comment_id int(9),
+    is_read boolean default false,
+	foreign key(post_id) references posts(post_id) ON DELETE CASCADE ,
+	foreign key(comment_id) references comments(comment_id) ON DELETE CASCADE,
+    primary key(alarm_id)
+)ENGINE =InnoDB DEFAULT charset= utf8;
+
+create table view_records(
+	post_id int(9) not null,
+    user_id varchar(20) not null,
+    foreign key(post_id) references posts(post_id) ON DELETE CASCADE ,
+    foreign key(user_id) references users(user_id) ON DELETE CASCADE ,
+    primary key(post_id,user_id)
+)ENGINE =InnoDB DEFAULT charset= utf8;
+
 alter table boards auto_increment=1;
 alter table posts auto_increment=1;
 alter table comments auto_increment=1;
+alter table alarms auto_increment=1;
 
 insert into companies values(1,'WORKS MOBILE');
 insert into companies values(2,'naver');
@@ -92,16 +133,27 @@ insert into boards (company_id,board_name) values(2,"공지사항");
 insert into boards (company_id,board_name) values(2,"건의사항");
 insert into boards (company_id,board_name) values(1,"자유게시판");
 
-insert into users values(1,1,'김동욱','123','관리자');
-insert into users values(2,1,'전우혁','123','사원');
-insert into users values(3,2,'곽대훈','123','관리자');
+insert into users values('admin', '1', '관리자', '123', '관리자', 'https://block-board-user.s3.amazonaws.com/admin.png', 'admin.png', 'https://block-board-user-thumbnail.s3.amazonaws.com/admin.png', 'admin.png');
+insert into users values(1, '1', '김동욱', '123', '관리자', 'https://block-board-user.s3.amazonaws.com/dongwook.jpg', 'dongwook.jpg', 'https://block-board-user-thumbnail.s3.amazonaws.com/dongwook.jpg', 'dongwook.jpg');
+insert into users values(2, '1', '전우혁', '123', '관리자', 'https://block-board-user.s3.amazonaws.com/woohyuk.jpg', 'woohyuk.jpg', 'https://block-board-user-thumbnail.s3.amazonaws.com/woohyuk.jpg', 'woohyuk.jpg');
+insert into users values('irene', '1', '아이린', '123', '일반', 'https://block-board-user.s3.amazonaws.com/irene.jpg', 'irene.jpg', 'https://block-board-user-thumbnail.s3.amazonaws.com/irene.jpg', 'irene.jpg');
+insert into users values('joy', '1', '조이', '123', '일반', 'https://block-board-user.s3.amazonaws.com/joy.jpg', 'joy.jpg', 'https://block-board-user-thumbnail.s3.amazonaws.com/joy.jpg', 'joy.jpg');
+insert into users values('seulgi', '1', '슬기', '123', '일반', 'https://block-board-user.s3.amazonaws.com/seulgi.jpg', 'seulgi.jpg', 'https://block-board-user-thumbnail.s3.amazonaws.com/seulgi.jpg', 'seulgi.jpg');
+insert into users values('wendy', '1', '웬디', '123', '일반', 'https://block-board-user.s3.amazonaws.com/wendy.png', 'wendy.png', 'https://block-board-user-thumbnail.s3.amazonaws.com/wendy.png', 'wendy.png');
+insert into users values('yeri', '1', '예리', '123', '일반', 'https://block-board-user.s3.amazonaws.com/yeri.jpg', 'yeri.jpg', 'https://block-board-user-thumbnail.s3.amazonaws.com/yeri.jpg', 'yeri.jpg');
+
 
 insert into functions values(1,'댓글');
 insert into functions values(2,'대댓글');
-insert into functions values(3,'파일첨부');
-insert into functions values(4,'inline 이미지');
-insert into functions values(5,'임시저장');
-insert into functions values(6,'스티커');
+insert into functions values(3,'게시물 파일첨부');
+insert into functions values(4,'댓글/답글 파일첨부');
+insert into functions values(5,'게시물 inline 이미지');
+insert into functions values(6,'댓글/답글 inline 이미지');
+insert into functions values(7,'임시저장');
+insert into functions values(9,'게시물 스티커');
+insert into functions values(10,'댓글/답글 스티커');
+insert into functions values(11,'게시물 자동태그');
+insert into functions values(12,'댓글/답글 자동태그');
 
 insert into functions_check values(1,1,null);
 insert into functions_check values(2,4,null);
@@ -113,8 +165,6 @@ insert into posts (user_id, board_id, company_id, post_title, post_content, post
 insert into posts (user_id, board_id, company_id, post_title, post_content, post_content_except_htmltag, post_register_time) values (1,5,1,'자유1','<p>1111</p>','1111',now());
 insert into posts (user_id, board_id, company_id, post_title, post_content, post_content_except_htmltag, post_register_time) values (1,5,1,'자유2','<p>22222</p>','22222',now());
 
-insert into comments values(1,1,1,1,'첫 댓글',now(),null,null);
-insert into comments values(2,1,1,1,'첫 답글',now(),1,1);
 select * from posts;
 INSERT INTO `Posts` (`user_id`,`board_id`,`company_id`,`post_title`,`post_content`,`post_content_except_htmltag`,`post_register_time`) VALUES (1,1,2,"Suspendisse","vel nisl. Quisque fringilla euismod enim. Etiam gravida molestie","mauris eu","2019-12-09 00:37:22"),(1,1,1,"sapien, cursus","dictum. Proin eget odio. Aliquam vulputate ullamcorper magna.","Nullam nisl. Maecenas malesuada fringilla est. Mauris","2018-12-27 01:33:59"),(2,1,2,"turpis nec","lacus. Nulla","sapien. Nunc pulvinar arcu et pede. Nunc sed","2018-04-29 06:34:13"),(1,1,2,"adipiscing lobortis risus. In","molestie dapibus ligula.","cursus luctus, ipsum leo elementum","2019-05-02 07:01:31"),(2,1,2,"dictum mi, ac mattis","dictum eu, eleifend nec, malesuada ut,","aliquet. Phasellus fermentum convallis ligula. Donec","2018-05-01 08:46:10"),(1,1,1,"dignissim","pede et risus. Quisque libero lacus, varius et, euismod","feugiat metus sit","2019-07-20 20:42:00"),(2,1,1,"penatibus et","amet ultricies sem magna nec quam. Curabitur","sagittis. Duis gravida. Praesent eu nulla at sem molestie sodales.","2019-06-06 13:10:15"),(2,1,2,"mollis. Duis sit","a nunc. In at pede. Cras vulputate velit","ultrices","2019-08-07 17:11:57"),(1,1,2,"Nunc mauris.","habitant morbi tristique senectus et netus et malesuada fames ac","ipsum","2019-08-15 14:51:38"),(1,1,2,"tempor","ornare,","Fusce dolor quam, elementum at, egestas a,","2018-08-26 11:07:15");
 INSERT INTO `Posts` (`user_id`,`board_id`,`company_id`,`post_title`,`post_content`,`post_content_except_htmltag`,`post_register_time`) VALUES (2,1,1,"sem, consequat","Sed eget lacus. Mauris non","laoreet lectus quis massa.","2019-10-18 02:16:51"),(1,1,1,"gravida. Praesent","Proin vel nisl.","dolor, tempus non, lacinia at, iaculis quis, pede. Praesent","2018-10-15 12:44:08"),(2,1,1,"justo nec","a, aliquet","a mi fringilla mi lacinia mattis. Integer eu lacus. Quisque","2018-05-16 01:16:10"),(1,1,1,"orci,","molestie in, tempus eu, ligula. Aenean euismod","vel lectus. Cum sociis natoque penatibus et","2019-04-30 11:35:28"),(1,1,2,"ipsum","taciti sociosqu ad litora torquent per conubia nostra, per","tincidunt, nunc ac mattis ornare, lectus","2019-07-13 01:33:16"),(1,1,2,"Donec tincidunt. Donec vitae","nec, cursus a, enim. Suspendisse aliquet, sem","Curabitur consequat, lectus sit amet luctus vulputate,","2018-08-18 12:09:11"),(2,1,1,"id, erat.","dui. Fusce aliquam, enim nec tempus scelerisque,","convallis convallis dolor. Quisque tincidunt","2019-04-13 05:40:45"),(2,1,1,"libero","blandit at, nisi. Cum","purus ac tellus. Suspendisse sed dolor. Fusce mi lorem,","2018-09-15 16:00:21"),(2,1,2,"metus. Aliquam erat volutpat.","risus. Morbi metus. Vivamus euismod urna. Nullam lobortis quam a","nulla magna, malesuada vel, convallis","2019-01-04 09:27:17"),(2,1,2,"Aliquam nisl. Nulla","purus gravida sagittis.","Mauris magna. Duis dignissim tempor arcu. Vestibulum ut eros non","2019-03-04 06:15:57");
@@ -127,55 +177,56 @@ INSERT INTO `Posts` (`user_id`,`board_id`,`company_id`,`post_title`,`post_conten
 INSERT INTO `Posts` (`user_id`,`board_id`,`company_id`,`post_title`,`post_content`,`post_content_except_htmltag`,`post_register_time`) VALUES (1,1,2,"penatibus et","sollicitudin adipiscing","orci tincidunt adipiscing. Mauris molestie pharetra nibh.","2020-01-27 02:56:05"),(1,1,1,"lorem ut aliquam iaculis,","et malesuada fames ac turpis","malesuada vel, convallis in,","2019-10-12 00:23:52"),(1,1,2,"Morbi","dictum eu, eleifend","mauris erat eget ipsum. Suspendisse sagittis.","2019-08-22 02:26:57"),(2,1,2,"posuere cubilia Curae; Donec","vel sapien","eget nisi dictum augue malesuada malesuada.","2019-05-10 11:54:27"),(1,1,1,"arcu eu odio","sagittis augue, eu tempor erat neque non","blandit enim consequat purus. Maecenas libero est, congue a, aliquet","2018-09-02 23:02:48"),(1,1,1,"urna. Vivamus","luctus sit amet, faucibus ut,","Aenean gravida nunc sed pede. Cum sociis natoque penatibus","2019-01-10 22:44:44"),(2,1,2,"sodales","Proin","at arcu. Vestibulum ante ipsum primis in","2019-02-02 06:13:41"),(2,1,1,"auctor quis, tristique ac,","ornare tortor at risus. Nunc","sem magna nec quam. Curabitur vel lectus. Cum","2018-06-13 06:50:41"),(2,1,1,"blandit viverra. Donec","Proin ultrices. Duis volutpat nunc sit","Donec tempus, lorem fringilla ornare","2019-10-31 07:24:25"),(1,1,1,"eu","diam dictum sapien.","placerat, augue. Sed molestie. Sed","2019-10-31 12:26:15");
 INSERT INTO `Posts` (`user_id`,`board_id`,`company_id`,`post_title`,`post_content`,`post_content_except_htmltag`,`post_register_time`) VALUES (1,1,1,"cursus a, enim. Suspendisse","erat. Sed nunc est,","ac mi","2019-08-17 01:47:19"),(1,1,1,"Proin non massa non","Proin eget odio. Aliquam vulputate ullamcorper magna. Sed eu eros.","eu, accumsan sed, facilisis vitae, orci.","2019-04-27 11:58:44"),(1,1,2,"eleifend","arcu. Vivamus sit amet risus.","rhoncus id, mollis nec, cursus a, enim.","2018-10-11 14:01:36"),(1,1,2,"amet","risus. In mi pede, nonummy ut, molestie","malesuada fames ac turpis egestas. Fusce aliquet magna a","2020-01-06 19:58:52"),(1,1,2,"posuere","odio sagittis","interdum enim non nisi. Aenean","2018-04-17 17:47:55"),(2,1,2,"Aenean eget metus.","hendrerit. Donec porttitor tellus non","aptent taciti","2018-05-06 04:41:02"),(1,1,2,"Donec est","scelerisque dui. Suspendisse ac","aliquet libero. Integer in magna. Phasellus dolor","2018-11-15 04:08:41"),(2,1,1,"Cras vehicula aliquet","id magna et ipsum cursus","magna, malesuada","2019-08-03 00:02:07"),(2,1,2,"vel","eros. Nam consequat dolor vitae","aliquet odio. Etiam ligula tortor, dictum","2019-11-20 18:38:32"),(2,1,2,"mi lorem, vehicula","ligula tortor, dictum","felis eget varius","2019-08-24 12:39:21");
 
-
-
-SELECT post.post_id               AS postID,
-               post.user_id               AS userID,
-               users.user_name            AS userName,
-               post.board_id              AS boardID,
-               post.company_id            AS companyID,
-               post.post_title            AS postTitle,
-               post.post_content          AS postContent,
-               post.post_register_time    AS postRegisterTime,
-               post.post_last_update_time AS postLastUpdateTime,
-               post.post_status           AS postStatus,
-               count(comments.comment_id) AS commentsCount,
-               post.view_count			  AS viewCount
-        FROM   posts post
-               JOIN users users
-                 ON post.user_id = users.user_id
-                 JOIN comments comments
-                    ON post.post_id = comments.post_id
-        WHERE  post.board_id = 1 AND
-               (json_extract(post.post_status, '$.isTemp') = false AND
-                    json_extract(post.post_status, '$.isTrash') = false)
-					AND comment_referenced_id IS NULL
-        ORDER  BY post.post_register_time DESC
-        LIMIT  0,10;
-        
-select *
-from posts;
-update posts
-set post_status='{"isTemp":false, "isRecycle":false}'
-where post_id <105;
 update posts
 set company_id = 1
 where company_id = 2;
 
-select if(count(function_id)>0,true,false)
-from functions_check
-where company_id = 1
-AND function_id = 1;
 
-select * 
-FROM   comments
-        WHERE  post_id = 1
-        AND comment_referenced_id is NULL; 
-SELECT Count(comment_id)
-        FROM   comments
-        WHERE  post_id = 1
-        AND comment_referenced_id is null; 
-        
-UPDATE posts
-SET view_count = view_count + 1
-WHERE post_id = 1;
+select * from posts;
+select * from alarms;
+select * from functions;
+select * from users;
+
+
+
+# user_id, company_id, user_name, user_password, user_type, image_url, image_file_name, thumbnail_url, thumbnail_file_name
+
+
+
+select * from view_records;
+select 
+view_records.post_id as postID,
+view_records.user_id as userID,
+users.user_name as userName,
+users.thumbnail_url as thumbnailUrl
+from view_records view_records left outer join users users
+on view_records.user_id = users.user_id
+WHERE view_records.post_id = 1;
+
+SELECT comments.comment_id            AS commentID,
+           comments.post_id               AS postID,
+           comments.user_id               AS userID,
+           users.user_name                AS userName,
+           users.thumbnail_url            AS thumbnailUrl,
+           comments.company_id            AS companyID,
+           comments.comment_content       AS commentContent,
+           comments.comment_register_time AS commentRegisterTime,
+           comments.comment_referenced_id AS commentReferencedID
+    FROM comments comments
+           LEFT OUTER JOIN users users
+                           ON comments.user_id = users.user_id
+    WHERE comments.post_id = 1
+      AND comments.comment_referenced_id IS NULL
+    LIMIT  5,5;
+    
+    select * from comments;
+    
+    SELECT comment_referenced_id
+    FROM comments
+    WHERE comment_id = 6;
+    
+    
+    select * from comments;
+    UPDATE comments
+    SET replies_count = replies_count - 1
+    WHERE comment_id = 2;

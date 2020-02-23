@@ -6,16 +6,26 @@ package com.board.project.blockboard.common.validation;
 
 
 import com.board.project.blockboard.common.exception.UserValidException;
+import com.board.project.blockboard.dto.FileDTO;
 import com.board.project.blockboard.dto.UserDTO;
+import com.board.project.blockboard.service.FileService;
+import com.board.project.blockboard.service.FunctionService;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @Slf4j
+@Component
 public class AuthorityValidation {
+
+  @Autowired
+  private FunctionService functionService;
+  @Autowired
+  private FileService fileService;
 
   public static boolean isValidateUserData(UserDTO frontEndUserData, UserDTO validatedUserData,
       HttpServletResponse response) {
-    log.info("!@#user: " + frontEndUserData);
     boolean isValid = frontEndUserData.equals(validatedUserData);
     try {
       if (!isValid) {
@@ -30,7 +40,6 @@ public class AuthorityValidation {
   }
 
   public static boolean isAdmin(UserDTO frontEndUserData, HttpServletResponse response) {
-    log.info("!@#user: " + frontEndUserData.getUserID() + "," + frontEndUserData.getUserType());
     boolean isValid = frontEndUserData.getUserType().equals("관리자");
     try {
       if (!isValid) {
@@ -42,6 +51,26 @@ public class AuthorityValidation {
       return isValid;
     }
   }
+
+  public boolean isWriter(FileDTO fileData,UserDTO userData,HttpServletResponse response){
+    String writerUserID = fileService.getFileWriterUserID(fileData);
+    boolean isValid = writerUserID.equals(userData.getUserID());
+    try {
+      if(!isValid){
+        throw new UserValidException();
+      }
+    } catch (UserValidException e) {
+      e.sendError(response,"다른 작성자의 작성물에 접근하였습니다. 로그인 화면으로 돌아갑니다.");
+      e.printStackTrace();
+    }finally {
+      return isValid;
+    }
+
+  }
+
+
+
+
 
 
 }

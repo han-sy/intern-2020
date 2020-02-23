@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
@@ -57,7 +58,7 @@ public class JsonParse {
    * @author Woohyeok Jun <woohyeok.jun@worksmobile.com>
    */
   public static Map<String, Object> getMapFromJsonString(String json) {
-    Map<String, Object> map = null;
+    Map<String, Object> map = new HashMap<String,Object>();
     try {
       ObjectMapper mapper = new ObjectMapper();
       mapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
@@ -86,31 +87,5 @@ public class JsonParse {
       jsonObject.put(key, value);
     }
     return jsonObject;
-  }
-
-  /**
-   * Object 형태의 'postStatus'의 Key List 를 PostDTO 에 Binding 한다.
-   *
-   * @param post PostDTO 객체
-   * @return postStatus 의 Key 들이 Binding 된 PostDTO
-   * @author Woohyeok Jun <woohyeok.jun@worksmobile.com>
-   */
-  public static PostDTO setPostStatusFromJsonString(PostDTO post) {
-    if (post.getPostStatus() == null) {
-      return null;
-    }
-
-    Map<String, Object> map = getMapFromJsonString(post.getPostStatus().toString());
-    if (map.get("isTemp") == null) {
-      post.setIsTemp(false);
-    } else {
-      post.setIsTemp(map.get("isTemp").toString().equals("true"));
-    }
-    if (map.get("isRecycle") == null) {
-      post.setIsRecycle(false);
-    } else {
-      post.setIsRecycle(map.get("isRecycle").toString().equals("true"));
-    }
-    return post;
   }
 }

@@ -2,11 +2,7 @@
  * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
  * @file    common.js
  */
-const UNICODE_3_BYTE = 11;
-const UNICODE_2_BYTE = 7;
-const BYTE_SIZE_3 = 3;
-const BYTE_SIZE_2 = 2;
-const BYTE_SIZE_1 = 1;
+
 
 function returnToLoginPage() {
   redirectLogout();
@@ -18,6 +14,10 @@ function returnToLoginPage() {
  */
 function redirectLogout() {
   window.location.href = "/logout";
+}
+function changedDataError(){
+  alert("페이지가 임의로 변경되었습니다.");
+  redirectLogout();
 }
 
 function getContextPath() {
@@ -77,4 +77,24 @@ function bytesHandler(obj, selector, maxLength) {
     $(selector).css('color', 'black');
   }
   $(selector).focus();
+}
+/**
+ * Data의 값유무를 리턴하는 함수
+ * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+ */
+function isNullData(data){
+  if(data==""||data ==null || data ==undefined){
+    return true;
+  }
+  return false;
+}
+
+function loadImage(value) {
+  if(value.files && value.files[0]) {
+    var reader = new FileReader();
+    reader.onload = function (e) {
+      $("#load_user_image").attr('src', e.target.result);
+    };
+    reader.readAsDataURL(value.files[0]);
+  }
 }

@@ -20,10 +20,9 @@ public class PostDTO {
   private String postContentExceptHTMLTag;
   private String postRegisterTime;
   private String postLastUpdateTime;
-  private Object postStatus;
+  private String postStatus;
+  private String thumbnailUrl;
   // postStatus 안의 Key List
-  private Boolean isTemp;
-  private Boolean isRecycle;
   private Boolean isPopular;
   private int commentsCount;
   private int viewCount;

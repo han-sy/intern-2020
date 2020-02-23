@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+ * @file FileMapper.xml
+-->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.board.project.blockboard.mapper.FileMapper">
+  <select id="selectFileListByEditorID" parameterType="hashmap" resultType="com.board.project.blockboard.dto.FileDTO">
+    SELECT file_id          AS fileID,
+           post_id          AS postID,
+           comment_id       AS commentID,
+           resource_url     AS resourceUrl,
+           origin_file_name AS originFileName,
+           stored_file_name AS storedFileName,
+           file_size        AS fileSize,
+           upload_time      AS uploadTime
+    FROM   files
+    <if test="commentID ==0">
+      WHERE  post_id = #{postID};
+    </if>
+    <if test="commentID !=0">
+      WHERE  comment_id = #{commentID};
+    </if>
+  </select>
+  <insert id="insertFile" parameterType="hashmap">
+    INSERT INTO files
+                (origin_file_name,
+                 stored_file_name,
+                 resource_url,
+                 file_size)
+    VALUES     (#{originFileName},
+                #{storedFileName},
+                #{resourceUrl},
+                #{fileSize});
+  </insert>
+
+  <update id="updateIDsByStoredFileName" parameterType="hashmap">
+    UPDATE files
+    <if test="commentID ==0">
+      SET    post_id = #{postID}
+    </if>
+    <if test="commentID !=0">
+      SET    comment_id = #{commentID}
+    </if>
+    WHERE  stored_file_name = #{storedFileName};
+  </update>
+
+  <select id="selectFileByFileID" parameterType="int" resultType="com.board.project.blockboard.dto.FileDTO">
+    SELECT file_id          AS fileID,
+           post_id          AS postID,
+           comment_id       AS commentID,
+           resource_url     AS resourceUrl,
+           origin_file_name AS originFileName,
+           stored_file_name AS storedFileName,
+           file_size        AS fileSize,
+           upload_time      AS uploadTime
+    FROM   files
+    WHERE  file_id = #{fileID};
+  </select>
+
+  <select id="selectFileByStoredFileName" parameterType="string" resultType="com.board.project.blockboard.dto.FileDTO">
+    SELECT file_id          AS fileID,
+           post_id          AS postID,
+           comment_id       AS commentID,
+           resource_url     AS resourceUrl,
+           origin_file_name AS originFileName,
+           stored_file_name AS storedFileName,
+           file_size        AS fileSize,
+           upload_time      AS uploadTime
+    FROM   files
+    WHERE  stored_file_name = #{storedFileName};
+  </select>
+
+  <select id="selectFileCheckByFileName" parameterType="string" resultType="boolean">
+    SELECT IF(Count(file_id) > 0, TRUE, FALSE)
+    FROM files
+    WHERE stored_file_name = #{fileName};
+  </select>
+
+  <delete id="deleteFileByStoredFileName" parameterType="string">
+    DELETE FROM files
+    WHERE  stored_file_name = #{storedFileName};
+  </delete>
+</mapper>

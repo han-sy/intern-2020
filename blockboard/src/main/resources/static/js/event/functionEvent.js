@@ -39,6 +39,8 @@ function clickSaveFunctionChange() {
 $(document).on('click', '._function-switch', function () {
   var switchText = $(this).find("._switch");
   var checkBox = $(this).find(".function_checkbox");
+  console.log($(this).closest(".btn-group-toggle").hasClass("first_function"));
+
   if (checkBox.prop("checked")) {
     $(this).removeClass('btn-success');
     $(this).addClass('btn-default');
@@ -51,4 +53,21 @@ $(document).on('click', '._function-switch', function () {
     checkBox.prop("checked", true);
   }
   $(this).removeClass("active");
+  if($(this).closest(".btn-group-toggle").hasClass("first_function")){
+    ChangeFunctionListUI($(".first_function").find("._function-switch"));
+  }
 });
+
+function ChangeFunctionListUI(obj){
+  console.log("첫번째 값:"+obj.find("._switch").html());
+  if(obj.find("._switch").html()=="OFF"){
+    $('.comment_function').addClass("display_none");
+    $('.comment_function').find("._switch").html("OFF");
+    $('.comment_function').find('._function-switch').removeClass('btn-success');
+    $('.comment_function').find('._function-switch').addClass('btn-default');
+    $('.comment_function').find(".function_checkbox").removeAttr("checked");
+  }
+  else{
+    $('.comment_function').removeClass("display_none");
+  }
+}

@@ -10,11 +10,12 @@ import lombok.ToString;
 @ToString
 @Getter
 public class PaginationDTO {
+  private String pageType;
   private int pageSize; /**1페이지에 들어가는 게시물개수*/
   private int rangeSize; /**한 범위안에 들어가는 페이지개수*/
   private int currentPage; /**현재 페이지*/
   private int currentRange; /**현재 블록*/
-  private int postsCount; /**게시물 개수*/
+  private int dataCount; /**게시물 개수*/
   private int pageCount; /** 페이지 개수*/
   private int rangeCount; /**범위 개수*/
   private int startPage; /**시작 페이지*/
@@ -24,13 +25,14 @@ public class PaginationDTO {
   private int startIndex; /** 페이지 첫번째 게시물 번호*/
   private int[] pageList;
 
-  public PaginationDTO(int postsCount, int currentPage, int pageSize, int rangeSize) {
+  public PaginationDTO(String pageType,int dataCount, int currentPage, int pageSize, int rangeSize) {
+    setPageType(pageType);
     setCurrentPage(currentPage);
-    setPostsCount(postsCount);
+    setDataCount(dataCount);
     setPageSize(pageSize);
     setRangeSize(rangeSize);
 
-    setPageCount(postsCount);
+    setPageCount(dataCount);
     setRangeCount(pageCount);
     setStartIndex(currentPage, pageSize);
 
@@ -63,6 +65,9 @@ public class PaginationDTO {
     setPageList(startPage, endPage);
   }
 
+  public void setPageType(String pageType) {
+    this.pageType = pageType;
+  }
 
   public void setCurrentPage(int currentPage) {//그대로
     this.currentPage = currentPage;
@@ -80,12 +85,12 @@ public class PaginationDTO {
     this.currentRange = (int) ((currentPage - 1) / rangeSize) + 1;
   }
 
-  public void setPostsCount(int postsCount) {
-    this.postsCount = (int) Math.ceil(postsCount * 1.0 / pageSize);
+  public void setDataCount(int dataCount) {
+    this.dataCount = (int) Math.ceil(dataCount * 1.0 / pageSize);
   }
 
-  public void setPageCount(int postsCount) {
-    this.pageCount = (int) Math.ceil(postsCount * 1.0 / pageSize);
+  public void setPageCount(int dataCount) {
+    this.pageCount = (int) Math.ceil(dataCount * 1.0 / pageSize);
   }
 
   public void setRangeCount(int rangeCount) {

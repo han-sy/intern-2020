@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * @author Woohyeok Jun <woohyeok.jun@worksmobile.com>
+ * @file AlarmMapper.xml
+-->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.board.project.blockboard.mapper.AlarmMapper">
+  <insert id="insertAlarm" parameterType="com.board.project.blockboard.dto.AlarmDTO">
+    INSERT INTO
+    alarms (
+    tagged_user_id,
+    post_id
+    <if test="commentID != 0">
+      ,comment_id
+    </if>)
+    VALUES (#{taggedUserID},
+    #{postID}
+    <if test="commentID != 0">
+      ,#{commentID}
+    </if>);
+  </insert>
+
+  <delete id="deleteAlarm" parameterType="int">
+    DELETE
+    FROM alarms
+    WHERE alarm_id = #{alarmID};
+  </delete>
+
+  <select id="selectAlarmsByUser" parameterType="com.board.project.blockboard.dto.UserDTO"
+    resultType="com.board.project.blockboard.dto.AlarmDTO">
+    SELECT alarm.alarm_id                         AS alarmID,
+           alarm.post_id                          AS postID,
+           alarm.comment_id                       AS commentID,
+           comment.comment_content_except_htmltag AS alarmContent,
+           users.user_name                        AS userName,
+           comment.comment_register_time          AS registerTime,
+           alarm.is_read                          AS isRead
+    FROM alarms alarm
+           JOIN comments comment ON alarm.comment_id = comment.comment_id
+           JOIN users ON comment.user_id = users.user_id
+           JOIN posts ON comment.post_id = posts.post_id
+    WHERE alarm.tagged_user_id = #{userID}
+      AND users.company_id = #{companyID}
+      AND posts.post_status = "normal"
+    UNION
+    SELECT alarm.alarm_id          AS alarmID,
+           alarm.post_id           AS postID,
+           alarm.comment_id        AS commentID,
+           ''                      AS alarmContent,
+           users.user_name         AS userName,
+           post.post_register_time AS registerTime,
+           alarm.is_read           AS isRead
+    FROM alarms alarm
+           JOIN posts post ON alarm.post_id = post.post_id
+           JOIN users ON post.user_id = users.user_id
+    WHERE alarm.tagged_user_id = #{userID}
+      AND users.company_id = #{companyID}
+      AND alarm.comment_id IS NULL
+      AND post.post_status = "normal"
+    ORDER BY registerTime DESC;
+  </select>
+
+  <update id="readAlarm" parameterType="int">
+    UPDATE alarms
+    SET alarms.is_read = true
+    WHERE alarm_id = #{alarmId};
+  </update>
+
+  <select id="selectAlarmByAlarmId" parameterType="int"
+    resultType="com.board.project.blockboard.dto.AlarmDTO">
+    SELECT alarm_id          AS alarmID,
+           tagged_user_id    AS taggedUserID,
+           post_id           AS postID,
+           comment_id        AS commentID,
+           is_read           AS isRead
+    FROM alarms
+    WHERE alarm_id = #{alarmId};
+  </select>
+</mapper>

@@ -12,8 +12,11 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>BLOCK BOARD</title>
+    <script src="https://use.fontawesome.com/releases/v5.12.1/js/all.js"
+            data-auto-replace-svg="nest"></script>
     <link rel="stylesheet" href="/webjars/bootstrap/4.4.1/dist/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="/static/css/boardstyle.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/alarmstyle.css">
     <link href="https://fonts.googleapis.com/css?family=Noto+Sans+JP|Roboto&display=swap"
           rel="stylesheet">
     <style>
@@ -22,7 +25,7 @@
             font-family: 'Noto Sans JP', sans-serif;
         }
     </style>
-    <script src="/static/js/util/data.js"></script>
+
 </head>
 
 <body>
@@ -58,6 +61,11 @@
                        onclick="javascript:clickDeleteBoardBtn(this)"
                        style="cursor:pointer">게시판 삭제</a>
                 </li>
+                <li class="nav-item active">
+                    <a class="nav-link" id='addUsersBtn' data-toggle="modal"
+                       data-target='#addUserModal'
+                       style="cursor:pointer">회원 추가</a>
+                </li>
             </c:if>
             <li class="nav-item dropdown"
                     <c:if test="${userType!='관리자'}">
@@ -67,7 +75,7 @@
                 <a class="nav-link dropdown-toggle active" href="#" id="dropdown03"
                    data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">사용중인 기능</a>
-                <div class="dropdown-menu" id="fuctionListContainer"
+                <div class="dropdown-menu" id="functionListContainer"
                      aria-labelledby="dropdown03">
                     <c:if test="${userType=='관리자'}">
                         <a class="dropdown-item text-success" id='changeFuncBtn' data-toggle="modal"
@@ -110,6 +118,92 @@
                 {{/isAbleFunction}}
             {{/functions}}
         </script>
+
+        <!-- 알람 창 -->
+        <div class="nav-item dropleft">
+            <a class="nav-link dropdown-alarm" href="#" id="dropdown04" style="color:white"
+               data-toggle="dropdown"
+               aria-haspopup="false" aria-expanded="false">
+                <i class="far fa-bell fa-2x" id="alarm_icon"></i>
+            </a>
+            <div class="dropdown-menu alarm-items" aria-labelledby="dropdown04">
+                <button type="button" class="btn-alarm-delete-read">읽은 알람 삭제
+                    <button type="button" class="btn-alarm-delete-all">모두 삭제
+                    </button>
+                    <br><br>
+                    <div id="alarm-content">
+                    </div>
+            </div>
+        </div>
+        <script id="alarm-count-template" type="text/x-handlebars-template">
+            <button type="button btn-alarm-count" id="alarmCount">{{alarmCount}}</button>
+        </script>
+        <script id="alarmList-template" type="text/x-handlebars-template">
+            {{#alarms}}
+                {{#isReadAlarm}}
+                    <li class="dropdown-item alarm-item alarm-read" data-id="{{alarmID}}">
+                {{else}}
+                    <li class="dropdown-item alarm-item" data-id="{{alarmID}}">
+                {{/isReadAlarm}}
+
+                    <button type="button" class="btn-alarm-delete">X</button>
+                    <p class="alarm-item">
+                        {{userName}}님이
+                        {{#isPostAlarm}}
+                            게시글에서 회원님을 언급했습니다.
+                        {{else}}
+                            댓글에서 회원님을 언급했습니다:<br>
+                            {{alarmContent}}
+                        {{/isPostAlarm}}
+                        <span style="float: right">{{registerTime}}</span>
+                    </p>
+                </li>
+            {{/alarms}}
+        </script>
+        <!-- 댓글 알람 클릭시 댓글 창 Modal -->
+        <div class="modal" id="comment-alarm-modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content" style="width: 1000px">
+                    <div class="modal-header" id="tagged-comment">
+                        <h5 class="modal-title text-success">답글을 달 수 있습니다.</h5>
+                    </div>
+                    <div class="modal-body" id="comment-alarm-input">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script id="click-comment-alarmItem-template" type="text/x-handlebars-template">
+            {{#comment}}
+                <div class='referenceCommentContainer' id='comment-alarm-container' data-id='{{commentReferencedID}}'>
+                    <div class="row border-left-comment localCommentContainer">
+                        <div></div>
+                        <div class='commentContainer col-8' id='comment{{commentID}}'
+                             style="padding-left: 50px">
+                            <div class="user"><h5><strong class=name
+                                                          data-id={{userID}}>{{userName}}</strong>
+                            </h5></div>
+                            <div>
+                                <div>
+                                    <div class="comment_area comment_content" id=translate_area
+                                         style="width: 100%;">{{{commentContent}}}
+                                    </div>
+                                    <br>
+                                    <div class="date text-muted">{{commentRegisterTime}}</div>
+                                </div>
+                                <div class="btn">
+                                    {{#isCommentFileAttachAble}}
+                                        <a class="text-success text-button font-weight-bold open_attached_file_list"
+                                        >첨부파일 보기</a>
+                                    {{else}}
+                                    {{/isCommentFileAttachAble}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4 attached_file_list_container_comment">
+                        </div>
+                    </div>
+            {{/comment}}
+        </script>
         <a class="nav-link text-white" id="current_user_info" style="nav-right: auto"
            data-id="${userID}" data-type="${userType}">${userName}</a>
         <a class="nav-link text-white" style="nav-right: auto"
@@ -140,12 +234,45 @@
                     </li>
                 {{/boards}}
                 <hr>
-                <li data-tab="-3" class=tabmenu id=default style="cursor:pointer"> 임시보관함</li>
+                {{#isTempSaveAble}}
+                    <li data-tab="-3" class=tabmenu id=default style="cursor:pointer"> 임시보관함</li>
+                {{/isTempSaveAble}}
                 <li data-tab="-4" class=tabmenu id=default style="cursor:pointer"> 휴지통</li>
             </script>
         </div>
         <div class="border-left border-success col">
-
+            <!-- 태그 이름 클릭 -> 회원 정보 Modal -->
+            <div class="modal" id="tagUserInfoModal" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title text-success">회원 정보</h5>
+                            <button type="button" class="close" data-dismiss="modal"
+                                    aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body-userInfo" style="padding: 15px 10px 10px 10px">
+                            <div class="row">
+                                <div class="col">
+                                    <img id="modal_userImage" width="100">
+                                </div>
+                                <div class="col">
+                                    <p>회원 이름: <a id="modal_userName">전우혁</a></p>
+                                    <p>회원 ID : <a id="modal_userID"></a></p>
+                                    <p>회원 유형: <a id="modal_userType"></a></p>
+                                    <p>회사명 : <a id="modal_companyName"></a></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                닫기
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!-- 게시판 추가 Modal -->
             <div class="modal" id="addBoardModal" tabindex="-1" role="dialog">
                 <div class="modal-dialog" role="document">
@@ -267,9 +394,9 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div class="modal-body-changeFunctions">
+                        <ul class="modal-body-changeFunctions" style="list-style:none;">
 
-                        </div>
+                        </ul>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">
                                 Close
@@ -286,28 +413,63 @@
             <script id="changeFunctionInfo-template" type="text/x-handlebars-template">
                 {{#functions}}
                     {{#isAbleFunction}}
-                        <div class="btn-group-toggle" data-toggle="buttons"
-                             style="padding: 3px 1px 1px 10px;">
+                        <li class="btn-group-toggle {{isCommentFunction}}" data-toggle="buttons"
+                            style="padding: 3px 1px 1px 10px;">
                             <label class="btn btn-default _function-switch">
                                 <span>{{functionName}}</span>
                                 <input class='function_checkbox' type='checkbox' name='function'
                                        value={{functionID}}>
                                 <span class='_switch'>OFF</span>
                             </label>
-                        </div>
+                        </li>
                     {{else}}
-                        <div class="btn-group-toggle" data-toggle="buttons"
-                             style="padding: 3px 1px 1px 10px;">
+                        <li class="btn-group-toggle {{isCommentFunction}}" data-toggle="buttons"
+                            style="padding: 3px 1px 1px 10px;">
                             <label class="btn btn-success _function-switch">
                                 <span>{{functionName}}</span>
                                 <input class='function_checkbox' type='checkbox' name='function'
                                        value={{functionID}} checked>
                                 <span class='_switch'>ON</span>
                             </label>
-                        </div>
+                        </li>
                     {{/isAbleFunction}}
                 {{/functions}}
             </script>
+            <!-- 회원 추가 Modal -->
+            <div class="modal" id="addUserModal" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title text-success">회원 추가</h5>
+                            <button type="button" class="close" data-dismiss="modal"
+                                    aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form id="userForm" name="userForm" method="post" class="form-group"
+                                  style="padding: 10px 30px 10px 10px;">
+                                <label class="col-form-label">회원 ID (최대 20자, 한글 X)</label>
+                                <input type="text" class="form-control" name="userID" id="form-userID"
+                                       placeholder="회원 ID (최대 20자)" maxlength="20">
+                                <label class="col-form-label">회원 이름</label>
+                                <input type="text" class="form-control" name="userName" id="form-userName"
+                                       placeholder="회원 이름" maxlength="10">
+                                <label class="col-form-label">회원 비밀번호(8~20자), 특수문자 1개 이상포함)</label>
+                                <input type="password" class="form-control" name="userPassword" id="form-userPassword"
+                                       placeholder="회원 비밀번호" maxlength="20">
+                                <label class="col-form-label">회원 사진</label>
+                                <input type="file" class="form-control" name="userImageFile"
+                                       id="userImageFile"
+                                       accept="image/png, image/jpeg" onchange="loadImage(this)">
+                                <img id="load_user_image" height="300px">
+                                <input type="button" class="form-control btn-success"
+                                       value="Add User" onclick="clickAddUser()">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!--게시글 작성 폼-->
             <div id="writecontent" style="display:none">
                 <!--게시글 작성 시 게시판 선택 폼-->
@@ -316,14 +478,15 @@
                         <label class="font-weight-light"> 게시판 선택 </label>
                     </div>
                     <div class="col-2 d-flex">
-                        <select class="form-control-sm" id="boardIDinEditor">
+                        <select class="form-control-sm" id="selectedBoardIDinEditor">
                         </select>
                     </div>
                     <!--게시글 작성 시 게시판 목록 템플릿-->
                     <script id="writecontent-boards-template" type="text/x-handlebars-template">
                         {{#boards}}
                             <option data-tab={{boardID}} class=tabmenu
-                                    id=default>{{boardName}}</option>
+                                    id=default>{{boardName}}
+                            </option>
                         {{/boards}}
                     </script>
                 </div>
@@ -336,23 +499,48 @@
                         <input type="text" class="form-control" id="post_title"/>
                     </div>
                 </div>
-                <div id="editorcontent" class="form-group">
-                    <textarea id="editor"></textarea>
-                    <button id="btn_post" class="btn btn-success"
-                            onclick="javascript:postFunction()">저장
-                    </button>
-                    <button id="btn_cancel" class="btn btn-success"
-                            onclick="javascript:writeCancel()">작성취소
-                    </button>
-                    <button id="btn_temp" class="btn btn-success"
-                            onclick="javascript:tempsaveFunction()">임시저장
-                    </button>
-                    <div id="editorcontent-hidden">
-                    </div>
-                    <script id="postid-template" type="text/x-handlebars-template">
-                        <a id="editor_postID" style="display:none">{{postID}}</a>
-                    </script>
+                <!--파일추가 폼-->
+                <div class="form-group row file_attach_form">
                 </div>
+                <script id="file-attach-form-template" type="text/x-handlebars-template">
+                    <div class="col-2">
+                        <label class="font-weight-light">파일첨부</label>
+                        <a class='file_drag_and_drop_btn text-success font-weight-bold text-button'
+                           style="cursor: pointer; margin-left: 5px">열기</a>
+                    </div>
+                    <div class="col-10">
+                        <form name="uploadForm" class="uploadForm" enctype="multipart/form-data"
+                              method="post">
+                            <div class="upload_list_start_point"></div>
+                            <div class=file_drop_container></div>
+
+                        </form>
+
+                    </div>
+
+                </script>
+                <script id="file-attach-drag-and-drop-form-template"
+                        type="text/x-handlebars-template">
+                    <div class="dragAndDropDiv dragAndDropBox">
+                        파일을 드래그 하세요
+                    </div>
+                </script>
+
+
+                <div id="editorcontent" class="form-group"></div>
+                <script id="editorcontent-template" type="text/x-handlebars-template">
+                    <textarea id="editor"></textarea>
+                    <button class="btn btn-success btn_post">저장</button>
+                    <button class="btn btn-success btn_cancel">작성취소</button>
+                    {{#isTempSaveAble}}
+                        <button class="btn btn-success btn_tempSave">임시저장</button>
+                    {{/isTempSaveAble}}
+                    <div id="editorcontent-hidden"></div>
+                </script>
+                <script id="postid-template" type="text/x-handlebars-template">
+                    <a id="postIdInEditor" style="display:none">{{postID}}</a>
+                    <a id="boardIdInEditor" style="display:none">{{boardID}}</a>
+                </script>
             </div>
 
             <div id="postcontent" class="border-primary"></div>
@@ -360,21 +548,22 @@
             <script id="postcontent-template" type="text/x-handlebars-template">
                 {{#post}}
                     <p class="h4">{{postTitle}}</p>
-                    <p class="h6" align="right">{{userName}}</p>
+                    <p class="h6 writer_info" align="right" data-id="{{userID}}">{{userName}}</p>
                     <p class="h6" align="right">{{postRegisterTime}}</p>
-                    <p class="h6" align="right">조회수 {{viewCount}}</p>
+                    <p align="right"><a class="h6 read_check" data-toggle="modal" data-target="#check_read_user" align="right">읽음 {{viewCount}}</a></p>
                     <hr>
+                    <div class="attached_file_list_container_post">
+                        <!--첨부파일 컨테이너 -->
+                    </div>
+
                     <div class="d-block">
                         <p>{{{postContent}}}</p>
                     </div>
                     <a id="postID" style="visibility: hidden;">{{postID}}</a>
+                    <a id="boardIdInPost" style="visibility: hidden">{{boardID}}</a>
                     <br>
-                    <button id="btn_updatePost" class="btn btn-success" style="visibility:hidden"
-                            onclick="javascript:postUpdateFunction()">수정
-                    </button>
-                    <button id="btn_deletePost" class="btn btn-success" style="visibility:hidden"
-                            onclick="javascript:movePostToTrashBox()">삭제
-                    </button>
+                    <button class="btn btn-success btn_modify" style="visibility:hidden">수정</button>
+                    <button class="btn btn-success btn_delete" style="visibility:hidden">삭제</button>
                 {{/post}}
 
                 {{#isCommentAble}}
@@ -383,16 +572,88 @@
                         <div class="row">
                         <span class="col-2">
                             <strong class="c">댓글 </strong>
-                        (<span id=commentCount></span>)
+                        (<span class='commentCount'></span>)
                         </span>
-                            <a class=' commentBtn text-success font-weight-bold text-button'
-                               style="cursor: pointer;">댓글 달기</a>
+                            <a class=' comment_btn text-success font-weight-bold text-button'
+                            >댓글 달기</a>
                         </div>
                         <div class=comment_list_container></div>
+                        <ul class="pagination comments_pagination_content"></ul>
                         <div class=comment_input_container></div>
                 {{else}}
                     </div>
                 {{/isCommentAble}}
+            </script>
+
+            <!--기독 모달-->
+            <div class="modal" id="check_read_user" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title text-success">게시글 조회 유저 확인</h5>
+                            <button type="button" class="close" data-dismiss="modal"
+                                    aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class ="modal-read-user-container" scroll=auto; >
+                            <ul class="modal-body-viewRecordList-container" style="list-style:none;">
+                                <!--사용자 목록-->
+                            </ul>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--기독 리스트 템플릿-->
+            <script id="view_record-list-template" type="text/x-handlebars-template">
+                {{#records}}
+                    <li>
+                        <div class ="row">
+                            <div class="col-1">
+                                <img class = "profile" name ="profile" width="50px" height="50px" src='{{thumbnailUrl}}'>
+                            </div>
+                            <div class="col">
+                                <a style="padding-left: 30px; padding-top: 15px"><strong class=name
+                                           data-id='{{userID}}'>{{userName}}</strong>({{userID}})</a>
+                            </div>
+                        </div>
+                    </li>
+                {{/records}}
+            </script>
+            <!--첨부파일 리스트 템플릿-->
+            <script id="attached-file-list-template" type="text/x-handlebars-template">
+                <a class='text-success font-weight-bold'>첨부파일</a>
+                {{#files}}
+                    <div class="form-group">
+                        <p><a class="attached-file-download" data-fileid='{{fileID}}'
+                              href="/files/{{fileID}}">{{originFileName}} ( {{printFileSize}} )</a>
+                        </p>
+                    </div>
+
+                {{/files}}
+                <hr>
+            </script>
+            <!--statusbar 템플릿-->
+            <script id="attached-file-statusbar-template" type="text/x-handlebars-template">
+                {{#files}}
+                    <div class="statusbar">
+                        <div class="filename"
+                             data-filename='{{storedFileName}}'>{{originFileName}}
+                        </div>
+                        <div class="filesize">{{fileSize}}</div>
+                        <div class="progressBar">
+                            <div style="width: 199px;">100%</div>
+                        </div>
+                        <div class="abort" style="display: none;">중지</div>
+                        <a class="delete-statusbar file_upload_btn text-success font-weight-bold text-button">삭제</a>
+                    </div>
+                {{/files}}
             </script>
             <!--댓글리스트 템플릿-->
             <script id="commentList-template" type="text/x-handlebars-template">
@@ -400,9 +661,11 @@
                     <hr>
                     <div class='referenceCommentContainer ' data-id='{{commentID}}'>
 
-                        <div class="row border-left-comment">
-                            <div></div>
-                            <div class='commentContainer ' id='comment{{commentID}}'
+                        <div class="row border-left-comment localCommentContainer">
+                            <div class="col-1">
+                                <img class = "profile" name ="profile" width="75px" height="75px" src='{{thumbnailUrl}}'>
+                            </div>
+                            <div class='commentContainer col-8' id='comment{{commentID}}'
                                  style="padding-left: 50px">
                                 <div class="user"><h5><strong class=name
                                                               data-id={{userID}}>{{userName}}</strong>
@@ -417,26 +680,33 @@
                                     </div>
                                     <div class="btn">
                                         {{#isReplyAble}}
-                                            <a class='text-success text-button text-button font-weight-bold replyBtn'
-                                               style="cursor: pointer;">답글</a>
+                                            <a class='text-success text-button font-weight-bold reply_btn'>답글(<span id="replies_count{{commentID}}">{{repliesCount}}</span>) 달기</a>
+                                            <a class='text-success text-button font-weight-bold open_reply_list_btn'>답글 보기</a>
                                         {{else}}
                                         {{/isReplyAble}}
 
                                         {{#isSameUser}}
-                                            <a class="text-success text-button text-button font-weight-bold"
-                                               id='edit_comment' style="cursor: pointer;">수정</a>
-                                            <a class="text-success text-button text-button font-weight-bold"
-                                               id='delete_comment' style="cursor: pointer;">삭제</a>
+                                            <a class="text-success text-button font-weight-bold"
+                                               id='edit_comment'>수정</a>
+                                            <a class="text-success text-button font-weight-bold"
+                                               id='delete_comment'>삭제</a>
                                         {{else}}
                                         {{/isSameUser}}
+                                        {{#isCommentFileAttachAble}}
+                                            <a class="text-success text-button font-weight-bold open_attached_file_list"
+                                            >첨부파일 보기</a>
+                                        {{else}}
+                                        {{/isCommentFileAttachAble}}
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-3 attached_file_list_container_comment">
+                            </div>
                         </div>
                         {{#isReplyAble}}
-                            <div class='replyContainer' id='reply_container{{commentID}}'
-                                 style='padding: 5px 1px 3px 30px;'>
-                            </div>
+                            <ul class='replyContainer' id='reply_container{{commentID}}'
+                                 style='padding: 5px 1px 3px 30px;list-style: none'>
+                            </ul>
                             <div id='reply_input_container{{commentID}}'
                                  style='padding: 5px 1px 3px 30px;'></div>
                         {{else}}
@@ -451,10 +721,13 @@
             <script id="replyList-template" type="text/x-handlebars-template">
                 {{#replies}}
                     <hr>
-                    <div class='row '>
+                    <li class='row localCommentContainer replyItem'>
                         <div class="col-1">
                         </div>
-                        <div class='commentContainer col-11' id='comment{{commentID}}'>
+                        <div class="col-1" style="padding-right: 10px">
+                            <img class = "profile" name ="profile" width="75px" height="75px" src='{{thumbnailUrl}}'>
+                        </div>
+                        <div class='commentContainer col-7' id='comment{{commentID}}' style="padding-left: 30px">
                             <div class="user"><h5><strong class=name
                                                           data-id={{userID}}>{{userName}}</strong>
                             </h5>
@@ -473,46 +746,68 @@
                             </div>
                             <div class=btn>
                                 {{#isReplyAble}}
-                                    <a class='text-success text-button font-weight-bold replyBtn'
-                                       style="cursor: pointer;">답글</a>
+                                    <a class='text-success text-button font-weight-bold reply_btn'
+                                    >답글</a>
                                 {{else}}
                                 {{/isReplyAble}}
                                 {{#isSameUser}}
                                     <a class="text-success text-button font-weight-bold"
                                        id='edit_comment'
-                                       style="cursor: pointer;">수정</a>
+                                    >수정</a>
                                     <a class="text-success text-button font-weight-bold"
                                        id='delete_comment'
-                                       style="cursor: pointer;">삭제</a>
+                                    >삭제</a>
                                 {{else}}
                                 {{/isSameUser}}
+                                {{#isCommentFileAttachAble}}
+                                    <a class="text-success text-button font-weight-bold open_attached_file_list"
+                                    >첨부파일 보기</a>
+                                {{else}}
+                                {{/isCommentFileAttachAble}}
                             </div>
                         </div>
-                    </div>
+                        <div class="col-3 attached_file_list_container_comment">
+                        </div>
+                    </li>
                 {{/replies}}
-                <div>
+                <div class ="more-replies">
+                    <button class="btn btn-success more-replies-btn" >답글 더보기</button>
                 </div>
             </script>
+            <script id="more-replies-template" type="text/x-handlebars-template">
+              <div class ="more-replies">
+                  <button class="btn btn-success more-replies-btn" >답글 더보기</button>
+              </div>
+            </script>
+
+
             <!--댓글 답글 input form 템플릿-->
             <script id="commentInputForm-template" type="text/x-handlebars-template">
                 {{#attribute}}
                     <br>
-                    <div style='width: 100%' class=commentHtml>
-                        {{{tag}}}
-                        <textarea class="form-control" id=commentText placeholder='{{type}}을 입력하세요'
-                                  name=commentTxt></textarea>
+                    <div style='width: 100%' class='commentHtml {{isReplyInput}}'>
+                        <textarea class="form-control" id="{{editorName}}" placeholder='{{type}}을 입력하세요'
+                                  name=commentText></textarea>
+                        <div class="form-group row file_attach_form">
+                        </div>
                         <div align="right">
+                            {{#isCommentFileAttachAble}}
+                                <a class="text-success text-button font-weight-bold open_file_form_btn"
+                                >파일첨부</a>
+                            {{else}}
+                            {{/isCommentFileAttachAble}}
                             {{#isReply}}
                                 <a class="text-success text-button font-weight-bold {{{buttonSelector}}}"
-                                   style="cursor: pointer;">{{buttonName}}</a>
+                                >{{buttonName}}</a>
                                 <a class="btn_close_cmt_input text-success text-button font-weight-bold"
-                                   style="cursor: pointer;">취소</a>
+                                >취소</a>
                             {{else}}
                                 <a class="text-success text-button font-weight-bold {{{buttonSelector}}}"
-                                   style="cursor: pointer;">{{buttonName}}</a>
+                                >{{buttonName}}</a>
                             {{/isReply}}
                         </div>
                     </div>
+
                 {{/attribute}}
             </script>
             <!--댓글 수정 템플릿-->
@@ -520,13 +815,21 @@
                 {{#attribute}}
                     <br>
                     <div style='width: 100%' class=commentHtml>
-                <textarea class="form-control" style='width: 100%' id='commentText'
-                          placeholder='댓글을 입력하세요'
-                          name=commentTxt>{{{oldText}}}</textarea>
+                <textarea class="form-control" style='width: 100%' id='commentEditText'
+                          name=commentText></textarea>
                         <div>
-                            <a id=btn_edit_comment_complete
-                               class="text-success text-button font-weight-bold"
-                               style="cursor: pointer;">수정하기</a>
+                            <div class="form-group row file_attach_form">
+                            </div>
+                            <div align="right">
+                                {{#isCommentFileAttachAble}}
+                                    <a class="text-success text-button font-weight-bold open_edit_file_form_btn"
+                                    >파일첨부 수정</a>
+                                {{else}}
+                                {{/isCommentFileAttachAble}}
+                                <a class="text-success text-button font-weight-bold btn_edit_comment_complete"
+                                >수정하기</a>
+                            </div>
+
                         </div>
                     </div>
                 {{/attribute}}
@@ -546,40 +849,52 @@
                         <th scope="col">제목</th>
                         <th scope="col">작성자</th>
                         <th scope="col">작성일</th>
-                        <th scope="col">조회수</th>
+                        {{#isTempBox}}
+                        {{else}}
+                            {{#isRecycleBin}}
+                            {{else}}
+                                <th scope="col">조회수</th>
+                            {{/isRecycleBin}}
+                        {{/isTempBox}}
                     </tr>
                     </thead>
                     <tbody id="postlist">
                     {{#posts}}
                         {{#isTemp}}
-                            <tr class="postclick" data-post={{postID}}
-                                onclick="javascript:clickTempPostEvent(this)">
-                                <td scope="row">{{postTitle}}
-                                </td>
+                            <tr class="postclick temp_post_click" data-post={{postID}}
+                                data-board={{boardID}}>
+                                <td>{{boardName}}</td>
+                                <td>{{postTitle}}</td>
                         {{else}}
                             {{#isRecycle}}
-                                <tr class="postclick" data-post={{postID}}
-                                    onclick="javascript:clickRecyclePostEvent(this)">
-                                    <td scope="row">{{postTitle}}</td>
+                                <tr class="postclick recycle_post_click" data-post={{postID}}
+                                    data-board={{boardID}}>
+                                    <td>{{boardName}}</td>
+                                    <td>{{postTitle}}</td>
                             {{else}}
-                                <tr class="postclick normal_post_click" data-post='{{postID}}'>
+                                <tr class="postclick normal_post_click" data-post={{postID}}
+                                    data-board={{boardID}}>
                                 {{#isPopular}}
                                         <td>{{boardName}}</td>
                                 {{else}}
                                 {{/isPopular}}
-                                    <td scope="row">{{postTitle}}
+                                    <td>{{postTitle}}
                                         {{#isCommentAble}}
                                             <span style="color:#28A745;">({{commentsCount}})</span>
                                         {{/isCommentAble}}
                                     </td>
                             {{/isRecycle}}
-                                <td>{{userName}}</td>
-                                <td>{{postRegisterTime}}</td>
-                                <td>{{viewCount}}</td>
-                                <a style="visibility:hidden">{{postID}}</a>
-                                <a style="visibility:hidden">{{boardID}}</a>
-                            </tr>
                         {{/isTemp}}
+                            <td>{{userName}}</td>
+                            <td>{{postRegisterTime}}</td>
+                        {{#isTemp}}
+                        {{else}}
+                            {{#isRecycle}}
+                            {{else}}
+                                    <td>{{viewCount}}</td>
+                            {{/isRecycle}}
+                        {{/isTemp}}
+                        </tr>
                     {{/posts}}
                 </script>
 
@@ -617,7 +932,7 @@
                 </div>
                 <div class="pagination_container">
                     <nav aria-label="Page navigation example">
-                        <ul class="pagination" id="pagination_content">
+                        <ul class="pagination" id="post_pagination_content">
 
                         </ul>
                     </nav>
@@ -627,29 +942,39 @@
                     {{#pagesInfo}}
                         {{#isFirstPage}}
                         {{else}}
-                            <li class="page-item"><a class="page-link"
-                                                     style="cursor: pointer;" data-page="1">처음</a>
+                            <li class='{{pageType}}-page-item' ><a class='page-link'
+                                                     style='cursor: pointer;' data-page='1'>처음</a>
                             </li>
                         {{/isFirstPage}}
                         {{#isFirstRange}}
                         {{else}}
-                            <li class="page-item"><a class="page-link" style="cursor: pointer;"
+                            <li class='{{pageType}}-page-item' ><a class='page-link' style='cursor: pointer;'
                                                      data-page='{{prevPage}}'>이전</a></li>
                         {{/isFirstRange}}
-                        {{#each pageList}}
-                            <li class="page-item" id="page{{this}}"><a class="page-link page-index"
-                                                                       style="cursor: pointer;"
-                                                                       data-page='{{this}}'>{{this}}</a>
+                        {{#isPostPage}}
+                            {{#each pageList}}
+                            <li class='posts-page-item' id='post_page{{this}}'><a class='page-link page-index'
+                                                                               style='cursor: pointer;'
+                                                                               data-page='{{this}}'>{{this}}</a>
                             </li>
-                        {{/each}}
+                            {{/each}}
+                        {{else}}
+                            {{#each pageList}}
+                            <li class='comments-page-item' id='comments_page{{this}}'><a class='page-link page-index'
+                                                                               style='cursor: pointer;'
+                                                                               data-page='{{this}}'>{{this}}</a>
+                            </li>
+                            {{/each}}
+                        {{/isPostPage}}
+
                         {{#isLastRange}}
                         {{else}}
-                            <li class="page-item"><a class="page-link" style="cursor: pointer;"
+                            <li class='{{pageType}}-page-item' ><a class='page-link' style='cursor: pointer;'
                                                      data-page='{{nextPage}}'>다음</a></li>
                         {{/isLastRange}}
                         {{#isLastPage}}
                         {{else}}
-                            <li class="page-item"><a class="page-link" style="cursor: pointer;"
+                            <li class='{{pageType}}-page-item' ><a class='page-link' style='cursor: pointer;'
                                                      data-page='{{pageCount}}'>마지막</a></li>
                         {{/isLastPage}}
                     {{/pagesInfo}}
@@ -659,30 +984,49 @@
         </div>
     </div>
 </div>
-
 <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
 <script src="/webjars/bootstrap/4.4.1/dist/js/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+<script src="/static/js/data/const.js"></script>
+<script src="/static/js/data/userData.js"></script>
+<script src="/static/js/data/commentData.js"></script>
+<script src="/static/js/data/functionData.js"></script>
+<script src="/static/js/data/postData.js"></script>
+<script src="/static/js/data/boardData.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
 <script src="/static/js/event/boardEvent.js"></script>
 <script src="/static/js/event/postEvent.js"></script>
 <script src="/static/js/event/commentEvent.js"></script>
 <script src="/static/js/event/functionEvent.js"></script>
 <script src="/static/js/event/paginationEvent.js"></script>
+<script src="/static/js/event/alarmEvent.js"></script>
+<script src="/static/js/event/userEvent.js"></script>
 <script src="/static/js/event/common.js"></script>
+<script src="/static/js/event/mentionEvent.js"></script>
+<script src="/static/js/event/fileEvent.js"></script>
+<script src="/static/js/event/modalEvent.js"></script>
+<script src="/static/js/event/viewRecordEvent.js"></script>
 <script src="/static/js/ajax/functionAjax.js"></script>
 <script src="/static/js/ajax/commentAjax.js"></script>
 <script src="/static/js/ajax/postAjax.js"></script>
 <script src="/static/js/ajax/boardAjax.js"></script>
 <script src="/static/js/ajax/paginationAjax.js"></script>
+<script src="/static/js/ajax/fileAjax.js"></script>
+<script src="/static/js/ajax/userAjax.js"></script>
+<script src="/static/js/ajax/alarmAjax.js"></script>
+<script src="/static/js/ajax/viewRecordAjax.js"></script>
 <script src="/static/ckeditor/ckeditor.js"></script>
 <script src="/static/ckeditor/adapters/jquery.js"></script>
 <script src="/static/js/util/handlebarsHelper.js"></script>
+<script src="/static/js/util/file.js"></script>
 <script src="/static/js/updateUI/boardUI.js"></script>
 <script src="/static/js/updateUI/commentUI.js"></script>
 <script src="/static/js/updateUI/functionUI.js"></script>
 <script src="/static/js/updateUI/paginationUI.js"></script>
+<script src="/static/js/updateUI/viewRecordUI.js"></script>
 <script src="/static/js/updateUI/postUI.js"></script>
+<script src="/static/js/updateUI/fileUI.js"></script>
+<script src="/static/js/updateUI/alarmUI.js"></script>
 <script src="/static/js/util/windowLoad.js"></script>
 
 </body>

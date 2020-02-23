@@ -7,6 +7,7 @@ package com.board.project.blockboard.controller;
 
 import com.board.project.blockboard.dto.CommentDTO;
 import com.board.project.blockboard.dto.UserDTO;
+import com.board.project.blockboard.service.CommentService;
 import com.board.project.blockboard.service.ReplyService;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -26,15 +27,26 @@ public class ReplyController {
 
   @Autowired
   private ReplyService replyService;
+  @Autowired
+  private CommentService commentService;
 
   /**
    * 답글 조회
    */
   @GetMapping("")
   public List<CommentDTO> getRepliesByComment(@PathVariable("postid") int postID,
-      @PathVariable("commentid") int commentReferencedID, HttpServletRequest request) {
-    List<CommentDTO> replyList = replyService.getReplyListByCommentID(commentReferencedID);
+      @PathVariable("commentid") int commentReferencedID, @RequestParam int startIndex,HttpServletRequest request) {
+    List<CommentDTO> replyList = replyService.getReplyListByCommentID(commentReferencedID,startIndex);
     return replyList;
+  }
+  /**
+   * 답글수 조회
+   */
+  @GetMapping("/counts")
+  public int getRepliesByComment(@PathVariable("postid") int postID,
+      @PathVariable("commentid") int commentReferencedID) {
+    int repliesCount = commentService.getRepliesCountByCommentReferencedID(commentReferencedID);
+    return repliesCount;
   }
 
   /**
@@ -45,15 +57,13 @@ public class ReplyController {
    * @param commentContent      답글내용
    */
   @PostMapping("")
-  public void writeReply(@RequestParam("postID") int postID,
+  public int insertReply(@RequestParam("postID") int postID,
       @RequestParam("commentContent") String commentContent,
       @RequestParam("commentReferencedID") int commentReferencedID,
-      @RequestParam("commentReferencedUserID") String commentReferencedUserID,
       HttpServletRequest request) {
     UserDTO userData = new UserDTO(request);
-    replyService
+    return replyService
         .writeReplyWithUserInfo(userData.getUserID(), userData.getCompanyID(), postID,
-            commentContent, commentReferencedID,
-            commentReferencedUserID);
+            commentContent, commentReferencedID);
   }
 }

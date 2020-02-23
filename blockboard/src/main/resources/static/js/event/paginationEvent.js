@@ -10,10 +10,16 @@
  * 3. ajax로 게시물 목록 요청한다.
  * */
 
-$(document).on('click', '.page-item', function () {
+$(document).on('click', '.posts-page-item', function () {
   var boardID = getCurrentBoardID();
   var pageNum = $(this).find(".page-link").attr("data-page");
-  getPageList(pageNum, boardID, updatePageList);
+  getPageList(pageNum, boardID,0, updatePostPageList);
+});
+
+$(document).on('click', '.comments-page-item', function () {
+  var postID = getPostIDInPost();
+  var pageNum = $(this).find(".page-link").attr("data-page");
+  getPageList(pageNum, 0,postID, updateCommentPageList);
 });
 
 

@@ -46,6 +46,13 @@ dependencies {
 	compile 'org.webjars.bower:bootstrap:4.4.1'
 	compile "com.fasterxml.jackson.core:jackson-databind:2.8.8"
 	compile 'org.jsoup:jsoup:1.12.1'
+	compile "commons-fileupload:commons-fileupload:1.2.1"
+	compile "org.apache.commons:commons-lang3:3.0"
+	compile "commons-io:commons-io:2.4"
+	implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.228')
+	implementation 'com.amazonaws:aws-java-sdk-s3'
+	compile group: 'com.amazonaws', name: 'aws-java-sdk-rekognition', version: '1.11.723'
+	compile group: 'org.imgscalr', name: 'imgscalr-lib', version: '4.2'
 }
 
 test {

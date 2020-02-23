@@ -17,7 +17,7 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(NullPointerException.class)
   protected void NullPointerError(HttpServletResponse response, Exception e) {
     try {
-      response.sendError(HttpServletResponse.SC_CONFLICT, "NULL Exception");
+      response.sendError(HttpServletResponse.SC_CONFLICT, e.getMessage());
       e.printStackTrace();
     } catch (IOException ie) {
       ie.printStackTrace();
@@ -28,7 +28,7 @@ public class GlobalExceptionHandler {
   protected void IllegalArgumentError(HttpServletResponse response, Exception e) {
     try {
       e.printStackTrace();
-      response.sendError(HttpServletResponse.SC_CONFLICT, "유효하지 않은 변수를 요청하였습니다.");
+      response.sendError(HttpServletResponse.SC_CONFLICT, e.getMessage());
     } catch (IOException ie) {
       ie.printStackTrace();
     }

@@ -49,7 +49,6 @@ public class FunctionController {
       HttpServletResponse response, HttpServletRequest request)
       throws IOException {
     UserDTO userData = new UserDTO(request);
-    log.info("fuctionDTOList : " + functionDTOList);
     if (AuthorityValidation.isAdmin(userData, response)) {
       functionService.updateNewFunctionsInfo(userData.getCompanyID(), functionDTOList);
     }

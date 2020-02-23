@@ -27,7 +27,7 @@ public class JwtInterceptor implements HandlerInterceptor {
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object object)
       throws Exception {
     String token = CookieUtils.getCookie(request, HEADER_AUTH);
-
+    log.info("인터셉터 = " + request.getRequestURL());
     // JWT Token 만료 검사 + 유저 일치검사
     if (token != null && jwtService.isUsable(token)) {
       jwtService.setUserDataToRequest(request);

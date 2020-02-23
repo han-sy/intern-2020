@@ -7,6 +7,7 @@ package com.board.project.blockboard.controller;
 import com.board.project.blockboard.dto.CommentDTO;
 import com.board.project.blockboard.dto.UserDTO;
 import com.board.project.blockboard.service.CommentService;
+import com.board.project.blockboard.service.PostService;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -26,14 +27,17 @@ import org.springframework.web.bind.annotation.RestController;
 public class CommentController {
 
   @Autowired
+  private PostService postService;
+  @Autowired
   private CommentService commentService;
 
   /**
    * postID 일치하는 댓글 목록 리턴 ( 대댓글은 반환하지 않는다.)
    */
   @GetMapping("")
-  public List<CommentDTO> getCommentsByPost(@PathVariable("postid") int postID) {
-    List<CommentDTO> commentList = commentService.getCommentListByPostID(postID);
+  public List<CommentDTO> getCommentsByPost(@PathVariable("postid") int postID,@RequestParam int pageNumber,HttpServletRequest request) {
+    UserDTO userData = new UserDTO(request);
+    List<CommentDTO> commentList = commentService.getCommentListByPostID(postID,pageNumber,userData.getCompanyID());
     return commentList;
   }
 
@@ -41,10 +45,10 @@ public class CommentController {
    * 댓글 추가
    */
   @PostMapping("")
-  public void writeComment(@RequestParam("postID") int postID,
+  public int insertComment(@RequestParam("postID") int postID,
       @RequestParam("commentContent") String commentContent, HttpServletRequest request) {
     UserDTO useeData = new UserDTO(request);
-    commentService
+    return commentService
         .writeCommentWithUserInfo(useeData.getUserID(), commentContent, useeData.getCompanyID(),
             postID);
   }
@@ -56,10 +60,8 @@ public class CommentController {
    * @return 댓글개수를 반환
    */
   @GetMapping("/counts")
-  public int getCommentsCountSByPostID(@PathVariable("postid") int postID,
-      HttpServletRequest request) {
-    UserDTO userData = new UserDTO(request);
-    int commentCount = commentService.getCommentCountByPostID(postID, userData.getCompanyID());
+  public int getCommentsCountsByPostID(@PathVariable("postid") int postID) {
+    int commentCount = postService.getCommentsCountByPostID(postID);
     return commentCount;
   }
 
@@ -83,5 +85,10 @@ public class CommentController {
       @PathVariable("postid") int postID, @PathVariable("boardid") int boardID,
       @RequestParam("newComment") String newComment) {
     commentService.updateComment(commentID, newComment);
+  }
+
+  @GetMapping("/{comment-id}")
+  public CommentDTO selectCommentByCommentId(@PathVariable("comment-id") int commentId) {
+    return commentService.selectCommentByCommentId(commentId);
   }
 }

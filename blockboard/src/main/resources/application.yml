@@ -22,6 +22,11 @@ spring:
   output:
     ansi:
       enabled: always
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 100MB
+      max-request-size: 100MB
 
 mybatis:
   type-aliases-package: com.board.project.blockboard.mapper
@@ -33,6 +38,13 @@ server:
   error:
     whitelabel:
       enabled: false
+
+cloud:
+  aws:
+    s3:
+      bucket: block-board
+    region:
+      static: ap-northeast-2
 
 # SQL Log 볼 때 사용하는 옵션
 #logging:

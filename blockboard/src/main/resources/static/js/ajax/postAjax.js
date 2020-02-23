@@ -4,26 +4,32 @@
  */
 
 
-function insertPost(boardID, postTitle, postContent) {
+function insertPost(postID,boardID, postTitle, postContent) {
   $.ajax({
     type: 'POST',
     url: `/boards/${boardID}/posts`,
     data: {
       postTitle: postTitle,
       postContent: postContent,
-      postStatus: `{"isTemp":false, "isRecycle":false}`
+      postStatus: "normal"
     },
     error: function (xhr) {
       errorFunction(xhr);
     },
-    success: function () {
-      alert("게시글 작성완료");
+    success: function (data) {
+      if(functionOn.postFileAttach){
+        if(isNullData(postID)){ //postID가 없는경우 일반
+          updateIDToFiles("post",data,"");
+        }else{ //postID가 이미 있는경우 //임시저장
+          updateIDToFiles("post",postID,"");
+        }
+      }
       refreshPostList();
     }
   });
 }
 
-function insertTempPost(boardID, postID, temp_title, temp_content, is_temp) {
+function insertTempPost(boardID, postID, temp_title, temp_content, post_status) {
   $.ajax({
     type: 'POST',
     url: `/boards/${boardID}/posts`,
@@ -32,17 +38,26 @@ function insertTempPost(boardID, postID, temp_title, temp_content, is_temp) {
       postID: postID,
       postTitle: temp_title,
       postContent: temp_content,
-      postStatus: `{"isTemp":${is_temp}, "isRecycle":false}`
+      postStatus: post_status
     },
     error: function (xhr) {
       errorFunction(xhr);
       editorClear();
       refreshPostList();
     },
-    success: function () {
-      addRecentTempPostIdToEditor(boardID);
-      if (is_temp) {
-        alert("임시저장 되었습니다.");
+    success: function (data) {
+      if (post_status == "temp") {
+        addPostInfoToEditor(data, boardID);
+        if(functionOn.postFileAttach){
+          if(isNullData(postID)){
+            updateIDToFiles("post",data,"");
+          }else{
+            updateIDToFiles("post",postID,"");
+          }
+        }
+        alert("임시저장 되었습니다.")
+      } else {
+        alert("게시물이 작성되었습니다.");
       }
     }
   });
@@ -58,7 +73,7 @@ function loadPost(boardID, postID) {
       errorFunction(xhr);
     },
     success: function (data) {
-      addPostIdToEditor(postID);
+      addPostInfoToEditor(postID, boardID);
       initBoardIdOptionInEditor(boardID);
       post_title.val(data.postTitle);
       CKEDITOR.instances['editor'].setData(data.postContent);
@@ -66,13 +81,14 @@ function loadPost(boardID, postID) {
   });
 }
 
-function updatePost(boardID, postID, postTitle, postContent) {
+function updatePost(boardID, originalBoardID, postID, postTitle, postContent) {
   $.ajax({
     type: 'PUT',
-    url: `/boards/${boardID}/posts/${postID}`,
+    url: `/boards/${originalBoardID}/posts/${postID}`,
     data: {
+      boardID: boardID,
       postTitle: postTitle,
-      postContent: postContent,
+      postContent: postContent
     },
     error: function (xhr) {
       errorFunction(xhr);
@@ -86,26 +102,10 @@ function updatePost(boardID, postID, postTitle, postContent) {
   });
 }
 
-// 게시글 완전 삭제 = 휴지통에서 삭제
-function completeDeletePost(boardID, postID) {
+function deletePost(boardID, postID) {
   $.ajax({
     type: 'DELETE',
     url: `/boards/${boardID}/posts/${postID}`,
-    error: function (xhr) {
-      errorFunction(xhr);
-    },
-    success: function () {
-      editorClear();
-      refreshPostList();
-    }
-  });
-}
-
-// 게시글 임시 삭제 = 휴지통으로 이동
-function temporaryDeletePost(boardID, postID) {
-  $.ajax({
-    type: 'PUT',
-    url: `/boards/${boardID}/posts/${postID}/trash`,
     error: function (xhr) {
       errorFunction(xhr);
     },
@@ -120,7 +120,7 @@ function temporaryDeletePost(boardID, postID) {
 function refreshPostList() {
   var boardID = getCurrentBoardID();
   postClear();
-  getPageList(1, boardID, updatePageList)
+  getPageList(1, boardID,0, updatePostPageList)
 }
 
 function searchPost(option, keyword) {
@@ -150,10 +150,11 @@ function searchPost(option, keyword) {
   });
 }
 
+// 임시보관함 게시글 목록을 가져온다.
 function getTempPosts(pageNum) {
   $.ajax({
     type: 'GET',
-    url: "/boards/-1/posts/temp",
+    url: "/boards/-1/posts/tempBox",
     data: {
       pageNumber: pageNum
     },
@@ -170,38 +171,7 @@ function getTempPosts(pageNum) {
   })
 }
 
-function getTempPost(postID) {
-  var postContentObj = $('#postcontent');
-  postContentObj.html("");
-  $.ajax({
-    type: 'GET',
-    url: `/boards/0/posts/temp/${postID}`,
-    error: function (xhr) {  //통신 실패시
-      errorFunction(xhr);
-      editorClear();
-      refreshPostList();
-    },
-    success: function (data) {
-      $('#btn_write').show();
-      loadPost(data.boardID, postID);
-    }
-  });
-}
-
-function addRecentTempPostIdToEditor(boardID) {
-  $.ajax({
-    type: 'GET',
-    url: `/boards/${boardID}/posts/temp/recent`,
-    error: function (xhr) {
-      errorFunction(xhr);
-    },
-    success: function (data) {
-      addPostIdToEditor(data.postID);
-    }
-  })
-}
-
-// 휴지통에 있는 게시글들을 가져온다.
+// 휴지통 게시글 목록을 가져온다.
 function getRecyclePosts(pageNum) {
   $.ajax({
     type: 'GET',
@@ -237,7 +207,7 @@ function restorePost(postID) {
   });
 }
 
-// 내가 작성한 게시글 불러오기
+// 내가 작성한 게시글 목록 불러오기
 function getMyPosts(pageNum) {
   $.ajax({
     type: 'GET',
@@ -258,7 +228,7 @@ function getMyPosts(pageNum) {
   });
 }
 
-// 내 댓글이 달린 게시글 받아오기
+// 내 댓글이 달린 게시글 목록 받아오기
 function getMyReplies(pageNum) {
   $.ajax({
     type: 'GET',
@@ -285,27 +255,27 @@ function getRecyclePost(postID, boardID) {
   $.ajax({
     type: 'GET',
     url: `/boards/${boardID}/posts/${postID}`,
-    error: function (error) {  //통신 실패시
-      alert('통신실패!' + error);
+    error: function (xhr) {
+      errorFunction(xhr);
+      refreshPostList();
     },
     success: function (data) {
       $('#writecontent').hide();
       $('#btn_write').show();
-      //게시글 내용 출력
+
       loadPostContent(data);
-      var btn_deletePost = $('#btn_deletePost');
-      var btn_updatePost = $('#btn_updatePost');
+      var btn_deletePost = $('.btn_delete');
+      var btn_updatePost = $('.btn_modify');
       btn_deletePost.attr('style', 'visibility:visible');
       btn_updatePost.attr('style', 'visibility:visible');
-      btn_deletePost.html("완전 삭제");
       btn_updatePost.html("복원");
-      btn_updatePost.attr('onclick', 'javascript:clickRestorePost()');
-      btn_deletePost.attr('onclick', 'javascript:clickCompleteDeletePost()');
+      btn_updatePost.removeClass("btn_modify");
+      btn_updatePost.addClass("btn_restore");
     }
   });
 }
 
-// 최신 게시글 받아오기
+// 최신 게시글 목록 받아오기
 function getRecentPosts(pageNum) {
   $.ajax({
     type: 'GET',
@@ -326,7 +296,7 @@ function getRecentPosts(pageNum) {
   });
 }
 
-// 인기 게시글 받아오기
+// 인기 게시글 목록 받아오기
 function getPopularPostList(pageNum) {
   $.ajax({
     type: 'GET',

@@ -5,12 +5,14 @@
 package com.board.project.blockboard.service;
 
 import com.board.project.blockboard.common.constant.ConstantData;
+import com.board.project.blockboard.common.exception.FunctionValidException;
 import com.board.project.blockboard.common.util.CompareData;
 import com.board.project.blockboard.dto.FunctionDTO;
 import com.board.project.blockboard.mapper.FunctionMapper;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,7 +48,7 @@ public class FunctionService {
     return functionInfoList;
   }
 
-  public boolean getFunctionStatus(int companyID, int functionID) {
+  public boolean isUseFunction(int companyID, int functionID) {
     Map<String, Object> functionPrimaryKey = new HashMap<String, Object>();
     functionPrimaryKey.put("functionID", functionID);
     functionPrimaryKey.put("companyID", companyID);
@@ -74,5 +76,6 @@ public class FunctionService {
       e.printStackTrace();
     }
   }
+
 
 }

@@ -13,20 +13,18 @@
            comments.post_id               AS postID,
            comments.user_id               AS userID,
            users.user_name                AS userName,
+           users.thumbnail_url            AS thumbnailUrl,
            comments.company_id            AS companyID,
            comments.comment_content       AS commentContent,
            comments.comment_register_time AS commentRegisterTime,
            comments.comment_referenced_id AS commentReferencedID,
-           referenced_user.user_id        AS commentReferencedUserID,
-           referenced_user.user_name      AS commentReferencedUserName
+           comments.replies_count         AS repliesCount
     FROM comments comments
            LEFT OUTER JOIN users users
                            ON comments.user_id = users.user_id
-           LEFT OUTER JOIN users referenced_user
-                           ON comments.comment_referenced_user_id =
-                              referenced_user.user_id
     WHERE comments.post_id = #{postID}
-      AND comments.comment_referenced_id IS NULL;
+      AND comments.comment_referenced_id IS NULL
+    LIMIT  #{startIndex},#{pageSize};
   </select>
 
   <select id="getAllCommentsCountByPostID" parameterType="int" resultType="int">
@@ -42,18 +40,34 @@
       AND comment_referenced_id IS NULL;
   </select>
 
+  <select id="selectUserIDByCommentID" parameterType="int" resultType="string">
+    SELECT user_id
+    FROM comments
+    WHERE comment_id = #{commentID};
+  </select>
+
   <insert id="insertNewCommentByCommentInfo" parameterType="hashmap">
     INSERT INTO comments
     (post_id,
      user_id,
      company_id,
      comment_content,
+     comment_content_except_htmltag,
      comment_referenced_id)
     VALUES (#{postID},
             #{userID},
             #{companyID},
             #{commentContent},
+            #{commentContentExceptHTMLTag},
             NULL);
+    <selectKey keyProperty="commentID" resultType="int" order="AFTER">
+      <if test='commentID != 0'>
+        SELECT #{commentID};
+      </if>
+      <if test='commentID == 0'>
+        SELECT LAST_INSERT_ID();
+      </if>
+    </selectKey>
   </insert>
 
   <delete id="deleteCommentByCommentReferencedID" parameterType="int">
@@ -76,7 +90,47 @@
 
   <update id="updateComment" parameterType="hashmap">
     UPDATE comments
-    SET comment_content = #{newComment}
+    SET comment_content = #{commentContent},
+        comment_content_except_htmltag = #{commentContentExceptHTMLTag}
     WHERE comment_id = #{commentID};
   </update>
+
+  <update id="updateRepliesCountPlus1" parameterType="int">
+    UPDATE comments
+    SET replies_count = replies_count + 1
+    WHERE comment_id = #{commentReferencedID};
+  </update>
+  <update id="updateRepliesCountMinus1" parameterType="int">
+    UPDATE comments
+    SET replies_count = replies_count - 1
+    WHERE comment_id = #{commentReferencedID};
+  </update>
+
+  <select id="selectCommentReferencedIDByCommentID" parameterType="int" resultType="int">
+    SELECT comment_referenced_id
+    FROM comments
+    WHERE comment_id = #{commentID};
+  </select>
+
+  <select id="selectRepliesCountByCommentReferencedID" parameterType="int" resultType="int">
+    SELECT replies_count
+    FROM comments
+    WHERE comment_id = #{commentReferencedID};
+  </select>
+
+  <select id="selectCommentByCommentId" parameterType="int"
+    resultType="com.board.project.blockboard.dto.CommentDTO">
+    SELECT comments.comment_id            AS commentID,
+           comments.post_id               AS postID,
+           comments.user_id               AS userID,
+           users.user_name                AS userName,
+           users.user_id                  AS userID,
+           comments.company_id            AS companyID,
+           comments.comment_content       AS commentContent,
+           comments.comment_register_time AS commentRegisterTime,
+           comments.comment_referenced_id AS commentReferencedID
+    FROM comments
+           JOIN users ON comments.user_id = users.user_id
+    WHERE comments.comment_id = #{commentId};
+  </select>
 </mapper>
