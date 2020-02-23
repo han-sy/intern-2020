@@ -174,7 +174,7 @@
         </div>
         <script id="click-comment-alarmItem-template" type="text/x-handlebars-template">
             {{#comment}}
-                <div class='referenceCommentContainer' id='comment-alarm-container' data-id='{{commentID}}'>
+                <div class='referenceCommentContainer' id='comment-alarm-container' data-id='{{commentReferencedID}}'>
                     <div class="row border-left-comment localCommentContainer">
                         <div></div>
                         <div class='commentContainer col-8' id='comment{{commentID}}'
