@@ -15,15 +15,18 @@ function updateCommentsCount(boardID, postID) {
     }
   });
 }
-function updateRepliesCount(boardID, postID,commentID) {
+function updateRepliesCount(boardID, postID,commentReferencedID) {
+
   $.ajax({
     type: 'GET',
-    url: `/boards/${boardID}/posts/${postID}/comments/${commentID}/replies/counts`,
+    url: `/boards/${boardID}/posts/${postID}/comments/${commentReferencedID}/replies/counts`,
     error: function () {  //통신 실패시
       alert('통신실패!');
     },
     success: function (data) {    //들어오는 data는 boardDTOlist
-      updateRepliesCountUI(data,commentID);
+      console.log("commentReferencedID : "+ commentReferencedID);
+      console.log("count : "+ data);
+      updateRepliesCountUI(data,commentReferencedID);
     }
   });
 }
@@ -150,7 +153,7 @@ function insertReply(boardID, postID, commentContent, commentReferencedID,commen
         }
       }
       getReplyList(boardID, postID, commentReferencedID, getReplyListUI);
-      updateCommentsCount(boardID, postID);
+      updateRepliesCount(boardID,postID,commentReferencedID);
       CKEDITOR.instances['commentText'].setData("");
     }
   });

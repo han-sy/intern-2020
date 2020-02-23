@@ -265,9 +265,11 @@ public class PostService {
   }
 
   public void updateCommentCountPlus1(int postID) {
+    log.info("post"+postID+" : plus1");
     postMapper.updateCommentCountPlus1(postID);
   }
   public void updateCommentCountMinus1(int postID){
+    log.info("post"+postID+" : minus1");
     postMapper.updateCommentCountMinus1(postID);
   }
 

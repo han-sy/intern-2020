@@ -76,16 +76,16 @@ function editCommentByCommentID(postID, boardID, commentID) {
 }
 
 //답글 ui 구성
-function getReplyListUI(commentID, data) {
+function getReplyListUI(commentReferencedID, data) {
   var source = $('#replyList-template').html();
   var template = Handlebars.compile(source);
   var replies = {replies: data};
   var itemList = template(replies);
-  $("#reply_container" + commentID).html(itemList);
+  $("#reply_container" + commentReferencedID).html(itemList);
   var boardID = getBoardIDInPost();
   var postID = getPostIDInPost();
 
-  updateRepliesCount(boardID,postID,commentID);
+  updateRepliesCount(boardID,postID,commentReferencedID);
 }
 
 //답글전체 받아오기
@@ -106,5 +106,5 @@ function updateCommentsCountUI(data) {
 
 function updateRepliesCountUI(data,commentReferencedID) {
   console.log("repliesCount : " + data);
-  $('#replies_count'+data).html(data);
+  $('#replies_count'+commentReferencedID).html(data);
 }
