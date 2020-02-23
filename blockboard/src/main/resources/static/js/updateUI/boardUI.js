@@ -35,7 +35,6 @@ function loadPostList(data) {
   var post = {posts: data};
   var itemList = template(post);
   $('#post_table').html(itemList);
-
 }
 
 //삭제를 위한 UI

@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @Slf4j
 public class AlarmService {
@@ -40,6 +41,7 @@ public class AlarmService {
 
   public void insertAlarm(CommentDTO comment) {
     Set<String> taggedUsers = tagCheckUtils.getTaggedUsers(comment);
+    log.info(taggedUsers.toString());
     if (taggedUsers != null) {
       for (String taggedUserID : taggedUsers) {
         AlarmDTO alarm = new AlarmDTO();

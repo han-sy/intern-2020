@@ -26,7 +26,7 @@
            users.user_password as userPassword,
            users.user_type     as userType,
            users.image_url     as imageURL,
-           users.thumbnail_url as thumbnailURL,
+           users.thumbnail_url as thumbnailUrl,
            company.company_name  as companyName
     FROM users users
         JOIN companies company ON users.company_id = company.company_id
@@ -66,7 +66,9 @@
   <update id="updateUserImage" parameterType="hashmap">
     UPDATE users
     SET    image_url = #{imageUrl},
-           image_file_name = #{imageFileName}
+           image_file_name = #{imageFileName},
+           thumbnail_url = #{thumbnailUrl},
+           thumbnail_file_name = #{thumbnailFileName}
     WHERE  user_id = #{userID};
   </update>
   <select id="selectUsersByCompanyID" parameterType="int"
@@ -75,7 +77,8 @@
            user_name       AS userName,
            user_type       AS userType,
            company_name    AS companyName,
-           image_file_name AS imageFileName
+           image_file_name AS imageFileName,
+           thumbnail_url   AS thumbnailUrl
     FROM   users users
            JOIN companies company
              ON users.company_id = company.company_id

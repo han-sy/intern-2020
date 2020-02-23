@@ -17,8 +17,7 @@ function insertPost(postID,boardID, postTitle, postContent) {
       errorFunction(xhr);
     },
     success: function (data) {
-      var functionData = new FunctionOn();
-      if(functionData.postFileAttach){
+      if(functionOn.postFileAttach){
         if(isNullData(postID)){
           updateIDToFiles(data,"");
         }else{
@@ -49,8 +48,7 @@ function insertTempPost(boardID, postID, temp_title, temp_content, post_status) 
     success: function (data) {
       if (post_status == "temp") {
         addPostInfoToEditor(data, boardID);
-        var functionData = new FunctionOn();
-        if(functionData.postFileAttach){
+        if(functionOn.postFileAttach){
           if(isNullData(postID)){
             updateIDToFiles(data,"");
           }else{
@@ -122,7 +120,7 @@ function deletePost(boardID, postID) {
 function refreshPostList() {
   var boardID = getCurrentBoardID();
   postClear();
-  getPageList(1, boardID, updatePageList)
+  getPageList(1, boardID,0, updatePostPageList)
 }
 
 function searchPost(option, keyword) {

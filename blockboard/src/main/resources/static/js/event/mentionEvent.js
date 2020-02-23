@@ -2,7 +2,7 @@
  * @author Woohyeok Jun <woohyeok.jun@worksmobile.com>
  * @file metionEvent.java
  */
-$(document).on('click', '.mentions_tag', function () {
+$(document).on('click', '.name', function () {
   let userID = $(this).attr("data-id");
   console.log(userID);
   $.ajax({
@@ -16,7 +16,7 @@ $(document).on('click', '.mentions_tag', function () {
       $("#modal_userName").html(data.userName);
       $("#modal_userType").html(data.userType);
       $("#modal_companyName").html(data.companyName);
-      $("#modal_userImage").attr("src", data.imageUrl);
+      $("#modal_userImage").attr("src", data.thumbnailUrl);
       $("#tagUserInfoModal").modal();
     }
   });

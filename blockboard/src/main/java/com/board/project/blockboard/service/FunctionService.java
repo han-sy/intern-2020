@@ -48,7 +48,7 @@ public class FunctionService {
     return functionInfoList;
   }
 
-  public boolean getFunctionStatus(int companyID, int functionID) {
+  public boolean isUseFunction(int companyID, int functionID) {
     Map<String, Object> functionPrimaryKey = new HashMap<String, Object>();
     functionPrimaryKey.put("functionID", functionID);
     functionPrimaryKey.put("companyID", companyID);

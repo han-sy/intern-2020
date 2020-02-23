@@ -124,6 +124,7 @@
     SELECT post.post_id               AS postID,
            post.user_id               AS userID,
            users.user_name            AS userName,
+           users.thumbnail_url        AS thumbnailUrl,
            post.board_id              AS boardID,
            board.board_name           AS boardName,
            post.company_id            AS companyID,
@@ -152,6 +153,7 @@
             post.post_content AS postContent,
             post.post_register_time AS postRegisterTime,
             users.user_name AS userName,
+            users.thumbnail_url AS thumbnailUrl,
             board.board_name AS boardName,
             post.view_count AS viewCount
     FROM    posts post
@@ -175,6 +177,7 @@
             post.post_content AS postContent,
             post.post_register_time AS postRegisterTime,
             users.user_name AS userName,
+            users.thumbnail_url AS thumbnailUrl,
             post.post_status AS postStatus
     FROM    posts post
        JOIN users users ON post.user_id = users.user_id
@@ -197,6 +200,7 @@
         post.post_content AS postContent,
         post.post_register_time AS postRegisterTime,
         users.user_name AS userName,
+        users.thumbnail_url AS thumbnailUrl,
         board.board_name AS boardName,
         post.post_status AS postStatus
     FROM   posts post
@@ -223,7 +227,9 @@
         post.post_content AS postContent,
         post.post_register_time AS postRegisterTime,
         users.user_name AS userName,
-        post.view_count AS viewCount
+        users.thumbnail_url AS thumbnailUrl,
+        post.view_count AS viewCount,
+        post.comments_count AS commentsCount
     FROM    posts post
        JOIN users users ON post.user_id = users.user_id
        JOIN boards board ON post.board_id = board.board_id
@@ -305,6 +311,7 @@
     SELECT post.post_id               AS postID,
            post.user_id               AS userID,
            users.user_name            AS userName,
+           users.thumbnail_url        AS thumbnailUrl,
            post.board_id              AS boardID,
            board.board_name           AS boardName,
            post.company_id            AS companyID,
@@ -313,7 +320,8 @@
            post.post_register_time    AS postRegisterTime,
            post.post_last_update_time AS postLastUpdateTime,
            post.post_status           AS postStatus,
-           post.view_count            AS viewCount
+           post.view_count            AS viewCount,
+           post.comments_count        AS commentsCount
     FROM   posts post
            JOIN users users ON post.user_id = users.user_id
            JOIN boards board ON post.board_id = board.board_id
@@ -327,20 +335,22 @@
   <!--@author Dongwook Kim <dongwook.kim1211@worksmobile.com>-->
   <select id="selectPostByPostID" parameterType="int"
     resultType="com.board.project.blockboard.dto.PostDTO">
-    SELECT post.post_id            AS postID,
-           post.user_id            AS userID,
-           users.user_name         AS userName,
-           post.board_id           AS boardID,
-           post.company_id         AS companyID,
-           post.post_title         AS postTitle,
-           post.post_content       AS postContent,
-           post.post_register_time AS postRegisterTime,
+    SELECT post.post_id               AS postID,
+           post.user_id               AS userID,
+           users.user_name            AS userName,
+           users.thumbnail_url        AS thumbnailUrl,
+           post.board_id              AS boardID,
+           post.company_id            AS companyID,
+           post.post_title            AS postTitle,
+           post.post_content          AS postContent,
+           post.post_register_time    AS postRegisterTime,
            post.post_last_update_time AS postLastUpdateTime,
-           post.post_status        AS postStatus,
-           post.view_count            AS viewCount
+           post.post_status           AS postStatus,
+           post.view_count            AS viewCount,
+           post.comments_count        AS commentsCount
     FROM   posts post
            JOIN users users
-            ON post.user_id = users.user_id
+             ON post.user_id = users.user_id
     WHERE  post.post_id = #{postID}
   </select>
 
@@ -367,6 +377,7 @@
     SELECT post.post_id               AS postID,
            post.user_id               AS userID,
            users.user_name            AS userName,
+           users.thumbnail_url        AS thumbnailUrl,
            post.board_id              AS boardID,
            boards.board_name          AS boardName,
            post.company_id            AS companyID,
@@ -375,7 +386,8 @@
            post.post_register_time    AS postRegisterTime,
            post.post_last_update_time AS postLastUpdateTime,
            post.post_status           AS postStatus,
-           post.view_count            AS viewCount
+           post.view_count            AS viewCount,
+           post.comments_count        AS commentsCount
     FROM   posts post
            JOIN users users
              ON post.user_id = users.user_id
@@ -392,5 +404,28 @@
     FROM   posts
     WHERE  company_id = #{companyID} AND
            post_status = "normal"
+  </select>
+
+  <update id="updateCommentCountMinus1" parameterType="int">
+    UPDATE posts
+    SET    comments_count = comments_count - 1
+    WHERE  post_id = #{postID};
+  </update>
+  <update id="updateCommentCountPlus1" parameterType="int">
+    UPDATE posts
+    SET    comments_count = comments_count + 1
+    WHERE  post_id = #{postID};
+  </update>
+
+  <select id="selectPostIDByCommentID" parameterType="int" resultType="int">
+    SELECT post_id
+    FROM comments
+    WHERE comment_id = #{commentID};
+  </select>
+
+  <select id="selectCommentsCountByPostID" parameterType="int" resultType="int">
+    SELECT comments_count
+    FROM posts
+    WHERE post_id = #{postID};
   </select>
 </mapper>

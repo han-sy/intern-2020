@@ -21,6 +21,7 @@ public class PostDTO {
   private String postRegisterTime;
   private String postLastUpdateTime;
   private String postStatus;
+  private String thumbnailUrl;
   // postStatus 안의 Key List
   private Boolean isPopular;
   private int commentsCount;

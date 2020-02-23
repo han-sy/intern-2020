@@ -77,11 +77,13 @@ function updateIDToFiles(postID, commentID, boardID, commentReferencedID) {
         boardID = getCurrentBoardID();
       }
       if (isNullData(commentReferencedID)) {
-        getCommentList(boardID, postID, updateCommentListUI);//성공하면 댓글목록 갱신
-      } else {
-        getReplyList(boardID, postID, commentReferencedID, getReplyListUI);//성공하면 댓글목록 갱신
+        getPageList(1,0,postID,updateCommentPageList);
+
+      } /*else {
+        var printedRepliesCount =  getCountPrintedReplies();
+        getReplyList(boardID, postID, commentID,printedRepliesCount,getReplyListUI);
         $('#reply_input_container' + commentReferencedID).html("");
-      }
+      }*/
 
       getCommentInputHtml("댓글", "입력", "", ".comment_input_container",
           "btn_openComment", '', "commentText");

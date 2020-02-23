@@ -18,7 +18,7 @@ public class FunctionValidation {
   FunctionService functionService;
 
   public boolean isFunctionOn(int companyID, int functionID, HttpServletResponse response) {
-    boolean isValid = functionService.getFunctionStatus(companyID, functionID);
+    boolean isValid = functionService.isUseFunction(companyID, functionID);
     try {
       if (!isValid) {
         throw new FunctionValidException("존재하지 않는 기능 권한에 접근하였습니다.");
@@ -32,8 +32,8 @@ public class FunctionValidation {
 
   public boolean isFunctionOn(int companyID, int postFunctionID, int commentFunctionID,
       HttpServletResponse response) {
-    boolean isPostFunctionValid = functionService.getFunctionStatus(companyID, postFunctionID);
-    boolean isCommentFunctionValid = functionService.getFunctionStatus(companyID, commentFunctionID);
+    boolean isPostFunctionValid = functionService.isUseFunction(companyID, postFunctionID);
+    boolean isCommentFunctionValid = functionService.isUseFunction(companyID, commentFunctionID);
     boolean isValid = (isCommentFunctionValid || isPostFunctionValid);
     try {
       if (!(isValid)) {

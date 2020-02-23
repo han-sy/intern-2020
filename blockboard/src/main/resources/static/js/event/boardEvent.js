@@ -2,30 +2,20 @@
  * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
  * @file boardEvent.js
  */
-const KEYCODE = {
-  ENTER: 13
-};
-const MAX_LENGTH = {
-  BOARD_NAME: 150
-};
-const BOARD_ID = {
-  MY_POST: -1,
-  MY_REPLY: -2,
-  TEMP_BOX: -3,
-  RECYCLE: -4,
-  RECENT: -5,
-  POPULAR: -6
-};
+
 $(function () {
   $('#input_board_name').keyup(function () {
     bytesHandler(this, "#board_name_length", MAX_LENGTH.BOARD_NAME);
   });
 });
+
+//게시판 이름 입력시 엔터키로 저장
 $(document).on('keydown', '#input_board_name', function (event) {
   if (event.keyCode == KEYCODE.ENTER) {
     clickSaveAddedBoard();
   }
 });
+
 $(document).on('click', '#add_board_save_btn', function () {
   clickSaveAddedBoard();
 });
@@ -37,7 +27,6 @@ $(document).on('click', '#add_board_btn', function () {
 
 //게시판 추가저장하기 버튼
 function clickSaveAddedBoard() {
-  var userData = new User();
   var boardName = $('#input_board_name').val();
   boardName = boardName.trim();
   if (boardName == "") {
@@ -83,7 +72,6 @@ function clickSaveDelteBoard() {
     }
   });
 
-  var userData = new User();
   var jsonData = JSON.stringify(boardDataList);
   var isAcceptance = confirm("선택한 게시판을 정말 삭제하시겠습니까? 게시물또한 모두 삭제됩니다.");
   if (isAcceptance) {
@@ -122,7 +110,6 @@ function clickSaveChangeBoard() {
     }
   });
 
-  var userData = new User();
   var jsonData = JSON.stringify(boardDataList);
   var isAcceptance = confirm("게시판 이름변경 내용을 저장하시겠습니까?");
   if (isAcceptance) {
@@ -133,10 +120,11 @@ function clickSaveChangeBoard() {
   $('#config_container').html("");
 }
 
+
 // 게시글 목록에서 게시글 클릭시
 $(document).on('click', '.normal_post_click', function () {
-  var postID = $(this).attr("data-post");
-  var boardID = $(this).attr("data-board");
+  var postID = getPostIDInPostList.call(this);
+  var boardID = getBoardIDInPostList.call(this);
   console.log("boardID = " + boardID);
   $(function () {
     getPostDataAfterPostClick(postID, boardID); //boardAjax.js 참고
@@ -154,6 +142,7 @@ function clickConfigClose() {
 $(document).on("mouseenter", ".tabmenu", function () {
   $(this).css('background-color', 'WhiteSmoke');
 });
+
 $(document).on("mouseleave", ".tabmenu", function () {
   $(this).css('background-color', 'white');
 });
@@ -171,7 +160,7 @@ $(document).on("click", ".tabmenu", function clickTabEvent(event) {
   postClear();
   editorClear();
 
-  getPageList(1, boardID, updatePageList);
+  getPageList(1, boardID,0, updatePostPageList);
 });
 
 //기능변경 on/off버튼 텍스트 바꾸기

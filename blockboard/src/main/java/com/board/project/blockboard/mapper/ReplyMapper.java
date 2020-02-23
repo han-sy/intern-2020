@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 @Mapper
 public interface ReplyMapper {
 
-  List<CommentDTO> selectRepliesByCommentID(int commentReferencedID);
+  List<CommentDTO> selectRepliesByCommentID(int commentReferencedID,int startIndex, int pageSize);
 
   int insertNewReplyByCommentInfo(CommentDTO reply);
 }

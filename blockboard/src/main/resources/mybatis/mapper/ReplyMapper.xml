@@ -13,6 +13,7 @@
            comments.post_id               AS postID,
            comments.user_id               AS userID,
            users.user_name                AS userName,
+           users.thumbnail_url            AS thumbnailUrl,
            comments.company_id            AS companyID,
            comments.comment_content       AS commentContent,
            comments.comment_register_time AS commentRegisterTime,
@@ -20,7 +21,8 @@
     FROM comments comments
            LEFT OUTER JOIN users users
                            ON comments.user_id = users.user_id
-    WHERE comments.comment_referenced_id = #{commentReferencedID};
+    WHERE comments.comment_referenced_id = #{commentReferencedID}
+    LIMIT #{startIndex}, #{pageSize};
   </select>
 
   <insert id="insertNewReplyByCommentInfo" parameterType="hashmap">
