@@ -6,6 +6,7 @@ package com.board.project.blockboard.mapper;
 
 import com.board.project.blockboard.dto.ViewRecordDTO;
 import java.util.List;
+import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -19,5 +20,5 @@ public interface ViewRecordMapper {
 
   boolean selectRecordExist(ViewRecordDTO record);
 
-  List<ViewRecordDTO> selectViewRecordsByPostID(int postID);
+  List<ViewRecordDTO> selectViewRecordsByPostID(Map<String,Object> recordData);
 }

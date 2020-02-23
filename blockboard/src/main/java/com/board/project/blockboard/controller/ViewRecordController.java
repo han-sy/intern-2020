@@ -27,8 +27,8 @@ public class ViewRecordController {
   //select 필요
   @GetMapping("")
   public List<ViewRecordDTO> getViewRecords(@PathVariable("boardid") int boardID,
-      @PathVariable("postid") int postID, HttpServletRequest request) {
+      @PathVariable("postid") int postID, @RequestParam int startIndex,HttpServletRequest request) {
     UserDTO userData = new UserDTO(request);
-    return viewRecordService.getViewRecords(postID,userData.getUserID());
+    return viewRecordService.getViewRecords(postID,userData.getUserID(),startIndex);
   }
 }

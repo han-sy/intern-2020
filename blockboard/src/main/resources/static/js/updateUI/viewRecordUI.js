@@ -9,5 +9,5 @@ function loadViewRecordUI(data){
   var template = Handlebars.compile(source);
   var records = {records: data};
   var itemList = template(records);
-  $('.modal-body-viewRecordList-container').html(itemList);
+  $('.modal-body-viewRecordList-container').append(itemList);
 }

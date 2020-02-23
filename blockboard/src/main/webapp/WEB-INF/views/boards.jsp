@@ -613,7 +613,7 @@
             <!--기독 리스트 템플릿-->
             <script id="view_record-list-template" type="text/x-handlebars-template">
                 {{#records}}
-                    <li>
+                    <li class ="view_record_data">
                         <div class ="row">
                             <div class="col-1">
                                 <img class = "profile" name ="profile" width="50px" height="50px" src='{{thumbnailUrl}}'>
