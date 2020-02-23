@@ -158,7 +158,8 @@ function insertReply(boardID, postID, commentContent, commentReferencedID,commen
         }
         updateRepliesCount(boardID, postID, commentReferencedID);
       }
-      getReplyList(boardID, postID, commentReferencedID, getReplyListUI);
+      var printedRepliesCount =  getCountPrintedReplies();
+      getReplyList(boardID, postID, commentReferencedID,printedRepliesCount, getReplyListUI);
       updateCommentsCount(boardID, postID);
       CKEDITOR.instances[editorName].setData("");
       $('#comment-alarm-modal').modal('hide');
