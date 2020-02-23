@@ -6,9 +6,10 @@
 
 //댓글 입력버튼 누를때
 $(document).on('click', '.btn_open_comment', function () {
+  var editorName = $(this).closest(".commentHtml").find('textarea').attr('id');
   var postID = getPostIDInPost();
   var boardID = getBoardIDInPost();
-  var commentText = CKEDITOR.instances['commentText'].getData();
+  var commentText = CKEDITOR.instances[editorName].getData();
   if (commentText == "") {
     alert("내용을 입력하세요.");
     return;
@@ -77,7 +78,7 @@ $(document).on('click', '.reply_btn', function () {
   getCommentInputHtml("답글", "입력",
       `<a class="mentions_tag name" style="cursor:pointer; text-decoration: none;" href="javascript:void(0)"`
       + ` data-id="${referenceUserID}"><strong>@${referenceUserName}</strong></a>&nbsp;`,
-      "#" + replyInputContainerID, "btn_openReply", "is_reply_input");
+      "#" + replyInputContainerID, "btn_openReply", "is_reply_input", "replyText");
 
   fileFormClear();
   moveToInputID(replyInputContainerID);
@@ -85,16 +86,17 @@ $(document).on('click', '.reply_btn', function () {
 
 //답글 입력 버튼
 $(document).on('click', '.btn_openReply', function () {
+  var editorName = $(this).closest(".commentHtml").find('textarea').attr('id');
   var postID = getPostIDInPost();
   var boardID = getCurrentBoardID();
-  var commentText = CKEDITOR.instances['commentText'].getData();
+  var commentText = CKEDITOR.instances[editorName].getData();
   var commentReferencedID = getCommentReferencedIDInReferenceCommentContainer.call(this);
   if (commentText == "") {
     alert("내용을 입력하세요.");
     return;
   }
   $(function () {
-    insertReply(boardID, postID, commentText, commentReferencedID);
+    insertReply(boardID, postID, commentText, commentReferencedID, '', editorName);
   });
 });
 
@@ -104,6 +106,7 @@ $(document).on('click', '.btn_close_cmt_input', function () {
   var replyInputContainer = $(
       "#reply_input_container" + referenceCommentContainer.attr("data-id"));
   replyInputContainer.html("");
+  $('#comment-alarm-modal').modal('hide');
 });
 
 

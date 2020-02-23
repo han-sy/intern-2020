@@ -115,5 +115,20 @@
     SELECT replies_count
     FROM comments
     WHERE comment_id = #{commentReferencedID};
+
+  <select id="selectCommentByCommentId" parameterType="int"
+    resultType="com.board.project.blockboard.dto.CommentDTO">
+    SELECT comments.comment_id            AS commentID,
+           comments.post_id               AS postID,
+           comments.user_id               AS userID,
+           users.user_name                AS userName,
+           users.user_id                  AS userID,
+           comments.company_id            AS companyID,
+           comments.comment_content       AS commentContent,
+           comments.comment_register_time AS commentRegisterTime,
+           comments.comment_referenced_id AS commentReferencedID
+    FROM comments
+           JOIN users ON comments.user_id = users.user_id
+    WHERE comments.comment_id = #{commentId};
   </select>
 </mapper>

@@ -195,10 +195,19 @@ Handlebars.registerHelper('isTempSaveAble', function (options) {
  * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
  */
 Handlebars.registerHelper('isPostAlarm', function (options) {
-  this.registerTime = this.registerTime.substring(0,
-      this.registerTime.length - 3);
-  if (this.postID != 0) {
+  this.registerTime = this.registerTime.substring(0, this.registerTime.length - 3);
+  if (this.commentID == 0) {
     return options.fn(this); // 게시물 태그 알람
   }
   return options.inverse(this);// 댓글 태그 알람
+});
+
+/**
+ * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
+ */
+Handlebars.registerHelper('isReadAlarm', function (options) {
+  if (this.isRead) {
+    return options.fn(this); // 읽은 알람
+  }
+  return options.inverse(this);// 안 읽은 알람
 });

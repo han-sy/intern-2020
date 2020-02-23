@@ -99,6 +99,26 @@
     WHERE post_id=#{postID};
   </update>
 
+  <select id="selectPostByAlarmId" parameterType="int"
+    resultType="com.board.project.blockboard.dto.PostDTO">
+    SELECT post.post_id               AS postID,
+           post.user_id               AS userID,
+           users.user_name            AS userName,
+           post.board_id              AS boardID,
+           post.company_id            AS companyID,
+           post.post_title            AS postTitle,
+           post.post_content          AS postContent,
+           post.post_register_time    AS postRegisterTime,
+           post.post_last_update_time AS postLastUpdateTime,
+           post.post_status           AS postStatus,
+           post.view_count            AS viewCount
+    FROM posts post
+        JOIN users ON post.user_id = users.user_id
+        JOIN alarms alarm on post.post_id = alarm.post_id
+    WHERE alarm.alarm_id = #{alarmId}
+        AND post.post_status = "normal";
+  </select>
+
   <select id="selectMyPosts" parameterType="hashMap"
     resultType="com.board.project.blockboard.dto.PostDTO">
     SELECT post.post_id               AS postID,

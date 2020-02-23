@@ -15,20 +15,21 @@ function updateCommentListUI(data) {
 
 //댓글 inputform 받아오기
 function getCommentInputHtml(type, buttonName, tag, className, buttonSelector,
-    isReplyInput) {
+    isReplyInput, editorName) {
   data = {
     type: type,
     className,
     buttonName: buttonName,
     tag: tag,
     buttonSelector: buttonSelector,
-    isReplyInput: isReplyInput
+    isReplyInput: isReplyInput,
+    editorName: editorName
   };
   var source = $('#commentInputForm-template').html();
   var template = Handlebars.compile(source);
   var attribute = {attribute: data};
   var itemList = template(attribute);
-  $(className).html(itemList + "</div>");
+  $(className).append(itemList + "</div>");
 
   var add_on = "";
   if (functionOn.commentSticker) {
@@ -39,8 +40,7 @@ function getCommentInputHtml(type, buttonName, tag, className, buttonSelector,
   }
 
   var original_config = CKEDITOR.config.plugins;
-
-  CKEDITOR.replace('commentText', {
+  CKEDITOR.replace(editorName, {
     height: 200,
     toolbarLocation: 'bottom',
     toolbarGroups: [{name: 'insert'}],
@@ -48,14 +48,13 @@ function getCommentInputHtml(type, buttonName, tag, className, buttonSelector,
     on: {
       instanceReady: function () {
         if (type === "답글") {
-          CKEDITOR.instances['commentText'].insertHtml(tag, 'unfiltered_html');
+          CKEDITOR.instances[editorName].insertHtml(tag, 'unfiltered_html');
         }
       }
     }
   }
   );
 }
-
 
 //댓글수정모드
 function editCommentByCommentID(postID, boardID, commentID) {
@@ -68,8 +67,6 @@ function editCommentByCommentID(postID, boardID, commentID) {
   var itemList = template(attribute);
   $('#comment' + commentID).html(itemList + "</div>");
 }
-
-
 
 //답글 ui 구성
 function getReplyListUI(commentReferencedID, data) {
@@ -84,6 +81,7 @@ function getReplyListUI(commentReferencedID, data) {
   //makeMoreBtn(commentReferencedID);
   showMoreRepliesBtn(commentReferencedID);
 }
+
 function makeMoreBtn(commentReferencedID) {
   console.log("makeMoreBtn");
   var source = $('#more-replies-template').html();
@@ -91,8 +89,6 @@ function makeMoreBtn(commentReferencedID) {
   var item = template();
   $("#reply_container" + commentReferencedID).append(item);
 }
-
-
 
 function showMoreRepliesBtn(commentReferencedID) {
   var repliesCount = $('#replies_count' + commentReferencedID).html();
@@ -110,6 +106,7 @@ function showMoreRepliesBtn(commentReferencedID) {
     }
   }
 }
+
 function replyFormClear() {
   $('.is_reply_input').html("");
 }

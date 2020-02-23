@@ -14,7 +14,7 @@ function updateTab(data) {
   $("#tab_id").children().each(function () {
     if ($(this).attr('data-tab') > 0) {
       $(this).trigger('click');
-      return;
+      return false;
     }
   });
 }

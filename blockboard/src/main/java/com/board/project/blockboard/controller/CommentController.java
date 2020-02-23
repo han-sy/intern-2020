@@ -86,4 +86,9 @@ public class CommentController {
       @RequestParam("newComment") String newComment) {
     commentService.updateComment(commentID, newComment);
   }
+
+  @GetMapping("/{comment-id}")
+  public CommentDTO selectCommentByCommentId(@PathVariable("comment-id") int commentId) {
+    return commentService.selectCommentByCommentId(commentId);
+  }
 }

@@ -17,7 +17,7 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(NullPointerException.class)
   protected void NullPointerError(HttpServletResponse response, Exception e) {
     try {
-      response.sendError(HttpServletResponse.SC_CONFLICT, "NULL Exception");
+      response.sendError(HttpServletResponse.SC_CONFLICT, e.getMessage());
       e.printStackTrace();
     } catch (IOException ie) {
       ie.printStackTrace();

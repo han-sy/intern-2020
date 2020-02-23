@@ -132,8 +132,7 @@ function getReplyList(boardID, postID, commentReferencedID, startIndex, successF
 }
 
 //답글 추가
-function insertReply(boardID, postID, commentContent, commentReferencedID,
-    commentID) {////댓글 임시저장 기능이 추가될수도있어 commentID 파라미터 추가해놓음
+function insertReply(boardID, postID, commentContent, commentReferencedID,commentID, editorName) {////댓글 임시저장 기능이 추가될수도있어 commentID 파라미터 추가해놓음
   //alert(commentReferencedUserID);
   $.ajax({
     type: 'POST',
@@ -158,10 +157,24 @@ function insertReply(boardID, postID, commentContent, commentReferencedID,
           }
         }
         updateRepliesCount(boardID, postID, commentReferencedID);
-
-        CKEDITOR.instances['commentText'].setData("");
       }
+      getReplyList(boardID, postID, commentReferencedID, getReplyListUI);
+      updateCommentsCount(boardID, postID);
+      CKEDITOR.instances[editorName].setData("");
+      $('#comment-alarm-modal').modal('hide');
     }
+  });
+}
 
+function getCommentForShowModal(commentId) {
+  $.ajax({
+    type: 'GET',
+    url: `/boards/0/posts/0/comments/${commentId}`,
+    error: function (xhr) {
+      errorFunction(xhr);
+    },
+    success: function (comment) {
+      showCommentInputModalOfAlarm(comment);
+    }
   });
 }

@@ -106,4 +106,8 @@ public class CommentService {
     }
     return 0;//댓글OFF
   }
+
+  public CommentDTO selectCommentByCommentId(int commentId) {
+    return commentMapper.selectCommentByCommentId(commentId);
+  }
 }

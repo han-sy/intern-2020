@@ -15,6 +15,8 @@ import org.springframework.stereotype.Repository;
 public interface CommentMapper {
 
 
+  CommentDTO selectCommentByCommentId(int commentId);
+
   void deleteCommentByCommentID(int commentID);
 
   void deleteCommentsByPostID(int postID);
