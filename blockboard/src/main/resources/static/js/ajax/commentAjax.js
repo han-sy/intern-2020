@@ -104,7 +104,7 @@ function editComment(postID, boardID, commentID, newComment) {
   $.ajax({
     type: 'PUT',
     url: `/boards/${boardID}/posts/${postID}/comments/${commentID}`,
-    data: {newComment, newComment},
+    data: {newComment: newComment},
     error: function () {  //통신 실패시
       alert('통신실패!수정');
     },

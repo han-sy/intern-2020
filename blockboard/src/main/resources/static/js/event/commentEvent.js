@@ -42,9 +42,8 @@ $(document).on('click', '#edit_comment', function () {
 
 //댓글수정후 수정하기 버튼 눌렀을때
 $(document).on('click', '.btn_edit_comment_complete', function () {
-  var newComment = $(this).closest(".commentHtml").find(
-      '#commentText').val().replace(/\n/g,
-      "<br>");
+  var editorName = $(this).closest(".commentHtml").find('textarea').attr('id');
+  var newComment = CKEDITOR.instances[editorName].getData();
   var commentID = getCommentIDInCommentContainer.call(this);
   var postID = getPostIDInPost();
   var boardID = getBoardIDInPost();

@@ -31,15 +31,23 @@ function getCommentInputHtml(type, buttonName, tag, className, buttonSelector,
   var itemList = template(attribute);
   $(className).append(itemList + "</div>");
 
-  var add_on = "";
+  createCommentEditor(editorName, type, tag);
+}
+
+function extractPluginAtFunction() {
+  let add_on = "";
   if (functionOn.commentSticker) {
     add_on += ",emoji";
   }
   if (functionOn.commentInlineImage) {
     add_on += ",image2";
   }
+  return add_on;
+}
 
-  var original_config = CKEDITOR.config.plugins;
+function createCommentEditor(editorName, type, tag, oldText) {
+  let original_config = CKEDITOR.config.plugins;
+  let add_on = extractPluginAtFunction();
   CKEDITOR.replace(editorName, {
     height: 200,
     toolbarLocation: 'bottom',
@@ -50,22 +58,24 @@ function getCommentInputHtml(type, buttonName, tag, className, buttonSelector,
         if (type === "답글") {
           CKEDITOR.instances[editorName].insertHtml(tag, 'unfiltered_html');
         }
+        if (type === "수정") {
+          CKEDITOR.instances[editorName].setData(oldText);
+        }
       }
     }
-  }
-  );
+  });
 }
 
 //댓글수정모드
 function editCommentByCommentID(postID, boardID, commentID) {
   var oldText = $('#comment' + commentID).find(".comment_content").html();
-  oldText = oldText.replace(/<br>/g, "\n").trim();
   data = {oldText: oldText};
   var source = $('#editCommentForm-template').html();
   var template = Handlebars.compile(source);
   var attribute = {attribute: data};
   var itemList = template(attribute);
   $('#comment' + commentID).html(itemList + "</div>");
+  createCommentEditor("commentEditText", "수정", '', oldText);
 }
 
 //답글 ui 구성

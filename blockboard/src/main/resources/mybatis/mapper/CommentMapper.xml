@@ -90,7 +90,8 @@
 
   <update id="updateComment" parameterType="hashmap">
     UPDATE comments
-    SET comment_content = #{newComment}
+    SET comment_content = #{commentContent},
+        comment_content_except_htmltag = #{commentContentExceptHTMLTag}
     WHERE comment_id = #{commentID};
   </update>
 

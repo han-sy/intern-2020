@@ -815,9 +815,8 @@
                 {{#attribute}}
                     <br>
                     <div style='width: 100%' class=commentHtml>
-                <textarea class="form-control" style='width: 100%' id='commentText'
-                          placeholder='댓글을 입력하세요'
-                          name=commentText>{{{oldText}}}</textarea>
+                <textarea class="form-control" style='width: 100%' id='commentEditText'
+                          name=commentText></textarea>
                         <div>
                             <div class="form-group row file_attach_form">
                             </div>
