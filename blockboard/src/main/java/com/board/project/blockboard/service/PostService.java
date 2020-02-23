@@ -272,7 +272,9 @@ public class PostService {
   }
 
   public int getPostIDByCommentID(int commentID) {
-    return postMapper.selectPostIDByCommentID(commentID);
+    log.info("!!!commentID : "+ commentID);
+    int postID = postMapper.selectPostIDByCommentID(commentID);
+    return postID;
   }
 
   public int getCommentsCountByPostID(int postID) {

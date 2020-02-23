@@ -70,7 +70,7 @@ function insertComment(boardID, postID, commentText,commentID) {//댓글 임시�
       //getCommentListByPageNum(1,boardID, postID, updateCommentListUI);//성공하면 댓글목록 갱신
       updateCommentsCount(boardID, postID);
       CKEDITOR.instances['commentText'].setData("");
-/*      var commentReferencedID = getCommentReferencedIDInReplyContainer();
+/*      var commentReferencedID = getCommentReferencedIDInReferenceCommentContainer();
       updateRepliesCount(boardID,postID,commentReferencedID);*/
     }
   });

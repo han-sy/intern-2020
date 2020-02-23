@@ -930,15 +930,15 @@
         </div>
     </div>
 </div>
+<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="/webjars/bootstrap/4.4.1/dist/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+<script src="/static/js/data/const.js"></script>
 <script src="/static/js/data/userData.js"></script>
 <script src="/static/js/data/commentData.js"></script>
 <script src="/static/js/data/functionData.js"></script>
 <script src="/static/js/data/postData.js"></script>
 <script src="/static/js/data/boardData.js"></script>
-<script src="/static/js/data/const.js"></script>
-<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
-<script src="/webjars/bootstrap/4.4.1/dist/js/bootstrap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
 <script src="/static/js/event/boardEvent.js"></script>
 <script src="/static/js/event/postEvent.js"></script>

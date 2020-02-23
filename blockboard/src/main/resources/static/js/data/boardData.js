@@ -4,7 +4,6 @@
  */
 
 function getBoardIDInPost() {
-  console.log("getBoardIDInPost");
   return $('#boardIdInPost').html();
 }
 

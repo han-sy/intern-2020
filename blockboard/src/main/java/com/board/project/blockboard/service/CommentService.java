@@ -59,9 +59,9 @@ public class CommentService {
 
   //TODO 카운트는 비동기로 트랜잭션 처리보다야
   public void deleteComment(int commentID) {
+    int postID = postService.getPostIDByCommentID(commentID);
     commentMapper.deleteCommentByCommentReferencedID(commentID);
     commentMapper.deleteCommentByCommentID(commentID);
-    int postID = postService.getPostIDByCommentID(commentID);
     if(isReply(commentID)){//답글일때
       postService.updateCommentCountMinus1(postID);
     } else{//댓글일때
@@ -73,7 +73,11 @@ public class CommentService {
 
 
   private boolean isReply(int commentID) {
-    return commentMapper.selectCommentReferencedIDByCommentID(commentID)>0;
+    Integer result = commentMapper.selectCommentReferencedIDByCommentID(commentID);
+    if(result!=null){
+      return true;
+    }
+    return false;
   }
 
   public void updateComment(int commentID, String newComment) {
@@ -92,6 +96,9 @@ public class CommentService {
   }
 
   public int getRepliesCountByCommentReferencedID(int commentReferencedID) {
-    return commentMapper.selectRepliesCountByCommentReferencedID(commentReferencedID);
+    Integer count = commentMapper.selectRepliesCountByCommentReferencedID(commentReferencedID);
+    if(count==null)
+      return 0;
+    return count;
   }
 }

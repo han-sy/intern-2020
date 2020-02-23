@@ -68,7 +68,7 @@ public interface PostMapper {
 
   void updateCommentCountMinus1(int postID);
 
-  int selectPostIDByCommentID(int commentID);
+  Integer selectPostIDByCommentID(int commentID);
 
   int selectCommentsCountByPostID(int postID);
 }

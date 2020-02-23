@@ -23,7 +23,10 @@ $(document).on('click', '#delete_comment', function () {
   var postID = getPostIDInPost();
   var boardID = getCurrentBoardID();
   var commentID = getCommentIDInCommentContainer.call(this);
-  var commentReferencedID = getCommentReferencedIDInReplyContainer().call(this);
+  console.log(postID+","+boardID+","+commentID);
+  var commentReferencedID = $(this).closest(".referenceCommentContainer").attr(
+      "data-id");
+  console.log(postID+","+boardID+","+commentID+","+commentReferencedID);
   var isAcceptance = confirm("선택한 댓글 or 답글을 정말 삭제하시겠습니까?");
   if (isAcceptance) {
     deleteCommentByCommentID(postID, boardID, commentID,commentReferencedID);
@@ -89,7 +92,7 @@ $(document).on('click', '.btn_openReply', function () {
   var postID = getPostIDInPost();
   var boardID = getCurrentBoardID();
   var commentText = CKEDITOR.instances['commentText'].getData();
-  var commentReferencedID = getCommentReferencedIDInReplyContainer.call(this);
+  var commentReferencedID = getCommentReferencedIDInReferenceCommentContainer.call(this);
   if (commentText == "") {
     alert("내용을 입력하세요.");
     return;

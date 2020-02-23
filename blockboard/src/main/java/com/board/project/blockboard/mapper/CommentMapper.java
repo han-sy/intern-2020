@@ -37,8 +37,8 @@ public interface CommentMapper {
 
   void updateRepliesCountMinus1(int commentReferencedID);
 
-  int selectCommentReferencedIDByCommentID(int commentID);
+  Integer selectCommentReferencedIDByCommentID(int commentID);
 
 
-  int selectRepliesCountByCommentReferencedID(int commentReferencedID);
+  Integer selectRepliesCountByCommentReferencedID(int commentReferencedID);
 }

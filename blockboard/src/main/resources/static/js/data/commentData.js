@@ -7,7 +7,7 @@
  * commentReferenceID 반환
  * @returns
  */
-function getCommentReferencedIDInReplyContainer() {
+function getCommentReferencedIDInReferenceCommentContainer() {
   return $(this).closest(".referenceCommentContainer").attr(
       "data-id");
 }
@@ -16,7 +16,6 @@ function getCommentReferencedIDInReplyContainer() {
  * comment Container에서 commentID 반환
  */
 function getCommentIDInCommentContainer() {
-  console.log("getCommentIDInCommentContainer");
   return $(this).closest(".commentContainer").attr("id").substring(COMMENT_PREFIX.length);
 }
 

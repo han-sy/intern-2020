@@ -4,7 +4,6 @@
  */
 
 function getPostIDInPost() {
-  console.log("getPostIDInPost");
   return $("#postID").html();
 }
 

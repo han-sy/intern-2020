@@ -37,7 +37,6 @@ public class PaginationController {
     PaginationDTO pageInfo = paginationService.getPageList(pageNumber,boardID,postID,user);
     /*PaginationDTO pageInfo = paginationService
         .getPostPageListByPageNumberAboutBoard(pageNumber, boardID, user); // select로 받아오기*/
-    log.info("!!!pageInfo : "+pageInfo);
     return pageInfo;
   }
 }
