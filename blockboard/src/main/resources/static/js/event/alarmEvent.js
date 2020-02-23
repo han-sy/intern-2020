@@ -29,6 +29,11 @@ $(document).on('click', 'li.alarm-item', function () {
 });
 
 $(document).on('click', '.btn-alarm-delete-all', function () {
+  let alarmItem = $(this).closest("li")[0];
+  if (!$(alarmItem).hasClass("alarm-read") &&
+      confirm("확인하지 않은 알람이 있습니다. 모두 삭제하시겠습니까?") === false) {
+    return;
+  }
   deleteAlarmByClass("li.alarm-item");
 });
 
@@ -72,7 +77,7 @@ function showCommentAlarmContent(commentId) {
       }
     });
     //if (offset === 0) { // 현재 페이지에 없어 댓글 모달창을 띄웁니다.
-      getCommentForShowModal(commentId);
+    getCommentForShowModal(commentId);
     //}
   }, 100);
 }
