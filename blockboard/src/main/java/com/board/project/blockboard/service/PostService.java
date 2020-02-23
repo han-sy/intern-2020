@@ -6,23 +6,17 @@ package com.board.project.blockboard.service;
 
 import com.board.project.blockboard.common.constant.ConstantData;
 import com.board.project.blockboard.common.util.LengthCheckUtils;
-import com.board.project.blockboard.common.util.TagCheckUtils;
 import com.board.project.blockboard.common.validation.PostValidation;
-import com.board.project.blockboard.dto.AlarmDTO;
 import com.board.project.blockboard.dto.PaginationDTO;
 import com.board.project.blockboard.dto.PostDTO;
 import com.board.project.blockboard.dto.UserDTO;
-import com.board.project.blockboard.mapper.AlarmMapper;
 import com.board.project.blockboard.mapper.PostMapper;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.User;
 import org.apache.commons.codec.binary.StringUtils;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -189,11 +183,11 @@ public class PostService {
 
   public Map<String, Object> makeMapUserAndPageInfo(UserDTO user, int pageCount, int pageNumber) {
     Map<String, Object> map = new HashMap<>();
-    PaginationDTO pageInfo = new PaginationDTO(pageCount, pageNumber, ConstantData.PAGE_SIZE,
-        ConstantData.RANGE_SIZE);
+    PaginationDTO pageInfo = new PaginationDTO("posts",pageCount, pageNumber, ConstantData.POST_PAGE_SIZE,
+        ConstantData.POST_RANGE_SIZE);
     map.put("user", user);
     map.put("startIndex", pageInfo.getStartIndex());
-    map.put("pageSize", ConstantData.PAGE_SIZE);
+    map.put("pageSize", ConstantData.POST_PAGE_SIZE);
     return map;
   }
 
@@ -204,15 +198,15 @@ public class PostService {
    */
   public List<PostDTO> getPostListByBoardID(int boardID, int pageNumber, int companyID) {
     int pageCount = getPostsCountByBoardID(boardID);
-    PaginationDTO pageInfo = new PaginationDTO(pageCount, pageNumber, ConstantData.PAGE_SIZE,
-        ConstantData.RANGE_SIZE);
+    PaginationDTO pageInfo = new PaginationDTO("posts",pageCount, pageNumber, ConstantData.POST_PAGE_SIZE,
+        ConstantData.POST_RANGE_SIZE);
     List<PostDTO> postList = postMapper
-        .selectPostByBoardID(boardID, pageInfo.getStartIndex(), ConstantData.PAGE_SIZE);
+        .selectPostByBoardID(boardID, pageInfo.getStartIndex(), ConstantData.POST_PAGE_SIZE);
 
-    for (PostDTO post : postList) {
+    /*for (PostDTO post : postList) {
       int commentsCount = commentService.getCommentCountByPostID(post.getPostID(), companyID);
       post.setCommentsCount(commentsCount);
-    }
+    }*/
     return postList;
   }
 
@@ -248,7 +242,7 @@ public class PostService {
    * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
    */
   //TODO 휴지통인경우 임시저장함인경우는 따로 구분해서 조회수 증가 안되도록 해야됨. 1번방법 : 임시저장이나 휴지통인 경우 제외 ,2번방법 : 작성자 조회수증가에서 제외.
-  @Transactional
+  //TODO 카운트는 비동기로 트랜잭션 처리보다야
   public void updateViewCnt(int postID, HttpServletRequest request,
       HttpServletResponse response) {
     UserDTO userData = new UserDTO(request);
@@ -259,8 +253,8 @@ public class PostService {
   public List<PostDTO> getPopularPostList(int companyID) {
     List<PostDTO> postList = postMapper.selectPopularPostListByCompanyID(companyID);
     for (PostDTO post : postList) {
-      int commentsCount = commentService.getCommentCountByPostID(post.getPostID(), companyID);
-      post.setCommentsCount(commentsCount);
+      /*int commentsCount = commentService.getCommentCountByPostID(post.getPostID(), companyID);
+      post.setCommentsCount(commentsCount);*/
       post.setIsPopular(true);
     }
     return postList;
@@ -268,6 +262,25 @@ public class PostService {
 
   public int getPopularPostsCount(int companyID) {
     return postMapper.getPopularPostsCount(companyID);
+  }
+
+  public void updateCommentCountPlus1(int postID) {
+    log.info("post"+postID+" : plus1");
+    postMapper.updateCommentCountPlus1(postID);
+  }
+  public void updateCommentCountMinus1(int postID){
+    log.info("post"+postID+" : minus1");
+    postMapper.updateCommentCountMinus1(postID);
+  }
+
+  public int getPostIDByCommentID(int commentID) {
+    log.info("!!!commentID : "+ commentID);
+    int postID = postMapper.selectPostIDByCommentID(commentID);
+    return postID;
+  }
+
+  public int getCommentsCountByPostID(int postID) {
+    return postMapper.selectCommentsCountByPostID(postID);
   }
 }
 

@@ -208,7 +208,8 @@
         post.post_register_time AS postRegisterTime,
         users.user_name AS userName,
         users.thumbnail_url AS thumbnailUrl,
-        post.view_count AS viewCount
+        post.view_count AS viewCount,
+        post.comments_count AS commentsCount
     FROM    posts post
        JOIN users users ON post.user_id = users.user_id
        JOIN boards board ON post.board_id = board.board_id
@@ -299,7 +300,8 @@
            post.post_register_time    AS postRegisterTime,
            post.post_last_update_time AS postLastUpdateTime,
            post.post_status           AS postStatus,
-           post.view_count            AS viewCount
+           post.view_count            AS viewCount,
+           post.comments_count        AS commentsCount
     FROM   posts post
            JOIN users users ON post.user_id = users.user_id
            JOIN boards board ON post.board_id = board.board_id
@@ -324,7 +326,8 @@
            post.post_register_time    AS postRegisterTime,
            post.post_last_update_time AS postLastUpdateTime,
            post.post_status           AS postStatus,
-           post.view_count            AS viewCount
+           post.view_count            AS viewCount,
+           post.comments_count        AS commentsCount
     FROM   posts post
            JOIN users users
              ON post.user_id = users.user_id
@@ -363,7 +366,8 @@
            post.post_register_time    AS postRegisterTime,
            post.post_last_update_time AS postLastUpdateTime,
            post.post_status           AS postStatus,
-           post.view_count            AS viewCount
+           post.view_count            AS viewCount,
+           post.comments_count        AS commentsCount
     FROM   posts post
            JOIN users users
              ON post.user_id = users.user_id
@@ -380,5 +384,28 @@
     FROM   posts
     WHERE  company_id = #{companyID} AND
            post_status = "normal"
+  </select>
+
+  <update id="updateCommentCountMinus1" parameterType="int">
+    UPDATE posts
+    SET    comments_count = comments_count - 1
+    WHERE  post_id = #{postID};
+  </update>
+  <update id="updateCommentCountPlus1" parameterType="int">
+    UPDATE posts
+    SET    comments_count = comments_count + 1
+    WHERE  post_id = #{postID};
+  </update>
+
+  <select id="selectPostIDByCommentID" parameterType="int" resultType="int">
+    SELECT post_id
+    FROM comments
+    WHERE comment_id = #{commentID};
+  </select>
+
+  <select id="selectCommentsCountByPostID" parameterType="int" resultType="int">
+    SELECT comments_count
+    FROM posts
+    WHERE post_id = #{postID};
   </select>
 </mapper>

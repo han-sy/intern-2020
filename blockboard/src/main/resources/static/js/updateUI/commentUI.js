@@ -9,10 +9,8 @@ function updateCommentListUI(data) {
   var comments = {comments: data};
   var itemList = template(comments);
   $('.comment_list_container').html(itemList);
-  var functionOn = new FunctionOn();
-  if (functionOn.reply) { //대댓글 기능 on 일때
-    getAllReplyList(data);
-  }
+  var boardID = getBoardIDInPost();
+  var postID = getPostIDInPost();
 }
 
 //댓글 inputform 받아오기
@@ -32,12 +30,11 @@ function getCommentInputHtml(type, buttonName, tag, className, buttonSelector,
   var itemList = template(attribute);
   $(className).html(itemList + "</div>");
 
-  var func = new FunctionOn();
   var add_on = "";
-  if (func.commentSticker) {
+  if (functionOn.commentSticker) {
     add_on += ",emoji";
   }
-  if (func.commentInlineImage) {
+  if (functionOn.commentInlineImage) {
     add_on += ",image2";
   }
 
@@ -59,14 +56,6 @@ function getCommentInputHtml(type, buttonName, tag, className, buttonSelector,
   );
 }
 
-//TODO 댓글과 답글을 분리해도 될것같다.
-//댓글 컨텐츠 모두 불러오기
-function getCommentAllContents(data) {
-  updateCommentListUI(data);
-  getCommentInputHtml("댓글", "입력", "", ".comment_input_container",
-      "btn_openComment");
-  fileFormClear();
-}
 
 //댓글수정모드
 function editCommentByCommentID(postID, boardID, commentID) {
@@ -80,22 +69,59 @@ function editCommentByCommentID(postID, boardID, commentID) {
   $('#comment' + commentID).html(itemList + "</div>");
 }
 
+
+
 //답글 ui 구성
-function getReplyListUI(commentID, data) {
+function getReplyListUI(commentReferencedID, data) {
+  $(".more-replies").remove();
   var source = $('#replyList-template').html();
   var template = Handlebars.compile(source);
   var replies = {replies: data};
   var itemList = template(replies);
-  $("#reply_container" + commentID).html(itemList);
+  console.log("getReplyListUI->commentReferencedID : "+commentReferencedID);
+  $("#reply_container" + commentReferencedID).append(itemList);
+  console.log("@@@@commentReferencedID : "+commentReferencedID);
+  //makeMoreBtn(commentReferencedID);
+  showMoreRepliesBtn(commentReferencedID);
+}
+function makeMoreBtn(commentReferencedID) {
+  console.log("makeMoreBtn");
+  var source = $('#more-replies-template').html();
+  var template = Handlebars.compile(source);
+  var item = template();
+  $("#reply_container" + commentReferencedID).append(item);
 }
 
-//답글전체 받아오기
-function getAllReplyList(data) {
-  $.each(data, function (key, value) {
-    getReplyList(value.boardID, value.postID, value.commentID, getReplyListUI);
-  });
-}
 
+
+function showMoreRepliesBtn(commentReferencedID) {
+  var repliesCount = $('#replies_count' + commentReferencedID).html();
+  var length = getCountPrintedReplies();
+
+
+  console.log("commentReferencedID : "+commentReferencedID);
+  console.log("showMoreRepliesBtn -> replyCount: "+repliesCount+","+length);
+  if (length >= repliesCount) {
+    $('.more-replies').remove();
+  }
+  else{
+    if($('.more-replies').length<1){
+      makeMoreBtn(commentReferencedID);
+    }
+  }
+}
 function replyFormClear() {
   $('.is_reply_input').html("");
+}
+
+function updateCommentsCountUI(data) {
+  console.log("commentsCount : " + data);
+  $(".commentCount").html(data);
+}
+
+function updateRepliesCountUI(data,commentReferencedID) {
+  console.log("repliesCount : " + data);
+  $('#replies_count'+commentReferencedID).html(data);
+  console.log("!!!!commentReferencedID : "+commentReferencedID);
+  showMoreRepliesBtn(commentReferencedID);
 }
