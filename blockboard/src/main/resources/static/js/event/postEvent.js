@@ -97,7 +97,7 @@ $(document).on('click', '.btn_update', function () {
   var postContent = CKEDITOR.instances.editor.getData();
   var boardID = $('#selectedBoardIDinEditor option:selected').attr('data-tab');
   if(functionOn.postFileAttach){
-    updateIDToFiles(postID,"");
+    updateIDToFiles("post",postID,"");//postID업데이트
   }
   updatePost(boardID, originalBoardID, postID, postTitle, postContent);
 });

@@ -52,9 +52,9 @@ function sendFileToServer(formData, status) {
 }
 
 /**
- * postID 업데이트
+ * 첨부된 에디터에 id를 파일 디비에 업데이트
  */
-function updateIDToFiles(postID, commentID, boardID, commentReferencedID) {
+function updateIDToFiles(editor,postID, commentID, boardID, commentReferencedID) {
   var fileList = getAttachedFileList(postID, commentID);
   console.log("insertComment", fileList);
   $.ajax({
@@ -76,17 +76,9 @@ function updateIDToFiles(postID, commentID, boardID, commentReferencedID) {
       if (isNullData(boardID)) {
         boardID = getCurrentBoardID();
       }
-      if (isNullData(commentReferencedID)) {
+      if (editor=="comment" && isNullData(commentReferencedID)) {
         getPageList(1,0,postID,updateCommentPageList);
-
-      } /*else {
-        var printedRepliesCount =  getCountPrintedReplies();
-        getReplyList(boardID, postID, commentID,printedRepliesCount,getReplyListUI);
-        $('#reply_input_container' + commentReferencedID).html("");
-      }*/
-
-      getCommentInputHtml("댓글", "입력", "", ".comment_input_container",
-          "btn_openComment", '', "commentText");
+      }
       updateCommentsCount(boardID, postID);
       fileFormClear();
     }
