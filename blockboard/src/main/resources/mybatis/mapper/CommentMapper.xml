@@ -115,6 +115,7 @@
     SELECT replies_count
     FROM comments
     WHERE comment_id = #{commentReferencedID};
+  </select>
 
   <select id="selectCommentByCommentId" parameterType="int"
     resultType="com.board.project.blockboard.dto.CommentDTO">

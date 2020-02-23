@@ -124,7 +124,7 @@ function showCommentContents(boardID, postID) {
       getPageList(1,0,postID,updateCommentPageList);
       //getCommentListByPageNum(1,boardID, postID, getCommentAllContents); //삭제이후 tab에 게시판목록 업데이트 //CommentAjax.js 에 있음
       getCommentInputHtml("댓글", "입력", "", ".comment_input_container",
-          "btn_open_comment");
+          "btn_open_comment", '', "commentText");
       updateCommentsCount(boardID, postID);
       fileFormClear();
     });

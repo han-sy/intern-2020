@@ -90,9 +90,10 @@ public class CommentService {
 
   public int getRepliesCountByCommentReferencedID(int commentReferencedID) {
     Integer count = commentMapper.selectRepliesCountByCommentReferencedID(commentReferencedID);
-    if(count==null)
+    if (count == null)
       return 0;
     return count;
+  }
 
   public int getCommentCountByPostID(int postID, int companyID) {
     boolean isCommentOn = functionService.isUseFunction(companyID, FunctionID.COMMENT);
