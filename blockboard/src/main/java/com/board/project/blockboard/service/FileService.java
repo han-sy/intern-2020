@@ -258,12 +258,12 @@ public class FileService {
             json.addProperty("url", fileUrl);
 
             if (StringUtils.equals(editorName, "editor")) {
-              if (functionService.idUseFunction(companyID, FunctionID.POST_AUTO_TAG)) {
+              if (functionService.isUseFunction(companyID, FunctionID.POST_AUTO_TAG)) {
                 List<UserDTO> detectedUsers = detectedUserList(fileName, companyID);
                 json.add("detectedUser", new Gson().toJsonTree(detectedUsers));
               }
             } else {
-              if (functionService.idUseFunction(companyID, FunctionID.COMMENT_AUTO_TAG)) {
+              if (functionService.isUseFunction(companyID, FunctionID.COMMENT_AUTO_TAG)) {
                 List<UserDTO> detectedUsers = detectedUserList(fileName, companyID);
                 json.add("detectedUser", new Gson().toJsonTree(detectedUsers));
               }

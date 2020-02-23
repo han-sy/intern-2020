@@ -87,10 +87,23 @@ public class CommentService {
     commentMapper.updateRepliesCountMinus1(commentReferencedID);
   }
 
+
   public int getRepliesCountByCommentReferencedID(int commentReferencedID) {
     Integer count = commentMapper.selectRepliesCountByCommentReferencedID(commentReferencedID);
     if(count==null)
       return 0;
     return count;
+
+  public int getCommentCountByPostID(int postID, int companyID) {
+    boolean isCommentOn = functionService.isUseFunction(companyID, FunctionID.COMMENT);
+    boolean isReplyOn = functionService.isUseFunction(companyID, FunctionID.REPLY);
+    if (isCommentOn) {//댓글ON
+      if (isReplyOn) {//답글ON
+        return commentMapper.getAllCommentsCountByPostID(postID);
+      } else {//답글 OFF
+        return commentMapper.getOnlyCommentsCountByPostID(postID);
+      }
+    }
+    return 0;//댓글OFF
   }
 }
