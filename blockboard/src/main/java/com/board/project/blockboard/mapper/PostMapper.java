@@ -64,4 +64,11 @@ public interface PostMapper {
   int getPopularPostsCount(int companyID);
 
 
+  void updateCommentCountPlus1(int postID);
+
+  void updateCommentCountMinus1(int postID);
+
+  Integer selectPostIDByCommentID(int commentID);
+
+  int selectCommentsCountByPostID(int postID);
 }

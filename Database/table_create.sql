@@ -1,4 +1,5 @@
 use block_board;
+drop table view_records;
 drop table alarms;
 drop table files;
 drop table comments;
@@ -25,7 +26,7 @@ create table users(
     image_file_name text,
     thumbnail_url text,
     thumbnail_file_name text,
-    foreign key(company_id) references companies(company_id),
+    foreign key(company_id) references companies(company_id) ON DELETE CASCADE ,
     primary key(user_id,company_id)
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
@@ -39,8 +40,8 @@ create table functions_check(
 	company_id int(9) not null,
     function_id int(9) not null,
     function_data varchar(300),
-    foreign key(company_id) references companies(company_id),
-    foreign key(function_id) references functions(function_id),
+    foreign key(company_id) references companies(company_id) ON DELETE CASCADE ,
+    foreign key(function_id) references functions(function_id) ON DELETE CASCADE ,
     primary key(company_id,function_id)
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
@@ -48,7 +49,7 @@ create table boards(
 	board_id int(9) not null AUTO_INCREMENT,
     company_id int(9) not null,
     board_name varchar(150) not null,
-	foreign key(company_id) references companies(company_id),
+	foreign key(company_id) references companies(company_id) ON DELETE CASCADE ,
     primary key(board_id)
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
@@ -64,6 +65,7 @@ create table posts(
     post_last_update_time datetime null,
     post_status varchar(50) not null default "normal",
     view_count int(9) default 0,
+    comments_count int(9) default 0,
 	foreign key(user_id) references users(user_id) ON DELETE CASCADE,
 	foreign key(board_id) references boards(board_id) ON DELETE CASCADE,
 	foreign key(company_id) references companies(company_id) ON DELETE CASCADE,
@@ -79,6 +81,7 @@ create table comments(
 	comment_content_except_htmltag longtext character set utf8mb4 collate utf8mb4_unicode_ci not null,
     comment_register_time timestamp not null,
     comment_referenced_id int(9),
+    replies_count int(9) default 0,
 	foreign key(post_id) references posts(post_id) ON DELETE CASCADE ,
 	foreign key(user_id) references users(user_id) ON DELETE CASCADE,
 	foreign key(company_id) references companies(company_id) ON DELETE CASCADE,
@@ -107,6 +110,14 @@ create table alarms(
     primary key(alarm_id)
 )ENGINE =InnoDB DEFAULT charset= utf8;
 
+create table view_records(
+	post_id int(9) not null,
+    user_id varchar(20) not null,
+    foreign key(post_id) references posts(post_id) ON DELETE CASCADE ,
+    foreign key(user_id) references users(user_id) ON DELETE CASCADE ,
+    primary key(post_id,user_id)
+)ENGINE =InnoDB DEFAULT charset= utf8;
+
 alter table boards auto_increment=1;
 alter table posts auto_increment=1;
 alter table comments auto_increment=1;
@@ -121,9 +132,15 @@ insert into boards (company_id,board_name) values(2,"공지사항");
 insert into boards (company_id,board_name) values(2,"건의사항");
 insert into boards (company_id,board_name) values(1,"자유게시판");
 
-insert into users (user_id,company_id,user_name,user_password,user_type) values(1,1,'김동욱','123','관리자');
-insert into users (user_id,company_id,user_name,user_password,user_type) values(2,1,'전우혁','123','사원');
-insert into users (user_id,company_id,user_name,user_password,user_type) values(3,2,'곽대훈','123','관리자');
+insert into users values('admin', '1', '관리자', '123', '관리자', 'https://block-board-user.s3.amazonaws.com/admin.png', 'admin.png', 'https://block-board-user-thumbnail.s3.amazonaws.com/admin.png', 'admin.png');
+insert into users values(1, '1', '김동욱', '123', '관리자', 'https://block-board-user.s3.amazonaws.com/dongwook.jpg', 'dongwook.jpg', 'https://block-board-user-thumbnail.s3.amazonaws.com/dongwook.jpg', 'dongwook.jpg');
+insert into users values(2, '1', '전우혁', '123', '관리자', 'https://block-board-user.s3.amazonaws.com/woohyuk.jpg', 'woohyuk.jpg', 'https://block-board-user-thumbnail.s3.amazonaws.com/woohyuk.jpg', 'woohyuk.jpg');
+insert into users values('irene', '1', '아이린', '123', '일반', 'https://block-board-user.s3.amazonaws.com/irene.jpg', 'irene.jpg', 'https://block-board-user-thumbnail.s3.amazonaws.com/irene.jpg', 'irene.jpg');
+insert into users values('joy', '1', '조이', '123', '일반', 'https://block-board-user.s3.amazonaws.com/joy.jpg', 'joy.jpg', 'https://block-board-user-thumbnail.s3.amazonaws.com/joy.jpg', 'joy.jpg');
+insert into users values('seulgi', '1', '슬기', '123', '일반', 'https://block-board-user.s3.amazonaws.com/seulgi.jpg', 'seulgi.jpg', 'https://block-board-user-thumbnail.s3.amazonaws.com/seulgi.jpg', 'seulgi.jpg');
+insert into users values('wendy', '1', '웬디', '123', '일반', 'https://block-board-user.s3.amazonaws.com/wendy.png', 'wendy.png', 'https://block-board-user-thumbnail.s3.amazonaws.com/wendy.png', 'wendy.png');
+insert into users values('yeri', '1', '예리', '123', '일반', 'https://block-board-user.s3.amazonaws.com/yeri.jpg', 'yeri.jpg', 'https://block-board-user-thumbnail.s3.amazonaws.com/yeri.jpg', 'yeri.jpg');
+
 
 insert into functions values(1,'댓글');
 insert into functions values(2,'대댓글');
@@ -163,12 +180,52 @@ update posts
 set company_id = 1
 where company_id = 2;
 
-update users
-set image_url = "aaa" ,image_file_name = "aaa"
-where user_id = "1";
 
 select * from posts;
-select * from users;
+select * from alarms;
 select * from functions;
+select * from users;
 
-delete from users where user_id="irin";
+
+
+# user_id, company_id, user_name, user_password, user_type, image_url, image_file_name, thumbnail_url, thumbnail_file_name
+
+
+
+select * from view_records;
+select 
+view_records.post_id as postID,
+view_records.user_id as userID,
+users.user_name as userName,
+users.thumbnail_url as thumbnailUrl
+from view_records view_records left outer join users users
+on view_records.user_id = users.user_id
+WHERE view_records.post_id = 1;
+
+SELECT comments.comment_id            AS commentID,
+           comments.post_id               AS postID,
+           comments.user_id               AS userID,
+           users.user_name                AS userName,
+           users.thumbnail_url            AS thumbnailUrl,
+           comments.company_id            AS companyID,
+           comments.comment_content       AS commentContent,
+           comments.comment_register_time AS commentRegisterTime,
+           comments.comment_referenced_id AS commentReferencedID
+    FROM comments comments
+           LEFT OUTER JOIN users users
+                           ON comments.user_id = users.user_id
+    WHERE comments.post_id = 1
+      AND comments.comment_referenced_id IS NULL
+    LIMIT  5,5;
+    
+    select * from comments;
+    
+    SELECT comment_referenced_id
+    FROM comments
+    WHERE comment_id = 6;
+    
+    
+    select * from comments;
+    UPDATE comments
+    SET replies_count = replies_count - 1
+    WHERE comment_id = 2;

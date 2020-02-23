@@ -12,12 +12,11 @@ function editorAreaCreate(method) {
   $('#btn_deletePost').attr('style', 'visibility:hidden');
   $('#btn_updatePost').attr('style', 'visibility:hidden');
   // textarea에 CKEditor 적용
-  var func = new FunctionOn();
   var add_on = "";
-  if (func.postSticker) {
+  if (functionOn.postSticker) {
     add_on += ",emoji";
   }
-  if (func.postInlineImage) {
+  if (functionOn.postInlineImage) {
     add_on += ",image2";
   }
   var original_config = CKEDITOR.config.plugins;
@@ -28,7 +27,6 @@ function editorAreaCreate(method) {
   // 게시글 작성시에만(수정 X) 자동저장 & 임시저장 기능 작동
   if (method == "insert") {
     $('#btn_temp').attr('style', 'visibility:visible');
-    var functionOn = new FunctionOn();
     if (functionOn.postTempSave) {
       on_autosave();
     }
@@ -102,4 +100,49 @@ function createEditorTemplate() {
   var source = $('#editorcontent-template').html();
   var template = Handlebars.compile(source);
   $('#editorcontent').html(template);
+}
+
+/**
+ * 게시글 내용 조회시 첨부파일관련 컨텐츠들
+ * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+ */
+function showAttachFileContents(postID) {
+  if (functionOn.postFileAttach) {
+    var container = $("#postcontent").find(
+        ".attached_file_list_container_post");
+    getFileList(postID, 0, container, updateFileListInPostUI);
+  }
+}
+
+/**
+ * 게시글 내용 조회시 댓글관련 컨텐츠들
+ * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+ */
+function showCommentContents(boardID, postID) {
+  if (functionOn.comments) {
+    $(function () {
+      getPageList(1,0,postID,updateCommentPageList);
+      //getCommentListByPageNum(1,boardID, postID, getCommentAllContents); //삭제이후 tab에 게시판목록 업데이트 //CommentAjax.js 에 있음
+      getCommentInputHtml("댓글", "입력", "", ".comment_input_container",
+          "btn_open_comment");
+      updateCommentsCount(boardID, postID);
+      fileFormClear();
+    });
+  }
+}
+
+/**
+ * 수정 삭제 버튼 나타내기
+ * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+ */
+function showEditAndDeleteButtonInPost(data, userID) {
+  var btn_deletePost = $('.btn_delete');
+  var btn_updatePost = $('.btn_modify');
+  if (data.userID == userID) {
+    btn_deletePost.attr('style', 'visibility:visible');
+    btn_updatePost.attr('style', 'visibility:visible');
+  } else {
+    btn_deletePost.attr('style', 'display:none');
+    btn_updatePost.attr('style', 'display:none');
+  }
 }

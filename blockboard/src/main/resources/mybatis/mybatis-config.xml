@@ -16,5 +16,6 @@
     <mapper resource="ReplyMapper.xml"/>
     <mapper resource="CompanyMapper.xml"/>
     <mapper resource="FileMapper.xml"/>
+    <mapper resource="ViewRecordMapper.xml"/>
   </mappers>
 </configuration>

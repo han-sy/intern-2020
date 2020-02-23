@@ -24,7 +24,7 @@
             font-family: 'Noto Sans JP', sans-serif;
         }
     </style>
-    <script src="/static/js/util/data.js"></script>
+
 </head>
 
 <body>
@@ -74,7 +74,7 @@
                 <a class="nav-link dropdown-toggle active" href="#" id="dropdown03"
                    data-toggle="dropdown"
                    aria-haspopup="true" aria-expanded="false">사용중인 기능</a>
-                <div class="dropdown-menu" id="fuctionListContainer"
+                <div class="dropdown-menu" id="functionListContainer"
                      aria-labelledby="dropdown03">
                     <c:if test="${userType=='관리자'}">
                         <a class="dropdown-item text-success" id='changeFuncBtn' data-toggle="modal"
@@ -398,25 +398,25 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div class="modal-body-addUser">
+                        <div class="modal-body">
                             <form id="userForm" name="userForm" method="post" class="form-group"
                                   style="padding: 10px 30px 10px 10px;">
-                                <label class="col-form-label">회원 ID (최대 20자)</label>
-                                <input type="text" class="form-control" name="userID"
+                                <label class="col-form-label">회원 ID (최대 20자, 한글 X)</label>
+                                <input type="text" class="form-control" name="userID" id="form-userID"
                                        placeholder="회원 ID (최대 20자)" maxlength="20">
                                 <label class="col-form-label">회원 이름</label>
-                                <input type="text" class="form-control" name="userName"
-                                       placeholder="회원 이름">
-                                <label class="col-form-label">회원 초기 비밀번호</label>
-                                <input type="text" class="form-control" name="userPassword"
-                                       placeholder="회원 초기 비밀번호">
+                                <input type="text" class="form-control" name="userName" id="form-userName"
+                                       placeholder="회원 이름" maxlength="10">
+                                <label class="col-form-label">회원 비밀번호(8~20자), 특수문자 1개 이상포함)</label>
+                                <input type="password" class="form-control" name="userPassword" id="form-userPassword"
+                                       placeholder="회원 비밀번호" maxlength="20">
                                 <label class="col-form-label">회원 사진</label>
                                 <input type="file" class="form-control" name="userImageFile"
                                        id="userImageFile"
                                        accept="image/png, image/jpeg" onchange="loadImage(this)">
                                 <img id="load_user_image" height="300px">
                                 <input type="button" class="form-control btn-success"
-                                       value="Add User" onclick="addUser(); return false">
+                                       value="Add User" onclick="clickAddUser()">
                             </form>
                         </div>
                     </div>
@@ -500,9 +500,9 @@
             <script id="postcontent-template" type="text/x-handlebars-template">
                 {{#post}}
                     <p class="h4">{{postTitle}}</p>
-                    <p class="h6" align="right">{{userName}}</p>
+                    <p class="h6 writer_info" align="right" data-id="{{userID}}">{{userName}}</p>
                     <p class="h6" align="right">{{postRegisterTime}}</p>
-                    <p class="h6" align="right">조회수 {{viewCount}}</p>
+                    <p align="right"><a class="h6 read_check" data-toggle="modal" data-target="#check_read_user" align="right">읽음 {{viewCount}}</a></p>
                     <hr>
                     <div class="attached_file_list_container_post">
                         <!--첨부파일 컨테이너 -->
@@ -524,16 +524,59 @@
                         <div class="row">
                         <span class="col-2">
                             <strong class="c">댓글 </strong>
-                        (<span id=commentCount></span>)
+                        (<span class='commentCount'></span>)
                         </span>
-                            <a class=' commentBtn text-success font-weight-bold text-button'
+                            <a class=' comment_btn text-success font-weight-bold text-button'
                             >댓글 달기</a>
                         </div>
                         <div class=comment_list_container></div>
+                        <ul class="pagination comments_pagination_content"></ul>
                         <div class=comment_input_container></div>
                 {{else}}
                     </div>
                 {{/isCommentAble}}
+            </script>
+
+            <!--기독 모달-->
+            <div class="modal" id="check_read_user" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title text-success">게시글 조회 유저 확인</h5>
+                            <button type="button" class="close" data-dismiss="modal"
+                                    aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class ="modal-read-user-container" scroll=auto; >
+                            <ul class="modal-body-viewRecordList-container" style="list-style:none;">
+                                <!--사용자 목록-->
+                            </ul>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--기독 리스트 템플릿-->
+            <script id="view_record-list-template" type="text/x-handlebars-template">
+                {{#records}}
+                    <li>
+                        <div class ="row">
+                            <div class="col-1">
+                                <img class = "profile" name ="profile" width="50px" height="50px" src='{{thumbnailUrl}}'>
+                            </div>
+                            <div class="col">
+                                <a style="padding-left: 30px; padding-top: 15px"><strong class=name
+                                           data-id='{{userID}}'>{{userName}}</strong>({{userID}})</a>
+                            </div>
+                        </div>
+                    </li>
+                {{/records}}
             </script>
             <!--첨부파일 리스트 템플릿-->
             <script id="attached-file-list-template" type="text/x-handlebars-template">
@@ -589,7 +632,8 @@
                                     </div>
                                     <div class="btn">
                                         {{#isReplyAble}}
-                                            <a class='text-success text-button font-weight-bold replyBtn'>답글</a>
+                                            <a class='text-success text-button font-weight-bold reply_btn'>답글(<span id="replies_count{{commentID}}">{{repliesCount}}</span>) 달기</a>
+                                            <a class='text-success text-button font-weight-bold open_reply_list_btn'>답글 보기</a>
                                         {{else}}
                                         {{/isReplyAble}}
 
@@ -612,9 +656,9 @@
                             </div>
                         </div>
                         {{#isReplyAble}}
-                            <div class='replyContainer' id='reply_container{{commentID}}'
-                                 style='padding: 5px 1px 3px 30px;'>
-                            </div>
+                            <ul class='replyContainer' id='reply_container{{commentID}}'
+                                 style='padding: 5px 1px 3px 30px;list-style: none'>
+                            </ul>
                             <div id='reply_input_container{{commentID}}'
                                  style='padding: 5px 1px 3px 30px;'></div>
                         {{else}}
@@ -629,7 +673,7 @@
             <script id="replyList-template" type="text/x-handlebars-template">
                 {{#replies}}
                     <hr>
-                    <div class='row localCommentContainer'>
+                    <li class='row localCommentContainer replyItem'>
                         <div class="col-1">
                         </div>
                         <div class="col-1" style="padding-right: 10px">
@@ -654,7 +698,7 @@
                             </div>
                             <div class=btn>
                                 {{#isReplyAble}}
-                                    <a class='text-success text-button font-weight-bold replyBtn'
+                                    <a class='text-success text-button font-weight-bold reply_btn'
                                     >답글</a>
                                 {{else}}
                                 {{/isReplyAble}}
@@ -676,11 +720,19 @@
                         </div>
                         <div class="col-3 attached_file_list_container_comment">
                         </div>
-                    </div>
+                    </li>
                 {{/replies}}
-                <div>
+                <div class ="more-replies">
+                    <button class="btn btn-success more-replies-btn" >답글 더보기</button>
                 </div>
             </script>
+            <script id="more-replies-template" type="text/x-handlebars-template">
+              <div class ="more-replies">
+                  <button class="btn btn-success more-replies-btn" >답글 더보기</button>
+              </div>
+            </script>
+
+
             <!--댓글 답글 input form 템플릿-->
             <script id="commentInputForm-template" type="text/x-handlebars-template">
                 {{#attribute}}
@@ -833,7 +885,7 @@
                 </div>
                 <div class="pagination_container">
                     <nav aria-label="Page navigation example">
-                        <ul class="pagination" id="pagination_content">
+                        <ul class="pagination" id="post_pagination_content">
 
                         </ul>
                     </nav>
@@ -843,29 +895,39 @@
                     {{#pagesInfo}}
                         {{#isFirstPage}}
                         {{else}}
-                            <li class="page-item"><a class="page-link"
-                                                     style="cursor: pointer;" data-page="1">처음</a>
+                            <li class='{{pageType}}-page-item' ><a class='page-link'
+                                                     style='cursor: pointer;' data-page='1'>처음</a>
                             </li>
                         {{/isFirstPage}}
                         {{#isFirstRange}}
                         {{else}}
-                            <li class="page-item"><a class="page-link" style="cursor: pointer;"
+                            <li class='{{pageType}}-page-item' ><a class='page-link' style='cursor: pointer;'
                                                      data-page='{{prevPage}}'>이전</a></li>
                         {{/isFirstRange}}
-                        {{#each pageList}}
-                            <li class="page-item" id="page{{this}}"><a class="page-link page-index"
-                                                                       style="cursor: pointer;"
-                                                                       data-page='{{this}}'>{{this}}</a>
+                        {{#isPostPage}}
+                            {{#each pageList}}
+                            <li class='posts-page-item' id='post_page{{this}}'><a class='page-link page-index'
+                                                                               style='cursor: pointer;'
+                                                                               data-page='{{this}}'>{{this}}</a>
                             </li>
-                        {{/each}}
+                            {{/each}}
+                        {{else}}
+                            {{#each pageList}}
+                            <li class='comments-page-item' id='comments_page{{this}}'><a class='page-link page-index'
+                                                                               style='cursor: pointer;'
+                                                                               data-page='{{this}}'>{{this}}</a>
+                            </li>
+                            {{/each}}
+                        {{/isPostPage}}
+
                         {{#isLastRange}}
                         {{else}}
-                            <li class="page-item"><a class="page-link" style="cursor: pointer;"
+                            <li class='{{pageType}}-page-item' ><a class='page-link' style='cursor: pointer;'
                                                      data-page='{{nextPage}}'>다음</a></li>
                         {{/isLastRange}}
                         {{#isLastPage}}
                         {{else}}
-                            <li class="page-item"><a class="page-link" style="cursor: pointer;"
+                            <li class='{{pageType}}-page-item' ><a class='page-link' style='cursor: pointer;'
                                                      data-page='{{pageCount}}'>마지막</a></li>
                         {{/isLastPage}}
                     {{/pagesInfo}}
@@ -875,10 +937,15 @@
         </div>
     </div>
 </div>
-
 <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
 <script src="/webjars/bootstrap/4.4.1/dist/js/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+<script src="/static/js/data/const.js"></script>
+<script src="/static/js/data/userData.js"></script>
+<script src="/static/js/data/commentData.js"></script>
+<script src="/static/js/data/functionData.js"></script>
+<script src="/static/js/data/postData.js"></script>
+<script src="/static/js/data/boardData.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
 <script src="/static/js/event/boardEvent.js"></script>
 <script src="/static/js/event/postEvent.js"></script>
@@ -886,9 +953,12 @@
 <script src="/static/js/event/functionEvent.js"></script>
 <script src="/static/js/event/paginationEvent.js"></script>
 <script src="/static/js/event/alarmEvent.js"></script>
+<script src="/static/js/event/userEvent.js"></script>
 <script src="/static/js/event/common.js"></script>
 <script src="/static/js/event/mentionEvent.js"></script>
 <script src="/static/js/event/fileEvent.js"></script>
+<script src="/static/js/event/modalEvent.js"></script>
+<script src="/static/js/event/viewRecordEvent.js"></script>
 <script src="/static/js/ajax/functionAjax.js"></script>
 <script src="/static/js/ajax/commentAjax.js"></script>
 <script src="/static/js/ajax/postAjax.js"></script>
@@ -897,6 +967,7 @@
 <script src="/static/js/ajax/fileAjax.js"></script>
 <script src="/static/js/ajax/userAjax.js"></script>
 <script src="/static/js/ajax/alarmAjax.js"></script>
+<script src="/static/js/ajax/viewRecordAjax.js"></script>
 <script src="/static/ckeditor/ckeditor.js"></script>
 <script src="/static/ckeditor/adapters/jquery.js"></script>
 <script src="/static/js/util/handlebarsHelper.js"></script>
@@ -905,6 +976,7 @@
 <script src="/static/js/updateUI/commentUI.js"></script>
 <script src="/static/js/updateUI/functionUI.js"></script>
 <script src="/static/js/updateUI/paginationUI.js"></script>
+<script src="/static/js/updateUI/viewRecordUI.js"></script>
 <script src="/static/js/updateUI/postUI.js"></script>
 <script src="/static/js/updateUI/fileUI.js"></script>
 <script src="/static/js/updateUI/alarmUI.js"></script>
