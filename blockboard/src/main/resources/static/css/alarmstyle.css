@@ -19,10 +19,10 @@ li.alarm-read {
 
 .alarm-items {
   font-size: 13px;
-  height: 250px;
+  height: 300px;
   width: 400px;
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: hidden;
   color: black;
 }
 
@@ -30,6 +30,10 @@ li.alarm-read {
   font-weight: bold;
 }
 
+#alarm-content {
+  overflow-y: auto;
+  height: 240px;
+}
 .alarm-item .alarm-read {
   font-weight: normal;
 }
@@ -39,7 +43,7 @@ li.alarm-read {
 }
 
 .btn-alarm-delete {
-  background-color: white;
+  background-color: inherit;
   color: darkgray;
   border: none;
   padding: 4px;
@@ -51,7 +55,6 @@ li.alarm-read {
 }
 
 .btn-alarm-delete:hover {
-  background-color: white;
   color: #1a1a1a;
 }
 
@@ -80,6 +83,8 @@ li.alarm-read {
   font-size: 13px;
   float: right;
   padding: 8px;
+  margin-right: 10px;
+  margin-left: 5px;
 }
 
 .btn-alarm-delete-read:hover {
