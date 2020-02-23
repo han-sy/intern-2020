@@ -42,6 +42,11 @@ public class AlarmController {
   }
 
   @GetMapping("alarms/{alarm-id}")
+  public AlarmDTO getAlarm(@PathVariable("alarm-id") int alarmId) {
+    return alarmService.selectAlarmByAlarmId(alarmId);
+  }
+
+  @GetMapping("alarms/{alarm-id}/post")
   public PostDTO getAlarmContent(@PathVariable("alarm-id") int alarmId) {
     PostDTO post = postService.selectPostByAlarmId(alarmId);
     if (post == null) {

@@ -56,6 +56,10 @@ public class AlarmService {
     return alarmMapper.selectAlarmsByUser(user);
   }
 
+  public AlarmDTO selectAlarmByAlarmId(int alarmId) {
+    return alarmMapper.selectAlarmByAlarmId(alarmId);
+  }
+
   public void deleteAlarm(int alarmID) {
     alarmMapper.deleteAlarm(alarmID);
   }

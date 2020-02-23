@@ -16,6 +16,8 @@ public interface CommentMapper {
 
   List<CommentDTO> selectCommentsByPostID(int postID);
 
+  CommentDTO selectCommentByCommentId(int commentId);
+
   void deleteCommentByCommentID(int commentID);
 
   void deleteCommentsByPostID(int postID);

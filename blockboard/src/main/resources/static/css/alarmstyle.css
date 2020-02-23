@@ -96,3 +96,17 @@ li.alarm-read {
   left: -15px;
   top: 5px;
 }
+
+#comment-alarm-modal {
+  width: 100%;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+}
+
+#tagged-comment {
+  height: auto;
+  min-width: 100%;
+  border-radius: 0;
+}

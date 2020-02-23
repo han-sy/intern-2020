@@ -160,6 +160,50 @@
                 </li>
             {{/alarms}}
         </script>
+        <!-- 댓글 알람 클릭시 댓글 창 Modal -->
+        <div class="modal" id="comment-alarm-modal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content" style="width: 1000px">
+                    <div class="modal-header" id="tagged-comment">
+                        <h5 class="modal-title text-success">답글을 달 수 있습니다.</h5>
+                    </div>
+                    <div class="modal-body" id="comment-alarm-input">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script id="click-comment-alarmItem-template" type="text/x-handlebars-template">
+            {{#comment}}
+                <div class='referenceCommentContainer' id='comment-alarm-container' data-id='{{commentID}}'>
+                    <div class="row border-left-comment localCommentContainer">
+                        <div></div>
+                        <div class='commentContainer col-8' id='comment{{commentID}}'
+                             style="padding-left: 50px">
+                            <div class="user"><h5><strong class=name
+                                                          data-id={{userID}}>{{userName}}</strong>
+                            </h5></div>
+                            <div>
+                                <div>
+                                    <div class="comment_area comment_content" id=translate_area
+                                         style="width: 100%;">{{{commentContent}}}
+                                    </div>
+                                    <br>
+                                    <div class="date text-muted">{{commentRegisterTime}}</div>
+                                </div>
+                                <div class="btn">
+                                    {{#isCommentFileAttachAble}}
+                                        <a class="text-success text-button font-weight-bold open_attached_file_list"
+                                        >첨부파일 보기</a>
+                                    {{else}}
+                                    {{/isCommentFileAttachAble}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-4 attached_file_list_container_comment">
+                        </div>
+                    </div>
+            {{/comment}}
+        </script>
         <a class="nav-link text-white" id="current_user_info" style="nav-right: auto"
            data-id="${userID}" data-type="${userType}">${userName}</a>
         <a class="nav-link text-white" style="nav-right: auto"
@@ -685,8 +729,8 @@
                 {{#attribute}}
                     <br>
                     <div style='width: 100%' class='commentHtml {{isReplyInput}}'>
-                        <textarea class="form-control" id=commentText placeholder='{{type}}을 입력하세요'
-                                  name=commentTxt></textarea>
+                        <textarea class="form-control" id="{{editorName}}" placeholder='{{type}}을 입력하세요'
+                                  name=commentText></textarea>
                         <div class="form-group row file_attach_form">
                         </div>
                         <div align="right">
@@ -716,7 +760,7 @@
                     <div style='width: 100%' class=commentHtml>
                 <textarea class="form-control" style='width: 100%' id='commentText'
                           placeholder='댓글을 입력하세요'
-                          name=commentTxt>{{{oldText}}}</textarea>
+                          name=commentText>{{{oldText}}}</textarea>
                         <div>
                             <div class="form-group row file_attach_form">
                             </div>

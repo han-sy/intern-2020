@@ -159,7 +159,8 @@ $(document).on("mouseleave", ".tabmenu", function () {
 });
 
 // 탭 메뉴 클릭 이벤트 - 해당 게시판의 게시글 불러옴
-$(document).on("click", ".tabmenu", function clickTabEvent() {
+$(document).on("click", ".tabmenu", function clickTabEvent(event) {
+  event.stopPropagation();
   var boardID = $(this).attr('data-tab');
   $('.tabmenu').css('color', 'black');
   $('.tabmenu').removeClass("font-weight-bold");

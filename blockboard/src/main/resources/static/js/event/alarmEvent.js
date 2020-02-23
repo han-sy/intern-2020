@@ -25,7 +25,7 @@ $(document).on('click', 'li.alarm-item', function () {
   $(this).addClass("alarm-read");
   postClear();
   editorClear();
-  showAlarmContent(alarmId);
+  getAlarmByAlarmId(alarmId);
 });
 
 $(document).on('click', '.btn-alarm-delete-all', function () {
@@ -53,4 +53,26 @@ function countUnreadAlarm(alarmList) {
     }
   }
   return unreadAlarmCount;
+}
+
+function showCommentAlarmContent(commentId) {
+  if (commentId == 0) {
+    return;
+  }
+
+  setTimeout(function () {
+    let offset = 0;
+    $('.referenceCommentContainer').each(function (index, item) {
+      if (item.dataset.id == commentId) {
+        offset = $(item).offset().top;
+        $('html, body').animate({
+          scrollTop: offset
+        }, 500);
+        return false;
+      }
+    });
+    //if (offset === 0) { // 현재 페이지에 없어 댓글 모달창을 띄웁니다.
+      getCommentForShowModal(commentId);
+    //}
+  }, 100);
 }

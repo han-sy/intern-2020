@@ -8,9 +8,10 @@ const COMMENT_PREFIX = {
 
 //댓글 입력버튼 누를때
 $(document).on('click', '.btn_openComment', function () {
+  var editorName = $(this).closest(".commentHtml").find('textarea').attr('id');
   var postID = $("#postID").html();
   var boardID = $("#boardIdInPost").html();
-  var commentText = CKEDITOR.instances['commentText'].getData();
+  var commentText = CKEDITOR.instances[editorName].getData();
   if (commentText == "") {
     alert("내용을 입력하세요.");
     return;
@@ -94,7 +95,7 @@ $(document).on('click', '.replyBtn', function () {
   getCommentInputHtml("답글", "입력",
       `<a class="mentions_tag" style="cursor:pointer; text-decoration: none;" href="javascript:void(0)"`
       + ` data-id="${referenceUserID}"><strong>@${referenceUserName}</strong></a>&nbsp;`,
-      "#" + inputID, "btn_openReply", "is_reply_input");
+      "#" + inputID, "btn_openReply", "is_reply_input", "replyText");
 
   fileFormClear();
   var offset = $("#" + inputID).offset().top - $(window).height() / 2;
@@ -103,9 +104,10 @@ $(document).on('click', '.replyBtn', function () {
 
 //답글 입력 버튼
 $(document).on('click', '.btn_openReply', function () {
+  var editorName = $(this).closest(".commentHtml").find('textarea').attr('id');
   var postID = $("#postID").html();
   var boardID = getCurrentBoardID();
-  var commentText = CKEDITOR.instances['commentText'].getData();
+  var commentText = CKEDITOR.instances[editorName].getData();
   var commentReferencedID = $(this).closest(".referenceCommentContainer").attr(
       "data-id");
   //alert("commentText ("+commentReferencedID+"): "+ commentText);
@@ -114,7 +116,7 @@ $(document).on('click', '.btn_openReply', function () {
     return;
   }
   $(function () {
-    insertReply(boardID, postID, commentText, commentReferencedID);
+    insertReply(boardID, postID, commentText, commentReferencedID, '', editorName);
   });
 });
 
@@ -124,6 +126,7 @@ $(document).on('click', '.btn_close_cmt_input', function () {
   var replyInputContainer = $(
       "#reply_input_container" + referenceCommentContainer.attr("data-id"));
   replyInputContainer.html("");
+  $('#comment-alarm-modal').modal('hide');
 });
 
 $(document).on('click', '.open_attached_file_list', function () {
