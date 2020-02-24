@@ -53,11 +53,11 @@ public class Thumbnail {
     return inputStream;
   }
 
-  public static void deleteSubFile(String fileNmae){
-    File file = new File(fileNmae);
+  public static void deleteSubFile(String fileName){
+    File file = new File(fileName);
     if(file.exists()){
       if(file.delete()){
-        log.info("파일삭제");
+        log.info("file delete");
       }
     }
   }

@@ -63,13 +63,19 @@ public class FileService {
   private FileMapper fileMapper;
 
   @Autowired
-  FunctionValidation functionValidation;
+  private FunctionValidation functionValidation;
 
   @Autowired
-  FileValidation fileValidation;
+  private FileValidation fileValidation;
 
   @Autowired
-  AuthorityValidation authorityValidation;
+  private AuthorityValidation authorityValidation;
+
+  @Autowired
+  private AmazonS3Service amazonS3Service;
+
+  @Autowired
+  private AmazonRekognitionService amazonRekognitionService;
 
   public String uploadFile(MultipartHttpServletRequest multipartRequest, HttpServletRequest request,
       HttpServletResponse response) throws IOException {
@@ -87,10 +93,10 @@ public class FileService {
       String originFileName = mpf.getOriginalFilename(); //파일명
       String storedFileName = uuid + "_" + originFileName;
       ObjectMetadata metadata = new ObjectMetadata();
-      AmazonS3Service amazonS3Service = new AmazonS3Service();
 
       url = amazonS3Service
-          .upload(storedFileName, ConstantData.BUCKET_FILE, mpf.getInputStream(), metadata, "");
+          .upload(storedFileName, ConstantData.BUCKET_FILE, mpf.getInputStream(), metadata);
+
       log.info("url -->" + url);
       long fileSize = mpf.getSize();
       //파일 전체 경로
@@ -164,7 +170,6 @@ public class FileService {
     try {
       OutputStream os = response.getOutputStream();
 
-      AmazonS3Service amazonS3Service = new AmazonS3Service();
       S3ObjectInputStream s3is = amazonS3Service
           .download(fileData.getStoredFileName(), ConstantData.BUCKET_FILE, response);
       int ncount = 0;
@@ -205,7 +210,6 @@ public class FileService {
     if (!authorityValidation.isWriter(fileData, userData, response)) {
       return;
     }
-    AmazonS3Service amazonS3Service = new AmazonS3Service();
     if (amazonS3Service.deleteFile(storedFileName, ConstantData.BUCKET_FILE, response)) {
       log.info("파일삭제 성공");
       fileMapper.deleteFileByStoredFileName(storedFileName);
@@ -245,13 +249,11 @@ public class FileService {
           try {
             String fileName = file.getName();
             ObjectMetadata metadata = new ObjectMetadata();
-            AmazonS3Service amazonS3Service = new AmazonS3Service();
+            //AmazonS3Service amazonS3Service = new AmazonS3Service();
             fileName = Common.getNewUUID();
             String fileUrl = amazonS3Service
-                .upload(fileName, ConstantData.BUCKET_INLINE, file.getInputStream(), metadata, "");
+                .upload(fileName, ConstantData.BUCKET_INLINE, file.getInputStream(), metadata);
             printWriter = response.getWriter();
-            response.setContentType("text/html;charset=utf-8");
-            response.setCharacterEncoding("utf-8");
 
             json.addProperty("uploaded", 1);
             json.addProperty("fileName", fileName);
@@ -282,9 +284,11 @@ public class FileService {
     return null;
   }
 
-  public List<UserDTO> detectedUserList(String fileName, int companyID) throws IOException {
+  /**
+   * 이미지에 존재하는 유저리스트 반환
+   */
+  public List<UserDTO> detectedUserList(String fileName, int companyID) {
     String collectionID = Common.getNewUUID();
-    AmazonRekognitionService amazonRekognitionService = new AmazonRekognitionService();
     //collection 등록
     amazonRekognitionService.registerCollection(collectionID);
     //collection에 이미지 등록

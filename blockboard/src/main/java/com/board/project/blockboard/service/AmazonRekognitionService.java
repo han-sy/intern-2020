@@ -45,38 +45,53 @@ public class AmazonRekognitionService {
         .withCredentials(new AWSStaticCredentialsProvider(awsCredentials)).build();
   }
 
+  /**
+   * 이미지를 collection에 등록
+   * @param fileName 등록할 이미지 파일이름
+   * @param bucket 이미지버킷
+   * @param collectionID collecion ID 분석할 사진단위로 생성된 collection
+   */
   public void registerImageToCollection(String fileName, String bucket, String collectionID) {
 
-    Image image = new Image()
-        .withS3Object(new S3Object()
-            .withBucket(bucket)
-            .withName(fileName));
-    //registerCollection();
+    Image image = getImageInstance(bucket, fileName);
+    IndexFacesRequest indexFacesRequest = getIndexFacesRequestInstance(fileName, collectionID,
+        image);
 
-    IndexFacesRequest indexFacesRequest = new IndexFacesRequest()
+    IndexFacesResult indexFacesResult = rekognitionClient.indexFaces(indexFacesRequest);
+
+  }
+
+  /**
+   * collection 생성시 조건들
+   * @param fileName 파일이름
+   * @param collectionID collectionID 유니크함
+   * @param image 이미지 객체
+   * @return
+   */
+  private IndexFacesRequest getIndexFacesRequestInstance(String fileName, String collectionID,
+      Image image) {
+    return new IndexFacesRequest()
         .withImage(image)
         .withQualityFilter(QualityFilter.AUTO)
         .withMaxFaces(5)
         .withCollectionId(collectionID)
         .withExternalImageId(fileName)
         .withDetectionAttributes("DEFAULT");
-
-    log.info("IndexFacesRequest : " + indexFacesRequest);
-    IndexFacesResult indexFacesResult = rekognitionClient.indexFaces(indexFacesRequest);
-
   }
 
+  /**
+   * collection 등록
+   * @param collectionID 유니크하게 생성한 collectionID를 가지고
+   */
   public void registerCollection(String collectionID) {
     CreateCollectionRequest request = new CreateCollectionRequest()
         .withCollectionId(collectionID);
-
-    CreateCollectionResult createCollectionResult = rekognitionClient.createCollection(request);
-    log.info("CollectionArn : " +
-        createCollectionResult.getCollectionArn());
-    log.info("Status code : " +
-        createCollectionResult.getStatusCode().toString());
   }
 
+  /**
+   * collection 분석후 collection 삭제
+   * @param collectionID
+   */
   public void deleteCollection(String collectionID) {
 
     DeleteCollectionRequest request = new DeleteCollectionRequest()
@@ -87,48 +102,64 @@ public class AmazonRekognitionService {
         .toString());
   }
 
+  /**
+   * collection에서 해당 얼굴이 있는지 찾는다.
+   * @param bucket 버킷이름
+   * @param fileName 파일이름
+   * @param collectionID collection이름
+   * @return 얼굴이 있으면 true 반환 아니면 false반환
+   */
   public boolean searchFaceMatchingImageCollection(String bucket, String fileName,
       String collectionID)
       throws IOException {
-    // Get an image object from S3 bucket.
-    Image image = new Image()
-        .withS3Object(new S3Object()
-            .withBucket(bucket)
-            .withName(fileName));
+    Image image = getImageInstance(bucket, fileName);
 
-    // Search collection for faces similar to the largest face in the image.
-    SearchFacesByImageRequest searchFacesByImageRequest = new SearchFacesByImageRequest()
-        .withCollectionId(collectionID)
-        .withImage(image)
-        .withFaceMatchThreshold(70F)
-        .withMaxFaces(1);
+    SearchFacesByImageRequest searchFacesByImageRequest = getSearchFacesByImageRequestInstance(
+        collectionID, image);
 
-    log.info("" + searchFacesByImageRequest);
+    return getResultOfUserExistInCollection(fileName, searchFacesByImageRequest);
 
+  }
+
+  /**
+   * 유저가 collection에 존재하는지 여부 반환
+   */
+  private boolean getResultOfUserExistInCollection(String fileName,
+      SearchFacesByImageRequest searchFacesByImageRequest) {
     if (searchFacesByImageRequest != null) {
       SearchFacesByImageResult searchFacesByImageResult =
           rekognitionClient.searchFacesByImage(searchFacesByImageRequest);
+
       List<FaceMatch> faceImageMatches = searchFacesByImageResult.getFaceMatches();
       if (faceImageMatches.size() > 0) {
-        log.info("감지 : "+fileName);
+        log.info("감지 : " + fileName);
         return true;
       }
       return false;
     }
     return false;
-
   }
 
-  public String parseExternalImageId(FaceMatch face) throws JsonProcessingException {
-    ObjectMapper objectMapper = new ObjectMapper();
-    String jsonString = objectMapper.writerWithDefaultPrettyPrinter()
-        .writeValueAsString(face);
-    Map<String, Object> faceData = JsonParse.getMapFromJsonString(jsonString);
-    String json = objectMapper.writerWithDefaultPrettyPrinter()
-        .writeValueAsString(faceData.get("face"));
-    Map<String, Object> imageID = JsonParse.getMapFromJsonString(json);
+  /**
+   * 얼굴찾기
+   */
+  private SearchFacesByImageRequest getSearchFacesByImageRequestInstance(String collectionID,
+      Image image) {
+    return new SearchFacesByImageRequest()
+        .withCollectionId(collectionID)
+        .withImage(image)
+        .withFaceMatchThreshold(70F)
+        .withMaxFaces(1);
+  }
 
-    return imageID.get("externalImageId").toString();
+  /**
+   * 이미지 인스턴스생성
+   */
+  private Image getImageInstance(String bucket, String fileName) {
+    return new Image()
+        .withS3Object(new S3Object()
+            .withBucket(bucket)
+            .withName(fileName));
   }
 
 }

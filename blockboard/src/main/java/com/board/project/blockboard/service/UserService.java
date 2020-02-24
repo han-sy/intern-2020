@@ -35,6 +35,9 @@ public class UserService {
   private UserMapper userMapper;
   @Autowired
   private JwtService jwtService;
+  @Autowired
+  private AmazonS3Service amazonS3Service;
+
   private final String HEADER_NAME = "Authorization";
 
   public boolean loginCheck(UserDTO requestUser, HttpServletResponse response) {
@@ -126,19 +129,15 @@ public class UserService {
       String storedFileName = userID + originFileName.substring(originFileName.indexOf("."));
       //zzzzString storedFileName = uuid + "_" + originFileName;
       ObjectMetadata metadata = new ObjectMetadata();
-      AmazonS3Service originalS3 = new AmazonS3Service();
-      AmazonS3Service thumbnailS3 = new AmazonS3Service();
       String fileExt = Common.getFileExt(storedFileName);
 
       try {
-        url = originalS3
-            .upload(storedFileName, ConstantData.BUCKET_USER, mpf.getInputStream(), metadata,
-                userID);
+        url = amazonS3Service
+            .upload(storedFileName, ConstantData.BUCKET_USER, mpf.getInputStream(), metadata);
         InputStream thumbnailInputStream = Thumbnail.makeThumbnail(mpf, storedFileName, fileExt);
-        thumbnailUrl = thumbnailS3
+        thumbnailUrl = amazonS3Service
             .upload(storedFileName, ConstantData.BUCKET_USER_THUMBNAIL, thumbnailInputStream,
-                metadata, userID);
-        Thumbnail.deleteSubFile(storedFileName);
+                metadata);
       } catch (Exception e) {
         e.printStackTrace();
       }
