@@ -28,7 +28,7 @@
     WHERE alarm_id = #{alarmID};
   </delete>
 
-  <select id="selectAlarmsByUser" parameterType="com.board.project.blockboard.dto.UserDTO"
+  <select id="selectAlarmsByUser" parameterType="hashMap"
     resultType="com.board.project.blockboard.dto.AlarmDTO">
     SELECT alarm.alarm_id                         AS alarmID,
            alarm.post_id                          AS postID,
@@ -41,9 +41,9 @@
            JOIN comments comment ON alarm.comment_id = comment.comment_id
            JOIN users ON comment.user_id = users.user_id
            JOIN posts ON comment.post_id = posts.post_id
-    WHERE alarm.tagged_user_id = #{userID}
-      AND users.company_id = #{companyID}
-      AND posts.post_status = "normal"
+    WHERE alarm.tagged_user_id = #{user.userID}
+      AND users.company_id = #{user.companyID}
+      AND posts.post_status = 'normal'
     UNION
     SELECT alarm.alarm_id          AS alarmID,
            alarm.post_id           AS postID,
@@ -55,11 +55,12 @@
     FROM alarms alarm
            JOIN posts post ON alarm.post_id = post.post_id
            JOIN users ON post.user_id = users.user_id
-    WHERE alarm.tagged_user_id = #{userID}
-      AND users.company_id = #{companyID}
+    WHERE alarm.tagged_user_id = #{user.userID}
+      AND users.company_id = #{user.companyID}
       AND alarm.comment_id IS NULL
-      AND post.post_status = "normal"
-    ORDER BY registerTime DESC;
+      AND post.post_status = 'normal'
+    ORDER BY registerTime DESC
+    LIMIT #{startIndex}, #{pageSize};
   </select>
 
   <update id="readAlarm" parameterType="int">
@@ -70,12 +71,23 @@
 
   <select id="selectAlarmByAlarmId" parameterType="int"
     resultType="com.board.project.blockboard.dto.AlarmDTO">
-    SELECT alarm_id          AS alarmID,
-           tagged_user_id    AS taggedUserID,
-           post_id           AS postID,
-           comment_id        AS commentID,
-           is_read           AS isRead
+    SELECT alarm_id       AS alarmID,
+           tagged_user_id AS taggedUserID,
+           post_id        AS postID,
+           comment_id     AS commentID,
+           is_read        AS isRead
     FROM alarms
     WHERE alarm_id = #{alarmId};
+  </select>
+
+  <select id="getUnreadAlarmCountByUser" parameterType="com.board.project.blockboard.dto.UserDTO"
+    resultType="Integer">
+    SELECT COUNT(alarm_id)
+    FROM alarms
+           JOIN posts ON posts.post_id = alarms.post_id
+    WHERE alarms.tagged_user_id = #{userID}
+      AND posts.company_id = #{companyID}
+      AND posts.post_status = 'normal'
+      AND alarms.is_read = false;
   </select>
 </mapper>

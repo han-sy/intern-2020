@@ -9,13 +9,11 @@ function updateAlarmUI(data) {
   let template = Handlebars.compile(source);
   let post = {alarms: data};
   let item = template(post);
-  $('#alarm-content').html(item);
-  updateAlarmCount(data);
+  $('#alarm-content').append(item);
 }
 
-function updateAlarmCount(data) {
+function updateAlarmCount(alarmCount) {
   $("#alarmCount").remove();
-  let alarmCount = countUnreadAlarm(data);
   if (alarmCount === 0) {
     return;
   }

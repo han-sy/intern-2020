@@ -4,13 +4,16 @@
  */
 package com.board.project.blockboard.service;
 
+import com.board.project.blockboard.common.constant.ConstantData;
 import com.board.project.blockboard.common.util.TagCheckUtils;
 import com.board.project.blockboard.dto.AlarmDTO;
 import com.board.project.blockboard.dto.CommentDTO;
 import com.board.project.blockboard.dto.PostDTO;
 import com.board.project.blockboard.dto.UserDTO;
 import com.board.project.blockboard.mapper.AlarmMapper;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -52,9 +55,14 @@ public class AlarmService {
     }
   }
 
-  public List<AlarmDTO> selectAlarmsByUser(HttpServletRequest request) {
+  public List<AlarmDTO> selectAlarmsByUser(HttpServletRequest request, int pageNum) {
+    Map<String, Object> attributes = new HashMap<>();
     UserDTO user = new UserDTO(request);
-    return alarmMapper.selectAlarmsByUser(user);
+    int startIndex = (pageNum - 1) * ConstantData.ALARM_COUNT_PER_PAGE;
+    attributes.put("user", user);
+    attributes.put("startIndex", startIndex);
+    attributes.put("pageSize", ConstantData.ALARM_COUNT_PER_PAGE);
+    return alarmMapper.selectAlarmsByUser(attributes);
   }
 
   public AlarmDTO selectAlarmByAlarmId(int alarmId) {
@@ -67,5 +75,11 @@ public class AlarmService {
 
   public void readAlarm(int alarmId) {
     alarmMapper.readAlarm(alarmId);
+  }
+
+  public int getUnreadAlarmCountByUser(HttpServletRequest request) {
+    log.info(request.getAttribute("userID").toString());
+    UserDTO user = new UserDTO(request);
+    return alarmMapper.getUnreadAlarmCountByUser(user);
   }
 }

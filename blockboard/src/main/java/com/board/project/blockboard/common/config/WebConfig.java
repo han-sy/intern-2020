@@ -13,23 +13,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
-
-  private static final String[] INCLUDE_PATHS = {
-      "/main/**",
-      "/main",
-      "/boards/**",
-      "/functions/**",
-      "/functions",
-      "/boards",
-      "/users",
-      "/userinfo",
-      "/imageUpload",
-      "/files/**",
-      "/img/**",
-      "/alarms",
-      "/users/**",
-      "/pages"
-  };
   private static final String[] EXCLUDE_PATHS = {
       "/",
       "/login"
@@ -40,7 +23,7 @@ public class WebConfig implements WebMvcConfigurer {
   @Override
   public void addInterceptors(InterceptorRegistry registry) {
     registry.addInterceptor(jwtInterceptor)
-        .addPathPatterns(INCLUDE_PATHS)
+        .addPathPatterns("/**")
         .excludePathPatterns(EXCLUDE_PATHS);
   }
 
