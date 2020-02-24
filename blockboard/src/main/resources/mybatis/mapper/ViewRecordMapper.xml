@@ -32,6 +32,7 @@
     FROM   view_records view_records
            LEFT OUTER JOIN users users
                         ON view_records.user_id = users.user_id
-    WHERE  view_records.post_id = #{postID};
+    WHERE  view_records.post_id = #{postID}
+    LIMIT #{startIndex}, #{pageSize};
   </select>
 </mapper>
