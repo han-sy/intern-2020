@@ -64,7 +64,7 @@
               self.blockElement = block.element;
               emojiList = self.editor._.emoji.list;
               self.addEmojiToGroups();
-
+              console.log("self = ", self);
               block.element.getAscendant('html').addClass('cke_emoji');
               block.element.getDocument().appendStyleSheet(
                   CKEDITOR.getUrl(CKEDITOR.basePath + 'contents.css'));
@@ -238,9 +238,7 @@
             );
           },
           openReset: function () {
-            // Resets state of emoji dropdown.
-            // Clear filters, reset focus, etc.
-            var self = this,
+            let self = this,
                 firstCall;
 
             return function () {
@@ -252,13 +250,13 @@
             };
           },
           refreshNavigationStatus: function () {
-            var containerOffset = this.elements.emojiBlock.getClientRect().top,
+            let containerOffset = this.elements.emojiBlock.getClientRect().top,
                 section,
                 groupName;
 
             section = arrTools.filter(this.elements.sections.toArray(),
                 function (element) {
-                  var rect = element.getClientRect();
+                  let rect = element.getClientRect();
                   if (!rect.height) {
                     return false;
                   }
@@ -281,7 +279,7 @@
             this.moveFocus(groupName);
           },
           moveFocus: function (groupName) {
-            var firstSectionItem = this.blockElement.findOne(
+            let firstSectionItem = this.blockElement.findOne(
                 'a[data-cke-emoji-group="' + htmlEncode(groupName) + '"]'),
                 itemIndex;
 
@@ -304,18 +302,17 @@
             var groupObj = {};
             arrTools.forEach(groupList, function (group) {
               groupObj[group.groupName] = group.items;
+              console.log("Array what is this = ", this);
             }, this);
-
+            console.log("what is this = ", this);
             arrTools.forEach(emojiList, function (emojiObj) {
               groupObj[emojiObj.groupName].push(emojiObj);
             }, this);
-
           },
           // '이전', '다음' 클릭시 Navigation Items 갱신
           reloadStickerPage: function () {
             let url = `/sticker/${currentPage}`;
             let editor = this.editor;
-            let plugin = this.plugin;
 
             let stickerDataInSessionStorage = sessionStorage.getItem(url);
             if (stickerDataInSessionStorage == null) {
@@ -371,7 +368,7 @@
 
       editor.addCommand('insertSticker', {
         exec: function (editor, data) {
-          var cloneElement = data.sticker.clone();
+          let cloneElement = data.sticker.clone();
           cloneElement.setAttributes({
             "class": "sticker",
             "width": "auto",
@@ -397,7 +394,7 @@
       editor._.emoji = {};
     }
     if (editor._.emoji.list === undefined) {
-      var json = JSON.parse(data);
+      let json = JSON.parse(data);
       groupList = json.groups;
       totalGroupCount = json.totalGroupCount;
       $.each(groupList, function (index) {
@@ -411,7 +408,7 @@
   }
 
   // 스티커 구성에 필요한 모든 값 초기화
-  function initializeAllVariableOfSticker(data) {
+  function initializeAllVariableOfSticker(editor, data) {
     editor._.emoji = {};
     groupList = data.groups;
     $.each(groupList, function (index) {
@@ -445,7 +442,7 @@
       return;
     }
     let json = JSON.parse(data);
-    initializeAllVariableOfSticker(json);
+    initializeAllVariableOfSticker(editor, json);
     cloneOfonBlock(json);
     showStickerAtFirstInNavigation();
   }
@@ -460,14 +457,13 @@
         });
   }
 
-  // GroupName 에 해당하는 스티커들을 불러온다.
+  // GroupName 에 해당하는 스티커들을 불러와 session Storage 에 저장
   function loadStickersByGroupName(groupName) {
     let url = `/sticker/groups/${groupName}`;
-    return new Promise(function (resolve, reject) {
+    return new Promise(function (resolve) {
       let stickerDataInSessionStorage = sessionStorage.getItem(url);
       if (stickerDataInSessionStorage == null) {
         CKEDITOR.ajax.load(CKEDITOR.getUrl(url), function (response) {
-          console.log(response);
           sessionStorage.setItem(url, response);
           resolve(response);
         });

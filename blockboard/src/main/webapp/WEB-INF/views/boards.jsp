@@ -25,7 +25,6 @@
             font-family: 'Noto Sans JP', sans-serif;
         }
     </style>
-
 </head>
 
 <body>
@@ -174,7 +173,13 @@
         </div>
         <script id="click-comment-alarmItem-template" type="text/x-handlebars-template">
             {{#comment}}
-                <div class='referenceCommentContainer' id='comment-alarm-container' data-id='{{commentReferencedID}}'>
+                {{#hasReferenceCommentId}}
+                    <div class='referenceCommentContainer' id='comment-alarm-container'
+                         data-id='{{commentReferencedID}}'>
+                {{else}}
+                    <div class='referenceCommentContainer' id='comment-alarm-container'
+                         data-id='{{commentID}}'>
+                {{/hasReferenceCommentId}}
                     <div class="row border-left-comment localCommentContainer">
                         <div></div>
                         <div class='commentContainer col-8' id='comment{{commentID}}'
@@ -206,8 +211,7 @@
         </script>
         <a class="nav-link text-white" id="current_user_info" style="nav-right: auto"
            data-id="${userID}" data-type="${userType}">${userName}</a>
-        <a class="nav-link text-white" style="nav-right: auto"
-           href="<c:url value='/logout' />">로그아웃</a>
+        <a class="nav-link text-white btn_logout" style="nav-right: auto">로그아웃</a>
     </div>
 </nav>
 <div class="row">
@@ -450,13 +454,16 @@
                             <form id="userForm" name="userForm" method="post" class="form-group"
                                   style="padding: 10px 30px 10px 10px;">
                                 <label class="col-form-label">회원 ID (최대 20자, 한글 X)</label>
-                                <input type="text" class="form-control" name="userID" id="form-userID"
+                                <input type="text" class="form-control" name="userID"
+                                       id="form-userID"
                                        placeholder="회원 ID (최대 20자)" maxlength="20">
                                 <label class="col-form-label">회원 이름</label>
-                                <input type="text" class="form-control" name="userName" id="form-userName"
+                                <input type="text" class="form-control" name="userName"
+                                       id="form-userName"
                                        placeholder="회원 이름" maxlength="10">
                                 <label class="col-form-label">회원 비밀번호(8~20자), 특수문자 1개 이상포함)</label>
-                                <input type="password" class="form-control" name="userPassword" id="form-userPassword"
+                                <input type="password" class="form-control" name="userPassword"
+                                       id="form-userPassword"
                                        placeholder="회원 비밀번호" maxlength="20">
                                 <label class="col-form-label">회원 사진</label>
                                 <input type="file" class="form-control" name="userImageFile"
@@ -471,18 +478,18 @@
                 </div>
             </div>
             <!--게시글 작성 폼-->
-            <div id="writecontent" style="display:none">
+            <div id="write-content" style="display:none">
                 <!--게시글 작성 시 게시판 선택 폼-->
                 <div class="form-group row">
                     <div class="col-sm-2">
                         <label class="font-weight-light"> 게시판 선택 </label>
                     </div>
                     <div class="col-2 d-flex">
-                        <select class="form-control-sm" id="selectedBoardIDinEditor">
+                        <select class="form-control-sm" id="selectableBoardIdInEditor">
                         </select>
                     </div>
                     <!--게시글 작성 시 게시판 목록 템플릿-->
-                    <script id="writecontent-boards-template" type="text/x-handlebars-template">
+                    <script id="selectable-boardId-template" type="text/x-handlebars-template">
                         {{#boards}}
                             <option data-tab={{boardID}} class=tabmenu
                                     id=default>{{boardName}}
@@ -527,30 +534,32 @@
                 </script>
 
 
-                <div id="editorcontent" class="form-group"></div>
-                <script id="editorcontent-template" type="text/x-handlebars-template">
+                <div id="editor-content" class="form-group"></div>
+                <script id="editor-content-template" type="text/x-handlebars-template">
                     <textarea id="editor"></textarea>
                     <button class="btn btn-success btn_post">저장</button>
                     <button class="btn btn-success btn_cancel">작성취소</button>
                     {{#isTempSaveAble}}
                         <button class="btn btn-success btn_tempSave">임시저장</button>
                     {{/isTempSaveAble}}
-                    <div id="editorcontent-hidden"></div>
+                    <div id="editor-content-hidden"></div>
                 </script>
-                <script id="postid-template" type="text/x-handlebars-template">
+                <script id="postId-template" type="text/x-handlebars-template">
                     <a id="postIdInEditor" style="display:none">{{postID}}</a>
                     <a id="boardIdInEditor" style="display:none">{{boardID}}</a>
                 </script>
             </div>
 
-            <div id="postcontent" class="border-primary"></div>
+            <div id="post-content" class="border-primary"></div>
             <!--게시물 내용 템플릿-->
-            <script id="postcontent-template" type="text/x-handlebars-template">
+            <script id="post-content-template" type="text/x-handlebars-template">
                 {{#post}}
                     <p class="h4">{{postTitle}}</p>
                     <p class="h6 writer_info" align="right" data-id="{{userID}}">{{userName}}</p>
                     <p class="h6" align="right">{{postRegisterTime}}</p>
-                    <p align="right"><a class="h6 read_check" data-toggle="modal" data-target="#check_read_user" align="right">읽음 {{viewCount}}</a></p>
+                    <p align="right"><a class="h6 read_check" data-toggle="modal"
+                                        data-target="#check_read_user"
+                                        align="right">읽음 {{viewCount}}</a></p>
                     <hr>
                     <div class="attached_file_list_container_post">
                         <!--첨부파일 컨테이너 -->
@@ -559,11 +568,11 @@
                     <div class="d-block">
                         <p>{{{postContent}}}</p>
                     </div>
-                    <a id="postID" style="visibility: hidden;">{{postID}}</a>
-                    <a id="boardIdInPost" style="visibility: hidden">{{boardID}}</a>
+                    <a id="postID" style="display: none;">{{postID}}</a>
+                    <a id="boardIdInPost" style="display: none">{{boardID}}</a>
                     <br>
-                    <button class="btn btn-success btn_modify" style="visibility:hidden">수정</button>
-                    <button class="btn btn-success btn_delete" style="visibility:hidden">삭제</button>
+                    <button class="btn btn-success btn_modify" style="display: none">수정</button>
+                    <button class="btn btn-success btn_delete" style="display: none">삭제</button>
                 {{/post}}
 
                 {{#isCommentAble}}
@@ -596,8 +605,9 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div class ="modal-read-user-container" scroll=auto; >
-                            <ul class="modal-body-viewRecordList-container" style="list-style:none;">
+                        <div class="modal-read-user-container" scroll=auto;>
+                            <ul class="modal-body-viewRecordList-container"
+                                style="list-style:none;">
                                 <!--사용자 목록-->
                             </ul>
                         </div>
@@ -613,14 +623,16 @@
             <!--기독 리스트 템플릿-->
             <script id="view_record-list-template" type="text/x-handlebars-template">
                 {{#records}}
-                    <li class ="view_record_data">
-                        <div class ="row">
+                    <li class="view_record_data">
+                        <div class="row">
                             <div class="col-1">
-                                <img class = "profile" name ="profile" width="50px" height="50px" src='{{thumbnailUrl}}'>
+                                <img class="profile" name="profile" width="50px" height="50px"
+                                     src='{{thumbnailUrl}}'>
                             </div>
                             <div class="col">
                                 <a style="padding-left: 30px; padding-top: 15px"><strong class=name
-                                           data-id='{{userID}}'>{{userName}}</strong>({{userID}})</a>
+                                                                                         data-id='{{userID}}'>{{userName}}</strong>({{userID}}
+                                    )</a>
                             </div>
                         </div>
                     </li>
@@ -663,7 +675,8 @@
 
                         <div class="row border-left-comment localCommentContainer">
                             <div class="col-1">
-                                <img class = "profile" name ="profile" width="75px" height="75px" src='{{thumbnailUrl}}'>
+                                <img class="profile" name="profile" width="75px" height="75px"
+                                     src='{{thumbnailUrl}}'>
                             </div>
                             <div class='commentContainer col-8' id='comment{{commentID}}'
                                  style="padding-left: 50px">
@@ -680,8 +693,11 @@
                                     </div>
                                     <div class="btn">
                                         {{#isReplyAble}}
-                                            <a class='text-success text-button font-weight-bold reply_btn'>답글(<span id="replies_count{{commentID}}">{{repliesCount}}</span>) 달기</a>
-                                            <a class='text-success text-button font-weight-bold open_reply_list_btn'>답글 보기</a>
+                                            <a class='text-success text-button font-weight-bold reply_btn'>답글(<span
+                                                    id="replies_count{{commentID}}">{{repliesCount}}</span>)
+                                                달기</a>
+                                            <a class='text-success text-button font-weight-bold open_reply_list_btn'>답글
+                                                보기</a>
                                         {{else}}
                                         {{/isReplyAble}}
 
@@ -705,7 +721,7 @@
                         </div>
                         {{#isReplyAble}}
                             <ul class='replyContainer' id='reply_container{{commentID}}'
-                                 style='padding: 5px 1px 3px 30px;list-style: none'>
+                                style='padding: 5px 1px 3px 30px;list-style: none'>
                             </ul>
                             <div id='reply_input_container{{commentID}}'
                                  style='padding: 5px 1px 3px 30px;'></div>
@@ -725,9 +741,11 @@
                         <div class="col-1">
                         </div>
                         <div class="col-1" style="padding-right: 10px">
-                            <img class = "profile" name ="profile" width="75px" height="75px" src='{{thumbnailUrl}}'>
+                            <img class="profile" name="profile" width="75px" height="75px"
+                                 src='{{thumbnailUrl}}'>
                         </div>
-                        <div class='commentContainer col-7' id='comment{{commentID}}' style="padding-left: 30px">
+                        <div class='commentContainer col-7' id='comment{{commentID}}'
+                             style="padding-left: 30px">
                             <div class="user"><h5><strong class=name
                                                           data-id={{userID}}>{{userName}}</strong>
                             </h5>
@@ -770,14 +788,14 @@
                         </div>
                     </li>
                 {{/replies}}
-                <div class ="more-replies">
-                    <button class="btn btn-success more-replies-btn" >답글 더보기</button>
+                <div class="more-replies">
+                    <button class="btn btn-success more-replies-btn">답글 더보기</button>
                 </div>
             </script>
             <script id="more-replies-template" type="text/x-handlebars-template">
-              <div class ="more-replies">
-                  <button class="btn btn-success more-replies-btn" >답글 더보기</button>
-              </div>
+                <div class="more-replies">
+                    <button class="btn btn-success more-replies-btn">답글 더보기</button>
+                </div>
             </script>
 
 
@@ -786,7 +804,8 @@
                 {{#attribute}}
                     <br>
                     <div style='width: 100%' class='commentHtml {{isReplyInput}}'>
-                        <textarea class="form-control" id="{{editorName}}" placeholder='{{type}}을 입력하세요'
+                        <textarea class="form-control" id="{{editorName}}"
+                                  placeholder='{{type}}을 입력하세요'
                                   name=commentText></textarea>
                         <div class="form-group row file_attach_form">
                         </div>
@@ -858,7 +877,7 @@
                         {{/isTempBox}}
                     </tr>
                     </thead>
-                    <tbody id="postlist">
+                    <tbody id="post-list">
                     {{#posts}}
                         {{#isTemp}}
                             <tr class="postclick temp_post_click" data-post={{postID}}
@@ -942,40 +961,49 @@
                     {{#pagesInfo}}
                         {{#isFirstPage}}
                         {{else}}
-                            <li class='{{pageType}}-page-item' ><a class='page-link'
-                                                     style='cursor: pointer;' data-page='1'>처음</a>
+                            <li class='{{pageType}}-page-item'><a class='page-link'
+                                                                  style='cursor: pointer;'
+                                                                  data-page='1'>처음</a>
                             </li>
                         {{/isFirstPage}}
                         {{#isFirstRange}}
                         {{else}}
-                            <li class='{{pageType}}-page-item' ><a class='page-link' style='cursor: pointer;'
-                                                     data-page='{{prevPage}}'>이전</a></li>
+                            <li class='{{pageType}}-page-item'><a class='page-link'
+                                                                  style='cursor: pointer;'
+                                                                  data-page='{{prevPage}}'>이전</a>
+                            </li>
                         {{/isFirstRange}}
                         {{#isPostPage}}
                             {{#each pageList}}
-                            <li class='posts-page-item' id='post_page{{this}}'><a class='page-link page-index'
-                                                                               style='cursor: pointer;'
-                                                                               data-page='{{this}}'>{{this}}</a>
-                            </li>
+                                <li class='posts-page-item' id='post_page{{this}}'><a
+                                        class='page-link page-index'
+                                        style='cursor: pointer;'
+                                        data-page='{{this}}'>{{this}}</a>
+                                </li>
                             {{/each}}
                         {{else}}
                             {{#each pageList}}
-                            <li class='comments-page-item' id='comments_page{{this}}'><a class='page-link page-index'
-                                                                               style='cursor: pointer;'
-                                                                               data-page='{{this}}'>{{this}}</a>
-                            </li>
+                                <li class='comments-page-item' id='comments_page{{this}}'><a
+                                        class='page-link page-index'
+                                        style='cursor: pointer;'
+                                        data-page='{{this}}'>{{this}}</a>
+                                </li>
                             {{/each}}
                         {{/isPostPage}}
 
                         {{#isLastRange}}
                         {{else}}
-                            <li class='{{pageType}}-page-item' ><a class='page-link' style='cursor: pointer;'
-                                                     data-page='{{nextPage}}'>다음</a></li>
+                            <li class='{{pageType}}-page-item'><a class='page-link'
+                                                                  style='cursor: pointer;'
+                                                                  data-page='{{nextPage}}'>다음</a>
+                            </li>
                         {{/isLastRange}}
                         {{#isLastPage}}
                         {{else}}
-                            <li class='{{pageType}}-page-item' ><a class='page-link' style='cursor: pointer;'
-                                                     data-page='{{pageCount}}'>마지막</a></li>
+                            <li class='{{pageType}}-page-item'><a class='page-link'
+                                                                  style='cursor: pointer;'
+                                                                  data-page='{{pageCount}}'>마지막</a>
+                            </li>
                         {{/isLastPage}}
                     {{/pagesInfo}}
                 </script>
@@ -985,6 +1013,7 @@
     </div>
 </div>
 <script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="/static/js/util/csrf.js"></script>
 <script src="/webjars/bootstrap/4.4.1/dist/js/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 <script src="/static/js/data/const.js"></script>
@@ -1030,6 +1059,7 @@
 <script src="/static/js/updateUI/fileUI.js"></script>
 <script src="/static/js/updateUI/alarmUI.js"></script>
 <script src="/static/js/updateUI/replyUI.js"></script>
+<script src="/static/js/updateUI/editorUI.js"></script>
 <script src="/static/js/util/windowLoad.js"></script>
 
 </body>

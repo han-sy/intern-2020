@@ -10,3 +10,19 @@ function getPostIDInPost() {
 function getPostIDInPostList() {
   return $(this).attr("data-post");
 }
+
+function getPostIdInEditor() {
+ return $("#postIdInEditor").html();
+}
+
+function getOriginalBoardIdInEditor() {
+  return $("#boardIdInEditor").html();
+}
+
+function getSelectedBoardIdInEditor() {
+  return $('#selectableBoardIdInEditor option:selected').attr('data-tab');
+}
+
+function getPostTitleInEditor() {
+  return $('#post_title').val();
+}

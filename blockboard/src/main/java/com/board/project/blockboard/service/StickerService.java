@@ -29,7 +29,7 @@ public class StickerService {
 
   private int startIndex, endIndex, totalDirectoryCount;
 
-  // 해당 페이지의 Navigation Bar Item(=카테고리 목록) 들을 생성하고
+  // 해당 스티커 페이지의 Navigation Bar Item(=카테고리 목록) 들을 생성하고
   // 그 중 첫 번째 카테고리의 스티커만 불러온다.
   public JSONObject getNavigationItemAndStickerAtFirst(HttpServletRequest request, int pageNum) {
     File[] allStickerDirectory = new File(STICKER_PATH).listFiles();
@@ -69,27 +69,27 @@ public class StickerService {
     return makeJsonOfStickerGroup(groupName, stickers);
   }
 
-  // 카테고리 아이템 생성
-  private JSONObject makeNavigationItems(File[] allDirectory) {
+  // Generate Navigation Bar + Sticker At First
+  private JSONObject makeNavigationItems(File[] allStickerDirectory) {
     JSONArray navigationItems = new JSONArray();
     JSONArray firstStickerOfNavigationItems = new JSONArray();
 
-    int navigationIndex = -1;
+    int navigationIndexOnUI = -1;
 
     for (int i = startIndex; i < endIndex && i < totalDirectoryCount; i++) {
       JSONObject navigationItem = new JSONObject();
       JSONObject uiPosition = new JSONObject();
 
-      uiPosition.put("x", (navigationIndex--) * 25);
+      uiPosition.put("x", (navigationIndexOnUI--) * 25);
       uiPosition.put("y", 0);
-      navigationItem.put("groupName", allDirectory[i].getName());
+      navigationItem.put("groupName", allStickerDirectory[i].getName());
       navigationItem.put("position", uiPosition);
 
-      addNavigationItemWithIcon(allDirectory[i], navigationItems, navigationItem);
+      addIconToNavigationItem(allStickerDirectory[i], navigationItem);
       if (i == startIndex) {
-        addStickerAtFirst(allDirectory[i], firstStickerOfNavigationItems, navigationItem);
+        addStickerAtFirst(allStickerDirectory[i], firstStickerOfNavigationItems);
       }
-
+      navigationItems.add(navigationItem);
     }
     return makeJsonOfStickerGroups(navigationItems, firstStickerOfNavigationItems);
   }
@@ -112,12 +112,12 @@ public class StickerService {
   }
 
   // Navigation Bar 에 아이콘을 추가한 각 스티커 그룹을 추가
-  private void addNavigationItemWithIcon(File directory, JSONArray navigationItems, JSONObject navigationItem) {
+  private void addIconToNavigationItem(File directory, JSONObject navigationItem) {
     if (!directory.isDirectory()) {
       return;
     }
     String directoryPath = STICKER_PATH + "/" + directory.getName();
-    // Navigation Bar 아이콘 파일이름 nav 로 시작한다.
+    // Navigation Bar 의 아이콘 파일이름은 nav 로 시작한다.
     for (File stickerItem : Objects.requireNonNull(new File(directoryPath).listFiles())) {
       if (stickerItem.getName().startsWith("nav")) {
         navigationItem.put("navIconSrc",
@@ -125,26 +125,22 @@ public class StickerService {
         break;
       }
     }
-    navigationItems.add(navigationItem);
   }
 
   // Navigation Items 중 에서 첫번째 카테고리 스티커들을 추가
-  private void addStickerAtFirst(File firstDirectory, JSONArray stickers, JSONObject navigationItem) {
+  private void addStickerAtFirst(File firstDirectory, JSONArray stickers) {
     String path = STICKER_PATH + "/" + firstDirectory.getName();
 
     for (File stickerItem : Objects.requireNonNull(new File(path).listFiles())) {
-      JSONObject sticker = new JSONObject();
+      if (!stickerItem.getName().startsWith("nav")) {
+        JSONObject sticker = new JSONObject();
+        String groupName = firstDirectory.getName();
+        String stickerName = stickerItem.getName();
 
-      String groupName = firstDirectory.getName();
-      String stickerName = stickerItem.getName();
-
-      sticker.put("groupName", groupName);
-      sticker.put("id", stickerName);
-      sticker.put("src", CONTEXT_PATH + "/sticker/" + groupName + "/" + stickerName);
-      stickers.add(sticker);
-
-      if (stickerItem.getName().startsWith("nav")) {
-        navigationItem.put("navIconSrc", CONTEXT_PATH + "/sticker/" + groupName + "/" + stickerName);
+        sticker.put("groupName", groupName);
+        sticker.put("id", stickerName);
+        sticker.put("src", CONTEXT_PATH + "/sticker/" + groupName + "/" + stickerName);
+        stickers.add(sticker);
       }
     }
   }

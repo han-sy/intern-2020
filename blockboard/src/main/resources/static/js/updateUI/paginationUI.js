@@ -14,7 +14,7 @@ function updatePostPageList(data, pageList) {
   $('#post_page' + data.currentPage).css('color', '#28A745');
   $('#post_page' + data.currentPage).css('font-weight', 'bold');
   $('#post_page' + data.currentPage).css('font-size', '110%');
-  var boardID = parseInt(getCurrentBoardID());
+  var boardID = parseInt(getCurrentActiveBoardID());
   getPostListByPageNum(data.currentPage, boardID);
 }
 

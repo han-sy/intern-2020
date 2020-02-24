@@ -2,34 +2,40 @@
  * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
  * @file    postAjax.js
  */
-
-
-function insertPost(postID,boardID, postTitle, postContent) {
+function insertPost(postID, boardID, postTitle, postContent) {
   $.ajax({
     type: 'POST',
     url: `/boards/${boardID}/posts`,
     data: {
       postTitle: postTitle,
       postContent: postContent,
-      postStatus: "normal"
+      postStatus: "normal",
+      boardID: boardID
     },
     error: function (xhr) {
       errorFunction(xhr);
     },
     success: function (data) {
-      if(functionOn.postFileAttach){
-        if(isNullData(postID)){ //postID가 없는경우 일반
-          updateIDToFiles("post",data,"");
-        }else{ //postID가 이미 있는경우 //임시저장
-          updateIDToFiles("post",postID,"");
-        }
-      }
-      refreshPostList();
+      attachFileToPost(postID, data);
+    },
+    complete: function () {
+      refreshPostListAfterPostCRUD();
     }
   });
 }
 
-function insertTempPost(boardID, postID, temp_title, temp_content, post_status) {
+function attachFileToPost(postID, data) {
+  if (functionOn.postFileAttach) {
+    if (isNullData(postID)) {
+      updateIDToFiles("post", data, "");
+    } else {
+      updateIDToFiles("post", postID, "");
+    }
+  }
+}
+
+function insertTempPost(boardID, postID, temp_title, temp_content,
+    new_post_status) {
   $.ajax({
     type: 'POST',
     url: `/boards/${boardID}/posts`,
@@ -38,33 +44,26 @@ function insertTempPost(boardID, postID, temp_title, temp_content, post_status) 
       postID: postID,
       postTitle: temp_title,
       postContent: temp_content,
-      postStatus: post_status
+      postStatus: new_post_status
     },
     error: function (xhr) {
       errorFunction(xhr);
-      editorClear();
-      refreshPostList();
+      clearEditor();
+      refreshPostListAfterPostCRUD();
     },
     success: function (data) {
-      if (post_status == "temp") {
-        addPostInfoToEditor(data, boardID);
-        if(functionOn.postFileAttach){
-          if(isNullData(postID)){
-            updateIDToFiles("post",data,"");
-          }else{
-            updateIDToFiles("post",postID,"");
-          }
-        }
-        alert("임시저장 되었습니다.")
-      } else {
+      if (new_post_status === "normal") {
         alert("게시물이 작성되었습니다.");
+      } else {
+        addHiddenTypePostIdAndBoardIdToEditor(data, boardID);
+        attachFileToPost(postID, data);
+        alert("임시저장 되었습니다.");
       }
     }
   });
 }
 
 function loadPost(boardID, postID) {
-  var post_title = $('#post_title');
   $.ajax({
     type: 'GET',
     url: `/boards/${boardID}/posts/${postID}`,
@@ -73,31 +72,32 @@ function loadPost(boardID, postID) {
       errorFunction(xhr);
     },
     success: function (data) {
-      addPostInfoToEditor(postID, boardID);
-      initBoardIdOptionInEditor(boardID);
-      post_title.val(data.postTitle);
+      addHiddenTypePostIdAndBoardIdToEditor(postID, boardID);
+      selectOptionOfCurrentBoardId(boardID);
+      $('#post_title').val(data.postTitle);
       CKEDITOR.instances['editor'].setData(data.postContent);
     }
   });
 }
 
-function updatePost(boardID, originalBoardID, postID, postTitle, postContent) {
+function updatePost(selectedBoardId, originalBoardID, postID, postTitle, postContent) {
   $.ajax({
     type: 'PUT',
     url: `/boards/${originalBoardID}/posts/${postID}`,
     data: {
-      boardID: boardID,
+      boardID: selectedBoardId,
       postTitle: postTitle,
       postContent: postContent
     },
     error: function (xhr) {
       errorFunction(xhr);
-      editorClear();
-      refreshPostList();
+      clearEditor();
     },
     success: function () {
-      editorClear();
-      refreshPostList();
+      clearEditor();
+    },
+    complete: function () {
+      refreshPostListAfterPostCRUD();
     }
   });
 }
@@ -110,24 +110,19 @@ function deletePost(boardID, postID) {
       errorFunction(xhr);
     },
     success: function () {
-      editorClear();
-      refreshPostList();
+      clearEditor();
+    },
+    complete: function () {
+      refreshPostListAfterPostCRUD();
     }
   });
 }
 
-// 게시글 작성, 수정, 삭제 시 해당 게시판 refresh 하는 함수
-function refreshPostList() {
-  var boardID = getCurrentBoardID();
-  postClear();
-  getPageList(1, boardID,0, updatePostPageList)
-}
-
 function searchPost(option, keyword) {
-  var boardID = getCurrentBoardID();
+  let boardId = getCurrentActiveBoardID();
   $.ajax({
     type: 'GET',
-    url: `/boards/${boardID}/posts/search`,
+    url: `/boards/${boardId}/posts/search`,
     data: {
       option: option,
       keyword: keyword.val()
@@ -141,8 +136,8 @@ function searchPost(option, keyword) {
       postsClear(); // 게시글 목록 화면 Clear
       keyword.val("");
 
-      if (data == "") {
-        showEmptyList();
+      if (data === "") {
+        showEmptyPostList();
       } else {
         loadPostList(data);
       }
@@ -162,8 +157,8 @@ function getTempPosts(pageNum) {
       errorFunction(xhr);
     },
     success: function (data) {
-      if (data == "") {
-        showEmptyList();
+      if (data === "") {
+        showEmptyPostList();
       } else {
         loadPostList(data);
       }
@@ -184,7 +179,7 @@ function getRecyclePosts(pageNum) {
     },
     success: function (data) {
       if (data == "") {
-        showEmptyList();
+        showEmptyPostList();
       } else {
         loadPostList(data);
       }
@@ -202,7 +197,7 @@ function restorePost(postID) {
     },
     success: function () {
       alert("게시글이 복원되었습니다.");
-      refreshPostList();
+      refreshPostListAfterPostCRUD();
     }
   });
 }
@@ -220,7 +215,7 @@ function getMyPosts(pageNum) {
     },
     success: function (data) {
       if (data == "") {
-        showEmptyList();
+        showEmptyPostList();
       } else {
         loadPostList(data);
       }
@@ -241,7 +236,7 @@ function getMyReplies(pageNum) {
     },
     success: function (data) {
       if (data == "") {
-        showEmptyList();
+        showEmptyPostList();
       } else {
         loadPostList(data);
       }
@@ -257,20 +252,14 @@ function getRecyclePost(postID, boardID) {
     url: `/boards/${boardID}/posts/${postID}`,
     error: function (xhr) {
       errorFunction(xhr);
-      refreshPostList();
+      refreshPostListAfterPostCRUD();
     },
     success: function (data) {
-      $('#writecontent').hide();
-      $('#btn_write').show();
+      $('#write-content').hide();
+      $('#btn_write').hide();
 
       loadPostContent(data);
-      var btn_deletePost = $('.btn_delete');
-      var btn_updatePost = $('.btn_modify');
-      btn_deletePost.attr('style', 'visibility:visible');
-      btn_updatePost.attr('style', 'visibility:visible');
-      btn_updatePost.html("복원");
-      btn_updatePost.removeClass("btn_modify");
-      btn_updatePost.addClass("btn_restore");
+      updateButtonOnRecycleBoard();
     }
   });
 }
@@ -288,7 +277,7 @@ function getRecentPosts(pageNum) {
     },
     success: function (data) {
       if (data == "") {
-        showEmptyList();
+        showEmptyPostList();
       } else {
         loadPostList(data);
       }
@@ -309,7 +298,7 @@ function getPopularPostList(pageNum) {
     },
     success: function (data) {
       if (data == "") {
-        showEmptyList();
+        showEmptyPostList();
       } else {
         loadPostList(data);
       }

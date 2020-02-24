@@ -40,17 +40,23 @@ public class AlarmController {
 
   @DeleteMapping("/alarms/{alarm-id}")
   public void deleteAlarm(@PathVariable("alarm-id") int alarmId) {
+    AlarmDTO alarm = alarmService.selectAlarmByAlarmId(alarmId);
+    existAlarmValidation(alarm);
     alarmService.deleteAlarm(alarmId);
   }
 
   @GetMapping("/alarms/{alarm-id}")
   public AlarmDTO getAlarm(@PathVariable("alarm-id") int alarmId) {
-    return alarmService.selectAlarmByAlarmId(alarmId);
+    AlarmDTO alarm = alarmService.selectAlarmByAlarmId(alarmId);
+    existAlarmValidation(alarm);
+    return alarm;
   }
 
   @PutMapping("/alarms/{alarm-id}")
-  public void readAlarm(@PathVariable("alarm-id") int alarmId) {
-    alarmService.readAlarm(alarmId);
+  public void readMarkToAlarm(@PathVariable("alarm-id") int alarmId) {
+    AlarmDTO alarm = alarmService.selectAlarmByAlarmId(alarmId);
+    existAlarmValidation(alarm);
+    alarmService.readMarkToAlarm(alarmId);
   }
 
   @GetMapping("/alarms/count")
@@ -60,14 +66,14 @@ public class AlarmController {
 
   @GetMapping("/alarms/{alarm-id}/post")
   public PostDTO getAlarmContent(@PathVariable("alarm-id") int alarmId) {
-    PostDTO post = postService.selectPostByAlarmId(alarmId);
-    if (post == null) {
-      throw new NullPointerException("원본 게시글이 삭제되었습니다.");
-    }
-    return post;
+    return postService.selectPostByAlarmId(alarmId);
   }
 
-
+  private void existAlarmValidation(AlarmDTO alarm) {
+    if (alarm == null) {
+      throw new NullPointerException("존재하지 않는 알람입니다.");
+    }
+  }
 }
 
 

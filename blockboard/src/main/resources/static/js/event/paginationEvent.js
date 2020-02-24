@@ -11,7 +11,7 @@
  * */
 
 $(document).on('click', '.posts-page-item', function () {
-  var boardID = getCurrentBoardID();
+  var boardID = getCurrentActiveBoardID();
   var pageNum = $(this).find(".page-link").attr("data-page");
   getPageList(pageNum, boardID,0, updatePostPageList);
 });
