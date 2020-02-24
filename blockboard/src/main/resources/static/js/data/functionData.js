@@ -3,8 +3,8 @@
  * @file    functionData.js
  */
 
-function isFunctionTagValueOn(functionID){
-  var functionTagID = "#functionAble"+ functionID;
+function isFunctionTagValueOn(functionId){
+  var functionTagID = "#functionAble"+ functionId;
   if($(functionTagID).attr("value") == "on"){
     return true;
   }else if($(functionTagID).attr("value") == "off"){
@@ -17,44 +17,44 @@ function isFunctionTagValueOn(functionID){
 
 class FunctionOn{
 
-  set comments(functionID) {
-    this._comments = isFunctionTagValueOn(functionID);
+  set comments(functionId) {
+    this._comments = isFunctionTagValueOn(functionId);
   }
 
-  set reply(functionID) {
-    this._reply = isFunctionTagValueOn(functionID);
+  set reply(functionId) {
+    this._reply = isFunctionTagValueOn(functionId);
   }
 
-  set postFileAttach(functionID) {
-    this._postFileAttach = isFunctionTagValueOn(functionID);
+  set postFileAttach(functionId) {
+    this._postFileAttach = isFunctionTagValueOn(functionId);
   }
 
-  set commentFileAttach(functionID) {
-    this._commentFileAttach = isFunctionTagValueOn(functionID);
+  set commentFileAttach(functionId) {
+    this._commentFileAttach = isFunctionTagValueOn(functionId);
   }
 
-  set postInlineImage(functionID) {
-    this._postInlineImage = isFunctionTagValueOn(functionID);
+  set postInlineImage(functionId) {
+    this._postInlineImage = isFunctionTagValueOn(functionId);
   }
 
-  set commentInlineImage(functionID) {
-    this._commentInlineImage = isFunctionTagValueOn(functionID);
+  set commentInlineImage(functionId) {
+    this._commentInlineImage = isFunctionTagValueOn(functionId);
   }
 
-  set postTempSave(functionID) {
-    this._postTempSave = isFunctionTagValueOn(functionID);
+  set postTempSave(functionId) {
+    this._postTempSave = isFunctionTagValueOn(functionId);
   }
 
-  set postSticker(functionID) {
-    this._postSticker = isFunctionTagValueOn(functionID);
+  set postSticker(functionId) {
+    this._postSticker = isFunctionTagValueOn(functionId);
   }
 
-  set commentSticker(functionID) {
-    this._commentSticker = isFunctionTagValueOn(functionID);
+  set commentSticker(functionId) {
+    this._commentSticker = isFunctionTagValueOn(functionId);
   }
 
-  set postAutoTag(functionID) {
-    this._postAutoTag = isFunctionTagValueOn(functionID);
+  set postAutoTag(functionId) {
+    this._postAutoTag = isFunctionTagValueOn(functionId);
   }
 
   get comments() {

@@ -34,11 +34,16 @@ public class ViewRecordService {
 
 
   public List<ViewRecordDTO> getViewRecords(int postId, String userId,int startIndex) {
+    Map<String, Object> recordData = getRecordMapData(postId, userId, startIndex);
+    return viewRecordMapper.selectViewRecordsByPostId(recordData);
+  }
+
+  private Map<String, Object> getRecordMapData(int postId, String userId, int startIndex) {
     Map<String, Object> recordData = new HashMap<>();
     recordData.put("postId",postId);
     recordData.put("userId",userId);
     recordData.put("startIndex",startIndex);
     recordData.put("pageSize", PageSize.VIEW_RECORDS);
-    return viewRecordMapper.selectViewRecordsByPostId(recordData);
+    return recordData;
   }
 }

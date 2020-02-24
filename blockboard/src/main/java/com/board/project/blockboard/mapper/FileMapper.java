@@ -17,9 +17,9 @@ public interface FileMapper {
 
   void insertFile(FileDTO fileData);
 
-  void updateIDsByStoredFileName(Map<String, Object> fileAttributes);
+  void updateIDsByStoredFileName(FileDTO fileData);
 
-  List<FileDTO> selectFileListByEditorID(Map<String, Object> fileAttributes);
+  List<FileDTO> selectFileListByEditorID(FileDTO fileData);
 
   FileDTO selectFileByFileId(int fileId);
 

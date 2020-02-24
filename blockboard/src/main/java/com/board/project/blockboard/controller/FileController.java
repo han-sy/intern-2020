@@ -8,7 +8,6 @@ import com.board.project.blockboard.dto.FileDTO;
 import com.board.project.blockboard.dto.UserDTO;
 import com.board.project.blockboard.service.FileService;
 import java.io.IOException;
-import java.util.Enumeration;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -50,7 +49,8 @@ public class FileController {
   @PutMapping(value = "/files")
   public void updateIdToFile(@RequestBody List<FileDTO> fileList, HttpServletRequest request,
       HttpServletResponse response) {
-    fileService.updateIDs(fileList,request,response);
+    UserDTO userData = new UserDTO(request);
+    fileService.updateIDs(fileList,userData.getCompanyId(),response);
   }
 
   /**
@@ -76,8 +76,9 @@ public class FileController {
    */
   @GetMapping(value = "/files/{fileId}")
   public void downloadFile(@PathVariable int fileId, HttpServletResponse response,
-      HttpServletRequest request) {
-    fileService.downloadFile(fileId, response, request);
+      HttpServletRequest request) throws IOException {
+    UserDTO userData = new UserDTO(request);
+    fileService.downloadFile(fileId, response, request,userData.getCompanyId());
   }
 
   /**

@@ -15,7 +15,7 @@ function clickSaveFunctionChange() {
   var functionDataList = new Array();
   $("input[name=function]").each(function () {
     var functionData = new Object();
-    functionData.functionID = $(this).val();
+    functionData.functionId = $(this).val();
     if ($(this).is(":checked")) {
       functionData.functionOn = true;
     } else {

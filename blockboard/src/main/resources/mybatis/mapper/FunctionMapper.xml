@@ -10,7 +10,7 @@
 
   <select id="selectFunctionCheckByCompanyId" parameterType="int"
     resultType="com.board.project.blockboard.dto.FunctionDTO">
-    SELECT FUNCTION.function_id                              AS functionID,
+    SELECT FUNCTION.function_id                              AS functionId,
            IF(ISNULL(functioncheck.company_id), FALSE, TRUE) AS functionOn,
            FUNCTION.function_name                            AS functionName,
            functioncheck.function_data                       AS functionData
@@ -20,18 +20,18 @@
                              AND functioncheck.company_id = #{companyId};
   </select>
 
-  <select id="selectFunctionCheckByCompanyIdAndFunctionID" parameterType="hashmap"
+  <select id="selectFunctionCheckByCompanyIdAndFunctionId" parameterType="hashmap"
     resultType="boolean">
     SELECT IF(Count(function_id) > 0, TRUE, FALSE)
     FROM functions_check
     WHERE company_id = #{companyId}
-      AND function_id = #{functionID};
+      AND function_id = #{functionId};
   </select>
 
   <insert id="insertFunctionCheckData" parameterType="hashmap">
     INSERT INTO functions_check
     VALUES (#{companyId},
-            #{functionID},
+            #{functionId},
             NULL);
   </insert>
 
@@ -39,6 +39,6 @@
     DELETE
     FROM functions_check
     WHERE company_id = #{companyId}
-      AND function_id = #{functionID};
+      AND function_id = #{functionId};
   </delete>
 </mapper>

@@ -86,12 +86,12 @@
                     <c:forEach items="${functionInfoList}" var="functionList"
                                varStatus="status">
                         <c:if test="${functionList.functionOn}">
-                            <a class="dropdown-item" id=functionAble${functionList.functionID}
+                            <a class="dropdown-item" id=functionAble${functionList.functionId}
                                value=on> ${functionList.functionName} </a>
                         </c:if>
                         <c:if test="${!(functionList.functionOn)}">
                             <a class="dropdown-item d-none"
-                               id=functionAble${functionList.functionID}
+                               id=functionAble${functionList.functionId}
                                value=off> ${functionList.functionName}</a>
                         </c:if>
                     </c:forEach>
@@ -109,10 +109,10 @@
             <hr>
             {{#functions}}
                 {{#isAbleFunction}}
-                    <a class="dropdown-item d-none" id='functionAble{{functionID}}'
+                    <a class="dropdown-item d-none" id='functionAble{{functionId}}'
                        value='off'>{{functionName}}</a>
                 {{else}}
-                    <a class="dropdown-item" id='functionAble{{functionID}}'
+                    <a class="dropdown-item" id='functionAble{{functionId}}'
                        value='on'>{{functionName}}</a>
                 {{/isAbleFunction}}
             {{/functions}}
@@ -422,7 +422,7 @@
                             <label class="btn btn-default _function-switch">
                                 <span>{{functionName}}</span>
                                 <input class='function_checkbox' type='checkbox' name='function'
-                                       value={{functionID}}>
+                                       value={{functionId}}>
                                 <span class='_switch'>OFF</span>
                             </label>
                         </li>
@@ -432,7 +432,7 @@
                             <label class="btn btn-success _function-switch">
                                 <span>{{functionName}}</span>
                                 <input class='function_checkbox' type='checkbox' name='function'
-                                       value={{functionID}} checked>
+                                       value={{functionId}} checked>
                                 <span class='_switch'>ON</span>
                             </label>
                         </li>
@@ -1022,6 +1022,7 @@
 <script src="/static/js/data/functionData.js"></script>
 <script src="/static/js/data/postData.js"></script>
 <script src="/static/js/data/boardData.js"></script>
+<script src="/static/js/data/fileData.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
 <script src="/static/js/event/boardEvent.js"></script>
 <script src="/static/js/event/postEvent.js"></script>

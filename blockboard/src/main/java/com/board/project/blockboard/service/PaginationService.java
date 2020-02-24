@@ -55,12 +55,14 @@ public class PaginationService {
     paginationInfo.rangeSetting(pageNumber);
     return paginationInfo;
   }
+
   public PaginationDTO getCommentPageListByPageNumberAboutPost(int pageNumber, int postId, UserDTO user) {
     int commentCount = postService.getCommentsCountByPostId(postId);
     PaginationDTO paginationInfo = new PaginationDTO("comments",commentCount,pageNumber,PageSize.COMMENT,RangeSize.COMMENT);
     paginationInfo.rangeSetting(pageNumber);
     return paginationInfo;
   }
+
   public PaginationDTO getPageList(int pageNumber, int boardId, int postId, UserDTO user) {
     if(isBoardPage(boardId)){
       return getPostPageListByPageNumberAboutBoard(pageNumber,boardId,user);
@@ -69,8 +71,6 @@ public class PaginationService {
       return getCommentPageListByPageNumberAboutPost(pageNumber,postId,user);
     }
   }
-
-
 
   public boolean isBoardPage(int boardId) {
     return boardId != 0;

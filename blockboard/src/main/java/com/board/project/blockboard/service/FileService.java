@@ -8,7 +8,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.board.project.blockboard.common.constant.ConstantData;
 import com.board.project.blockboard.common.constant.ConstantData.Bucket;
-import com.board.project.blockboard.common.constant.ConstantData.FunctionID;
+import com.board.project.blockboard.common.constant.ConstantData.FunctionId;
 import com.board.project.blockboard.common.exception.UserValidException;
 import com.board.project.blockboard.common.util.Common;
 import com.board.project.blockboard.common.validation.AuthorityValidation;
@@ -22,6 +22,7 @@ import com.board.project.blockboard.mapper.PostMapper;
 import com.board.project.blockboard.mapper.UserMapper;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -78,69 +79,103 @@ public class FileService {
   @Autowired
   private AmazonRekognitionService amazonRekognitionService;
 
+  /**
+   * 파일 업로드
+   * @return 파일이름
+   */
   public String uploadFile(MultipartHttpServletRequest multipartRequest, int companyId,
       HttpServletResponse response) throws IOException {
     String uuid = Common.getNewUUID();
     Iterator<String> itr = multipartRequest.getFileNames();
-    if (!functionValidation.isFunctionOn(companyId, FunctionID.POST_ATTACH_FILE,FunctionID.COMMENT_ATTACH_FILE, response)) {
+    if (!functionValidation.isFunctionOn(companyId, FunctionId.POST_ATTACH_FILE,FunctionId.COMMENT_ATTACH_FILE, response)) {
       return null;
     }
-    FileDTO fileData = FileDTO.builder().build();
+    FileDTO fileData = new FileDTO();
     while (itr.hasNext()) {
-      MultipartFile mpf = multipartRequest.getFile(itr.next());
-
-      fileData.setOriginFileName(mpf.getOriginalFilename());
-      fileData.setStoredFileName(uuid + "_" + fileData.getOriginFileName());
-      ObjectMetadata metadata = new ObjectMetadata();
-
-      String url = amazonS3Service
-          .upload(fileData.getStoredFileName(), Bucket.FILE, mpf.getInputStream(), metadata);
-      fileData.setResourceUrl(url);
-      long fileSize = mpf.getSize();
+      setFileData(multipartRequest, uuid, itr, fileData);
       //파일 전체 경로
-
-
-
-
       fileMapper.insertFile(fileData);
-
     }
-
+    log.info("fileData",fileData);
     return fileData.getStoredFileName();
   }
 
-  public void updateIDs(List<FileDTO> fileList, HttpServletRequest request,
+  /**
+   * 파일 데이터 setting
+   */
+  private void setFileData(MultipartHttpServletRequest multipartRequest, String uuid,
+      Iterator<String> itr, FileDTO fileData) throws IOException {
+    MultipartFile mpf = multipartRequest.getFile(itr.next());
+
+    fileData.setOriginFileName(mpf.getOriginalFilename());
+    fileData.setStoredFileName(uuid + "_" + fileData.getOriginFileName());
+    ObjectMetadata metadata = new ObjectMetadata();
+
+    String url = amazonS3Service
+        .upload(fileData.getStoredFileName(), Bucket.FILE, mpf.getInputStream(), metadata);
+    fileData.setResourceUrl(url);
+    fileData.setFileSize(mpf.getSize());
+  }
+
+  /**
+   * id 업데이트 to 파일테이블
+   */
+  public void updateIDs(List<FileDTO> fileList, int companyId,
       HttpServletResponse response) {
-    int companyId = Integer.parseInt(request.getAttribute("companyId").toString());
-    if (!functionValidation.isFunctionOn(companyId, FunctionID.POST_ATTACH_FILE,FunctionID.COMMENT_ATTACH_FILE, response)) {
+    if (!functionValidation.isFunctionOn(companyId, FunctionId.POST_ATTACH_FILE,FunctionId.COMMENT_ATTACH_FILE, response)) {
       return;
     }
-    for (FileDTO file : fileList) {
-      Map<String, Object> fileAttributes = new HashMap<String, Object>();
-      log.info("fileInfo : " + file.getPostId() + "," + file.getCommentId() + "," + file
-          .getStoredFileName());
-      fileAttributes.put("postId", file.getPostId());
-      fileAttributes.put("commentId", file.getCommentId());
-      fileAttributes.put("storedFileName", file.getStoredFileName());
-      fileMapper.updateIDsByStoredFileName(fileAttributes);
-    }
+    fileList.forEach(fileDTO -> fileMapper.updateIDsByStoredFileName(fileDTO));
   }
 
+  /**
+   * 파일리스트 반환
+   */
   public List<FileDTO> getFileList(int postId, int commentId) {
-    Map<String, Object> fileAttributes = new HashMap<String, Object>();
-    fileAttributes.put("postId", postId);
-    fileAttributes.put("commentId", commentId);
-    return fileMapper.selectFileListByEditorID(fileAttributes);
+    FileDTO fileDTO = new FileDTO();
+    fileDTO.setPostId(postId);
+    fileDTO.setCommentId(commentId);
+    return fileMapper.selectFileListByEditorID(fileDTO);
   }
 
-  public void downloadFile(int fileId, HttpServletResponse response, HttpServletRequest request) {
-    UserDTO userData = new UserDTO(request);
+  /**
+   * 파일 다운로드 (id를 가지고
+   */
+  public void downloadFile(int fileId, HttpServletResponse response, HttpServletRequest request,int companyID)
+      throws IOException {
     if (!functionValidation
-        .isFunctionOn(userData.getCompanyId(), FunctionID.POST_ATTACH_FILE,FunctionID.COMMENT_ATTACH_FILE, response)) {
+        .isFunctionOn(companyID, FunctionId.POST_ATTACH_FILE,FunctionId.COMMENT_ATTACH_FILE, response)) {
       return;
     }
     FileDTO fileData = fileMapper.selectFileByFileId(fileId);
+    setRequestAndResponseForDownload(response, request, fileData);
+    writeFile(response, fileData);
 
+  }
+
+  /**
+   * 파일쓰기
+   */
+  private void writeFile(HttpServletResponse response, FileDTO fileData) throws IOException {
+    OutputStream os = response.getOutputStream();
+
+    S3ObjectInputStream s3is = amazonS3Service
+        .download(fileData.getStoredFileName(), Bucket.FILE, response);
+    int ncount = 0;
+    byte[] bytes = new byte[512];
+
+    while ((ncount = s3is.read(bytes)) != -1) {
+      os.write(bytes, 0, ncount);
+    }
+    s3is.close();
+    os.close();
+  }
+
+  /**
+   * request와 response 설정
+   */
+  private void setRequestAndResponseForDownload(HttpServletResponse response,
+      HttpServletRequest request, FileDTO fileData) {
     String browser = request.getHeader("User-Agent");//브라우저 종류 가져옴.
     String downName = null;
 
@@ -157,29 +192,12 @@ public class FileService {
     response.setHeader("Content-Disposition", "attachment;filename=\"" + downName + "\"");
     response.setContentType("application/octer-stream");
     response.setHeader("Content-Transfer-Encoding", "binary;");
-
-    try {
-      OutputStream os = response.getOutputStream();
-
-      S3ObjectInputStream s3is = amazonS3Service
-          .download(fileData.getStoredFileName(), Bucket.FILE, response);
-      int ncount = 0;
-      byte[] bytes = new byte[512];
-
-      while ((ncount = s3is.read(bytes)) != -1) {
-        os.write(bytes, 0, ncount);
-      }
-      s3is.close();
-      os.close();
-    } catch (FileNotFoundException ex) {
-      log.info("FileNotFoundException");
-    } catch (IOException ex) {
-      log.info("IOException");
-    }
-
   }
 
 
+  /**
+   * 파일 작성자 id 가져오기
+   */
   public String getFileWriterUserId(FileDTO fileData) {
     if (fileData.getPostId() > 0) {//post의 첨부파일일때
       return postMapper.selectUserIdByPostId(fileData.getPostId());
@@ -189,19 +207,36 @@ public class FileService {
     return null;
   }
 
+  /**
+   * 파일삭제
+   */
   public void deleteFile(String storedFileName, HttpServletRequest request,
       HttpServletResponse response) {
     UserDTO userData = new UserDTO(request);
-    if (!functionValidation
-        .isFunctionOn(userData.getCompanyId(), FunctionID.POST_ATTACH_FILE,FunctionID.COMMENT_ATTACH_FILE, response)
-        || !fileValidation.isExistFileInDatabase(storedFileName, response)) {
+    if (!canDeleteFile(storedFileName, response, userData)) {
       return;
     }
     FileDTO fileData = fileMapper.selectFileByStoredFileName(storedFileName);
     if (!authorityValidation.isWriter(fileData, userData, response)) {
       return;
     }
+    deleteFileInAmazonS3(storedFileName, response);
+  }
 
+  /**
+   * 파일삭제가능여부 반환
+   */
+  private boolean canDeleteFile(String storedFileName, HttpServletResponse response,
+      UserDTO userData) {
+    return functionValidation
+        .isFunctionOn(userData.getCompanyId(), FunctionId.POST_ATTACH_FILE,FunctionId.COMMENT_ATTACH_FILE, response)
+        && fileValidation.isExistFileInDatabase(storedFileName, response);
+  }
+
+  /**
+   * amazonS3파일 삭제
+   */
+  private void deleteFileInAmazonS3(String storedFileName, HttpServletResponse response) {
     if (amazonS3Service.deleteFile(storedFileName, Bucket.FILE, response)) {
       log.info("파일삭제 성공");
       fileMapper.deleteFileByStoredFileName(storedFileName);
@@ -220,11 +255,11 @@ public class FileService {
       throws Exception {
     int companyId = Integer.parseInt(request.getAttribute("companyId").toString());
     if (StringUtils.equals(editorName, "editor")) {
-      if (!(functionValidation.isFunctionOn(companyId, FunctionID.POST_INLINE_IMAGE, response))) {
+      if (!(functionValidation.isFunctionOn(companyId, FunctionId.POST_INLINE_IMAGE, response))) {
         return null;
       }
     } else {
-      if (!(functionValidation.isFunctionOn(companyId, FunctionID.COMMENT_INLINE_IMAGE, response))) {
+      if (!(functionValidation.isFunctionOn(companyId, FunctionId.COMMENT_INLINE_IMAGE, response))) {
         return null;
       }
     }
@@ -253,12 +288,12 @@ public class FileService {
             json.addProperty("url", fileUrl);
 
             if (StringUtils.equals(editorName, "editor")) {
-              if (functionService.isUseFunction(companyId, FunctionID.POST_AUTO_TAG)) {
+              if (functionService.isUseFunction(companyId, FunctionId.POST_AUTO_TAG)) {
                 List<UserDTO> detectedUsers = detectedUserList(fileName, companyId);
                 json.add("detectedUser", new Gson().toJsonTree(detectedUsers));
               }
             } else {
-              if (functionService.isUseFunction(companyId, FunctionID.COMMENT_AUTO_TAG)) {
+              if (functionService.isUseFunction(companyId, FunctionId.COMMENT_AUTO_TAG)) {
                 List<UserDTO> detectedUsers = detectedUserList(fileName, companyId);
                 json.add("detectedUser", new Gson().toJsonTree(detectedUsers));
               }
@@ -288,6 +323,13 @@ public class FileService {
     amazonRekognitionService
         .registerImageToCollection(fileName, Bucket.INLINE, collectionID);
     //
+    return getDetectedUsers(companyId, collectionID);
+  }
+
+  /**
+   * 유저별로 얼굴이 이미지에 있는지검사 쓰레드를 통해
+   */
+  private List<UserDTO> getDetectedUsers(int companyId, String collectionID) {
     List<UserDTO> detectedUsers = new ArrayList<>();
     List<UserDTO> userList = userMapper.selectUsersByCompanyId(companyId);
     DetectThread detectThread = null;

@@ -18,10 +18,10 @@ function createEditorArea(method) { // 에디터 div 생성
     case "modify":
       hideTempSaveButton();
       break;
-    default:
-      if (functionOn.postFileAttach) {
-        openFileAttachForm();
-      }
+  }
+  if (functionOn.postFileAttach) {
+    console.log("!!!!openFileAttachForm");
+    openFileAttachForm();
   }
 }
 

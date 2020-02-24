@@ -12,10 +12,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 
-@Getter
-@Setter
-@ToString
-@Builder
+
+@Data
 public class FileDTO {
   private int fileId;
   private int postId;

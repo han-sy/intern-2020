@@ -123,8 +123,8 @@ Handlebars.registerHelper('isPopular', function (option) {
   }
 });
 Handlebars.registerHelper('isCommentFunction', function (option) {
-  var isCommentFunction = (this.functionID%2);
-  console.log(this.functionID +" : "+isCommentFunction );
+  var isCommentFunction = (this.functionId%2);
+  console.log(this.functionId +" : "+isCommentFunction );
   if (isCommentFunction == 0) {
     return "comment_function";
   } else {

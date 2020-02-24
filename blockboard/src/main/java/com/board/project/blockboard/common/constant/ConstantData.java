@@ -42,7 +42,7 @@ public class ConstantData {
     public static final String USER_THUMBNAIL = "block-board-user-thumbnail";
   }
 
-  public static final class FunctionID {
+  public static final class FunctionId {
 
     public static final int COMMENT = 1;
     public static final int REPLY = 2;
