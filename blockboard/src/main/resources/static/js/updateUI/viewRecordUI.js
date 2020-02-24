@@ -3,6 +3,8 @@
  * @file    viewRecordUI.js
  */
 
+
+
 function loadViewRecordUI(data){
   console.log("loadViewRecordUI");
   var source = $('#view_record-list-template').html();

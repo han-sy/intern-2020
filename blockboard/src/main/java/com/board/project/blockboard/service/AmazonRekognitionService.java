@@ -100,7 +100,7 @@ public class AmazonRekognitionService {
     SearchFacesByImageRequest searchFacesByImageRequest = new SearchFacesByImageRequest()
         .withCollectionId(collectionID)
         .withImage(image)
-        .withFaceMatchThreshold(75F)
+        .withFaceMatchThreshold(70F)
         .withMaxFaces(1);
 
     log.info("" + searchFacesByImageRequest);

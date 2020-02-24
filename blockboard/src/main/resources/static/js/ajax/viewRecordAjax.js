@@ -13,6 +13,10 @@ function getViewRecords(postID,boardID, startIndex,successFunction) {
     },
     success: function (data) {
       console.log("data : ",data);
+      console.log("data length :"+data.length);
+      if(data.length==0){
+        hasRemainData=false;
+      }
       successFunction(data);
     }
   });

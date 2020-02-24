@@ -230,3 +230,66 @@ SELECT comments.comment_id            AS commentID,
     UPDATE comments
     SET replies_count = replies_count - 1
     WHERE comment_id = 2;
+    
+    UPDATE posts
+    SET    view_count = view_count + 1
+    WHERE  post_id = 1;
+    
+    select * from view_records;
+    insert into view_records values(1,"irene");
+    insert into view_records values(1,"yeri");
+    insert into view_records values(1,"2");
+    insert into view_records values(1,"admin");
+	insert into view_records values(1,"seulgi");
+    
+    insert into view_records values(1,"rkdgPdnjs");
+    insert into view_records values(1,"rnjsdmsql");
+    insert into view_records values(1,"rlaalswn");
+    insert into view_records values(1,"rlacodnjs");
+    insert into view_records values(1,"aldhkdizl");
+    insert into view_records values(1,"dkqnzlskzh");
+    insert into view_records values(1,"dksdbwls");
+    insert into view_records values(1,"dlcodus");
+    insert into view_records values(1,"wkddnjsdud");
+    insert into view_records values(1,"whdbfl");
+    insert into view_records values(1,"chldPsk");
+    insert into view_records values(1,"ghsekglxhal");
+    
+      insert into view_records values(1,"rlaskawn");
+    insert into view_records values(1,"eldh");
+    insert into view_records values(1,"foqahstmxj");
+    insert into view_records values(1,"fpdl");
+    insert into view_records values(1,"fhwp");
+    insert into view_records values(1,"fltk");
+    insert into view_records values(1,"qorgus");
+    insert into view_records values(1,"qnl");
+    insert into view_records values(1,"tjgus");
+    insert into view_records values(1,"tpgns");
+    insert into view_records values(1,"thsskdms");
+    insert into view_records values(1,"tndud");
+    
+    insert into view_records values(1,"tngh");
+    insert into view_records values(1,"tbrk");
+    insert into view_records values(1,"tldnals");
+    insert into view_records values(1,"Tjsl");
+    insert into view_records values(1,"dhgkdud");
+    insert into view_records values(1,"dbfl");
+    insert into view_records values(1,"dbsdk");
+    insert into view_records values(1,"dlcodus");
+    insert into view_records values(1,"wkddnsdud");
+    insert into view_records values(1,"wjdrnr");
+    
+    insert into view_records values(1,"wjddmswl");
+    insert into view_records values(1,"wpsl");
+    insert into view_records values(1,"wptlzk");
+    insert into view_records values(1,"wpdlghq");
+    insert into view_records values(1,"wlals");
+    insert into view_records values(1,"wltn");
+    insert into view_records values(1,"wls");
+    insert into view_records values(1,"cksduf");
+    insert into view_records values(1,"cps");
+    insert into view_records values(1,"zkdl");
+    insert into view_records values(1,"xlvksl");
+    insert into view_records values(1,"gydus");
+    
+    select * from users;
