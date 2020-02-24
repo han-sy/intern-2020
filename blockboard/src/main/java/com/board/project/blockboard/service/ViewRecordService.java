@@ -5,7 +5,6 @@
 
 package com.board.project.blockboard.service;
 
-import com.board.project.blockboard.common.constant.ConstantData;
 import com.board.project.blockboard.common.constant.ConstantData.PageSize;
 import com.board.project.blockboard.dto.ViewRecordDTO;
 import com.board.project.blockboard.mapper.ViewRecordMapper;
@@ -19,30 +18,31 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 public class ViewRecordService {
+
   @Autowired
   private ViewRecordMapper viewRecordMapper;
 
-  public void readPostByUser(String userId, int postId){
-    ViewRecordDTO record = new ViewRecordDTO(postId,userId);
+  public void readPostByUser(String userId, int postId) {
+    ViewRecordDTO record = new ViewRecordDTO(postId, userId);
     viewRecordMapper.insertViewRecord(record);
   }
 
-  public boolean isReadPostByUser(String userId, int postId){
-    ViewRecordDTO record = new ViewRecordDTO(postId,userId);
+  public boolean isReadPostByUser(String userId, int postId) {
+    ViewRecordDTO record = new ViewRecordDTO(postId, userId);
     return viewRecordMapper.selectRecordExist(record);
   }
 
 
-  public List<ViewRecordDTO> getViewRecords(int postId, String userId,int startIndex) {
+  public List<ViewRecordDTO> getViewRecords(int postId, String userId, int startIndex) {
     Map<String, Object> recordData = getRecordMapData(postId, userId, startIndex);
     return viewRecordMapper.selectViewRecordsByPostId(recordData);
   }
 
   private Map<String, Object> getRecordMapData(int postId, String userId, int startIndex) {
     Map<String, Object> recordData = new HashMap<>();
-    recordData.put("postId",postId);
-    recordData.put("userId",userId);
-    recordData.put("startIndex",startIndex);
+    recordData.put("postId", postId);
+    recordData.put("userId", userId);
+    recordData.put("startIndex", startIndex);
     recordData.put("pageSize", PageSize.VIEW_RECORDS);
     return recordData;
   }

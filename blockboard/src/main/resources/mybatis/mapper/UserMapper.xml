@@ -63,7 +63,7 @@
     WHERE user_id = #{userId};
   </select>
 
-  <update id="updateUserImage" parameterType="hashmap">
+  <update id="updateUserImage" parameterType="com.board.project.blockboard.dto.UserDTO">
     UPDATE users
     SET    image_url = #{imageUrl},
            image_file_name = #{imageFileName},

@@ -56,7 +56,7 @@ public class PaginationService {
     return paginationInfo;
   }
 
-  public PaginationDTO getCommentPageListByPageNumberAboutPost(int pageNumber, int postId, UserDTO user) {
+  public PaginationDTO getCommentPageListByPageNumberAboutPost(int pageNumber, int postId) {
     int commentCount = postService.getCommentsCountByPostId(postId);
     PaginationDTO paginationInfo = new PaginationDTO("comments",commentCount,pageNumber,PageSize.COMMENT,RangeSize.COMMENT);
     paginationInfo.rangeSetting(pageNumber);
@@ -68,7 +68,7 @@ public class PaginationService {
       return getPostPageListByPageNumberAboutBoard(pageNumber,boardId,user);
     }
     else{
-      return getCommentPageListByPageNumberAboutPost(pageNumber,postId,user);
+      return getCommentPageListByPageNumberAboutPost(pageNumber,postId);
     }
   }
 

@@ -4,6 +4,7 @@
  */
 package com.board.project.blockboard.controller;
 
+import com.board.project.blockboard.common.exception.AuthorityValidException;
 import com.board.project.blockboard.common.validation.AuthorityValidation;
 import com.board.project.blockboard.dto.FunctionDTO;
 import com.board.project.blockboard.dto.UserDTO;
@@ -46,10 +47,10 @@ public class FunctionController {
    */
   @PostMapping(value = "")
   public void insertNewFunctionData(@RequestBody List<FunctionDTO> functionDTOList,
-      HttpServletResponse response, HttpServletRequest request)
-      throws IOException {
+      HttpServletRequest request)
+      throws IOException, AuthorityValidException {
     UserDTO userData = new UserDTO(request);
-    if (AuthorityValidation.isAdmin(userData, response)) {
+    if (AuthorityValidation.isAdmin(userData)) {
       functionService.updateNewFunctionsInfo(userData.getCompanyId(), functionDTOList);
     }
 

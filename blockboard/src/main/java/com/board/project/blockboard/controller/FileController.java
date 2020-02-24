@@ -4,6 +4,8 @@
  */
 package com.board.project.blockboard.controller;
 
+import com.board.project.blockboard.common.exception.FileValidException;
+import com.board.project.blockboard.common.exception.FunctionValidException;
 import com.board.project.blockboard.dto.FileDTO;
 import com.board.project.blockboard.dto.UserDTO;
 import com.board.project.blockboard.service.FileService;
@@ -37,9 +39,9 @@ public class FileController {
    */
   @PostMapping(value = "/files")
   public String uploadFile(MultipartHttpServletRequest multipartRequest, HttpServletRequest request,
-      HttpServletResponse response) throws IOException {
+      HttpServletResponse response) throws IOException, FunctionValidException {
     UserDTO userData = new UserDTO(request);
-    return fileService.uploadFile(multipartRequest, userData.getCompanyId(), response);
+    return fileService.uploadFile(multipartRequest, userData.getCompanyId());
 
   }
 
@@ -47,10 +49,9 @@ public class FileController {
    * 파일 테이블에 postId 업데이트 최종으로 리스트에 추가된 목록을 기준으로
    */
   @PutMapping(value = "/files")
-  public void updateIdToFile(@RequestBody List<FileDTO> fileList, HttpServletRequest request,
-      HttpServletResponse response) {
+  public void updateIdToFile(@RequestBody List<FileDTO> fileList, HttpServletRequest request) throws FunctionValidException {
     UserDTO userData = new UserDTO(request);
-    fileService.updateIDs(fileList,userData.getCompanyId(),response);
+    fileService.updateIDs(fileList,userData.getCompanyId());
   }
 
   /**
@@ -67,7 +68,7 @@ public class FileController {
    */
   @DeleteMapping(value = "/files")
   public void deleteFile(@RequestParam String storedFileName, HttpServletRequest request,
-      HttpServletResponse response) {
+      HttpServletResponse response) throws FileValidException, FunctionValidException {
     fileService.deleteFile(storedFileName,request,response);
   }
 
@@ -76,7 +77,7 @@ public class FileController {
    */
   @GetMapping(value = "/files/{fileId}")
   public void downloadFile(@PathVariable int fileId, HttpServletResponse response,
-      HttpServletRequest request) throws IOException {
+      HttpServletRequest request) throws IOException, FileValidException {
     UserDTO userData = new UserDTO(request);
     fileService.downloadFile(fileId, response, request,userData.getCompanyId());
   }
@@ -86,8 +87,7 @@ public class FileController {
    */
   @PostMapping("/imageUpload")
   public String uploadImage(HttpServletResponse response, MultipartHttpServletRequest multiFile,
-      HttpServletRequest request, @RequestParam("editorName") String editorName)
-      throws Exception {
+      HttpServletRequest request, @RequestParam("editorName") String editorName) {
     return fileService.uploadImage(response, multiFile, request, editorName);
   }
 

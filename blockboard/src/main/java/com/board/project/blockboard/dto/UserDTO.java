@@ -47,4 +47,13 @@ public class UserDTO {
     this.userId = userId;
     this.companyId = companyId;
   }
+
+  public UserDTO(String userId, String imageUrl, String imageFileName, String thumbnailUrl,
+      String thumbnailFileName) {
+    this.userId = userId;
+    this.imageUrl = imageUrl;
+    this.imageFileName = imageFileName;
+    this.thumbnailUrl = thumbnailUrl;
+    this.thumbnailFileName = thumbnailFileName;
+  }
 }

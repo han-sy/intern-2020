@@ -26,5 +26,5 @@ public interface UserMapper {
 
   String selectUserTypeByUserId(String userId);
 
-  void updateUserImage(Map<String, Object> userData);
+  void updateUserImage(UserDTO userData);
 }

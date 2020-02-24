@@ -14,7 +14,6 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
-import com.board.project.blockboard.common.constant.ConstantData;
 import com.board.project.blockboard.common.constant.ConstantData.Bucket;
 import com.board.project.blockboard.common.exception.FileValidException;
 import com.board.project.blockboard.common.util.Thumbnail;
@@ -50,7 +49,7 @@ public class AmazonS3Service {
         amazonS3.putObject(
             new PutObjectRequest(bucket, fileName, inputStream, metadata));
 
-        return amazonS3.getUrl(bucket,fileName).toString();
+        return amazonS3.getUrl(bucket, fileName).toString();
       } catch (AmazonClientException ace) {
         ace.printStackTrace();
       } finally {
@@ -65,34 +64,28 @@ public class AmazonS3Service {
   /**
    * 파일 다운로드
    */
-  public S3ObjectInputStream download(String fileName, String bucket,
-      HttpServletResponse response) {
+  public S3ObjectInputStream download(String fileName, String bucket) throws FileValidException {
     if (amazonS3 != null) {
-
       try {
         if (!amazonS3.doesObjectExist(bucket, fileName)) { //버킷에 파일이 존재하지 않을때.
-          throw new FileValidException();
+          throw new FileValidException("존재하지 않는 파일입니다.");
         }
         S3Object o = amazonS3.getObject(Bucket.FILE, fileName);
         S3ObjectInputStream s3is = o.getObjectContent();
         return s3is;
       } catch (AmazonServiceException e) {
         log.error(e.getErrorMessage());
-      } catch (FileValidException fve) {
-        fve.sendError(response, "존재하지 않는 파일입니다.");
-        fve.printStackTrace();
-      } /*finally {
-        amazonS3 = null;
-      }*/
+      }
     }
     return null;
   }
 
-  public boolean deleteFile(String fileName, String bucket, HttpServletResponse response) {
+  public boolean deleteFile(String fileName, String bucket, HttpServletResponse response)
+      throws FileValidException {
     if (amazonS3 != null) {
       try {
         if (!amazonS3.doesObjectExist(bucket, fileName)) { //버킷에 파일이 존재하지 않을때.
-          throw new FileValidException();
+          throw new FileValidException("이미 존재하지 않는 파일입니다.");
         }
         amazonS3.deleteObject(Bucket.FILE, fileName);
         if (amazonS3.doesObjectExist(Bucket.FILE, fileName)) {
@@ -103,12 +96,7 @@ public class AmazonS3Service {
         System.err.println(e.getErrorMessage());
         System.exit(1);
         return false;
-      } catch (FileValidException fve) {
-        fve.sendError(response, "이미 존재하지 않는 파일입니다.");
-        fve.printStackTrace();
-      } /*finally {
-        amazonS3 = null;
-      }*/
+      }
     }
     return false;
   }

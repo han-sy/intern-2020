@@ -43,7 +43,8 @@ public class UserController {
    * @return 로그인 메인화면으로 redirect
    */
   @PostMapping("/login")
-  public String loginCheck(@ModelAttribute UserDTO requestUser, HttpServletResponse response, HttpServletRequest request) {
+  public String loginCheck(@ModelAttribute UserDTO requestUser, HttpServletResponse response,
+      HttpServletRequest request) {
     boolean isValid = userService.loginCheck(requestUser, response);
     if (isValid) {
       return "redirect:/main";
@@ -109,11 +110,8 @@ public class UserController {
 
   @PutMapping("/users/{userid}/Image")
   public void updateUserImage(MultipartHttpServletRequest multipartRequest,
-      @PathVariable("userid") String userId, HttpServletResponse response,
-      HttpServletRequest request)
-      throws IOException {
-
-    userService.updateUserImage(multipartRequest, userId, response, request);
+      @PathVariable("userid") String userId) {
+    userService.updateUserImage(multipartRequest, userId);
   }
 
 

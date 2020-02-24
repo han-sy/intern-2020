@@ -5,6 +5,7 @@
 package com.board.project.blockboard.controller;
 
 
+import com.board.project.blockboard.common.exception.AuthorityValidException;
 import com.board.project.blockboard.common.validation.AuthorityValidation;
 import com.board.project.blockboard.dto.BoardDTO;
 import com.board.project.blockboard.dto.UserDTO;
@@ -57,9 +58,9 @@ public class BoardController {
   @PostMapping(value = "")
   @ResponseBody
   public void insertNewBoard(@RequestParam("boardName") String newBoardName,
-      HttpServletRequest request, HttpServletResponse response) {
+      HttpServletRequest request, HttpServletResponse response) throws AuthorityValidException {
     UserDTO userData = new UserDTO(request);
-    if (AuthorityValidation.isAdmin(userData, response)) {
+    if (AuthorityValidation.isAdmin(userData)) {
       boardService.insertNewBoard(newBoardName, userData.getCompanyId());
     }
 
@@ -73,9 +74,9 @@ public class BoardController {
   @PutMapping(value = "")
   @ResponseBody
   public void changeNewBoardName(@RequestBody List<BoardDTO> newTitleList,
-      HttpServletRequest request, HttpServletResponse response) {
+      HttpServletRequest request, HttpServletResponse response) throws AuthorityValidException {
     UserDTO userData = new UserDTO(request);
-    if (AuthorityValidation.isAdmin(userData, response)) {
+    if (AuthorityValidation.isAdmin(userData)) {
       boardService.updateChangedName(newTitleList, userData.getCompanyId());
     }
   }
@@ -88,9 +89,9 @@ public class BoardController {
   @DeleteMapping(value = "")
   @ResponseBody
   public void deleteBoardByBoardId(@RequestBody List<BoardDTO> deleteBoards,
-      HttpServletRequest request, HttpServletResponse response) {
+      HttpServletRequest request){
     UserDTO userData = new UserDTO(request);
-    if (AuthorityValidation.isAdmin(userData, response)) {
+    if (AuthorityValidation.isAdmin(userData)) {
       boardService.deleteBoardsByDeleteBoardList(deleteBoards); //기존데이터
     }
   }

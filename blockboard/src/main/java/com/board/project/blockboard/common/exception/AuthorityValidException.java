@@ -1,12 +1,12 @@
 /**
  * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
- * @file FileValidException.java
+ * @file AuthorityValidException.java
  */
 package com.board.project.blockboard.common.exception;
 
-public class FileValidException extends Exception {
-  public FileValidException(String msg) {
+
+public class AuthorityValidException extends Exception{
+  public AuthorityValidException(String msg) {
     super(msg);
   }
-
 }

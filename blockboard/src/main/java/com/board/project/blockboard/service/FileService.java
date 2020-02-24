@@ -6,10 +6,10 @@ package com.board.project.blockboard.service;
 
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
-import com.board.project.blockboard.common.constant.ConstantData;
 import com.board.project.blockboard.common.constant.ConstantData.Bucket;
 import com.board.project.blockboard.common.constant.ConstantData.FunctionId;
-import com.board.project.blockboard.common.exception.UserValidException;
+import com.board.project.blockboard.common.exception.FileValidException;
+import com.board.project.blockboard.common.exception.FunctionValidException;
 import com.board.project.blockboard.common.util.Common;
 import com.board.project.blockboard.common.validation.AuthorityValidation;
 import com.board.project.blockboard.common.validation.FileValidation;
@@ -22,22 +22,17 @@ import com.board.project.blockboard.mapper.PostMapper;
 import com.board.project.blockboard.mapper.UserMapper;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.User;
 import org.apache.commons.codec.binary.StringUtils;
 import org.jsoup.internal.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,13 +76,15 @@ public class FileService {
 
   /**
    * 파일 업로드
+   *
    * @return 파일이름
    */
-  public String uploadFile(MultipartHttpServletRequest multipartRequest, int companyId,
-      HttpServletResponse response) throws IOException {
+  public String uploadFile(MultipartHttpServletRequest multipartRequest, int companyId)
+      throws IOException, FunctionValidException {
     String uuid = Common.getNewUUID();
     Iterator<String> itr = multipartRequest.getFileNames();
-    if (!functionValidation.isFunctionOn(companyId, FunctionId.POST_ATTACH_FILE,FunctionId.COMMENT_ATTACH_FILE, response)) {
+    if (!functionValidation
+        .isFunctionOn(companyId, FunctionId.POST_ATTACH_FILE, FunctionId.COMMENT_ATTACH_FILE)) {
       return null;
     }
     FileDTO fileData = new FileDTO();
@@ -96,7 +93,7 @@ public class FileService {
       //파일 전체 경로
       fileMapper.insertFile(fileData);
     }
-    log.info("fileData",fileData);
+    log.info("fileData", fileData);
     return fileData.getStoredFileName();
   }
 
@@ -120,9 +117,9 @@ public class FileService {
   /**
    * id 업데이트 to 파일테이블
    */
-  public void updateIDs(List<FileDTO> fileList, int companyId,
-      HttpServletResponse response) {
-    if (!functionValidation.isFunctionOn(companyId, FunctionId.POST_ATTACH_FILE,FunctionId.COMMENT_ATTACH_FILE, response)) {
+  public void updateIDs(List<FileDTO> fileList, int companyId) throws FunctionValidException {
+    if (!functionValidation
+        .isFunctionOn(companyId, FunctionId.POST_ATTACH_FILE, FunctionId.COMMENT_ATTACH_FILE)) {
       return;
     }
     fileList.forEach(fileDTO -> fileMapper.updateIDsByStoredFileName(fileDTO));
@@ -141,10 +138,11 @@ public class FileService {
   /**
    * 파일 다운로드 (id를 가지고
    */
-  public void downloadFile(int fileId, HttpServletResponse response, HttpServletRequest request,int companyID)
-      throws IOException {
+  public void downloadFile(int fileId, HttpServletResponse response, HttpServletRequest request,
+      int companyID)
+      throws IOException, FileValidException {
     if (!functionValidation
-        .isFunctionOn(companyID, FunctionId.POST_ATTACH_FILE,FunctionId.COMMENT_ATTACH_FILE, response)) {
+        .isFunctionOn(companyID, FunctionId.POST_ATTACH_FILE, FunctionId.COMMENT_ATTACH_FILE)) {
       return;
     }
     FileDTO fileData = fileMapper.selectFileByFileId(fileId);
@@ -156,11 +154,12 @@ public class FileService {
   /**
    * 파일쓰기
    */
-  private void writeFile(HttpServletResponse response, FileDTO fileData) throws IOException {
+  private void writeFile(HttpServletResponse response, FileDTO fileData)
+      throws IOException, FileValidException {
     OutputStream os = response.getOutputStream();
 
     S3ObjectInputStream s3is = amazonS3Service
-        .download(fileData.getStoredFileName(), Bucket.FILE, response);
+        .download(fileData.getStoredFileName(), Bucket.FILE);
     int ncount = 0;
     byte[] bytes = new byte[512];
 
@@ -211,13 +210,14 @@ public class FileService {
    * 파일삭제
    */
   public void deleteFile(String storedFileName, HttpServletRequest request,
-      HttpServletResponse response) {
+      HttpServletResponse response)
+      throws FileValidException, FunctionValidException {
     UserDTO userData = new UserDTO(request);
-    if (!canDeleteFile(storedFileName, response, userData)) {
+    if (!canDeleteFile(storedFileName, userData)) {
       return;
     }
     FileDTO fileData = fileMapper.selectFileByStoredFileName(storedFileName);
-    if (!authorityValidation.isWriter(fileData, userData, response)) {
+    if (!authorityValidation.isWriter(fileData, userData)) {
       return;
     }
     deleteFileInAmazonS3(storedFileName, response);
@@ -226,17 +226,19 @@ public class FileService {
   /**
    * 파일삭제가능여부 반환
    */
-  private boolean canDeleteFile(String storedFileName, HttpServletResponse response,
-      UserDTO userData) {
+  private boolean canDeleteFile(String storedFileName,
+      UserDTO userData) throws FileValidException, FunctionValidException {
     return functionValidation
-        .isFunctionOn(userData.getCompanyId(), FunctionId.POST_ATTACH_FILE,FunctionId.COMMENT_ATTACH_FILE, response)
-        && fileValidation.isExistFileInDatabase(storedFileName, response);
+        .isFunctionOn(userData.getCompanyId(), FunctionId.POST_ATTACH_FILE,
+            FunctionId.COMMENT_ATTACH_FILE)
+        && fileValidation.isExistFileInDatabase(storedFileName);
   }
 
   /**
    * amazonS3파일 삭제
    */
-  private void deleteFileInAmazonS3(String storedFileName, HttpServletResponse response) {
+  private void deleteFileInAmazonS3(String storedFileName, HttpServletResponse response)
+      throws FileValidException {
     if (amazonS3Service.deleteFile(storedFileName, Bucket.FILE, response)) {
       log.info("파일삭제 성공");
       fileMapper.deleteFileByStoredFileName(storedFileName);
@@ -251,15 +253,14 @@ public class FileService {
    */
   // TODO 추후 디비 저장 & 삭제 구현할 것 ( 로컬 or AWS S3)
   public String uploadImage(HttpServletResponse response,
-      MultipartHttpServletRequest multiFile, HttpServletRequest request, String editorName)
-      throws Exception {
+      MultipartHttpServletRequest multiFile, HttpServletRequest request, String editorName) {
     int companyId = Integer.parseInt(request.getAttribute("companyId").toString());
     if (StringUtils.equals(editorName, "editor")) {
-      if (!(functionValidation.isFunctionOn(companyId, FunctionId.POST_INLINE_IMAGE, response))) {
+      if (!(functionValidation.isFunctionOn(companyId, FunctionId.POST_INLINE_IMAGE))) {
         return null;
       }
     } else {
-      if (!(functionValidation.isFunctionOn(companyId, FunctionId.COMMENT_INLINE_IMAGE, response))) {
+      if (!(functionValidation.isFunctionOn(companyId, FunctionId.COMMENT_INLINE_IMAGE))) {
         return null;
       }
     }

@@ -27,9 +27,6 @@ function showMoreRepliesBtn(commentReferencedId) {
   var repliesCount = $('#replies_count' + commentReferencedId).html();
   var length = getCountPrintedReplies();
 
-
-  console.log("commentReferencedId : "+commentReferencedId);
-  console.log("showMoreRepliesBtn -> replyCount: "+repliesCount+","+length);
   if (length >= repliesCount) {
     $('.more-replies').remove();
   }
@@ -46,8 +43,6 @@ function replyFormClear() {
 
 
 function updateRepliesCountUI(data,commentReferencedId) {
-  console.log("repliesCount : " + data);
   $('#replies_count'+commentReferencedId).html(data);
-  console.log("!!!!commentReferencedId : "+commentReferencedId);
   showMoreRepliesBtn(commentReferencedId);
 }

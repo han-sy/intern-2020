@@ -4,6 +4,7 @@
  */
 package com.board.project.blockboard.common.exception;
 
+import com.board.project.blockboard.dto.FunctionDTO;
 import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -53,4 +54,24 @@ public class GlobalExceptionHandler {
       ie.printStackTrace();
     }
   }
+
+  @ExceptionHandler(FunctionValidException.class)
+  protected void FunctionValidError(HttpServletResponse response, Exception e) {
+    try {
+      response.sendError(HttpServletResponse.SC_FORBIDDEN, e.getMessage());
+      e.printStackTrace();
+    } catch (IOException ie) {
+      ie.printStackTrace();
+    }
+  }
+  @ExceptionHandler(FileValidException.class)
+  protected void FileValidException(HttpServletResponse response, Exception e) {
+    try {
+      response.sendError(HttpServletResponse.SC_CONFLICT,e.getMessage());
+      e.printStackTrace();
+    } catch (IOException ie) {
+      ie.printStackTrace();
+    }
+  }
+
 }

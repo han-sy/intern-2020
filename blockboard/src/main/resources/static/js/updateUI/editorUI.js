@@ -1,8 +1,19 @@
+function openPostFileAttachForm(postId) {
+  if (functionOn.postFileAttach) {
+    if (isNullData(postId)) {
+      openFileAttachForm();
+    } else {
+      console.log("postID : "+postId);
+      openFileAttachForm(postId);
+    }
+  }
+}
+
 /**
  * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
  * @file    editorUI.js
  */
-function createEditorArea(method) { // 에디터 div 생성
+function createEditorArea(method,postId) { // 에디터 div 생성
   clearEditor();
   createEditorTemplate();
   applyFunctionPluginOnEditor();
@@ -19,10 +30,8 @@ function createEditorArea(method) { // 에디터 div 생성
       hideTempSaveButton();
       break;
   }
-  if (functionOn.postFileAttach) {
-    console.log("!!!!openFileAttachForm");
-    openFileAttachForm();
-  }
+  console.log("postId = "+postId);
+  openPostFileAttachForm(postId);
 }
 
 function clearEditor() {  // 작성 폼 초기화

@@ -8,9 +8,9 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.board.project.blockboard.common.constant.ConstantData.Bucket;
 import com.board.project.blockboard.common.util.Common;
 import com.board.project.blockboard.common.util.Thumbnail;
+import com.board.project.blockboard.dto.FileDTO;
 import com.board.project.blockboard.dto.UserDTO;
 import com.board.project.blockboard.mapper.UserMapper;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -21,6 +21,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.User;
 import org.apache.commons.codec.binary.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -114,20 +115,15 @@ public class UserService {
    *
    * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
    */
-  public void updateUserImage(MultipartHttpServletRequest multipartRequest, String userId,
-      HttpServletResponse response, HttpServletRequest request)
-      throws IOException {
-    String uuid = Common.getNewUUID();
-
+  public void updateUserImage(MultipartHttpServletRequest multipartRequest, String userId){
     Iterator<String> itr = multipartRequest.getFileNames();
-    String url = "";
-    String thumbnailUrl = "";
+    String url="";
+    String thumbnailUrl ="";
     while (itr.hasNext()) {
       MultipartFile mpf = multipartRequest.getFile(itr.next());
 
       String originFileName = mpf.getOriginalFilename(); //파일명
       String storedFileName = userId + originFileName.substring(originFileName.indexOf("."));
-      //String storedFileName = uuid + "_" + originFileName;
       ObjectMetadata metadata = new ObjectMetadata();
       String fileExt = Common.getFileExt(storedFileName);
 
@@ -143,17 +139,7 @@ public class UserService {
         e.printStackTrace();
       }
 
-      log.info("url -->" + url);
-      log.info("thumbnailUrl -->" + thumbnailUrl);
-      //파일 전체 경로
-      //log.info("fileName => " + mpf.getName());
-
-      Map<String, Object> userData = new HashMap<String, Object>();
-      userData.put("userId", userId);
-      userData.put("imageUrl", url);
-      userData.put("imageFileName", storedFileName);
-      userData.put("thumbnailUrl", thumbnailUrl);
-      userData.put("thumbnailFileName", storedFileName);
+      UserDTO userData = new UserDTO(userId,url,storedFileName,thumbnailUrl,storedFileName);
       userMapper.updateUserImage(userData);
     }
   }
