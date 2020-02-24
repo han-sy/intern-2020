@@ -99,7 +99,9 @@ public class PostService {
   }
 
   public PostDTO selectPostByAlarmId(int alarmId) {
-    return postMapper.selectPostByAlarmId(alarmId);
+    PostDTO post = postMapper.selectPostByAlarmId(alarmId);
+    PostValidation.isExistPost(post);
+    return post;
   }
 
   public List<PostDTO> selectMyPosts(UserDTO user, int pageNumber) {

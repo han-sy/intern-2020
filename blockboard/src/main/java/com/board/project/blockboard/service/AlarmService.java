@@ -43,7 +43,6 @@ public class AlarmService {
 
   public void insertAlarm(CommentDTO comment) {
     Set<String> taggedUsers = tagCheckUtils.getTaggedUsers(comment);
-    log.info(taggedUsers.toString());
     if (taggedUsers != null) {
       for (String taggedUserID : taggedUsers) {
         AlarmDTO alarm = new AlarmDTO();
@@ -73,12 +72,11 @@ public class AlarmService {
     alarmMapper.deleteAlarm(alarmID);
   }
 
-  public void readAlarm(int alarmId) {
-    alarmMapper.readAlarm(alarmId);
+  public void readMarkToAlarm(int alarmId) {
+    alarmMapper.readMarkToAlarm(alarmId);
   }
 
   public int getUnreadAlarmCountByUser(HttpServletRequest request) {
-    log.info(request.getAttribute("userID").toString());
     UserDTO user = new UserDTO(request);
     return alarmMapper.getUnreadAlarmCountByUser(user);
   }

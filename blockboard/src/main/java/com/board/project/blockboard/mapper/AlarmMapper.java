@@ -25,5 +25,5 @@ public interface AlarmMapper {
 
   void deleteAlarm(int alarmID);
 
-  void readAlarm(int alarmId);
+  void readMarkToAlarm(int alarmId);
 }

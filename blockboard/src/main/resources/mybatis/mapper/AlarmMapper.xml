@@ -63,7 +63,7 @@
     LIMIT #{startIndex}, #{pageSize};
   </select>
 
-  <update id="readAlarm" parameterType="int">
+  <update id="readMarkToAlarm" parameterType="int">
     UPDATE alarms
     SET alarms.is_read = true
     WHERE alarm_id = #{alarmId};
