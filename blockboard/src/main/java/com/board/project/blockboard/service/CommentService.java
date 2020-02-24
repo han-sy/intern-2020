@@ -6,6 +6,8 @@ package com.board.project.blockboard.service;
 
 import com.board.project.blockboard.common.constant.ConstantData;
 import com.board.project.blockboard.common.constant.ConstantData.FunctionID;
+import com.board.project.blockboard.common.constant.ConstantData.PageSize;
+import com.board.project.blockboard.common.constant.ConstantData.RangeSize;
 import com.board.project.blockboard.dto.CommentDTO;
 import com.board.project.blockboard.dto.PaginationDTO;
 import com.board.project.blockboard.mapper.CommentMapper;
@@ -37,8 +39,8 @@ public class CommentService {
   public List<CommentDTO> getCommentListByPostID(int postID,int pageNumber,int companyID) {
     int pageCount = postService.getCommentsCountByPostID(postID);
     PaginationDTO pageInfo = new PaginationDTO("comments",pageCount,pageNumber,
-        ConstantData.COMMENT_PAGE_SIZE,ConstantData.COMMENT_RANGE_SIZE);
-    return commentMapper.selectCommentsByPostID(postID,pageInfo.getStartIndex(),ConstantData.COMMENT_PAGE_SIZE);
+        PageSize.COMMENT, RangeSize.COMMENT);
+    return commentMapper.selectCommentsByPostID(postID,pageInfo.getStartIndex(),PageSize.COMMENT);
   }
 
   //TODO 카운트는 비동기로 트랜잭션 처리보다야

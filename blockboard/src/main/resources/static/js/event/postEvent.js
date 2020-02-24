@@ -23,7 +23,6 @@ $(document).on("click", "#btn_write", function () {
   editorAreaCreate("insert");
   initBoardIdOptionInEditor(getCurrentBoardID());
   if (functionOn.postFileAttach) {
-    console.log("파일 첨부 on");
     openFileAttachForm();
   }
 });
@@ -51,7 +50,6 @@ $(document).on('click', '.btn_post', function () {
   // 제목 & 내용 비었는지 검사
   if (checkEmpty()) {
     // 게시글 ID가 존재하지 않으면? 바로 저장
-    console.log("저장 postID = ", postID);
     if (typeof postID == "undefined") {
       insertPost(postID,boardID, postTitle, postContent);
     }

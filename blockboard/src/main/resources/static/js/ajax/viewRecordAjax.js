@@ -12,8 +12,6 @@ function getViewRecords(postID,boardID, startIndex,successFunction) {
       errorFunction(xhr);
     },
     success: function (data) {
-      console.log("data : ",data);
-      console.log("data length :"+data.length);
       if(data.length==0){
         hasRemainData=false;
       }

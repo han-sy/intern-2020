@@ -5,6 +5,8 @@
 package com.board.project.blockboard.service;
 
 import com.board.project.blockboard.common.constant.ConstantData;
+import com.board.project.blockboard.common.constant.ConstantData.PageSize;
+import com.board.project.blockboard.common.constant.ConstantData.RangeSize;
 import com.board.project.blockboard.dto.PaginationDTO;
 import com.board.project.blockboard.dto.UserDTO;
 import lombok.extern.slf4j.Slf4j;
@@ -40,22 +42,22 @@ public class PaginationService {
         break;
       case ConstantData.BOARD_POPULAR:
         postCount = postService.getPopularPostsCount(user.getCompanyID());
-        if (postCount >= ConstantData.POST_PAGE_SIZE) {
-          postCount = ConstantData.POST_PAGE_SIZE;
+        if (postCount >= PageSize.POST) {
+          postCount = PageSize.POST;
         }
         break;
       default:
         postCount = postService.getPostsCountByBoardID(boardID);
     }
 
-    PaginationDTO paginationInfo = new PaginationDTO("posts",postCount, pageNumber, ConstantData.POST_PAGE_SIZE,
-        ConstantData.POST_RANGE_SIZE);
+    PaginationDTO paginationInfo = new PaginationDTO("posts",postCount, pageNumber, PageSize.POST,
+        RangeSize.POST);
     paginationInfo.rangeSetting(pageNumber);
     return paginationInfo;
   }
   public PaginationDTO getCommentPageListByPageNumberAboutPost(int pageNumber, int postID, UserDTO user) {
     int commentCount = postService.getCommentsCountByPostID(postID);
-    PaginationDTO paginationInfo = new PaginationDTO("comments",commentCount,pageNumber,ConstantData.COMMENT_PAGE_SIZE,ConstantData.COMMENT_RANGE_SIZE);
+    PaginationDTO paginationInfo = new PaginationDTO("comments",commentCount,pageNumber,PageSize.COMMENT,RangeSize.COMMENT);
     paginationInfo.rangeSetting(pageNumber);
     return paginationInfo;
   }

@@ -5,6 +5,8 @@
 package com.board.project.blockboard.service;
 
 import com.board.project.blockboard.common.constant.ConstantData;
+import com.board.project.blockboard.common.constant.ConstantData.PageSize;
+import com.board.project.blockboard.common.constant.ConstantData.RangeSize;
 import com.board.project.blockboard.common.util.LengthCheckUtils;
 import com.board.project.blockboard.common.validation.PostValidation;
 import com.board.project.blockboard.dto.PaginationDTO;
@@ -188,11 +190,11 @@ public class PostService {
 
   public Map<String, Object> makeMapUserAndPageInfo(UserDTO user, int pageCount, int pageNumber) {
     Map<String, Object> map = new HashMap<>();
-    PaginationDTO pageInfo = new PaginationDTO("posts",pageCount, pageNumber, ConstantData.POST_PAGE_SIZE,
-        ConstantData.POST_RANGE_SIZE);
+    PaginationDTO pageInfo = new PaginationDTO("posts",pageCount, pageNumber, PageSize.POST,
+        RangeSize.POST);
     map.put("user", user);
     map.put("startIndex", pageInfo.getStartIndex());
-    map.put("pageSize", ConstantData.POST_PAGE_SIZE);
+    map.put("pageSize", PageSize.POST);
     return map;
   }
 
@@ -203,10 +205,10 @@ public class PostService {
    */
   public List<PostDTO> getPostListByBoardID(int boardID, int pageNumber, int companyID) {
     int pageCount = getPostsCountByBoardID(boardID);
-    PaginationDTO pageInfo = new PaginationDTO("posts",pageCount, pageNumber, ConstantData.POST_PAGE_SIZE,
-        ConstantData.POST_RANGE_SIZE);
+    PaginationDTO pageInfo = new PaginationDTO("posts",pageCount, pageNumber, PageSize.POST,
+        RangeSize.POST);
     List<PostDTO> postList = postMapper
-        .selectPostByBoardID(boardID, pageInfo.getStartIndex(), ConstantData.POST_PAGE_SIZE);
+        .selectPostByBoardID(boardID, pageInfo.getStartIndex(), PageSize.POST);
 
     /*for (PostDTO post : postList) {
       int commentsCount = commentService.getCommentCountByPostID(post.getPostID(), companyID);

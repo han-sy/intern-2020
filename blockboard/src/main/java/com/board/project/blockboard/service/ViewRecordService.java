@@ -6,6 +6,7 @@
 package com.board.project.blockboard.service;
 
 import com.board.project.blockboard.common.constant.ConstantData;
+import com.board.project.blockboard.common.constant.ConstantData.PageSize;
 import com.board.project.blockboard.dto.ViewRecordDTO;
 import com.board.project.blockboard.mapper.ViewRecordMapper;
 import java.util.HashMap;
@@ -37,7 +38,7 @@ public class ViewRecordService {
     recordData.put("postID",postID);
     recordData.put("userID",userID);
     recordData.put("startIndex",startIndex);
-    recordData.put("pageSize", ConstantData.VIEW_RECORDS_PAGE_SIZE);
+    recordData.put("pageSize", PageSize.VIEW_RECORDS);
     return viewRecordMapper.selectViewRecordsByPostID(recordData);
   }
 }

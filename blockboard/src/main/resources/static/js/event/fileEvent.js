@@ -53,13 +53,6 @@ $(document).on("drop", ".dragAndDropDiv", function (e) {
   handleFileUpload(files);
 });
 
-/*
-//다운로드할 파일 클릭시
-$(document).on("click", ".attached-file-download", function () {
-  console.log($(this).attr("data-fileid"));
-  downloadFile($(this).attr("data-fileid"));
-});
-*/
 
 //스테이터스바 내 삭제 클릭시
 $(document).on("click", ".delete-statusbar", function () {

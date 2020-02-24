@@ -17,7 +17,6 @@ function getPageList(pageNumber, boardID,postID, successFunction) {
       alert('통신실패!');
     },
     success: function (data) {
-      console.log("data",data);
       successFunction(data, data.pageList);
     }
   });

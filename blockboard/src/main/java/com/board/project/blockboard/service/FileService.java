@@ -7,6 +7,7 @@ package com.board.project.blockboard.service;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.board.project.blockboard.common.constant.ConstantData;
+import com.board.project.blockboard.common.constant.ConstantData.Bucket;
 import com.board.project.blockboard.common.constant.ConstantData.FunctionID;
 import com.board.project.blockboard.common.exception.UserValidException;
 import com.board.project.blockboard.common.util.Common;
@@ -90,7 +91,7 @@ public class FileService {
       AmazonS3Service amazonS3Service = new AmazonS3Service();
 
       url = amazonS3Service
-          .upload(storedFileName, ConstantData.BUCKET_FILE, mpf.getInputStream(), metadata, "");
+          .upload(storedFileName, Bucket.FILE, mpf.getInputStream(), metadata, "");
       log.info("url -->" + url);
       long fileSize = mpf.getSize();
       //파일 전체 경로
@@ -166,7 +167,7 @@ public class FileService {
 
       AmazonS3Service amazonS3Service = new AmazonS3Service();
       S3ObjectInputStream s3is = amazonS3Service
-          .download(fileData.getStoredFileName(), ConstantData.BUCKET_FILE, response);
+          .download(fileData.getStoredFileName(), Bucket.FILE, response);
       int ncount = 0;
       byte[] bytes = new byte[512];
 
@@ -206,7 +207,7 @@ public class FileService {
       return;
     }
     AmazonS3Service amazonS3Service = new AmazonS3Service();
-    if (amazonS3Service.deleteFile(storedFileName, ConstantData.BUCKET_FILE, response)) {
+    if (amazonS3Service.deleteFile(storedFileName, Bucket.FILE, response)) {
       log.info("파일삭제 성공");
       fileMapper.deleteFileByStoredFileName(storedFileName);
     } else {
@@ -248,7 +249,7 @@ public class FileService {
             AmazonS3Service amazonS3Service = new AmazonS3Service();
             fileName = Common.getNewUUID();
             String fileUrl = amazonS3Service
-                .upload(fileName, ConstantData.BUCKET_INLINE, file.getInputStream(), metadata, "");
+                .upload(fileName, Bucket.INLINE, file.getInputStream(), metadata, "");
             printWriter = response.getWriter();
             response.setContentType("text/html;charset=utf-8");
             response.setCharacterEncoding("utf-8");
@@ -289,7 +290,7 @@ public class FileService {
     amazonRekognitionService.registerCollection(collectionID);
     //collection에 이미지 등록
     amazonRekognitionService
-        .registerImageToCollection(fileName, ConstantData.BUCKET_INLINE, collectionID);
+        .registerImageToCollection(fileName, Bucket.INLINE, collectionID);
     //
     List<UserDTO> detectedUsers = new ArrayList<>();
     List<UserDTO> userList = userMapper.selectUsersByCompanyID(companyID);
@@ -338,7 +339,7 @@ public class FileService {
       if (user.getImageFileName() != null) {
         try {
           detected = amazonRekognitionService
-              .searchFaceMatchingImageCollection(ConstantData.BUCKET_USER,
+              .searchFaceMatchingImageCollection(Bucket.USER,
                   user.getImageFileName(),
                   collectionID);
           if (detected) {

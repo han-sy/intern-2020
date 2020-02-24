@@ -5,6 +5,7 @@
 package com.board.project.blockboard.service;
 
 import com.board.project.blockboard.common.constant.ConstantData;
+import com.board.project.blockboard.common.constant.ConstantData.FunctionAble;
 import com.board.project.blockboard.common.exception.FunctionValidException;
 import com.board.project.blockboard.common.util.CompareData;
 import com.board.project.blockboard.dto.FunctionDTO;
@@ -66,9 +67,9 @@ public class FunctionService {
         FunctionDTO newFunction = functionNewList.get(sameIndex);
         int changeInfo = CompareData.compareFunctionOnOff(oldFunction, newFunction);
 
-        if (changeInfo == ConstantData.OFF_TO_ON) {
+        if (changeInfo == FunctionAble.OFF_TO_ON) {
           changeFunctionOffToOn(newFunction.getFunctionID(), companyID);//delete문
-        } else if (changeInfo == ConstantData.ON_TO_OFF) {
+        } else if (changeInfo == FunctionAble.ON_TO_OFF) {
           changeFunctionOnToOff(newFunction.getFunctionID(), companyID);//insert문
         }
       }

@@ -40,11 +40,8 @@ function sendUserImageToServer(userID){
     contentType: false,
     processData: false,
     cache: false,
-    success: function () {
-      console.log("이미지 업로드 성공");
-    },
     error: function (e) {
-      console.log(e.responseText);
+      errorFunction(e);
     }
   });
 }

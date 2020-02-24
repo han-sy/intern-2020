@@ -36,9 +36,7 @@ function sendFileToServer(formData, status) {
     data: formData,
     success: function (data) {
       status.setProgress(100);
-      console.log(data);
       status.filename.attr("data-filename", data);
-      //$("#status1").append("File upload Done<br>");
     },
     error: function (request, status, error) {
       alert("code = " + request.status + " message = " + request.responseText
@@ -56,7 +54,6 @@ function sendFileToServer(formData, status) {
  */
 function updateIDToFiles(editor,postID, commentID, boardID, commentReferencedID) {
   var fileList = getAttachedFileList(postID, commentID);
-  console.log("insertComment", fileList);
   $.ajax({
     type: 'PUT',
     url: `/files`,
@@ -108,7 +105,6 @@ function getFileList(postID, commentID, obj, successFunction) {
  * 파일 삭제
  */
 function deleteFile(storedFileName, obj, successFunction) {
-  console.log("storedFileName : " + storedFileName);
   $.ajax({
     type: 'DELETE',
     url: `/files`,

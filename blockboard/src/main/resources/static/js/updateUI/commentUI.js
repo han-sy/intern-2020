@@ -85,9 +85,7 @@ function getReplyListUI(commentReferencedID, data) {
   var template = Handlebars.compile(source);
   var replies = {replies: data};
   var itemList = template(replies);
-  console.log("getReplyListUI->commentReferencedID : "+commentReferencedID);
   $("#reply_container" + commentReferencedID).append(itemList);
-  console.log("@@@@commentReferencedID : "+commentReferencedID);
   //makeMoreBtn(commentReferencedID);
   showMoreRepliesBtn(commentReferencedID);
 }
