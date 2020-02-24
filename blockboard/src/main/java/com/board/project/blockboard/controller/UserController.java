@@ -95,25 +95,25 @@ public class UserController {
   @GetMapping("/users")
   @ResponseBody
   public List<UserDTO> getAllUserByCompanyId(HttpServletRequest request) {
-    int companyID = Integer.parseInt(request.getAttribute("companyID").toString());
-    return userService.selectUsersByCompanyID(companyID);
+    int companyId = Integer.parseInt(request.getAttribute("companyId").toString());
+    return userService.selectUsersByCompanyId(companyId);
   }
 
   @GetMapping("/users/{userid}")
   @ResponseBody
   public UserDTO getUserByUserIdAndCompanyId(HttpServletRequest request,
-      @PathVariable("userid") String userID) {
-    int companyID = Integer.parseInt(request.getAttribute("companyID").toString());
-    return userService.selectUserByUserIdAndCompanyId(userID, companyID);
+      @PathVariable("userid") String userId) {
+    int companyId = Integer.parseInt(request.getAttribute("companyId").toString());
+    return userService.selectUserByUserIdAndCompanyId(userId, companyId);
   }
 
   @PutMapping("/users/{userid}/Image")
   public void updateUserImage(MultipartHttpServletRequest multipartRequest,
-      @PathVariable("userid") String userID, HttpServletResponse response,
+      @PathVariable("userid") String userId, HttpServletResponse response,
       HttpServletRequest request)
       throws IOException {
 
-    userService.updateUserImage(multipartRequest, userID, response, request);
+    userService.updateUserImage(multipartRequest, userId, response, request);
   }
 
 

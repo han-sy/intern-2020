@@ -32,10 +32,10 @@ public class AlarmService {
   public void insertAlarm(PostDTO post) {
     Set<String> taggedUsers = tagCheckUtils.getTaggedUsers(post);
     if (taggedUsers != null) {
-      for (String taggedUserID : taggedUsers) {
+      for (String taggedUserId : taggedUsers) {
         AlarmDTO alarm = new AlarmDTO();
-        alarm.setPostID(post.getPostID());
-        alarm.setTaggedUserID(taggedUserID);
+        alarm.setPostId(post.getPostId());
+        alarm.setTaggedUserId(taggedUserId);
         alarmMapper.insertAlarm(alarm);
       }
     }
@@ -44,11 +44,11 @@ public class AlarmService {
   public void insertAlarm(CommentDTO comment) {
     Set<String> taggedUsers = tagCheckUtils.getTaggedUsers(comment);
     if (taggedUsers != null) {
-      for (String taggedUserID : taggedUsers) {
+      for (String taggedUserId : taggedUsers) {
         AlarmDTO alarm = new AlarmDTO();
-        alarm.setCommentID(comment.getCommentID());
-        alarm.setPostID(comment.getPostID());
-        alarm.setTaggedUserID(taggedUserID);
+        alarm.setCommentId(comment.getCommentId());
+        alarm.setPostId(comment.getPostId());
+        alarm.setTaggedUserId(taggedUserId);
         alarmMapper.insertAlarm(alarm);
       }
     }

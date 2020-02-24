@@ -3,10 +3,10 @@
  * @file    viewRecordAjax.js
  */
 
-function getViewRecords(postID,boardID, startIndex,successFunction) {
+function getViewRecords(postId,boardId, startIndex,successFunction) {
   $.ajax({
     type: 'GET',
-    url: `/boards/${boardID}/posts/${postID}/view-records`,
+    url: `/boards/${boardId}/posts/${postId}/view-records`,
     data :{startIndex:startIndex},
     error: function (xhr) {
       errorFunction(xhr);

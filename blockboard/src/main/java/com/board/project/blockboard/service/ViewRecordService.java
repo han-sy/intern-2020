@@ -22,23 +22,23 @@ public class ViewRecordService {
   @Autowired
   private ViewRecordMapper viewRecordMapper;
 
-  public void readPostByUser(String userID, int postID){
-    ViewRecordDTO record = new ViewRecordDTO(postID,userID);
+  public void readPostByUser(String userId, int postId){
+    ViewRecordDTO record = new ViewRecordDTO(postId,userId);
     viewRecordMapper.insertViewRecord(record);
   }
 
-  public boolean isReadPostByUser(String userID, int postID){
-    ViewRecordDTO record = new ViewRecordDTO(postID,userID);
+  public boolean isReadPostByUser(String userId, int postId){
+    ViewRecordDTO record = new ViewRecordDTO(postId,userId);
     return viewRecordMapper.selectRecordExist(record);
   }
 
 
-  public List<ViewRecordDTO> getViewRecords(int postID, String userID,int startIndex) {
+  public List<ViewRecordDTO> getViewRecords(int postId, String userId,int startIndex) {
     Map<String, Object> recordData = new HashMap<>();
-    recordData.put("postID",postID);
-    recordData.put("userID",userID);
+    recordData.put("postId",postId);
+    recordData.put("userId",userId);
     recordData.put("startIndex",startIndex);
     recordData.put("pageSize", PageSize.VIEW_RECORDS);
-    return viewRecordMapper.selectViewRecordsByPostID(recordData);
+    return viewRecordMapper.selectViewRecordsByPostId(recordData);
   }
 }

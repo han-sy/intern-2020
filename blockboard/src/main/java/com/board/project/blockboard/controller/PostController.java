@@ -36,11 +36,11 @@ public class PostController {
    * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
    */
   @GetMapping("")
-  public List<PostDTO> getPostListByBoardID(@PathVariable("boardId") int boardID,
+  public List<PostDTO> getPostListByBoardId(@PathVariable("boardId") int boardId,
       @RequestParam("pageNumber") int pageNumber, HttpServletRequest request) {
     UserDTO userDTO = new UserDTO(request);
     return postService
-        .getPostListByBoardID(boardID, pageNumber, userDTO.getCompanyID());
+        .getPostListByBoardId(boardId, pageNumber, userDTO.getCompanyId());
   }
 
   @PostMapping("")
@@ -49,24 +49,24 @@ public class PostController {
   }
 
   @GetMapping("/{postid}")
-  public PostDTO getPostByPostID(@PathVariable("postid") int postID, HttpServletRequest request) {
-    return postService.selectPostByPostID(postID, request);
+  public PostDTO getPostByPostId(@PathVariable("postid") int postId, HttpServletRequest request) {
+    return postService.selectPostByPostId(postId, request);
   }
 
   @PutMapping("/{postid}")
-  public void updatePost(@PathVariable("postid") int postID,
+  public void updatePost(@PathVariable("postid") int postId,
       @ModelAttribute PostDTO requestPost, HttpServletRequest request) {
-    postService.updatePost(requestPost, postID, request);
+    postService.updatePost(requestPost, postId, request);
   }
 
   @DeleteMapping("/{postid}")
-  public void deletePost(@PathVariable("postid") int postID, HttpServletRequest request) {
-    postService.deletePost(postID, request);
+  public void deletePost(@PathVariable("postid") int postId, HttpServletRequest request) {
+    postService.deletePost(postId, request);
   }
 
   @PutMapping("/{postid}/restore")
-  public void restorePost(@PathVariable("postid") int postID, HttpServletRequest request) {
-    postService.restorePost(postID, request);
+  public void restorePost(@PathVariable("postid") int postId, HttpServletRequest request) {
+    postService.restorePost(postId, request);
   }
 
   @GetMapping("/search")
@@ -113,6 +113,6 @@ public class PostController {
   @GetMapping("/popular-board")
   public List<PostDTO> getPopularPosts(HttpServletRequest request) {
     UserDTO userData = new UserDTO(request);
-    return postService.getPopularPostList(userData.getCompanyID());
+    return postService.getPopularPostList(userData.getCompanyId());
   }
 }

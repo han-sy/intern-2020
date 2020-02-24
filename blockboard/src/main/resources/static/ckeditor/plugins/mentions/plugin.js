@@ -38,7 +38,7 @@
             + '</div>'
             + '<div class="col">'
             + '<div class="row mentions_list_top">'
-            + '<a>{userID}</a>'
+            + '<a>{userId}</a>'
             + '</div>'
             + '<div class="row mentions_list_bottom">'
             + '<a>{userName} {userType}</a>'
@@ -46,7 +46,7 @@
             + '</div>'
             + '</div>'
             + '</div>',
-        outputTemplate: `<a class="mentions_tag name" href="javascript:void(0)" data-id="{userID}"><strong>{TagName}</strong></a>&nbsp;`
+        outputTemplate: `<a class="mentions_tag name" href="javascript:void(0)" data-id="{userId}"><strong>{TagName}</strong></a>&nbsp;`
       }];
     },
     init: function (editor) {
@@ -245,7 +245,7 @@
 
       function createArrayFeed() {
         var data = indexArrayFeed(feed).filter(function (item) {
-          var itemName = item.userID;
+          var itemName = item.userId;
           if (!mentions.caseSensitive) {
             itemName = itemName.toLowerCase();
             query = query.toLowerCase();
@@ -262,7 +262,7 @@
         return CKEDITOR.tools.array.reduce(feed, function (current, item) {
           current.push({
             userName: item.userName,
-            userID: item.userID,
+            userId: item.userId,
             userType: item.userType,
             companyName: item.companyName,
             id: index++
@@ -301,7 +301,7 @@
         var newData = CKEDITOR.tools.array.map(data, function (item) {
           var name = MARKER + item.userName;
           return CKEDITOR.tools.object.merge(item,
-              {userID: item.userID, TagName: name});
+              {userId: item.userId, TagName: name});
         });
 
         callback(newData);

@@ -7,15 +7,15 @@
  * commentReferenceID 반환
  * @returns
  */
-function getCommentReferencedIDInReferenceCommentContainer() {
+function getCommentReferencedIdInReferenceCommentContainer() {
   return $(this).closest(".referenceCommentContainer").attr(
       "data-id");
 }
 
 /**
- * comment Container에서 commentID 반환
+ * comment Container에서 commentId 반환
  */
-function getCommentIDInCommentContainer() {
+function getCommentIdInCommentContainer() {
   return $(this).closest(".commentContainer").attr("id").substring(COMMENT_PREFIX.length);
 }
 
@@ -30,7 +30,7 @@ function getReferenceUserName() {
 /**
  * 참조한 유저아이디 반환
  */
-function getReferenceUserID() {
+function getReferenceUserId() {
   return $(this).closest(".commentContainer").find(".name").attr(
       "data-id");
 }
@@ -67,10 +67,10 @@ function getCountPrintedReplies() {
 
 
 class Comment{
-  constructor(boardID,postID,commentID,commentReferencedID,commentContent) {
-    this.boardID = boardID;
-    this.postID = postID;
-    this.commentReferencedID = commentReferencedID;
+  constructor(boardId,postId,commentId,commentReferencedId,commentContent) {
+    this.boardId = boardId;
+    this.postId = postId;
+    this.commentReferencedId = commentReferencedId;
     this.commentContent = commentContent;
   }
 

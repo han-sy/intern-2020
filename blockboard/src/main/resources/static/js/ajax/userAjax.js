@@ -5,13 +5,13 @@
 
 function addUser() {
   let formData = new FormData($("#userForm")[0]);
-  sendUserImageToServer(formData.get("userID"));
+  sendUserImageToServer(formData.get("userId"));
   $.ajax({
     type: "POST",
     url: "/users",
     cache: false,
     data: {
-      userID: formData.get("userID"),
+      userId: formData.get("userId"),
       userName: formData.get("userName"),
       userPassword: formData.get("userPassword")
     },
@@ -29,13 +29,13 @@ function addUser() {
  * 유저 이미지 전송
  * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
  */
-function sendUserImageToServer(userID){
+function sendUserImageToServer(userId){
   let formData = new FormData($("#userForm")[0]);
   formData.append("file", $("#userImageFile")[0].files[0]);
 
   $.ajax({
     type: "PUT",
-    url: `/users/${userID}/Image`,
+    url: `/users/${userId}/Image`,
     data: formData,
     contentType: false,
     processData: false,

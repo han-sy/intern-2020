@@ -53,8 +53,8 @@ public class AuthorityValidation {
   }
 
   public boolean isWriter(FileDTO fileData,UserDTO userData,HttpServletResponse response){
-    String writerUserID = fileService.getFileWriterUserID(fileData);
-    boolean isValid = writerUserID.equals(userData.getUserID());
+    String writerUserId = fileService.getFileWriterUserId(fileData);
+    boolean isValid = writerUserId.equals(userData.getUserId());
     try {
       if(!isValid){
         throw new UserValidException();

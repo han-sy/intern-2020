@@ -26,11 +26,11 @@ public class PaginationController {
   private PaginationService paginationService;
 
   @GetMapping(value = "")
-  public PaginationDTO getPageList(@RequestParam int boardID, @RequestParam int postID,
+  public PaginationDTO getPageList(@RequestParam int boardId, @RequestParam int postId,
       @RequestParam int pageNumber, HttpServletRequest request) {
     UserDTO user = new UserDTO(request);
     //게시판 목록
-    PaginationDTO pageInfo = paginationService.getPageList(pageNumber,boardID,postID,user);
+    PaginationDTO pageInfo = paginationService.getPageList(pageNumber,boardId,postId,user);
     return pageInfo;
   }
 }

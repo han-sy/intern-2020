@@ -25,40 +25,40 @@ public class FunctionService {
   @Autowired
   private FunctionMapper functionMapper;
 
-  public List<FunctionDTO> getFunctionInfoByCompanyID(int companyID) {
-    return functionMapper.selectFunctionCheckByCompanyID(companyID);
+  public List<FunctionDTO> getFunctionInfoByCompanyId(int companyId) {
+    return functionMapper.selectFunctionCheckByCompanyId(companyId);
   }
 
-  public void changeFunctionOnToOff(int functionID, int companyID) {
+  public void changeFunctionOnToOff(int functionID, int companyId) {
     Map<String, Object> map_functionData = new HashMap<String, Object>();
     map_functionData.put("functionID", functionID);
-    map_functionData.put("companyID", companyID);
+    map_functionData.put("companyId", companyId);
     functionMapper.deleteFunctionCheckData(map_functionData);
   }
 
-  public void changeFunctionOffToOn(int functionID, int companyID) {
+  public void changeFunctionOffToOn(int functionID, int companyId) {
     Map<String, Object> functionPrimaryKey = new HashMap<String, Object>();
     functionPrimaryKey.put("functionID", functionID);
-    functionPrimaryKey.put("companyID", companyID);
+    functionPrimaryKey.put("companyId", companyId);
     functionMapper.insertFunctionCheckData(functionPrimaryKey);
 
   }
 
-  public List<FunctionDTO> getFunctionInfoListByCompanyID(int companyID) {
-    List<FunctionDTO> functionInfoList = getFunctionInfoByCompanyID(companyID);
+  public List<FunctionDTO> getFunctionInfoListByCompanyId(int companyId) {
+    List<FunctionDTO> functionInfoList = getFunctionInfoByCompanyId(companyId);
     return functionInfoList;
   }
 
-  public boolean isUseFunction(int companyID, int functionID) {
+  public boolean isUseFunction(int companyId, int functionID) {
     Map<String, Object> functionPrimaryKey = new HashMap<String, Object>();
     functionPrimaryKey.put("functionID", functionID);
-    functionPrimaryKey.put("companyID", companyID);
-    boolean result = functionMapper.selectFunctionCheckByCompanyIDAndFunctionID(functionPrimaryKey);
+    functionPrimaryKey.put("companyId", companyId);
+    boolean result = functionMapper.selectFunctionCheckByCompanyIdAndFunctionID(functionPrimaryKey);
     return result;
   }
 
-  public void updateNewFunctionsInfo(int companyID, List<FunctionDTO> functionNewList) {
-    List<FunctionDTO> functionOldList = getFunctionInfoByCompanyID(companyID); //기존데이터
+  public void updateNewFunctionsInfo(int companyId, List<FunctionDTO> functionNewList) {
+    List<FunctionDTO> functionOldList = getFunctionInfoByCompanyId(companyId); //기존데이터
     //ajax를 통해 넘어온 json 형식의 string을 map 타입으로 변경
 
     try {
@@ -68,9 +68,9 @@ public class FunctionService {
         int changeInfo = CompareData.compareFunctionOnOff(oldFunction, newFunction);
 
         if (changeInfo == FunctionAble.OFF_TO_ON) {
-          changeFunctionOffToOn(newFunction.getFunctionID(), companyID);//delete문
+          changeFunctionOffToOn(newFunction.getFunctionID(), companyId);//delete문
         } else if (changeInfo == FunctionAble.ON_TO_OFF) {
-          changeFunctionOnToOff(newFunction.getFunctionID(), companyID);//insert문
+          changeFunctionOnToOff(newFunction.getFunctionID(), companyId);//insert문
         }
       }
     } catch (Exception e) {

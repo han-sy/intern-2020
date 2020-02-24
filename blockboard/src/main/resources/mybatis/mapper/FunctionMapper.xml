@@ -8,7 +8,7 @@
 
 <mapper namespace="com.board.project.blockboard.mapper.FunctionMapper">
 
-  <select id="selectFunctionCheckByCompanyID" parameterType="int"
+  <select id="selectFunctionCheckByCompanyId" parameterType="int"
     resultType="com.board.project.blockboard.dto.FunctionDTO">
     SELECT FUNCTION.function_id                              AS functionID,
            IF(ISNULL(functioncheck.company_id), FALSE, TRUE) AS functionOn,
@@ -17,20 +17,20 @@
     FROM functions FUNCTION
            LEFT OUTER JOIN functions_check functioncheck
                            ON FUNCTION.function_id = functioncheck.function_id
-                             AND functioncheck.company_id = #{companyID};
+                             AND functioncheck.company_id = #{companyId};
   </select>
 
-  <select id="selectFunctionCheckByCompanyIDAndFunctionID" parameterType="hashmap"
+  <select id="selectFunctionCheckByCompanyIdAndFunctionID" parameterType="hashmap"
     resultType="boolean">
     SELECT IF(Count(function_id) > 0, TRUE, FALSE)
     FROM functions_check
-    WHERE company_id = #{companyID}
+    WHERE company_id = #{companyId}
       AND function_id = #{functionID};
   </select>
 
   <insert id="insertFunctionCheckData" parameterType="hashmap">
     INSERT INTO functions_check
-    VALUES (#{companyID},
+    VALUES (#{companyId},
             #{functionID},
             NULL);
   </insert>
@@ -38,7 +38,7 @@
   <delete id="deleteFunctionCheckData" parameterType="hashmap">
     DELETE
     FROM functions_check
-    WHERE company_id = #{companyID}
+    WHERE company_id = #{companyId}
       AND function_id = #{functionID};
   </delete>
 </mapper>

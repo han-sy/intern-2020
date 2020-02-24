@@ -64,7 +64,7 @@ function clickSaveDeleteBoard() {
     var checkboxObj = $(this);
     if (checkboxObj.is(":checked")) { //삭제할때 체크 이렇게 불러옴
       var boardData = new Object();
-      boardData.boardID = checkboxObj.val();
+      boardData.boardId = checkboxObj.val();
       boardData.boardName = checkboxObj.attr("data-boardName");
       boardDataList.push(boardData);
     }
@@ -100,10 +100,10 @@ function clickSaveChangeBoard() {
       alert("기존" + oldBoardName + "게시판 제목이 비었습니다.");
       return;
     }
-    var boardID = clickObj.attr("data-boardid");
+    var boardId = clickObj.attr("data-boardid");
     if (oldBoardName != newBoardName) {
       boardData.boardName = newBoardName;
-      boardData.boardID = boardID;
+      boardData.boardId = boardId;
       boardDataList.push(boardData);
     }
   });
@@ -120,10 +120,10 @@ function clickSaveChangeBoard() {
 
 // 게시글 목록에서 게시글 클릭시
 $(document).on('click', '.normal_post_click', function () {
-  var postID = getPostIDInPostList.call(this);
-  var boardID = getBoardIDInPostList.call(this);
+  var postId = getPostIdInPostList.call(this);
+  var boardId = getBoardIdInPostList.call(this);
   $(function () {
-    getPostDataAfterPostClick(postID, boardID); //boardAjax.js 참고
+    getPostDataAfterPostClick(postId, boardId); //boardAjax.js 참고
   });
 });
 
@@ -145,7 +145,7 @@ $(document).on("mouseleave", ".tabmenu", function () {
 // 탭 메뉴 클릭 이벤트 - 해당 게시판의 게시글 불러옴
 $(document).on("click", ".tabmenu", function clickTabEvent(event) {
   event.stopPropagation();
-  var boardID = $(this).attr('data-tab');
+  var boardId = $(this).attr('data-tab');
   $('.tabmenu').css('color', 'black');
   $('.tabmenu').removeClass("font-weight-bold");
   $('.tabmenu').removeClass("active_tab");
@@ -155,7 +155,7 @@ $(document).on("click", ".tabmenu", function clickTabEvent(event) {
   postClear();
   clearEditor();
 
-  getPageList(1, boardID, 0, updatePostPageList);
+  getPageList(1, boardId, 0, updatePostPageList);
 });
 
 //기능변경 on/off버튼 텍스트 바꾸기
@@ -179,9 +179,9 @@ $(document).on('click', '._function-switch', function () {
 /**
  * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
  */
-function clickBoardEventByBoardId(boardID) {
+function clickBoardEventByBoardId(boardId) {
   $(".tabmenu").each(function (index, item) {
-    if (parseInt(item.dataset.tab) === parseInt(boardID)) {
+    if (parseInt(item.dataset.tab) === parseInt(boardId)) {
       $(item).trigger("click");
       return false;
     }
@@ -191,7 +191,7 @@ function clickBoardEventByBoardId(boardID) {
 /**
  * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
  */
-function getCurrentActiveBoardID() {
+function getCurrentActiveBoardId() {
   let boardId = 0;
   $('#tab_id').children().each(function () {
     if ($(this).hasClass("active_tab")) {

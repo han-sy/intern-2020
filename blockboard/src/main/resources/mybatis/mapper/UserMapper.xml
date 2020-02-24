@@ -9,19 +9,19 @@
 <mapper namespace="com.board.project.blockboard.mapper.UserMapper">
   <select id="selectUserByID" parameterType="string"
     resultType="com.board.project.blockboard.dto.UserDTO">
-    SELECT user_id       as userID,
-           company_id    as companyID,
+    SELECT user_id       as userId,
+           company_id    as companyId,
            user_name     as userName,
            user_password as userPassword,
            user_type     as userType
     FROM users
-    WHERE user_id = #{userID};
+    WHERE user_id = #{userId};
   </select>
 
-  <select id="selectUserByUserIdAndCompanyID" parameterType="com.board.project.blockboard.dto.UserDTO"
+  <select id="selectUserByUserIdAndCompanyId" parameterType="com.board.project.blockboard.dto.UserDTO"
     resultType="com.board.project.blockboard.dto.UserDTO">
-    SELECT users.user_id       as userID,
-           users.company_id    as companyID,
+    SELECT users.user_id       as userId,
+           users.company_id    as companyId,
            users.user_name     as userName,
            users.user_password as userPassword,
            users.user_type     as userType,
@@ -30,8 +30,8 @@
            company.company_name  as companyName
     FROM users users
         JOIN companies company ON users.company_id = company.company_id
-    WHERE users.user_id = #{userID} AND
-          users.company_id = #{companyID};
+    WHERE users.user_id = #{userId} AND
+          users.company_id = #{companyId};
   </select>
 
   <insert id="insertUser" parameterType="com.board.project.blockboard.dto.UserDTO">
@@ -42,25 +42,25 @@
             user_name,
             user_password,
             user_type)
-    VALUES (#{userID},
-            #{companyID},
+    VALUES (#{userId},
+            #{companyId},
             #{userName},
             #{userPassword},
             #{userType});
   </insert>
 
-  <select id="selectUserNameByUserID" parameterType="string" resultType="string">
+  <select id="selectUserNameByUserId" parameterType="string" resultType="string">
     SELECT user_name as userName
     FROM users
-    WHERE user_id = #{userID};
+    WHERE user_id = #{userId};
   </select>
 
   <!--userid로 회원 타입 반환-->
   <!--@author Dongwook Kim <dongwook.kim1211@worksmobile.com>-->
-  <select id="selectUserTypeByUserID" parameterType="string" resultType="string">
+  <select id="selectUserTypeByUserId" parameterType="string" resultType="string">
     SELECT user_type AS userType
     FROM users
-    WHERE user_id = #{userID};
+    WHERE user_id = #{userId};
   </select>
 
   <update id="updateUserImage" parameterType="hashmap">
@@ -69,11 +69,11 @@
            image_file_name = #{imageFileName},
            thumbnail_url = #{thumbnailUrl},
            thumbnail_file_name = #{thumbnailFileName}
-    WHERE  user_id = #{userID};
+    WHERE  user_id = #{userId};
   </update>
-  <select id="selectUsersByCompanyID" parameterType="int"
+  <select id="selectUsersByCompanyId" parameterType="int"
     resultType="com.board.project.blockboard.dto.UserDTO">
-    SELECT user_id         AS userID,
+    SELECT user_id         AS userId,
            user_name       AS userName,
            user_type       AS userType,
            company_name    AS companyName,
@@ -82,6 +82,6 @@
     FROM   users users
            JOIN companies company
              ON users.company_id = company.company_id
-    WHERE  users.company_id = #{companyID};
+    WHERE  users.company_id = #{companyId};
   </select>
 </mapper>

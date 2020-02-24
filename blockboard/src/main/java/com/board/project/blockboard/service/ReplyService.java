@@ -39,26 +39,26 @@ public class ReplyService {
   /**
    * 댓글 id 를 통해 답글 리스트 get
    */
-  public List<CommentDTO> getReplyListByCommentID(int commentReferencedID,int startIndex) {
-    return replyMapper.selectRepliesByCommentID(commentReferencedID,startIndex, PageSize.REPLY);
+  public List<CommentDTO> getReplyListByCommentId(int commentReferencedId,int startIndex) {
+    return replyMapper.selectRepliesByCommentId(commentReferencedId,startIndex, PageSize.REPLY);
   }
 
   /**
    * 답글 insert
    */
-  public int writeReplyWithUserInfo(String userID, int companyID, CommentDTO replyData) {
-    updateReplyData(userID, companyID, replyData);
+  public int writeReplyWithUserInfo(String userId, int companyId, CommentDTO replyData) {
+    updateReplyData(userId, companyId, replyData);
     replyMapper.insertNewReplyByCommentInfo(replyData);
-    commentService.updateRepliesCountPlus1(replyData.getCommentReferencedID());
+    commentService.updateRepliesCountPlus1(replyData.getCommentReferencedId());
     alarmService.insertAlarm(replyData);
-    return replyData.getCommentID();
+    return replyData.getCommentId();
   }
 
-  private void updateReplyData(String userID, int companyID, CommentDTO replyData) {
-    replyData.setUserID(userID);
+  private void updateReplyData(String userId, int companyId, CommentDTO replyData) {
+    replyData.setUserId(userId);
     replyData.setCommentContentExceptHTMLTag(Jsoup.parse(replyData.getCommentContent()).text());
-    replyData.setCompanyID(companyID);
-    replyData.setUserName(userMapper.selectUserNameByUserID(userID));
+    replyData.setCompanyId(companyId);
+    replyData.setUserName(userMapper.selectUserNameByUserId(userId));
   }
 
 }

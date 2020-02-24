@@ -37,11 +37,11 @@ public class PostService {
 
   public int insertPost(PostDTO receivePost, HttpServletRequest request) {
     LengthCheckUtils.validatePostData(receivePost);
-    int receivedPostID = receivePost.getPostID();
+    int receivedPostId = receivePost.getPostId();
     setPostDataFromRequest(receivePost, request);
     // [임시보관함]의 게시글에서 '저장'or'임시저장' 버튼을 눌렀을 때 검증
-    if (receivedPostID != 0) {
-      PostDTO receivePostInDatabase = postMapper.selectPostByPostID(receivedPostID);
+    if (receivedPostId != 0) {
+      PostDTO receivePostInDatabase = postMapper.selectPostByPostId(receivedPostId);
       PostValidation.validateTempPost(receivePostInDatabase);
     }
     postMapper.insertPost(receivePost);
@@ -49,32 +49,32 @@ public class PostService {
     if (StringUtils.equals(receivePost.getPostStatus(), "normal")) {
       alarmService.insertAlarm(receivePost);
     }
-    return receivePost.getPostID();
+    return receivePost.getPostId();
   }
 
   private void setPostDataFromRequest(PostDTO receivePost, HttpServletRequest request) {
-    receivePost.setUserID(request.getAttribute("userID").toString());
+    receivePost.setUserId(request.getAttribute("userId").toString());
     receivePost.setUserName(request.getAttribute("userName").toString());
-    receivePost.setCompanyID(Integer.parseInt(request.getAttribute("companyID").toString()));
+    receivePost.setCompanyId(Integer.parseInt(request.getAttribute("companyId").toString()));
     receivePost.setPostContentExceptHTMLTag(Jsoup.parse(receivePost.getPostContent()).text());
   }
 
-  public void deletePost(int postID, HttpServletRequest request) {
-    PostDTO post = postMapper.selectPostByPostID(postID);
+  public void deletePost(int postId, HttpServletRequest request) {
+    PostDTO post = postMapper.selectPostByPostId(postId);
     UserDTO user = new UserDTO(request);
     PostValidation.validateDelete(post, user);
 
     // 휴지통에 있는 게시글이면 바로삭제하고, 아니면 휴지통으로 보낸다.
     if (StringUtils.equals(post.getPostStatus(), "recycle")) {
-      postMapper.deletePostByPostID(postID);
+      postMapper.deletePostByPostId(postId);
     } else {
       postMapper.temporaryDeletePost(post);
     }
   }
 
-  public void updatePost(PostDTO newPost, int postID, HttpServletRequest request) {
+  public void updatePost(PostDTO newPost, int postId, HttpServletRequest request) {
     UserDTO user = new UserDTO(request);
-    PostDTO oldPost = postMapper.selectPostByPostID(postID);
+    PostDTO oldPost = postMapper.selectPostByPostId(postId);
 
     LengthCheckUtils.validatePostData(newPost);
     PostValidation.isValidChange(oldPost, user);
@@ -83,7 +83,7 @@ public class PostService {
   }
 
   private void updateOldPostFromNewPost(PostDTO oldPost, PostDTO newPost) {
-    oldPost.setBoardID(newPost.getBoardID());
+    oldPost.setBoardId(newPost.getBoardId());
     oldPost.setPostTitle(newPost.getPostTitle());
     oldPost.setPostContent(newPost.getPostContent());
     oldPost.setPostContentExceptHTMLTag(Jsoup.parse(newPost.getPostContent()).text());
@@ -94,9 +94,9 @@ public class PostService {
     return postMapper.searchPost(option, keyword);
   }
 
-  public void restorePost(int postID, HttpServletRequest request) {
+  public void restorePost(int postId, HttpServletRequest request) {
     UserDTO user = new UserDTO(request);
-    PostDTO post = postMapper.selectPostByPostID(postID);
+    PostDTO post = postMapper.selectPostByPostId(postId);
     PostValidation.isValidRestore(post, user);
     postMapper.restorePost(post);
   }
@@ -132,7 +132,7 @@ public class PostService {
   }
 
   public List<PostDTO> selectRecentPosts(UserDTO user, int pageNumber) {
-    int pageCount = postMapper.getRecentPostsCount(user.getCompanyID());
+    int pageCount = postMapper.getRecentPostsCount(user.getCompanyId());
     Map<String, Object> map = makeMapUserAndPageInfo(user, pageCount, pageNumber);
     return postMapper.selectRecentPosts(map);
   }
@@ -153,8 +153,8 @@ public class PostService {
     return postMapper.getMyRecyclePostsCount(user);
   }
 
-  public int getRecentPostsCount(int companyID) {
-    return postMapper.getRecentPostsCount(companyID);
+  public int getRecentPostsCount(int companyId) {
+    return postMapper.getRecentPostsCount(companyId);
   }
 
   public Map<String, Object> makeMapUserAndPageInfo(UserDTO user, int pageCount, int pageNumber) {
@@ -172,12 +172,12 @@ public class PostService {
    *
    * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
    */
-  public PostDTO selectPostByPostID(int postID, HttpServletRequest request) {
+  public PostDTO selectPostByPostId(int postId, HttpServletRequest request) {
     UserDTO userData = new UserDTO(request);
-    PostDTO post = postMapper.selectPostByPostID(postID);
+    PostDTO post = postMapper.selectPostByPostId(postId);
     PostValidation.isExistPost(post);
-    if (!viewRecordService.isReadPostByUser(userData.getUserID(), postID)) {//안읽은경우
-      updateViewCnt(postID, request);//조회수 업데이트
+    if (!viewRecordService.isReadPostByUser(userData.getUserId(), postId)) {//안읽은경우
+      updateViewCnt(postId, request);//조회수 업데이트
       post.setViewCount(post.getViewCount() + 1);//반환도 1증가
     }
     return post;
@@ -188,12 +188,12 @@ public class PostService {
    *
    * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
    */
-  public List<PostDTO> getPostListByBoardID(int boardID, int pageNumber, int companyID) {
-    int pageCount = getPostsCountByBoardID(boardID);
+  public List<PostDTO> getPostListByBoardId(int boardId, int pageNumber, int companyId) {
+    int pageCount = getPostsCountByBoardId(boardId);
     PaginationDTO pageInfo = new PaginationDTO("posts",pageCount, pageNumber, PageSize.POST,
         RangeSize.POST);
     List<PostDTO> postList = postMapper
-        .selectPostByBoardID(boardID, pageInfo.getStartIndex(), PageSize.POST);
+        .selectPostByBoardId(boardId, pageInfo.getStartIndex(), PageSize.POST);
 
     return postList;
   }
@@ -203,7 +203,7 @@ public class PostService {
    *
    * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
    */
-  private List<PostDTO> updatePostInfo(List<PostDTO> postList, int companyID) {
+  private List<PostDTO> updatePostInfo(List<PostDTO> postList, int companyId) {
 
     return postList;
   }
@@ -211,16 +211,16 @@ public class PostService {
   /**
    * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
    */
-  public PostDTO getPostByPostID(int postID) {
-    PostDTO post = postMapper.selectPostByPostID(postID);
+  public PostDTO getPostByPostId(int postId) {
+    PostDTO post = postMapper.selectPostByPostId(postId);
     return post;
   }
 
   /**
    * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
    */
-  public int getPostsCountByBoardID(int boardID) {
-    int postCounts = postMapper.selectPostCountByBoardID(boardID);
+  public int getPostsCountByBoardId(int boardId) {
+    int postCounts = postMapper.selectPostCountByBoardId(boardId);
     return postCounts;
   }
 
@@ -231,17 +231,17 @@ public class PostService {
    */
   //TODO 휴지통인경우 임시저장함인경우는 따로 구분해서 조회수 증가 안되도록 해야됨. 1번방법 : 임시저장이나 휴지통인 경우 제외 ,2번방법 : 작성자 조회수증가에서 제외.
   //TODO 카운트는 비동기로 트랜잭션 처리보다야
-  public void updateViewCnt(int postID, HttpServletRequest request) {
+  public void updateViewCnt(int postId, HttpServletRequest request) {
     UserDTO userData = new UserDTO(request);
-    viewRecordService.readPostByUser(userData.getUserID(), postID);
-    postMapper.updateViewCnt(postID);
+    viewRecordService.readPostByUser(userData.getUserId(), postId);
+    postMapper.updateViewCnt(postId);
   }
 
   /**
    * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
    */
-  public List<PostDTO> getPopularPostList(int companyID) {
-    List<PostDTO> postList = postMapper.selectPopularPostListByCompanyID(companyID);
+  public List<PostDTO> getPopularPostList(int companyId) {
+    List<PostDTO> postList = postMapper.selectPopularPostListByCompanyId(companyId);
     for (PostDTO post : postList) {
       post.setIsPopular(true);
     }
@@ -251,40 +251,38 @@ public class PostService {
   /**
    * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
    */
-  public int getPopularPostsCount(int companyID) {
-    return postMapper.getPopularPostsCount(companyID);
+  public int getPopularPostsCount(int companyId) {
+    return postMapper.getPopularPostsCount(companyId);
   }
 
   
   /**
    * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
    */
-  @Async
-  public void updateCommentCountPlus1(int postID) {
-    postMapper.updateCommentCountPlus1(postID);
+  public void updateCommentCountPlus1(int postId) {
+    postMapper.updateCommentCountPlus1(postId);
   }
 
   /**
    * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
    */
-  @Async
-  public void updateCommentCountMinus1(int postID){
-    postMapper.updateCommentCountMinus1(postID);
+  public void updateCommentCountMinus1(int postId){
+    postMapper.updateCommentCountMinus1(postId);
   }
 
   /**
    * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
    */
-  public int getPostIDByCommentID(int commentID) {
-    int postID = postMapper.selectPostIDByCommentID(commentID);
-    return postID;
+  public int getPostIdByCommentId(int commentId) {
+    int postId = postMapper.selectPostIdByCommentId(commentId);
+    return postId;
   }
 
   /**
    * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
    */
-  public int getCommentsCountByPostID(int postID) {
-    return postMapper.selectCommentsCountByPostID(postID);
+  public int getCommentsCountByPostId(int postId) {
+    return postMapper.selectCommentsCountByPostId(postId);
   }
 }
 

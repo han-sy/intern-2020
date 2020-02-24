@@ -3,11 +3,11 @@
  * @file    postData.js
  */
 
-function getPostIDInPost() {
-  return $("#postID").html();
+function getPostIdInPost() {
+  return $("#postId").html();
 }
 
-function getPostIDInPostList() {
+function getPostIdInPostList() {
   return $(this).attr("data-post");
 }
 

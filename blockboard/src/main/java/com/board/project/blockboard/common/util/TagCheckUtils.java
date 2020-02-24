@@ -26,8 +26,8 @@ public class TagCheckUtils {
     Elements body = doc.select("a.mentions_tag");
     for (int i = 0; i < body.size(); i++) {
       Element tagItem = body.get(i);
-      String userID = tagItem.dataset().get("id");
-      taggedUsers.add(userID);
+      String userId = tagItem.dataset().get("id");
+      taggedUsers.add(userId);
     }
     return taggedUsers;
   }
@@ -39,9 +39,9 @@ public class TagCheckUtils {
     log.info(body.toString());
     for (int i = 0; i < body.size(); i++) {
       Element tagItem = body.get(i);
-      String userID = tagItem.dataset().get("id");
-      log.info(userID);
-      taggedUsers.add(userID);
+      String userId = tagItem.dataset().get("id");
+      log.info(userId);
+      taggedUsers.add(userId);
     }
     log.info(taggedUsers.toString());
     return taggedUsers;

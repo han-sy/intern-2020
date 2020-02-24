@@ -3,10 +3,10 @@
  * @file    boardData.js
  */
 
-function getBoardIDInPost() {
+function getBoardIdInPost() {
   return $('#boardIdInPost').html();
 }
 
-function getBoardIDInPostList() {
+function getBoardIdInPostList() {
   return $(this).attr("data-board");
 }

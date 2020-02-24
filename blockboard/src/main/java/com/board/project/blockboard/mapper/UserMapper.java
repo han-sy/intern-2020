@@ -14,17 +14,17 @@ import org.springframework.stereotype.Repository;
 @Mapper
 public interface UserMapper {
 
-  List<UserDTO> selectUsersByCompanyID(int companyID);
+  List<UserDTO> selectUsersByCompanyId(int companyId);
 
   void insertUser(UserDTO user);
 
-  UserDTO selectUserByID(String userID);
+  UserDTO selectUserByID(String userId);
 
-  UserDTO selectUserByUserIdAndCompanyID(UserDTO user);
+  UserDTO selectUserByUserIdAndCompanyId(UserDTO user);
 
-  String selectUserNameByUserID(String userID);
+  String selectUserNameByUserId(String userId);
 
-  String selectUserTypeByUserID(String userID);
+  String selectUserTypeByUserId(String userId);
 
   void updateUserImage(Map<String, Object> userData);
 }

@@ -80,10 +80,10 @@ public class FileService {
 
   public String uploadFile(MultipartHttpServletRequest multipartRequest, HttpServletRequest request,
       HttpServletResponse response) throws IOException {
-    int companyID = Integer.parseInt(request.getAttribute("companyID").toString());
+    int companyId = Integer.parseInt(request.getAttribute("companyId").toString());
     String uuid = Common.getNewUUID();
     Iterator<String> itr = multipartRequest.getFileNames();
-    if (!functionValidation.isFunctionOn(companyID, FunctionID.POST_ATTACH_FILE,FunctionID.COMMENT_ATTACH_FILE, response)) {
+    if (!functionValidation.isFunctionOn(companyId, FunctionID.POST_ATTACH_FILE,FunctionID.COMMENT_ATTACH_FILE, response)) {
       return null;
     }
     String fileName = "";
@@ -120,32 +120,32 @@ public class FileService {
 
   public void updateIDs(List<FileDTO> fileList, HttpServletRequest request,
       HttpServletResponse response) {
-    int companyID = Integer.parseInt(request.getAttribute("companyID").toString());
-    if (!functionValidation.isFunctionOn(companyID, FunctionID.POST_ATTACH_FILE,FunctionID.COMMENT_ATTACH_FILE, response)) {
+    int companyId = Integer.parseInt(request.getAttribute("companyId").toString());
+    if (!functionValidation.isFunctionOn(companyId, FunctionID.POST_ATTACH_FILE,FunctionID.COMMENT_ATTACH_FILE, response)) {
       return;
     }
     for (FileDTO file : fileList) {
       Map<String, Object> fileAttributes = new HashMap<String, Object>();
-      log.info("fileInfo : " + file.getPostID() + "," + file.getCommentID() + "," + file
+      log.info("fileInfo : " + file.getPostId() + "," + file.getCommentId() + "," + file
           .getStoredFileName());
-      fileAttributes.put("postID", file.getPostID());
-      fileAttributes.put("commentID", file.getCommentID());
+      fileAttributes.put("postId", file.getPostId());
+      fileAttributes.put("commentId", file.getCommentId());
       fileAttributes.put("storedFileName", file.getStoredFileName());
       fileMapper.updateIDsByStoredFileName(fileAttributes);
     }
   }
 
-  public List<FileDTO> getFileList(int postID, int commentID) {
+  public List<FileDTO> getFileList(int postId, int commentId) {
     Map<String, Object> fileAttributes = new HashMap<String, Object>();
-    fileAttributes.put("postID", postID);
-    fileAttributes.put("commentID", commentID);
+    fileAttributes.put("postId", postId);
+    fileAttributes.put("commentId", commentId);
     return fileMapper.selectFileListByEditorID(fileAttributes);
   }
 
   public void downloadFile(int fileID, HttpServletResponse response, HttpServletRequest request) {
     UserDTO userData = new UserDTO(request);
     if (!functionValidation
-        .isFunctionOn(userData.getCompanyID(), FunctionID.POST_ATTACH_FILE,FunctionID.COMMENT_ATTACH_FILE, response)) {
+        .isFunctionOn(userData.getCompanyId(), FunctionID.POST_ATTACH_FILE,FunctionID.COMMENT_ATTACH_FILE, response)) {
       return;
     }
     FileDTO fileData = fileMapper.selectFileByFileID(fileID);
@@ -189,11 +189,11 @@ public class FileService {
   }
 
 
-  public String getFileWriterUserID(FileDTO fileData) {
-    if (fileData.getPostID() > 0) {//post의 첨부파일일때
-      return postMapper.selectUserIDByPostID(fileData.getPostID());
-    } else if (fileData.getCommentID() > 0) {//댓글의 첨부파일일때
-      return commentMapper.selectUserIDByCommentID(fileData.getCommentID());
+  public String getFileWriterUserId(FileDTO fileData) {
+    if (fileData.getPostId() > 0) {//post의 첨부파일일때
+      return postMapper.selectUserIdByPostId(fileData.getPostId());
+    } else if (fileData.getCommentId() > 0) {//댓글의 첨부파일일때
+      return commentMapper.selectUserIdByCommentId(fileData.getCommentId());
     }
     return null;
   }
@@ -202,7 +202,7 @@ public class FileService {
       HttpServletResponse response) {
     UserDTO userData = new UserDTO(request);
     if (!functionValidation
-        .isFunctionOn(userData.getCompanyID(), FunctionID.POST_ATTACH_FILE,FunctionID.COMMENT_ATTACH_FILE, response)
+        .isFunctionOn(userData.getCompanyId(), FunctionID.POST_ATTACH_FILE,FunctionID.COMMENT_ATTACH_FILE, response)
         || !fileValidation.isExistFileInDatabase(storedFileName, response)) {
       return;
     }
@@ -227,13 +227,13 @@ public class FileService {
   public String uploadImage(HttpServletResponse response,
       MultipartHttpServletRequest multiFile, HttpServletRequest request, String editorName)
       throws Exception {
-    int companyID = Integer.parseInt(request.getAttribute("companyID").toString());
+    int companyId = Integer.parseInt(request.getAttribute("companyId").toString());
     if (StringUtils.equals(editorName, "editor")) {
-      if (!(functionValidation.isFunctionOn(companyID, FunctionID.POST_INLINE_IMAGE, response))) {
+      if (!(functionValidation.isFunctionOn(companyId, FunctionID.POST_INLINE_IMAGE, response))) {
         return null;
       }
     } else {
-      if (!(functionValidation.isFunctionOn(companyID, FunctionID.COMMENT_INLINE_IMAGE, response))) {
+      if (!(functionValidation.isFunctionOn(companyId, FunctionID.COMMENT_INLINE_IMAGE, response))) {
         return null;
       }
     }
@@ -262,13 +262,13 @@ public class FileService {
             json.addProperty("url", fileUrl);
 
             if (StringUtils.equals(editorName, "editor")) {
-              if (functionService.isUseFunction(companyID, FunctionID.POST_AUTO_TAG)) {
-                List<UserDTO> detectedUsers = detectedUserList(fileName, companyID);
+              if (functionService.isUseFunction(companyId, FunctionID.POST_AUTO_TAG)) {
+                List<UserDTO> detectedUsers = detectedUserList(fileName, companyId);
                 json.add("detectedUser", new Gson().toJsonTree(detectedUsers));
               }
             } else {
-              if (functionService.isUseFunction(companyID, FunctionID.COMMENT_AUTO_TAG)) {
-                List<UserDTO> detectedUsers = detectedUserList(fileName, companyID);
+              if (functionService.isUseFunction(companyId, FunctionID.COMMENT_AUTO_TAG)) {
+                List<UserDTO> detectedUsers = detectedUserList(fileName, companyId);
                 json.add("detectedUser", new Gson().toJsonTree(detectedUsers));
               }
             }
@@ -289,7 +289,7 @@ public class FileService {
   /**
    * 이미지에 존재하는 유저리스트 반환
    */
-  public List<UserDTO> detectedUserList(String fileName, int companyID) {
+  public List<UserDTO> detectedUserList(String fileName, int companyId) {
     String collectionID = Common.getNewUUID();
     //collection 등록
     amazonRekognitionService.registerCollection(collectionID);
@@ -298,7 +298,7 @@ public class FileService {
         .registerImageToCollection(fileName, Bucket.INLINE, collectionID);
     //
     List<UserDTO> detectedUsers = new ArrayList<>();
-    List<UserDTO> userList = userMapper.selectUsersByCompanyID(companyID);
+    List<UserDTO> userList = userMapper.selectUsersByCompanyId(companyId);
     DetectThread detectThread = null;
     for (UserDTO user : userList) {
       detectThread = new DetectThread(user, collectionID, amazonRekognitionService, detectedUsers);

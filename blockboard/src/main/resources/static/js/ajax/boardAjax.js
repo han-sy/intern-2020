@@ -68,12 +68,12 @@ function getBoardList(successFunction) {
 }
 
 //게시물 클릭후 게시물 데이터 받아오기
-function getPostDataAfterPostClick(postID, boardID) {
-  var userID = $('#current_user_info').attr('data-id');
+function getPostDataAfterPostClick(postId, boardId) {
+  var userId = $('#current_user_info').attr('data-id');
   postClear();
   $.ajax({
     type: 'GET',
-    url: `/boards/${boardID}/posts/${postID}`,
+    url: `/boards/${boardId}/posts/${postId}`,
     error: function (error) {  //통신 실패시
       alert('통신실패!' + error);
     },
@@ -83,23 +83,23 @@ function getPostDataAfterPostClick(postID, boardID) {
 
       //게시글 내용 출력
       loadPostContent(data);
-      showAttachFileContents(postID);
-      // 작성글의 userID와 현재 로그인한 userID가 같으면 삭제버튼 표시
-      showEditAndDeleteButtonInPost(data, userID);
+      showAttachFileContents(postId);
+      // 작성글의 userId와 현재 로그인한 userId가 같으면 삭제버튼 표시
+      showEditAndDeleteButtonInPost(data, userId);
 
-      showCommentContents(boardID, postID);
+      showCommentContents(boardId, postId);
     }
   });
 }
 
 //탭클릭후 게시판 목록 불러오기
-function getPostListByPageNum(pageNum, boardID) {
+function getPostListByPageNum(pageNum, boardId) {
   var btn_write = $('#btn_write');
-  if (boardID < 0) {
+  if (boardId < 0) {
     btn_write.attr('style', 'visibility:hidden');
   }
 
-  switch (boardID) {
+  switch (boardId) {
     case BOARD_ID.MY_POST:
       getMyPosts(pageNum);
       break;
@@ -122,7 +122,7 @@ function getPostListByPageNum(pageNum, boardID) {
       btn_write.attr('style', 'visibility:visible');
       $.ajax({
         type: 'GET',
-        url: `/boards/${boardID}/posts`,
+        url: `/boards/${boardId}/posts`,
         data: {
           pageNumber: pageNum
         },
@@ -135,4 +135,5 @@ function getPostListByPageNum(pageNum, boardID) {
       });
   }
 }
+
 

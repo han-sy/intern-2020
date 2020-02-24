@@ -5,22 +5,22 @@
 
 class User {
   constructor() {
-    this.companyID = $("#companyInfo").attr("value");
-    this.userID = $('#current_user_info').attr("data-id");
+    this.companyId = $("#companyInfo").attr("value");
+    this.userId = $('#current_user_info').attr("data-id");
     this.userType = $('#current_user_info').attr("data-type");
     this.userName = $('#current_user_info').html();
   }
 
-  getUserID() {
-    return this.userID;
+  getUserId() {
+    return this.userId;
   }
 
   getUserType() {
     return this.userType;
   }
 
-  getCompanyID() {
-    return this.companyID;
+  getCompanyId() {
+    return this.companyId;
   }
 
   getUserName() {

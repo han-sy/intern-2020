@@ -33,11 +33,11 @@ public class CommentController {
   private CommentService commentService;
 
   /**
-   * postID 일치하는 댓글 목록 리턴 ( 대댓글은 반환하지 않는다.)
+   * postId 일치하는 댓글 목록 리턴 ( 대댓글은 반환하지 않는다.)
    */
   @GetMapping("")
-  public List<CommentDTO> getCommentsByPost(@PathVariable("postId") int postID,@RequestParam int pageNumber) {
-    List<CommentDTO> commentList = commentService.getCommentListByPostID(postID,pageNumber);
+  public List<CommentDTO> getCommentsByPost(@PathVariable("postId") int postId,@RequestParam int pageNumber) {
+    List<CommentDTO> commentList = commentService.getCommentListByPostId(postId,pageNumber);
     return commentList;
   }
 
@@ -48,18 +48,18 @@ public class CommentController {
   public int insertComment(@RequestBody CommentDTO commentData, HttpServletRequest request) {
     UserDTO userData = new UserDTO(request);
     return commentService
-        .writeCommentWithUserInfo(commentData,userData.getUserID(), userData.getCompanyID());
+        .writeCommentWithUserInfo(commentData,userData.getUserId(), userData.getCompanyId());
   }
 
   /**
    * 게시물 별로 댓글 개수를 반환한다.
    *
-   * @param postID 게시물의 ID
+   * @param postId 게시물의 ID
    * @return 댓글개수를 반환
    */
   @GetMapping("/counts")
-  public int getCommentsCountsByPostID(@PathVariable("postId") int postID) {
-    int commentCount = postService.getCommentsCountByPostID(postID);
+  public int getCommentsCountsByPostId(@PathVariable("postId") int postId) {
+    int commentCount = postService.getCommentsCountByPostId(postId);
     return commentCount;
   }
 
@@ -68,8 +68,8 @@ public class CommentController {
    * 댓글 삭제
    */
   @DeleteMapping("/{commentId}")
-  public void deleteComment(@RequestParam int commentID) {
-    commentService.deleteComment(commentID);
+  public void deleteComment(@RequestParam int commentId) {
+    commentService.deleteComment(commentId);
   }
 
   /**

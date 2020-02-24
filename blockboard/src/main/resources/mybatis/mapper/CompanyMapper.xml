@@ -7,19 +7,19 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.board.project.blockboard.mapper.CompanyMapper">
-  <select id="selectCompanyNameByUserID" parameterType="string" resultType="string">
+  <select id="selectCompanyNameByUserId" parameterType="string" resultType="string">
     SELECT company.company_name AS companyName
     FROM companies company
            JOIN users users
                 ON company.company_id = users.company_id
-    WHERE users.user_id = #{userID};
+    WHERE users.user_id = #{userId};
   </select>
 
-  <select id="selectCompanyIDByUserID" parameterType="string" resultType="int">
-    SELECT company.company_id AS companyID
+  <select id="selectCompanyIdByUserId" parameterType="string" resultType="int">
+    SELECT company.company_id AS companyId
     FROM companies company
            JOIN users users
                 ON company.company_id = users.company_id
-    WHERE users.user_id = #{userID};
+    WHERE users.user_id = #{userId};
   </select>
 </mapper>

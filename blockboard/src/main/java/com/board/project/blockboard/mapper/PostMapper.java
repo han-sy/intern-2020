@@ -27,11 +27,11 @@ public interface PostMapper {
 
   List<PostDTO> selectMyTempPosts(Map<String, Object> map);
 
-  List<PostDTO> selectPostByBoardID(int boardID, int startIndex, int pageSize);
+  List<PostDTO> selectPostByBoardId(int boardId, int startIndex, int pageSize);
 
-  List<PostDTO> selectPopularPostListByCompanyID(int companyID);
+  List<PostDTO> selectPopularPostListByCompanyId(int companyId);
 
-  PostDTO selectPostByPostID(int postID);
+  PostDTO selectPostByPostId(int postId);
 
   PostDTO selectPostByAlarmId(int alarmId);
 
@@ -41,15 +41,15 @@ public interface PostMapper {
 
   void insertPost(PostDTO post);
 
-  void deletePostByPostID(int postID);
+  void deletePostByPostId(int postId);
 
   void updatePost(PostDTO post);
 
-  void updateViewCnt(int postID);
+  void updateViewCnt(int postId);
 
-  String selectUserIDByPostID(int postId);
+  String selectUserIdByPostId(int postId);
 
-  int selectPostCountByBoardID(int boardID);
+  int selectPostCountByBoardId(int boardId);
 
   int getMyPostsCount(UserDTO user);
 
@@ -59,16 +59,16 @@ public interface PostMapper {
 
   int getMyRecyclePostsCount(UserDTO user);
 
-  int getRecentPostsCount(int companyID);
+  int getRecentPostsCount(int companyId);
 
-  int getPopularPostsCount(int companyID);
+  int getPopularPostsCount(int companyId);
 
 
-  void updateCommentCountPlus1(int postID);
+  void updateCommentCountPlus1(int postId);
 
-  void updateCommentCountMinus1(int postID);
+  void updateCommentCountMinus1(int postId);
 
-  Integer selectPostIDByCommentID(int commentID);
+  Integer selectPostIdByCommentId(int commentId);
 
-  int selectCommentsCountByPostID(int postID);
+  int selectCommentsCountByPostId(int postId);
 }

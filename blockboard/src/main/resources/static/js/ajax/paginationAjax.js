@@ -4,13 +4,13 @@
  */
 
 //리스트 받아오기
-function getPageList(pageNumber, boardID,postID, successFunction) {
+function getPageList(pageNumber, boardId,postId, successFunction) {
   $.ajax({
     type: 'GET',
     url: `/pages`,
     data: {
-      boardID: boardID,
-      postID: postID,
+      boardId: boardId,
+      postId: postId,
       pageNumber: pageNumber
     },
     error: function () {  //통신 실패시

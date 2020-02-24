@@ -43,7 +43,7 @@ public class FileController {
   }
 
   /**
-   * 파일 테이블에 postID 업데이트 최종으로 리스트에 추가된 목록을 기준으로
+   * 파일 테이블에 postId 업데이트 최종으로 리스트에 추가된 목록을 기준으로
    */
   @PutMapping(value = "/files")
   public void updateIdToFile(@RequestBody List<FileDTO> fileList, HttpServletRequest request,
@@ -55,9 +55,9 @@ public class FileController {
    * 게시물 id를 가지고 게시물 첨부파일 리스트 가져오기
    */
   @GetMapping(value = "/files")
-  public List<FileDTO> getFileList(@RequestParam int postID, @RequestParam int commentID) {
+  public List<FileDTO> getFileList(@RequestParam int postId, @RequestParam int commentId) {
 
-    return fileService.getFileList(postID, commentID);
+    return fileService.getFileList(postId, commentId);
   }
 
   /**

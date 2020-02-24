@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 @Mapper
 public interface CompanyMapper {
 
-  int selectCompanyIDByUserID(String userID);
+  int selectCompanyIdByUserId(String userId);
 
-  String selectCompanyNameByUserID(String userID);
+  String selectCompanyNameByUserId(String userId);
 }

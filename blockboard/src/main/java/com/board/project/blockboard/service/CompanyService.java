@@ -16,7 +16,7 @@ public class CompanyService {
   @Autowired
   CompanyMapper companyMapper;
 
-  public String getCompanyNameByUserID(String userID) {
-    return companyMapper.selectCompanyNameByUserID(userID);
+  public String getCompanyNameByUserId(String userId) {
+    return companyMapper.selectCompanyNameByUserId(userId);
   }
 }

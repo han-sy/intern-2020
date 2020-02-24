@@ -45,7 +45,7 @@ public class BoardController {
 
     //게시판 목록
     List<BoardDTO> boardList = boardService
-        .getBoardListByCompanyID(userData.getCompanyID()); // select로 받아오기
+        .getBoardListByCompanyId(userData.getCompanyId()); // select로 받아오기
     return boardList;
   }
 
@@ -60,7 +60,7 @@ public class BoardController {
       HttpServletRequest request, HttpServletResponse response) {
     UserDTO userData = new UserDTO(request);
     if (AuthorityValidation.isAdmin(userData, response)) {
-      boardService.insertNewBoard(newBoardName, userData.getCompanyID());
+      boardService.insertNewBoard(newBoardName, userData.getCompanyId());
     }
 
   }
@@ -76,7 +76,7 @@ public class BoardController {
       HttpServletRequest request, HttpServletResponse response) {
     UserDTO userData = new UserDTO(request);
     if (AuthorityValidation.isAdmin(userData, response)) {
-      boardService.updateChangedName(newTitleList, userData.getCompanyID());
+      boardService.updateChangedName(newTitleList, userData.getCompanyId());
     }
   }
 
@@ -87,7 +87,7 @@ public class BoardController {
    */
   @DeleteMapping(value = "")
   @ResponseBody
-  public void deleteBoardByBoardID(@RequestBody List<BoardDTO> deleteBoards,
+  public void deleteBoardByBoardId(@RequestBody List<BoardDTO> deleteBoards,
       HttpServletRequest request, HttpServletResponse response) {
     UserDTO userData = new UserDTO(request);
     if (AuthorityValidation.isAdmin(userData, response)) {

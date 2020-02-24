@@ -14,11 +14,11 @@ import org.springframework.stereotype.Repository;
 @Mapper
 public interface FunctionMapper {
 
-  List<FunctionDTO> selectFunctionCheckByCompanyID(int companyID);
+  List<FunctionDTO> selectFunctionCheckByCompanyId(int companyId);
 
   void insertFunctionCheckData(Map<String, Object> functionPrimaryKey);
 
   void deleteFunctionCheckData(Map<String, Object> functionPrimaryKey);
 
-  boolean selectFunctionCheckByCompanyIDAndFunctionID(Map<String, Object> functionPrimaryKey);
+  boolean selectFunctionCheckByCompanyIdAndFunctionID(Map<String, Object> functionPrimaryKey);
 }

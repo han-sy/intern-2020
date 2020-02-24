@@ -41,7 +41,7 @@ public class UserService {
   private final String HEADER_NAME = "Authorization";
 
   public boolean loginCheck(UserDTO requestUser, HttpServletResponse response) {
-    UserDTO login_user = userMapper.selectUserByID(requestUser.getUserID());
+    UserDTO login_user = userMapper.selectUserByID(requestUser.getUserId());
     String login_userPassword = login_user.getUserPassword();
     String requestPassword = requestUser.getUserPassword();
     String jwtToken = "";
@@ -57,12 +57,12 @@ public class UserService {
     return false;
   }
 
-  public String getUserNameByUserID(String userID) {
-    return userMapper.selectUserNameByUserID(userID);
+  public String getUserNameByUserId(String userId) {
+    return userMapper.selectUserNameByUserId(userId);
   }
 
   public UserDTO insertUser(HttpServletRequest request, UserDTO user) {
-    user.setCompanyID(Integer.parseInt(request.getAttribute("companyID").toString()));
+    user.setCompanyId(Integer.parseInt(request.getAttribute("companyId").toString()));
     user.setUserType("일반");
     validateUser(user);
     userMapper.insertUser(user);
@@ -74,7 +74,7 @@ public class UserService {
       throw new IllegalArgumentException("중복된 유저입니다.");
     }
     Pattern korean = Pattern.compile(".*[ㄱ-ㅎㅏ-ㅣ가-힣]+.*");
-    if (korean.matcher(user.getUserID()).find()) {
+    if (korean.matcher(user.getUserId()).find()) {
       throw new IllegalArgumentException("ID에 한글이 포함되어 있습니다.");
     }
     Pattern specialChar = Pattern.compile("[ !@#$%^&*(),.?\\\":{}|<>]");
@@ -87,25 +87,25 @@ public class UserService {
   }
 
   public boolean isDuplicateUser(UserDTO user) {
-    return userMapper.selectUserByUserIdAndCompanyID(user) != null;
+    return userMapper.selectUserByUserIdAndCompanyId(user) != null;
   }
 
-  public List<UserDTO> selectUsersByCompanyID(int companyID) {
-    return userMapper.selectUsersByCompanyID(companyID);
+  public List<UserDTO> selectUsersByCompanyId(int companyId) {
+    return userMapper.selectUsersByCompanyId(companyId);
   }
 
-  public UserDTO selectUserByUserIdAndCompanyId(String userID, int companyID) {
-    UserDTO user = new UserDTO(userID, companyID);
-    return userMapper.selectUserByUserIdAndCompanyID(user);
+  public UserDTO selectUserByUserIdAndCompanyId(String userId, int companyId) {
+    UserDTO user = new UserDTO(userId, companyId);
+    return userMapper.selectUserByUserIdAndCompanyId(user);
   }
 
   /**
-   * @param userID
+   * @param userId
    * @return
    * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
    */
-  public String getUserTypeByUserID(String userID) {
-    String type = userMapper.selectUserTypeByUserID(userID);
+  public String getUserTypeByUserId(String userId) {
+    String type = userMapper.selectUserTypeByUserId(userId);
     return type;
   }
 
@@ -114,7 +114,7 @@ public class UserService {
    *
    * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
    */
-  public void updateUserImage(MultipartHttpServletRequest multipartRequest, String userID,
+  public void updateUserImage(MultipartHttpServletRequest multipartRequest, String userId,
       HttpServletResponse response, HttpServletRequest request)
       throws IOException {
     String uuid = Common.getNewUUID();
@@ -126,7 +126,7 @@ public class UserService {
       MultipartFile mpf = multipartRequest.getFile(itr.next());
 
       String originFileName = mpf.getOriginalFilename(); //파일명
-      String storedFileName = userID + originFileName.substring(originFileName.indexOf("."));
+      String storedFileName = userId + originFileName.substring(originFileName.indexOf("."));
       //String storedFileName = uuid + "_" + originFileName;
       ObjectMetadata metadata = new ObjectMetadata();
       String fileExt = Common.getFileExt(storedFileName);
@@ -149,7 +149,7 @@ public class UserService {
       //log.info("fileName => " + mpf.getName());
 
       Map<String, Object> userData = new HashMap<String, Object>();
-      userData.put("userID", userID);
+      userData.put("userId", userId);
       userData.put("imageUrl", url);
       userData.put("imageFileName", storedFileName);
       userData.put("thumbnailUrl", thumbnailUrl);

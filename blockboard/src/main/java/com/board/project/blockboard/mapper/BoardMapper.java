@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
 @Mapper
 public interface BoardMapper {
 
-  List<BoardDTO> selectBoardsByCompanyID(int companyID);
+  List<BoardDTO> selectBoardsByCompanyId(int companyId);
 
   BoardDTO selectBoardByBoardName(String newBoardName);
 
@@ -22,6 +22,6 @@ public interface BoardMapper {
 
   void updateBoardName(BoardDTO boardData);
 
-  int deleteBoard(int boardID);
+  int deleteBoard(int boardId);
 }
 

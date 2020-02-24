@@ -22,9 +22,9 @@ public class PaginationService {
   @Autowired
   private CommentService commentService;
 
-  public PaginationDTO getPostPageListByPageNumberAboutBoard(int pageNumber, int boardID, UserDTO user) {
+  public PaginationDTO getPostPageListByPageNumberAboutBoard(int pageNumber, int boardId, UserDTO user) {
     int postCount;
-    switch (boardID) {
+    switch (boardId) {
       case ConstantData.BOARD_MY_POSTS:
         postCount = postService.getMyPostsCount(user);
         break;
@@ -38,16 +38,16 @@ public class PaginationService {
         postCount = postService.getMyRecyclePostsCount(user);
         break;
       case ConstantData.BOARD_RECENT:
-        postCount = postService.getRecentPostsCount(user.getCompanyID());
+        postCount = postService.getRecentPostsCount(user.getCompanyId());
         break;
       case ConstantData.BOARD_POPULAR:
-        postCount = postService.getPopularPostsCount(user.getCompanyID());
+        postCount = postService.getPopularPostsCount(user.getCompanyId());
         if (postCount >= PageSize.POST) {
           postCount = PageSize.POST;
         }
         break;
       default:
-        postCount = postService.getPostsCountByBoardID(boardID);
+        postCount = postService.getPostsCountByBoardId(boardId);
     }
 
     PaginationDTO paginationInfo = new PaginationDTO("posts",postCount, pageNumber, PageSize.POST,
@@ -55,24 +55,24 @@ public class PaginationService {
     paginationInfo.rangeSetting(pageNumber);
     return paginationInfo;
   }
-  public PaginationDTO getCommentPageListByPageNumberAboutPost(int pageNumber, int postID, UserDTO user) {
-    int commentCount = postService.getCommentsCountByPostID(postID);
+  public PaginationDTO getCommentPageListByPageNumberAboutPost(int pageNumber, int postId, UserDTO user) {
+    int commentCount = postService.getCommentsCountByPostId(postId);
     PaginationDTO paginationInfo = new PaginationDTO("comments",commentCount,pageNumber,PageSize.COMMENT,RangeSize.COMMENT);
     paginationInfo.rangeSetting(pageNumber);
     return paginationInfo;
   }
-  public PaginationDTO getPageList(int pageNumber, int boardID, int postID, UserDTO user) {
-    if(isBoardPage(boardID)){
-      return getPostPageListByPageNumberAboutBoard(pageNumber,boardID,user);
+  public PaginationDTO getPageList(int pageNumber, int boardId, int postId, UserDTO user) {
+    if(isBoardPage(boardId)){
+      return getPostPageListByPageNumberAboutBoard(pageNumber,boardId,user);
     }
     else{
-      return getCommentPageListByPageNumberAboutPost(pageNumber,postID,user);
+      return getCommentPageListByPageNumberAboutPost(pageNumber,postId,user);
     }
   }
 
 
 
-  public boolean isBoardPage(int boardID) {
-    return boardID != 0;
+  public boolean isBoardPage(int boardId) {
+    return boardId != 0;
   }
 }

@@ -9,19 +9,19 @@
 <mapper namespace="com.board.project.blockboard.mapper.FileMapper">
   <select id="selectFileListByEditorID" parameterType="hashmap" resultType="com.board.project.blockboard.dto.FileDTO">
     SELECT file_id          AS fileID,
-           post_id          AS postID,
-           comment_id       AS commentID,
+           post_id          AS postId,
+           comment_id       AS commentId,
            resource_url     AS resourceUrl,
            origin_file_name AS originFileName,
            stored_file_name AS storedFileName,
            file_size        AS fileSize,
            upload_time      AS uploadTime
     FROM   files
-    <if test="commentID ==0">
-      WHERE  post_id = #{postID};
+    <if test="commentId ==0">
+      WHERE  post_id = #{postId};
     </if>
-    <if test="commentID !=0">
-      WHERE  comment_id = #{commentID};
+    <if test="commentId !=0">
+      WHERE  comment_id = #{commentId};
     </if>
   </select>
   <insert id="insertFile" parameterType="hashmap">
@@ -38,19 +38,19 @@
 
   <update id="updateIDsByStoredFileName" parameterType="hashmap">
     UPDATE files
-    <if test="commentID ==0">
-      SET    post_id = #{postID}
+    <if test="commentId ==0">
+      SET    post_id = #{postId}
     </if>
-    <if test="commentID !=0">
-      SET    comment_id = #{commentID}
+    <if test="commentId !=0">
+      SET    comment_id = #{commentId}
     </if>
     WHERE  stored_file_name = #{storedFileName};
   </update>
 
   <select id="selectFileByFileID" parameterType="int" resultType="com.board.project.blockboard.dto.FileDTO">
     SELECT file_id          AS fileID,
-           post_id          AS postID,
-           comment_id       AS commentID,
+           post_id          AS postId,
+           comment_id       AS commentId,
            resource_url     AS resourceUrl,
            origin_file_name AS originFileName,
            stored_file_name AS storedFileName,
@@ -62,8 +62,8 @@
 
   <select id="selectFileByStoredFileName" parameterType="string" resultType="com.board.project.blockboard.dto.FileDTO">
     SELECT file_id          AS fileID,
-           post_id          AS postID,
-           comment_id       AS commentID,
+           post_id          AS postId,
+           comment_id       AS commentId,
            resource_url     AS resourceUrl,
            origin_file_name AS originFileName,
            stored_file_name AS storedFileName,

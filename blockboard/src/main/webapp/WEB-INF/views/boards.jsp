@@ -31,7 +31,7 @@
 
 <nav class="navbar navbar-expand navbar-dark bg-success">
     <a class="navbar-brand" id="companyInfo" href="JavaScript:window.location.reload()"
-       value="${companyID}">${companyName}</a>
+       value="${companyId}">${companyName}</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse"
             data-target="#navbarsExample02"
             aria-controls="navbarsExample02" aria-expanded="false" aria-label="Toggle navigation">
@@ -175,17 +175,17 @@
             {{#comment}}
                 {{#hasReferenceCommentId}}
                     <div class='referenceCommentContainer' id='comment-alarm-container'
-                         data-id='{{commentReferencedID}}'>
+                         data-id='{{commentReferencedId}}'>
                 {{else}}
                     <div class='referenceCommentContainer' id='comment-alarm-container'
-                         data-id='{{commentID}}'>
+                         data-id='{{commentId}}'>
                 {{/hasReferenceCommentId}}
                     <div class="row border-left-comment localCommentContainer">
                         <div></div>
-                        <div class='commentContainer col-8' id='comment{{commentID}}'
+                        <div class='commentContainer col-8' id='comment{{commentId}}'
                              style="padding-left: 50px">
                             <div class="user"><h5><strong class=name
-                                                          data-id={{userID}}>{{userName}}</strong>
+                                                          data-id={{userId}}>{{userName}}</strong>
                             </h5></div>
                             <div>
                                 <div>
@@ -210,7 +210,7 @@
             {{/comment}}
         </script>
         <a class="nav-link text-white" id="current_user_info" style="nav-right: auto"
-           data-id="${userID}" data-type="${userType}">${userName}</a>
+           data-id="${userId}" data-type="${userType}">${userName}</a>
         <a class="nav-link text-white btn_logout" style="nav-right: auto">로그아웃</a>
     </div>
 </nav>
@@ -233,7 +233,7 @@
                 <li data-tab="-2" class="tabmenu" id=default style="cursor:pointer"> 내가 쓴 댓글</li>
                 <hr>
                 {{#boards}}
-                    <li data-tab={{boardID}} class=tabmenu id=default style="cursor:pointer">
+                    <li data-tab={{boardId}} class=tabmenu id=default style="cursor:pointer">
                         {{boardName}}
                     </li>
                 {{/boards}}
@@ -263,7 +263,7 @@
                                 </div>
                                 <div class="col">
                                     <p>회원 이름: <a id="modal_userName">전우혁</a></p>
-                                    <p>회원 ID : <a id="modal_userID"></a></p>
+                                    <p>회원 ID : <a id="modal_userId"></a></p>
                                     <p>회원 유형: <a id="modal_userType"></a></p>
                                     <p>회사명 : <a id="modal_companyName"></a></p>
                                 </div>
@@ -341,9 +341,9 @@
                     <div class="custom-control custom-checkbox checkbox-success"
                          style="padding: 15px 1px 10px 30px;">
                         <input class="custom-control-input" type='checkbox' name='boardDelete'
-                               id="checkDelBoard{{boardID}}" value='{{boardID}}'/>
+                               id="checkDelBoard{{boardId}}" value='{{boardId}}'/>
                         <label class="custom-control-label"
-                               for="checkDelBoard{{boardID}}">{{boardName}}</label>
+                               for="checkDelBoard{{boardId}}">{{boardName}}</label>
                     </div>
                 {{/boards}}
             </script>
@@ -376,13 +376,13 @@
             <!--게시판 이름변경 템플릿-->
             <script id="changeBoardName-template" type="text/x-handlebars-template">
                 {{#boards}}
-                    <div class='boardInfo' id='board{{boardID}}'
+                    <div class='boardInfo' id='board{{boardId}}'
                          style="padding: 15px 1px 5px 10px;">
                         <span class='deleteBoard'
-                              data-board='board{{boardID}}'> {{boardName}} </span>
+                              data-board='board{{boardId}}'> {{boardName}} </span>
                         <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
                         <input class="form-control" type='text' name='boardname'
-                               data-boardid={{boardID}} data-oldname="{{boardName}}"
+                               data-boardid={{boardId}} data-oldname="{{boardName}}"
                                value="{{boardName}}">
                     </div>
                 {{/boards}}
@@ -454,8 +454,8 @@
                             <form id="userForm" name="userForm" method="post" class="form-group"
                                   style="padding: 10px 30px 10px 10px;">
                                 <label class="col-form-label">회원 ID (최대 20자, 한글 X)</label>
-                                <input type="text" class="form-control" name="userID"
-                                       id="form-userID"
+                                <input type="text" class="form-control" name="userId"
+                                       id="form-userId"
                                        placeholder="회원 ID (최대 20자)" maxlength="20">
                                 <label class="col-form-label">회원 이름</label>
                                 <input type="text" class="form-control" name="userName"
@@ -491,7 +491,7 @@
                     <!--게시글 작성 시 게시판 목록 템플릿-->
                     <script id="selectable-boardId-template" type="text/x-handlebars-template">
                         {{#boards}}
-                            <option data-tab={{boardID}} class=tabmenu
+                            <option data-tab={{boardId}} class=tabmenu
                                     id=default>{{boardName}}
                             </option>
                         {{/boards}}
@@ -545,8 +545,8 @@
                     <div id="editor-content-hidden"></div>
                 </script>
                 <script id="postId-template" type="text/x-handlebars-template">
-                    <a id="postIdInEditor" style="display:none">{{postID}}</a>
-                    <a id="boardIdInEditor" style="display:none">{{boardID}}</a>
+                    <a id="postIdInEditor" style="display:none">{{postId}}</a>
+                    <a id="boardIdInEditor" style="display:none">{{boardId}}</a>
                 </script>
             </div>
 
@@ -555,7 +555,7 @@
             <script id="post-content-template" type="text/x-handlebars-template">
                 {{#post}}
                     <p class="h4">{{postTitle}}</p>
-                    <p class="h6 writer_info" align="right" data-id="{{userID}}">{{userName}}</p>
+                    <p class="h6 writer_info" align="right" data-id="{{userId}}">{{userName}}</p>
                     <p class="h6" align="right">{{postRegisterTime}}</p>
                     <p align="right"><a class="h6 read_check" data-toggle="modal"
                                         data-target="#check_read_user"
@@ -568,8 +568,8 @@
                     <div class="d-block">
                         <p>{{{postContent}}}</p>
                     </div>
-                    <a id="postID" style="display: none;">{{postID}}</a>
-                    <a id="boardIdInPost" style="display: none">{{boardID}}</a>
+                    <a id="postId" style="display: none;">{{postId}}</a>
+                    <a id="boardIdInPost" style="display: none">{{boardId}}</a>
                     <br>
                     <button class="btn btn-success btn_modify" style="display: none">수정</button>
                     <button class="btn btn-success btn_delete" style="display: none">삭제</button>
@@ -631,7 +631,7 @@
                             </div>
                             <div class="col">
                                 <a style="padding-left: 30px; padding-top: 15px"><strong class=name
-                                                                                         data-id='{{userID}}'>{{userName}}</strong>({{userID}}
+                                                                                         data-id='{{userId}}'>{{userName}}</strong>({{userId}}
                                     )</a>
                             </div>
                         </div>
@@ -671,17 +671,17 @@
             <script id="commentList-template" type="text/x-handlebars-template">
                 {{#comments}}
                     <hr>
-                    <div class='referenceCommentContainer ' data-id='{{commentID}}'>
+                    <div class='referenceCommentContainer ' data-id='{{commentId}}'>
 
                         <div class="row border-left-comment localCommentContainer">
                             <div class="col-1">
                                 <img class="profile" name="profile" width="75px" height="75px"
                                      src='{{thumbnailUrl}}'>
                             </div>
-                            <div class='commentContainer col-8' id='comment{{commentID}}'
+                            <div class='commentContainer col-8' id='comment{{commentId}}'
                                  style="padding-left: 50px">
                                 <div class="user"><h5><strong class=name
-                                                              data-id={{userID}}>{{userName}}</strong>
+                                                              data-id={{userId}}>{{userName}}</strong>
                                 </h5></div>
                                 <div>
                                     <div>
@@ -694,7 +694,7 @@
                                     <div class="btn">
                                         {{#isReplyAble}}
                                             <a class='text-success text-button font-weight-bold reply_btn'>답글(<span
-                                                    id="replies_count{{commentID}}">{{repliesCount}}</span>)
+                                                    id="replies_count{{commentId}}">{{repliesCount}}</span>)
                                                 달기</a>
                                             <a class='text-success text-button font-weight-bold open_reply_list_btn'>답글
                                                 보기</a>
@@ -720,10 +720,10 @@
                             </div>
                         </div>
                         {{#isReplyAble}}
-                            <ul class='replyContainer' id='reply_container{{commentID}}'
+                            <ul class='replyContainer' id='reply_container{{commentId}}'
                                 style='padding: 5px 1px 3px 30px;list-style: none'>
                             </ul>
-                            <div id='reply_input_container{{commentID}}'
+                            <div id='reply_input_container{{commentId}}'
                                  style='padding: 5px 1px 3px 30px;'></div>
                         {{else}}
                         {{/isReplyAble}}
@@ -744,16 +744,16 @@
                             <img class="profile" name="profile" width="75px" height="75px"
                                  src='{{thumbnailUrl}}'>
                         </div>
-                        <div class='commentContainer col-7' id='comment{{commentID}}'
+                        <div class='commentContainer col-7' id='comment{{commentId}}'
                              style="padding-left: 30px">
                             <div class="user"><h5><strong class=name
-                                                          data-id={{userID}}>{{userName}}</strong>
+                                                          data-id={{userId}}>{{userName}}</strong>
                             </h5>
                             </div>
                             <div>
                                 <div class="comment_area row" id=translate_area">
                                     <strong class="nametag text-primary "
-                                            data-id={{commentReferencedUserID}}
+                                            data-id={{commentReferencedUserId}}
                                             style="cursor:pointer;padding: 0px 0px 0px 15px">{{commentReferencedUserName}}</strong>
                                     <div class="comment_content col-10" style="float:left;">
                                         {{{commentContent}}}
@@ -880,19 +880,19 @@
                     <tbody id="post-list">
                     {{#posts}}
                         {{#isTemp}}
-                            <tr class="postclick temp_post_click" data-post={{postID}}
-                                data-board={{boardID}}>
+                            <tr class="postclick temp_post_click" data-post={{postId}}
+                                data-board={{boardId}}>
                                 <td>{{boardName}}</td>
                                 <td>{{postTitle}}</td>
                         {{else}}
                             {{#isRecycle}}
-                                <tr class="postclick recycle_post_click" data-post={{postID}}
-                                    data-board={{boardID}}>
+                                <tr class="postclick recycle_post_click" data-post={{postId}}
+                                    data-board={{boardId}}>
                                     <td>{{boardName}}</td>
                                     <td>{{postTitle}}</td>
                             {{else}}
-                                <tr class="postclick normal_post_click" data-post={{postID}}
-                                    data-board={{boardID}}>
+                                <tr class="postclick normal_post_click" data-post={{postId}}
+                                    data-board={{boardId}}>
                                 {{#isPopular}}
                                         <td>{{boardName}}</td>
                                 {{else}}

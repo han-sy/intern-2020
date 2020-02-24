@@ -17,8 +17,8 @@ import lombok.ToString;
 @ToString
 @RequiredArgsConstructor
 public class ViewRecordDTO {
-  @NonNull private int postID;
-  @NonNull private String userID;
+  @NonNull private int postId;
+  @NonNull private String userId;
   private String userName;
   private String thumbnailUrl;
 }

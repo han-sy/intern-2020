@@ -47,7 +47,7 @@ function openDragAndDropForm(obj) {
  * 파일첨부 폼
  * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
  */
-function openFileAttachForm(postID,commentID,obj) {
+function openFileAttachForm(postId,commentId,obj) {
   source = $('#file-attach-form-template').html();
   template = Handlebars.compile(source);
   item = template();
@@ -59,11 +59,11 @@ function openFileAttachForm(postID,commentID,obj) {
     obj.find('.file_attach_form').html(item);
     container = obj.find('.file_attach_form').find(".upload_list_start_point");
   }
-  if(!isNullData(postID)){
-    getFileList(postID,0,container,createStatusbarUI);
+  if(!isNullData(postId)){
+    getFileList(postId,0,container,createStatusbarUI);
   }
-  if(!isNullData(commentID)){
-    getFileList(0,commentID,container,createStatusbarUI);
+  if(!isNullData(commentId)){
+    getFileList(0,commentId,container,createStatusbarUI);
   }
 }
 
@@ -75,10 +75,10 @@ function fileFormClear(){
  * 게시글 내용 조회시 첨부파일관련 컨텐츠들
  * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
  */
-function showAttachFileContents(postID) {
+function showAttachFileContents(postId) {
   if (functionOn.postFileAttach) {
     var container = $("#post-content").find(
         ".attached_file_list_container_post");
-    getFileList(postID, 0, container, updateFileListInPostUI);
+    getFileList(postId, 0, container, updateFileListInPostUI);
   }
 }

@@ -8,7 +8,7 @@ var autosave = null;
 $(document).on("click", "#btn_write", function () {
   postClear();
   createEditorArea("insert");
-  selectOptionOfCurrentBoardId(getCurrentActiveBoardID());
+  selectOptionOfCurrentBoardId(getCurrentActiveBoardId());
 });
 
 // '임시저장' 이벤트
@@ -36,7 +36,7 @@ $(document).on('click', '.btn_post', function () {
       insertPost(postId, selectedBoardId, postTitle, postContent);
     } else {  // 임시 or 자동 저장이 된 후 '저장' 버튼을 누를 때
       insertTempPost(selectedBoardId, postId, postTitle, postContent, "normal");
-      getPageList(1, getCurrentActiveBoardID(), 0, updatePostPageList);
+      getPageList(1, getCurrentActiveBoardId(), 0, updatePostPageList);
     }
     clearEditor();
   }
@@ -68,7 +68,7 @@ function isValidPostData() {
 // '수정' 버튼 클릭 후 '수정하기' 버튼 이벤트
 $(document).on('click', '.btn_update', function () {
   let postId = getPostIdInEditor();
-  let originalBoardID = getOriginalBoardIdInEditor();
+  let originalBoardId = getOriginalBoardIdInEditor();
   let postTitle = getPostTitleInEditor();
   let postContent = CKEDITOR.instances.editor.getData();
   let selectedBoardId = getSelectedBoardIdInEditor();
@@ -76,7 +76,7 @@ $(document).on('click', '.btn_update', function () {
   if (functionOn.postFileAttach) {
     updateIDToFiles("post", postId, "");
   }
-  updatePost(selectedBoardId, originalBoardID, postId, postTitle, postContent);
+  updatePost(selectedBoardId, originalBoardId, postId, postTitle, postContent);
 });
 
 function updateButtonOfSavePostToUpdatePost() {
@@ -88,8 +88,8 @@ function updateButtonOfSavePostToUpdatePost() {
 
 // 게시글 조회 후 '수정' 버튼 이벤트
 $(document).on('click', '.btn_modify', function () {
-  let postId = getPostIDInPost();
-  let boardId = getBoardIDInPost();
+  let postId = getPostIdInPost();
+  let boardId = getBoardIdInPost();
   postClear();
   createEditorArea("modify");
   updateButtonOfSavePostToUpdatePost();
@@ -100,8 +100,8 @@ $(document).on('click', '.btn_modify', function () {
 
 // 게시글 조회 후 삭제 버튼 이벤트
 $(document).on('click', '.btn_delete', function () {
-  let postId = getPostIDInPost();
-  let boardId = parseInt(getCurrentActiveBoardID());
+  let postId = getPostIdInPost();
+  let boardId = parseInt(getCurrentActiveBoardId());
   if (boardId === BOARD_ID.RECYCLE || boardId === BOARD_ID.TEMP_BOX) {
     if (confirm("영구 삭제됩니다. 삭제하시겠습니까?")) {
       deletePost(boardId, postId);
@@ -147,8 +147,8 @@ function updateButtonOfCancelToDeletePost() {
 
 // 임시저장 게시물 클릭 이벤트
 $(document).on('click', '.temp_post_click', function () {
-  let postId = getPostIDInPostList.call(this);
-  let boardId = getBoardIDInPostList.call(this);
+  let postId = getPostIdInPostList.call(this);
+  let boardId = getBoardIdInPostList.call(this);
   postClear();
   createEditorArea("insert");
   updateButtonOfCancelToDeletePost();
@@ -167,15 +167,15 @@ function isValidLength(str, limit) {
 
 // 휴지통 게시물 클릭 이벤트
 $(document).on('click', '.recycle_post_click', function () {
-  var postID = $(this).attr("data-post");
-  var boardID = getCurrentActiveBoardID();
-  getRecyclePost(postID, boardID);
+  var postId = $(this).attr("data-post");
+  var boardId = getCurrentActiveBoardId();
+  getRecyclePost(postId, boardId);
 });
 
 // 휴지통 게시글 복원 이벤트
 $(document).on('click', '.btn_restore', function () {
-  var postID = $('#postID').html();
+  var postId = $('#postId').html();
   if (confirm("원래 게시판으로 복원하시겠습니까?")) {
-    restorePost(postID);
+    restorePost(postId);
   }
 });

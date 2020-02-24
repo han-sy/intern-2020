@@ -9,8 +9,8 @@ import lombok.Data;
 @Data
 public class FileDTO {
   private int fileID;
-  private int postID;
-  private int commentID;
+  private int postId;
+  private int commentId;
   private String resourceUrl;
   private String originFileName;
   private String storedFileName;

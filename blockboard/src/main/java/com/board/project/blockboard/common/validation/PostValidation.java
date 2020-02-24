@@ -30,7 +30,7 @@ public class PostValidation {
   @SneakyThrows
   public static void validateDelete(PostDTO post, UserDTO user) {
     isExistPost(post);
-    if(!StringUtils.equals(post.getUserID(), user.getUserID())) {
+    if(!StringUtils.equals(post.getUserId(), user.getUserId())) {
       throw new UserValidException("게시물 변경 권한이 없습니다.");
     }
   }
@@ -50,7 +50,7 @@ public class PostValidation {
   @SneakyThrows
   public static void isValidChange(PostDTO post, UserDTO user) {
     isExistPost(post);
-    if (!StringUtils.equals(post.getUserID(), user.getUserID())) {
+    if (!StringUtils.equals(post.getUserId(), user.getUserId())) {
       throw new UserValidException("게시물 변경 권한이 없습니다.");
     }
   }

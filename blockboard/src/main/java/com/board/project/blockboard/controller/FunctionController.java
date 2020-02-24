@@ -37,7 +37,7 @@ public class FunctionController {
   public List<FunctionDTO> getFunctionInfo(HttpServletRequest request) {
     UserDTO userData = new UserDTO(request);
     List<FunctionDTO> functionInfoList = functionService
-        .getFunctionInfoListByCompanyID(userData.getCompanyID());
+        .getFunctionInfoListByCompanyId(userData.getCompanyId());
     return functionInfoList;
   }
 
@@ -50,7 +50,7 @@ public class FunctionController {
       throws IOException {
     UserDTO userData = new UserDTO(request);
     if (AuthorityValidation.isAdmin(userData, response)) {
-      functionService.updateNewFunctionsInfo(userData.getCompanyID(), functionDTOList);
+      functionService.updateNewFunctionsInfo(userData.getCompanyId(), functionDTOList);
     }
 
   }

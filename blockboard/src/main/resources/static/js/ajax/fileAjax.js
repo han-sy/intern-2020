@@ -52,8 +52,8 @@ function sendFileToServer(formData, status) {
 /**
  * 첨부된 에디터에 id를 파일 디비에 업데이트
  */
-function updateIDToFiles(editor,postID, commentID, boardID, commentReferencedID) {
-  var fileList = getAttachedFileList(postID, commentID);
+function updateIDToFiles(editor,postId, commentId, boardId, commentReferencedId) {
+  var fileList = getAttachedFileList(postId, commentId);
   $.ajax({
     type: 'PUT',
     url: `/files`,
@@ -67,29 +67,29 @@ function updateIDToFiles(editor,postID, commentID, boardID, commentReferencedID)
 
     },
     complete() {
-      if (isNullData(postID)) {
-        postID = $('#postID').html();
+      if (isNullData(postId)) {
+        postId = $('#postId').html();
       }
-      if (isNullData(boardID)) {
-        boardID = getCurrentActiveBoardID();
+      if (isNullData(boardId)) {
+        boardId = getCurrentActiveBoardId();
       }
-      if (editor=="comment" && isNullData(commentReferencedID)) {
-        getPageList(1,0,postID,updateCommentPageList);
+      if (editor=="comment" && isNullData(commentReferencedId)) {
+        getPageList(1,0,postId,updateCommentPageList);
       }
-      updateCommentsCount(boardID, postID);
+      updateCommentsCount(boardId, postId);
       fileFormClear();
     }
   });
 }
 
 /**
- * postID에 일치하는 파일리스트 반환
+ * postId에 일치하는 파일리스트 반환
  */
-function getFileList(postID, commentID, obj, successFunction) {
+function getFileList(postId, commentId, obj, successFunction) {
   $.ajax({
     type: 'GET',
     url: `/files`,
-    data: {postID: postID, commentID: commentID},
+    data: {postId: postId, commentId: commentId},
     dataType: "json",
     contentType: 'application/json',
     error: function (error, msg) {  //통신 실패시

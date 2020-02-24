@@ -27,8 +27,8 @@ function isValidPasswordPattern(str) {
   return true;
 }
 
-// userID 에 한글입력 제한
-$("#form-userID").on('keyup blur keydown', function (event) {
+// userId 에 한글입력 제한
+$("#form-userId").on('keyup blur keydown', function (event) {
   if (event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 37
       || event.KeyCode == 39 || event.keyCode == 46) {
     return;
