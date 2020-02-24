@@ -116,5 +116,10 @@ public class UserController {
     userService.updateUserImage(multipartRequest, userId, response, request);
   }
 
-
+  @GetMapping("/users/count")
+  @ResponseBody
+  public int countUsersByCompanyId(HttpServletRequest request) {
+    log.info(request.getRequestURL().toString());
+    return userService.countUsersByCompanyId(request);
+  }
 }

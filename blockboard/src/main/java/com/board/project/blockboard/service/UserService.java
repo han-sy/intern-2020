@@ -99,6 +99,11 @@ public class UserService {
     return userMapper.selectUserByUserIdAndCompanyId(user);
   }
 
+  public int countUsersByCompanyId(HttpServletRequest request) {
+    int companyId = Integer.parseInt(request.getAttribute("companyId").toString());
+    return userMapper.countUsersByCompanyId(companyId);
+  }
+
   /**
    * @param userId
    * @return

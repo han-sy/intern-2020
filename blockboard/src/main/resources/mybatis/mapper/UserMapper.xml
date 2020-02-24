@@ -71,6 +71,7 @@
            thumbnail_file_name = #{thumbnailFileName}
     WHERE  user_id = #{userId};
   </update>
+
   <select id="selectUsersByCompanyId" parameterType="int"
     resultType="com.board.project.blockboard.dto.UserDTO">
     SELECT user_id         AS userId,
@@ -83,5 +84,11 @@
            JOIN companies company
              ON users.company_id = company.company_id
     WHERE  users.company_id = #{companyId};
+  </select>
+
+  <select id="countUsersByCompanyId" parameterType="int" resultType="int">
+    SELECT Count(*)
+    FROM users
+    WHERE company_id = #{companyId};
   </select>
 </mapper>

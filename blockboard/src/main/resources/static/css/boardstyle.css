@@ -242,3 +242,7 @@
 .modal-open {
   overflow-y: scroll;
 }
+
+.btn_logout {
+  cursor: pointer;
+}
