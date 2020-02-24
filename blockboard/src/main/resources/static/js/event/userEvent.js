@@ -50,3 +50,17 @@ function resetAddUserForm() {
   $("#userForm")[0].reset();
   $("#load_user_image").attr("src", '');
 }
+
+$('.btn_logout').on('click', function () {
+  $.ajax({
+    type: 'POST',
+    url: '/logout',
+    error: function (xhr) {
+      errorFunction(xhr);
+    },
+    success: function (url) {
+      console.log("url = ", url);
+      window.location.href = url;
+    }
+  })
+});

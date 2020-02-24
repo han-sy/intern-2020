@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -42,7 +43,7 @@ public class UserController {
    * @return 로그인 메인화면으로 redirect
    */
   @PostMapping("/login")
-  public String loginCheck(@ModelAttribute UserDTO requestUser, HttpServletResponse response) {
+  public String loginCheck(@ModelAttribute UserDTO requestUser, HttpServletResponse response, HttpServletRequest request) {
     boolean isValid = userService.loginCheck(requestUser, response);
     if (isValid) {
       return "redirect:/main";
@@ -75,12 +76,13 @@ public class UserController {
    * @param response 유효기간이 0인 쿠키를 담은 객체
    * @return 로그인 메인화면으로 redirect
    */
-  @GetMapping("/logout")
+  @PostMapping("/logout")
+  @ResponseBody
   public String logout(HttpServletResponse response) {
     Cookie c = new Cookie(HEADER_NAME, null);
     c.setMaxAge(0);
     response.addCookie(c);
-    return "redirect:/login";
+    return "login";
   }
 
 
@@ -99,7 +101,8 @@ public class UserController {
 
   @GetMapping("/users/{userid}")
   @ResponseBody
-  public UserDTO getUserByUserIdAndCompanyId(HttpServletRequest request, @PathVariable("userid") String userID) {
+  public UserDTO getUserByUserIdAndCompanyId(HttpServletRequest request,
+      @PathVariable("userid") String userID) {
     int companyID = Integer.parseInt(request.getAttribute("companyID").toString());
     return userService.selectUserByUserIdAndCompanyId(userID, companyID);
   }
