@@ -52,7 +52,7 @@
                 <li class="nav-item active">
                     <a class="nav-link" id='changeBoardsNameBtn' data-toggle="modal"
                        data-target="#changeBoardNameModal"
-                       onclick="javascript:clickchangeBoardBtn(this)" style="cursor:pointer">게시판
+                       onclick="javascript:clickChangeBoardBtn(this)" style="cursor:pointer">게시판
                         이름변경</a>
                 </li>
                 <li class="nav-item active">
@@ -323,7 +323,7 @@
                                 Close
                             </button>
                             <button type="button" id='deleteBoardBtn' class="btn btn-success"
-                                    onclick=javascript:clickSaveDelteBoard(this)
+                                    onclick=javascript:clickSaveDeleteBoard(this)
                                     data-dismiss="modal">Save changes
                             </button>
                         </div>

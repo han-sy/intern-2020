@@ -44,7 +44,7 @@ public class FunctionService {
 
   }
 
-  public List<FunctionDTO> getfunctionInfoListByCompanyID(int companyID) {
+  public List<FunctionDTO> getFunctionInfoListByCompanyID(int companyID) {
     List<FunctionDTO> functionInfoList = getFunctionInfoByCompanyID(companyID);
     return functionInfoList;
   }

@@ -55,7 +55,7 @@ public class MainController {
     model.addAttribute("userID", userData.getUserID());
     model.addAttribute("userName", userService.getUserNameByUserID(userData.getUserID()));
     model.addAttribute("functionInfoList",
-        functionService.getfunctionInfoListByCompanyID(userData.getCompanyID()));
+        functionService.getFunctionInfoListByCompanyID(userData.getCompanyID()));
 
     return "boards";
   }

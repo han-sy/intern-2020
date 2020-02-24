@@ -57,7 +57,7 @@ function clickDeleteBoardBtn() {
 }
 
 //게시판 삭제- 삭제하기버튼 누를시
-function clickSaveDelteBoard() {
+function clickSaveDeleteBoard() {
   var boardDataList = new Array();
 
   $("input[name=boardDelete]").each(function () {
@@ -80,7 +80,7 @@ function clickSaveDelteBoard() {
 }
 
 //게시판 이름변경 버튼 클릭시
-function clickchangeBoardBtn() {
+function clickChangeBoardBtn() {
   $(function () {
     getBoardList(getBoardListToChangeName);
   });

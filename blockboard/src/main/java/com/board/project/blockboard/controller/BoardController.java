@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -59,7 +60,7 @@ public class BoardController {
       HttpServletRequest request, HttpServletResponse response) {
     UserDTO userData = new UserDTO(request);
     if (AuthorityValidation.isAdmin(userData, response)) {
-      boardService.insertNewBoard(newBoardName, userData);
+      boardService.insertNewBoard(newBoardName, userData.getCompanyID());
     }
 
   }
@@ -71,7 +72,7 @@ public class BoardController {
    */
   @PutMapping(value = "")
   @ResponseBody
-  public void changeNewBoardName(@RequestParam("newTitles") String newTitleList,
+  public void changeNewBoardName(@RequestBody List<BoardDTO> newTitleList,
       HttpServletRequest request, HttpServletResponse response) {
     UserDTO userData = new UserDTO(request);
     if (AuthorityValidation.isAdmin(userData, response)) {
@@ -86,7 +87,7 @@ public class BoardController {
    */
   @DeleteMapping(value = "")
   @ResponseBody
-  public void deleteBoardByBoardID(@RequestParam("deleteList") String deleteBoards,
+  public void deleteBoardByBoardID(@RequestBody List<BoardDTO> deleteBoards,
       HttpServletRequest request, HttpServletResponse response) {
     UserDTO userData = new UserDTO(request);
     if (AuthorityValidation.isAdmin(userData, response)) {

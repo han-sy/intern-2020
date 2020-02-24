@@ -37,7 +37,7 @@ public class FunctionController {
   public List<FunctionDTO> getFunctionInfo(HttpServletRequest request) {
     UserDTO userData = new UserDTO(request);
     List<FunctionDTO> functionInfoList = functionService
-        .getfunctionInfoListByCompanyID(userData.getCompanyID());
+        .getFunctionInfoListByCompanyID(userData.getCompanyID());
     return functionInfoList;
   }
 

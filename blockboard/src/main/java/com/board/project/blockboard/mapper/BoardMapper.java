@@ -20,7 +20,7 @@ public interface BoardMapper {
 
   void insertBoard(BoardDTO newBoard);
 
-  void updateBoardName(Map<String, Object> boardAttributes);
+  void updateBoardName(BoardDTO boardData);
 
   int deleteBoard(int boardID);
 }

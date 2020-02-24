@@ -19,15 +19,17 @@ function updateTabByNewBoardListAfterAddBoard(boardName) {
 }
 
 //게시판 삭제후 탭업데이트
-function updateTabByNewBoardListAfterDeleteBoard(jsonData) {
+function updateTabByNewBoardListAfterDeleteBoard(deleteBoards) {
   $.ajax({
     type: 'DELETE',
     url: `/boards`,
-    data: {deleteList: jsonData},
+    data: deleteBoards,
+    dataType: "json",
+    contentType: 'application/json',
     error: function (xhr) {  //통신 실패시
       errorFunction(xhr);
     },
-    success: function () {
+    complete : function () {
       getBoardList(updateTab);//새로운 탭 내용으로 교체
     }
   });
@@ -35,15 +37,17 @@ function updateTabByNewBoardListAfterDeleteBoard(jsonData) {
 }
 
 //게시판 이름변경후 탭업데이트
-function updateTabByNewBoardListAfterUpdateBoardName(jsonData) {
+function updateTabByNewBoardListAfterUpdateBoardName(newTitles) {
   $.ajax({
     type: 'PUT',
     url: `/boards`,
-    data: {newTitles: jsonData},
+    data: newTitles,
+    dataType: "json",
+    contentType: 'application/json',
     error: function (xhr) {  //통신 실패시
       errorFunction(xhr);
     },
-    success: function () {
+    complete : function () {
       getBoardList(updateTab);//새로운 탭 내용으로 교체
     }
   });
