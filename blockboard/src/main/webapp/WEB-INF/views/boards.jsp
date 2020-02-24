@@ -643,8 +643,8 @@
                 <a class='text-success font-weight-bold'>첨부파일</a>
                 {{#files}}
                     <div class="form-group">
-                        <p><a class="attached-file-download" data-fileid='{{fileID}}'
-                              href="/files/{{fileID}}">{{originFileName}} ( {{printFileSize}} )</a>
+                        <p><a class="attached-file-download" data-fileid='{{fileId}}'
+                              href="/files/{{fileId}}">{{originFileName}} ( {{printFileSize}} )</a>
                         </p>
                     </div>
 

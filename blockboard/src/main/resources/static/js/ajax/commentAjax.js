@@ -95,8 +95,8 @@ function editComment(postId, boardId, commentId, newComment) {
     data: commentData,
     dataType: "json",
     contentType: 'application/json',
-    error: function () {  //통신 실패시
-      alert('통신실패!수정');
+    error: function (error) {  //통신 실패시
+      errorFunction(error)
     },
     complete: function (data) {
       getPageList(1, 0, postId, updateCommentPageList);

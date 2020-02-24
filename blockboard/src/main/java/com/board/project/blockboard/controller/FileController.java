@@ -5,6 +5,7 @@
 package com.board.project.blockboard.controller;
 
 import com.board.project.blockboard.dto.FileDTO;
+import com.board.project.blockboard.dto.UserDTO;
 import com.board.project.blockboard.service.FileService;
 import java.io.IOException;
 import java.util.Enumeration;
@@ -38,7 +39,8 @@ public class FileController {
   @PostMapping(value = "/files")
   public String uploadFile(MultipartHttpServletRequest multipartRequest, HttpServletRequest request,
       HttpServletResponse response) throws IOException {
-    return fileService.uploadFile(multipartRequest, request, response);
+    UserDTO userData = new UserDTO(request);
+    return fileService.uploadFile(multipartRequest, userData.getCompanyId(), response);
 
   }
 
@@ -72,10 +74,10 @@ public class FileController {
   /**
    * 파일 다운로드
    */
-  @GetMapping(value = "/files/{file-id}")
-  public void downloadFile(@PathVariable("file-id") int fileID, HttpServletResponse response,
+  @GetMapping(value = "/files/{fileId}")
+  public void downloadFile(@PathVariable int fileId, HttpServletResponse response,
       HttpServletRequest request) {
-    fileService.downloadFile(fileID, response, request);
+    fileService.downloadFile(fileId, response, request);
   }
 
   /**

@@ -1,14 +1,23 @@
-package com.board.project.blockboard.dto;
-
-import lombok.Data;
-
 /**
  * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
  * @file FileDTO.java
  */
-@Data
+package com.board.project.blockboard.dto;
+
+import lombok.Builder;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+
+
+@Getter
+@Setter
+@ToString
+@Builder
 public class FileDTO {
-  private int fileID;
+  private int fileId;
   private int postId;
   private int commentId;
   private String resourceUrl;

@@ -1,5 +1,5 @@
 /**
- * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
+ * @author  @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
  * @file    commentData.js
  */
 

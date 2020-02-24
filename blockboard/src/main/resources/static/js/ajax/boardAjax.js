@@ -23,7 +23,7 @@ function updateTabByNewBoardListAfterDeleteBoard(deleteBoards) {
   $.ajax({
     type: 'DELETE',
     url: `/boards`,
-    data: deleteBoards,
+    data: JSON.stringify(deleteBoards),
     dataType: "json",
     contentType: 'application/json',
     error: function (xhr) {  //통신 실패시

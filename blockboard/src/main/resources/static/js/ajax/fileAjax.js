@@ -52,7 +52,8 @@ function sendFileToServer(formData, status) {
 /**
  * 첨부된 에디터에 id를 파일 디비에 업데이트
  */
-function updateIDToFiles(editor,postId, commentId, boardId, commentReferencedId) {
+function updateIDToFiles(editor, postId, commentId, boardId,
+    commentReferencedId) {
   var fileList = getAttachedFileList(postId, commentId);
   $.ajax({
     type: 'PUT',
@@ -62,19 +63,16 @@ function updateIDToFiles(editor,postId, commentId, boardId, commentReferencedId)
     contentType: 'application/json',
     error: function (error, msg) {  //통신 실패시
       errorFunction(error);
-    },
-    success: function () {
-
-    },
-    complete() {
+    }, complete() {
       if (isNullData(postId)) {
         postId = $('#postId').html();
       }
       if (isNullData(boardId)) {
         boardId = getCurrentActiveBoardId();
       }
-      if (editor=="comment" && isNullData(commentReferencedId)) {
-        getPageList(1,0,postId,updateCommentPageList);
+      //댓글인경우(답글말고)
+      if (editor == "comment" && isNullData(commentReferencedId)) {
+        getPageList(1, 0, postId, updateCommentPageList);
       }
       updateCommentsCount(boardId, postId);
       fileFormClear();
@@ -110,7 +108,7 @@ function deleteFile(storedFileName, obj, successFunction) {
     url: `/files`,
     data: {storedFileName: storedFileName},
     error: function (error, msg) {  //통신 실패시
-      if(error.status==409){
+      if (error.status == 409) {
         obj.remove();
       }
       errorFunction(error);

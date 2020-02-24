@@ -8,7 +8,7 @@
 
 <mapper namespace="com.board.project.blockboard.mapper.FileMapper">
   <select id="selectFileListByEditorID" parameterType="hashmap" resultType="com.board.project.blockboard.dto.FileDTO">
-    SELECT file_id          AS fileID,
+    SELECT file_id          AS fileId,
            post_id          AS postId,
            comment_id       AS commentId,
            resource_url     AS resourceUrl,
@@ -24,7 +24,7 @@
       WHERE  comment_id = #{commentId};
     </if>
   </select>
-  <insert id="insertFile" parameterType="hashmap">
+  <insert id="insertFile" parameterType="com.board.project.blockboard.dto.FileDTO">
     INSERT INTO files
                 (origin_file_name,
                  stored_file_name,
@@ -47,8 +47,8 @@
     WHERE  stored_file_name = #{storedFileName};
   </update>
 
-  <select id="selectFileByFileID" parameterType="int" resultType="com.board.project.blockboard.dto.FileDTO">
-    SELECT file_id          AS fileID,
+  <select id="selectFileByFileId" parameterType="int" resultType="com.board.project.blockboard.dto.FileDTO">
+    SELECT file_id          AS fileId,
            post_id          AS postId,
            comment_id       AS commentId,
            resource_url     AS resourceUrl,
@@ -57,11 +57,11 @@
            file_size        AS fileSize,
            upload_time      AS uploadTime
     FROM   files
-    WHERE  file_id = #{fileID};
+    WHERE  file_id = #{fileId};
   </select>
 
   <select id="selectFileByStoredFileName" parameterType="string" resultType="com.board.project.blockboard.dto.FileDTO">
-    SELECT file_id          AS fileID,
+    SELECT file_id          AS fileId,
            post_id          AS postId,
            comment_id       AS commentId,
            resource_url     AS resourceUrl,

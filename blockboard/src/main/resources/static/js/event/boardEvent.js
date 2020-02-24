@@ -56,25 +56,23 @@ function clickDeleteBoardBtn() {
   });
 }
 
+
+
 //게시판 삭제- 삭제하기버튼 누를시
 function clickSaveDeleteBoard() {
   var boardDataList = new Array();
 
   $("input[name=boardDelete]").each(function () {
-    var checkboxObj = $(this);
-    if (checkboxObj.is(":checked")) { //삭제할때 체크 이렇게 불러옴
-      var boardData = new Object();
-      boardData.boardId = checkboxObj.val();
-      boardData.boardName = checkboxObj.attr("data-boardName");
+    if (isCheckedBoardDelete.call(this)) { //삭제할때 체크 이렇게 불러옴
+      var boardData = new Boards(getCheckedBoardID.call(this),getCheckedBoardName.call(this));
       boardDataList.push(boardData);
     }
   });
 
-  var jsonData = JSON.stringify(boardDataList);
   var isAcceptance = confirm("선택한 게시판을 정말 삭제하시겠습니까? 게시물또한 모두 삭제됩니다.");
   if (isAcceptance) {
     $(function () {
-      updateTabByNewBoardListAfterDeleteBoard(jsonData); //삭제이후 tab에 게시판목록 업데이트
+      updateTabByNewBoardListAfterDeleteBoard(boardDataList); //삭제이후 tab에 게시판목록 업데이트
     });
   }
 }
@@ -86,26 +84,29 @@ function clickChangeBoardBtn() {
   });
 }
 
+function insertChangeBoard(oldBoardName, newBoardName, boardId, boardDataList) {
+  if (oldBoardName != newBoardName) {
+    var boardData = new Boards(boardId, newBoardName)
+    boardDataList.push(boardData);
+  }
+}
+
+
+
 //게시판 이름변경 저장하기
 function clickSaveChangeBoard() {
   var boardDataList = new Array();
 
   $("input[name=boardname]").each(function () {
-    var boardData = new Object();
-    var clickObj = $(this);
-    var oldBoardName = clickObj.attr("data-oldname");
-    var newBoardName = clickObj.val();
+    var oldBoardName = getOldBoardName.call(this);
+    var newBoardName = getNewBoardName.call(this);
     newBoardName = newBoardName.trim();
     if (newBoardName == "") {
       alert("기존" + oldBoardName + "게시판 제목이 비었습니다.");
       return;
     }
-    var boardId = clickObj.attr("data-boardid");
-    if (oldBoardName != newBoardName) {
-      boardData.boardName = newBoardName;
-      boardData.boardId = boardId;
-      boardDataList.push(boardData);
-    }
+    var boardId = $(this).attr("data-boardid");
+    insertChangeBoard(oldBoardName, newBoardName, boardId, boardDataList);
   });
 
   var jsonData = JSON.stringify(boardDataList);
@@ -142,26 +143,26 @@ $(document).on("mouseleave", ".tabmenu", function () {
   $(this).css('background-color', 'white');
 });
 
-// 탭 메뉴 클릭 이벤트 - 해당 게시판의 게시글 불러옴
-$(document).on("click", ".tabmenu", function clickTabEvent(event) {
-  event.stopPropagation();
-  var boardId = $(this).attr('data-tab');
+function changeTabDesign() {
   $('.tabmenu').css('color', 'black');
   $('.tabmenu').removeClass("font-weight-bold");
   $('.tabmenu').removeClass("active_tab");
   $(this).css('color', '#40A745');//success색
   $(this).addClass("active_tab");
   $(this).addClass("font-weight-bold");
+}
+
+// 탭 메뉴 클릭 이벤트 - 해당 게시판의 게시글 불러옴
+$(document).on("click", ".tabmenu", function clickTabEvent(event) {
+  event.stopPropagation();
+  var boardId = $(this).attr('data-tab');
+  changeTabDesign.call(this);
   postClear();
   clearEditor();
-
   getPageList(1, boardId, 0, updatePostPageList);
 });
 
-//기능변경 on/off버튼 텍스트 바꾸기
-$(document).on('click', '._function-switch', function () {
-  var switchText = $(this).find("._switch");
-  var checkBox = $(this).find(".function_checkbox");
+function switchFunctionOnOff(checkBox, switchText) {
   if (checkBox.prop("checked")) {
     $(this).removeClass('btn-success');
     $(this).addClass('btn-default');
@@ -173,6 +174,13 @@ $(document).on('click', '._function-switch', function () {
     switchText.html("ON");
     checkBox.prop("checked", true);
   }
+}
+
+//기능변경 on/off버튼 텍스트 바꾸기
+$(document).on('click', '._function-switch', function () {
+  var switchText = $(this).find("._switch");
+  var checkBox = $(this).find(".function_checkbox");
+  switchFunctionOnOff.call(this, checkBox, switchText);
   $(this).removeClass("active");
 });
 

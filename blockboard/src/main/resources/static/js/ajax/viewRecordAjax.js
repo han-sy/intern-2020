@@ -4,6 +4,8 @@
  */
 
 function getViewRecords(postId,boardId, startIndex,successFunction) {
+
+  console.log("!!!boardId",boardId);
   $.ajax({
     type: 'GET',
     url: `/boards/${boardId}/posts/${postId}/view-records`,

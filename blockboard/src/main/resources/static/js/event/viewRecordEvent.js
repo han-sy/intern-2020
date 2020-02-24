@@ -5,12 +5,13 @@
 
 var hasRemainData;
 $(document).on("click", ".read_check", function () {
-  var postId = $('#postId').html();
-  var boardId = $('#selectedBoardIdinEditor option:selected').attr('data-tab');
+  var postId = getPostIdInPost();
+  var boardId = getBoardIdInPost();
   $('.modal-body-viewRecordList-container').html("");
+  hasRemainData=true;
   getViewRecords(postId,boardId,0,loadViewRecordUI);
   //안띄움
-  hasRemainData=true;
+
 });
 $('.modal-read-user-container').on("scroll",function () {
   var scrollTop = $(this).scrollTop();
@@ -19,8 +20,8 @@ $('.modal-read-user-container').on("scroll",function () {
   var resultCount =  $(".view_record_data").length;
   var postId = getPostIdInPost();
   var boardId = getBoardIdInPost();
-  console.log("boarId",boardId);
-  if (scrollTop + innerHeight >= scrollHeight-1 && hasRemainData){
+  if (scrollTop + innerHeight >= scrollHeight-0.25 && hasRemainData){
+    console.log(scrollTop + innerHeight-scrollHeight);
     getViewRecords(postId,boardId,resultCount,loadViewRecordUI);
   }
 });

@@ -78,44 +78,35 @@ public class FileService {
   @Autowired
   private AmazonRekognitionService amazonRekognitionService;
 
-  public String uploadFile(MultipartHttpServletRequest multipartRequest, HttpServletRequest request,
+  public String uploadFile(MultipartHttpServletRequest multipartRequest, int companyId,
       HttpServletResponse response) throws IOException {
-    int companyId = Integer.parseInt(request.getAttribute("companyId").toString());
     String uuid = Common.getNewUUID();
     Iterator<String> itr = multipartRequest.getFileNames();
     if (!functionValidation.isFunctionOn(companyId, FunctionID.POST_ATTACH_FILE,FunctionID.COMMENT_ATTACH_FILE, response)) {
       return null;
     }
-    String fileName = "";
-    String url = "";
+    FileDTO fileData = FileDTO.builder().build();
     while (itr.hasNext()) {
       MultipartFile mpf = multipartRequest.getFile(itr.next());
 
-      String originFileName = mpf.getOriginalFilename(); //파일명
-      String storedFileName = uuid + "_" + originFileName;
+      fileData.setOriginFileName(mpf.getOriginalFilename());
+      fileData.setStoredFileName(uuid + "_" + fileData.getOriginFileName());
       ObjectMetadata metadata = new ObjectMetadata();
 
-      url = amazonS3Service
-          .upload(storedFileName, Bucket.FILE, mpf.getInputStream(), metadata);
-      log.info("url -->" + url);
+      String url = amazonS3Service
+          .upload(fileData.getStoredFileName(), Bucket.FILE, mpf.getInputStream(), metadata);
+      fileData.setResourceUrl(url);
       long fileSize = mpf.getSize();
       //파일 전체 경로
 
-      log.info("originFileName => " + originFileName);
 
-      log.info("fileName => " + mpf.getName());
-      fileName = storedFileName;
 
-      Map<String, Object> fileAttributes = new HashMap<String, Object>();
-      fileAttributes.put("resourceUrl", url);
-      fileAttributes.put("originFileName", originFileName);
-      fileAttributes.put("storedFileName", storedFileName);
-      fileAttributes.put("fileSize", fileSize);
-      fileMapper.insertFile(fileAttributes);
+
+      fileMapper.insertFile(fileData);
 
     }
-    log.info("fileName => " + fileName);
-    return fileName;
+
+    return fileData.getStoredFileName();
   }
 
   public void updateIDs(List<FileDTO> fileList, HttpServletRequest request,
@@ -142,13 +133,13 @@ public class FileService {
     return fileMapper.selectFileListByEditorID(fileAttributes);
   }
 
-  public void downloadFile(int fileID, HttpServletResponse response, HttpServletRequest request) {
+  public void downloadFile(int fileId, HttpServletResponse response, HttpServletRequest request) {
     UserDTO userData = new UserDTO(request);
     if (!functionValidation
         .isFunctionOn(userData.getCompanyId(), FunctionID.POST_ATTACH_FILE,FunctionID.COMMENT_ATTACH_FILE, response)) {
       return;
     }
-    FileDTO fileData = fileMapper.selectFileByFileID(fileID);
+    FileDTO fileData = fileMapper.selectFileByFileId(fileId);
 
     String browser = request.getHeader("User-Agent");//브라우저 종류 가져옴.
     String downName = null;

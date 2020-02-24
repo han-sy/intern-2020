@@ -36,7 +36,7 @@ public class CommentController {
    * postId 일치하는 댓글 목록 리턴 ( 대댓글은 반환하지 않는다.)
    */
   @GetMapping("")
-  public List<CommentDTO> getCommentsByPost(@PathVariable("postId") int postId,@RequestParam int pageNumber) {
+  public List<CommentDTO> getCommentsByPost(@PathVariable int postId,@RequestParam int pageNumber) {
     List<CommentDTO> commentList = commentService.getCommentListByPostId(postId,pageNumber);
     return commentList;
   }
@@ -58,7 +58,7 @@ public class CommentController {
    * @return 댓글개수를 반환
    */
   @GetMapping("/counts")
-  public int getCommentsCountsByPostId(@PathVariable("postId") int postId) {
+  public int getCommentsCountsByPostId(@PathVariable int postId) {
     int commentCount = postService.getCommentsCountByPostId(postId);
     return commentCount;
   }
@@ -82,7 +82,7 @@ public class CommentController {
   }
 
   @GetMapping("/{commentId}")
-  public CommentDTO selectCommentByCommentId(@PathVariable("commentId") int commentId) {
+  public CommentDTO selectCommentByCommentId(@PathVariable int commentId) {
     return commentService.selectCommentByCommentId(commentId);
   }
 }
