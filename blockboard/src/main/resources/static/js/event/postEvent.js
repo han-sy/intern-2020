@@ -113,9 +113,10 @@ $(document).on('click', '.btn_delete', function () {
 
 // 게시글 검색 버튼 이벤트
 function search() {
-  let option = $('#search_option option:selected').attr('value');
-  let keyword = $('#search_keyword');
-  searchPost(option, keyword);
+  let keyword = getSearchKeyword();
+  let option = getSearchOption();
+  addBannerOfSearchResult(keyword, option);
+  getSearchPageList(1, keyword, option, updateSearchPostPageList);
 }
 
 // 작성 취소 버튼 이벤트
@@ -179,3 +180,4 @@ $(document).on('click', '.btn_restore', function () {
     restorePost(postID);
   }
 });
+

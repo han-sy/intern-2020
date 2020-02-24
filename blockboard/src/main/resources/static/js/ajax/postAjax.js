@@ -118,14 +118,15 @@ function deletePost(boardID, postID) {
   });
 }
 
-function searchPost(option, keyword) {
+function getSearchPost(keyword, option, pageNum) {
   let boardId = getCurrentActiveBoardID();
   $.ajax({
     type: 'GET',
     url: `/boards/${boardId}/posts/search`,
     data: {
+      keyword: keyword,
       option: option,
-      keyword: keyword.val()
+      pageNumber: pageNum
     },
     dataType: 'JSON',
     error: function (xhr) {
@@ -134,8 +135,7 @@ function searchPost(option, keyword) {
     success: function (data) {
       postClear(); // 게시글 조회 화면 Clear
       postsClear(); // 게시글 목록 화면 Clear
-      keyword.val("");
-
+      clearSearchKeyword();
       if (data === "") {
         showEmptyPostList();
       } else {

@@ -302,9 +302,7 @@
             var groupObj = {};
             arrTools.forEach(groupList, function (group) {
               groupObj[group.groupName] = group.items;
-              console.log("Array what is this = ", this);
             }, this);
-            console.log("what is this = ", this);
             arrTools.forEach(emojiList, function (emojiObj) {
               groupObj[emojiObj.groupName].push(emojiObj);
             }, this);

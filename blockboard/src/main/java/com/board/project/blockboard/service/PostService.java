@@ -89,9 +89,14 @@ public class PostService {
     oldPost.setPostContentExceptHTMLTag(Jsoup.parse(newPost.getPostContent()).text());
   }
 
-  public List<PostDTO> searchPost(String option, String keyword) {
+  public List<PostDTO> searchPost(String option, String keyword, int pageNumber) {
     PostValidation.isValidSearch(option, keyword);
-    return postMapper.searchPost(option, keyword);
+    Map<String, Object> attributes = new HashMap<>();
+    attributes.put("option", option);
+    attributes.put("keyword", keyword);
+    attributes.put("startIndex", (pageNumber - 1) * PageSize.POST);
+    attributes.put("pageSize", PageSize.POST);
+    return postMapper.searchPost(attributes);
   }
 
   public void restorePost(int postID, HttpServletRequest request) {
@@ -285,6 +290,10 @@ public class PostService {
    */
   public int getCommentsCountByPostID(int postID) {
     return postMapper.selectCommentsCountByPostID(postID);
+  }
+
+  public int getSearchPostCount(Map<String, Object> attributes) {
+    return postMapper.selectSearchPostCount(attributes);
   }
 }
 

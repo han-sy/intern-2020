@@ -7,7 +7,7 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.board.project.blockboard.mapper.PostMapper">
-  <insert id="insertPost" parameterType="com.board.project.blockboard.dto.PostDTO" >
+  <insert id="insertPost" parameterType="com.board.project.blockboard.dto.PostDTO">
     INSERT INTO posts (
     <if test='postID != 0'>
       post_id,
@@ -84,7 +84,8 @@
     JOIN users users ON post.user_id = users.user_id
     WHERE post.post_status = "normal"
     <include refid="searchOption"/>
-    ORDER BY postRegisterTime DESC;
+    ORDER BY postRegisterTime DESC
+    LIMIT #{startIndex}, #{pageSize};
   </select>
 
   <update id="temporaryDeletePost" parameterType="com.board.project.blockboard.dto.PostDTO">
@@ -427,5 +428,15 @@
     SELECT comments_count
     FROM posts
     WHERE post_id = #{postID};
+  </select>
+
+  <select id="selectSearchPostCount" parameterType="hashMap" resultType="Integer">
+    SELECT COUNT(post.post_id)
+    FROM posts post
+    JOIN boards board ON post.board_id = board.board_id
+    JOIN users users ON post.user_id = users.user_id
+    WHERE post.post_status = "normal"
+    AND post.company_id = #{companyId}
+    <include refid="searchOption"/>;
   </select>
 </mapper>

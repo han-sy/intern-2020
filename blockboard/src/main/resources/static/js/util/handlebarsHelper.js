@@ -221,3 +221,13 @@ Handlebars.registerHelper('hasReferenceCommentId', function (options) {
   }
   return options.inverse(this);
 });
+
+/**
+ * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
+ */
+Handlebars.registerHelper('isSearchPage', function (options) {
+  if (this.pageType === "search") {
+    return options.fn(this);
+  }
+  return options.inverse(this);
+});

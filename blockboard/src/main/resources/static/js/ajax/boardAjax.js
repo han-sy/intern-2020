@@ -29,7 +29,7 @@ function updateTabByNewBoardListAfterDeleteBoard(deleteBoards) {
     error: function (xhr) {  //통신 실패시
       errorFunction(xhr);
     },
-    complete : function () {
+    complete: function () {
       getBoardList(updateTab);//새로운 탭 내용으로 교체
     }
   });
@@ -47,7 +47,7 @@ function updateTabByNewBoardListAfterUpdateBoardName(newTitles) {
     error: function (xhr) {  //통신 실패시
       errorFunction(xhr);
     },
-    complete : function () {
+    complete: function () {
       getBoardList(updateTab);//새로운 탭 내용으로 교체
     }
   });
@@ -92,8 +92,12 @@ function getPostDataAfterPostClick(postID, boardID) {
   });
 }
 
+function getSearchPostListByPageNum(pageNum) {
+  getSearchPost(getSearchBannerKeyword(), getSearchBannerOption(), pageNum);
+}
 //탭클릭후 게시판 목록 불러오기
 function getPostListByPageNum(pageNum, boardID) {
+  clearSearchBanner();
   var btn_write = $('#btn_write');
   if (boardID < 0) {
     btn_write.attr('style', 'visibility:hidden');

@@ -26,3 +26,19 @@ function getSelectedBoardIdInEditor() {
 function getPostTitleInEditor() {
   return $('#post_title').val();
 }
+
+function getSearchOption() {
+  return $('#search_option option:selected').attr('value');
+}
+
+function getSearchKeyword() {
+  return $('#search_keyword').val();
+}
+
+function getSearchBannerOption() {
+  return $('#search-banner-option').html();
+}
+
+function getSearchBannerKeyword() {
+  return $('#search-banner-keyword').html();
+}

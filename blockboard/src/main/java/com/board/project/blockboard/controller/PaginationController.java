@@ -30,7 +30,14 @@ public class PaginationController {
       @RequestParam int pageNumber, HttpServletRequest request) {
     UserDTO user = new UserDTO(request);
     //게시판 목록
-    PaginationDTO pageInfo = paginationService.getPageList(pageNumber,boardID,postID,user);
+    PaginationDTO pageInfo = paginationService.getPageList(pageNumber, boardID, postID, user);
     return pageInfo;
+  }
+
+  @GetMapping("/search")
+  public PaginationDTO getSearchPageList(@RequestParam int pageNumber, @RequestParam String keyword,
+      @RequestParam String option, HttpServletRequest request) {
+    log.info("keyword = " + keyword + ", options = " + option);
+    return paginationService.getSearchPageList(pageNumber, keyword, option, request);
   }
 }

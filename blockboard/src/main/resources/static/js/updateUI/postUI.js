@@ -3,23 +3,23 @@
  * @file    postUI.js
  */
 function loadPostList(data) {
-  var source = $('#posts-template').html();
-  var template = Handlebars.compile(source);
-  var post = {posts: data};
-  var itemList = template(post);
+  let source = $('#posts-template').html();
+  let template = Handlebars.compile(source);
+  let post = {posts: data};
+  let itemList = template(post);
   $('#post_table').html(itemList);
 }
 
 function loadPostContent(data) {
-  var source = $('#post-content-template').html();
-  var template = Handlebars.compile(source);
-  var post = {post: data};
-  var item = template(post);
+  let source = $('#post-content-template').html();
+  let template = Handlebars.compile(source);
+  let post = {post: data};
+  let item = template(post);
   $('#post-content').html(item);
 }
 
 function showEmptyPostList() {
-  var source = $('#empty-posts-template').html();
+  let source = $('#empty-posts-template').html();
   $('#post-list').html(source);
 }
 
@@ -50,8 +50,8 @@ function hideTempSaveButton() {
 }
 
 function updateButtonOnRecycleBoard() {
-  var btn_deletePost = $('.btn_delete');
-  var btn_updatePost = $('.btn_modify');
+  let btn_deletePost = $('.btn_delete');
+  let btn_updatePost = $('.btn_modify');
   btn_deletePost.show();
   btn_updatePost.show();
   btn_updatePost.html("복원");
@@ -66,6 +66,21 @@ function refreshPostListAfterPostCRUD() {
   getPageList(1, boardId, 0, updatePostPageList)
 }
 
+function addBannerOfSearchResult(keyword, option) {
+  let source = $('#search-banner-template').html();
+  let template = Handlebars.compile(source);
+  let searchItems = {keyword: keyword, option:option};
+  let searchBanner = template(searchItems);
+  $('#search-banner').html(searchBanner);
+}
+
+function clearSearchBanner() {
+  $('#search-banner').html('');
+}
+
+function clearSearchKeyword() {
+  $('#search_keyword').val('');
+}
 /**
  * 수정 삭제 버튼 나타내기
  * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>

@@ -13,13 +13,19 @@
 $(document).on('click', '.posts-page-item', function () {
   var boardID = getCurrentActiveBoardID();
   var pageNum = $(this).find(".page-link").attr("data-page");
-  getPageList(pageNum, boardID,0, updatePostPageList);
+  getPageList(pageNum, boardID, 0, updatePostPageList);
 });
 
 $(document).on('click', '.comments-page-item', function () {
   var postID = getPostIDInPost();
   var pageNum = $(this).find(".page-link").attr("data-page");
-  getPageList(pageNum, 0,postID, updateCommentPageList);
+  getPageList(pageNum, 0, postID, updateCommentPageList);
 });
 
+$(document).on('click', '.search-page-item', function () {
+  let pageNum = $(this).find(".page-link").attr("data-page");
+  let keyword = getSearchBannerKeyword();
+  let option = getSearchBannerOption();
+  getSearchPageList(pageNum, keyword, option, updateSearchPostPageList);
+});
 

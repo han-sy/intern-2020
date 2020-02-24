@@ -71,8 +71,8 @@ public class PostController {
 
   @GetMapping("/search")
   public List<PostDTO> searchPost(@RequestParam("option") String option,
-      @RequestParam("keyword") String keyword) {
-    return postService.searchPost(option, keyword);
+      @RequestParam("keyword") String keyword, @RequestParam("pageNumber") int pageNumber) {
+    return postService.searchPost(option, keyword, pageNumber);
   }
 
   @GetMapping("/myArticle")

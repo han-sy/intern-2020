@@ -853,7 +853,13 @@
                     </div>
                 {{/attribute}}
             </script>
-
+            <div id="search-banner"></div>
+            <script id="search-banner-template" type="text/x-handlebars-template">
+                <h4 class="search-banner">
+                    <span id="search-banner-option">{{option}}</span>:'
+                    <span id="search-banner-keyword">{{keyword}}</span>'로 검색한 결과입니다.
+                </h4>
+            </script>
             <div id="tabcontent" class="container-fluid">
                 <table id="post_table" class="table table-hover" cellpadding="0" cellspacing="0"
                        border="0"></table>
@@ -982,13 +988,23 @@
                                 </li>
                             {{/each}}
                         {{else}}
-                            {{#each pageList}}
-                                <li class='comments-page-item' id='comments_page{{this}}'><a
-                                        class='page-link page-index'
-                                        style='cursor: pointer;'
-                                        data-page='{{this}}'>{{this}}</a>
-                                </li>
-                            {{/each}}
+                            {{#isSearchPage}}
+                                {{#each pageList}}
+                                    <li class='search-page-item' id='search_page{{this}}'><a
+                                            class='page-link page-index'
+                                            style='cursor: pointer;'
+                                            data-page='{{this}}'>{{this}}</a>
+                                    </li>
+                                {{/each}}
+                            {{else}}
+                                {{#each pageList}}
+                                    <li class='comments-page-item' id='comments_page{{this}}'><a
+                                            class='page-link page-index'
+                                            style='cursor: pointer;'
+                                            data-page='{{this}}'>{{this}}</a>
+                                    </li>
+                                {{/each}}
+                            {{/isSearchPage}}
                         {{/isPostPage}}
 
                         {{#isLastRange}}
@@ -1007,7 +1023,6 @@
                         {{/isLastPage}}
                     {{/pagesInfo}}
                 </script>
-
             </div>
         </div>
     </div>

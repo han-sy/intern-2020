@@ -15,7 +15,7 @@ import org.springframework.stereotype.Repository;
 @Mapper
 public interface PostMapper {
 
-  List<PostDTO> searchPost(String option, String keyword);
+  List<PostDTO> searchPost(Map<String, Object> attributes);
 
   List<PostDTO> selectMyPosts(Map<String, Object> map);
 
@@ -63,7 +63,6 @@ public interface PostMapper {
 
   int getPopularPostsCount(int companyID);
 
-
   void updateCommentCountPlus1(int postID);
 
   void updateCommentCountMinus1(int postID);
@@ -71,4 +70,6 @@ public interface PostMapper {
   Integer selectPostIDByCommentID(int commentID);
 
   int selectCommentsCountByPostID(int postID);
+
+  int selectSearchPostCount(Map<String, Object> attributes);
 }

@@ -9,6 +9,9 @@ import com.board.project.blockboard.common.constant.ConstantData.PageSize;
 import com.board.project.blockboard.common.constant.ConstantData.RangeSize;
 import com.board.project.blockboard.dto.PaginationDTO;
 import com.board.project.blockboard.dto.UserDTO;
+import java.util.HashMap;
+import java.util.Map;
+import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,7 +25,8 @@ public class PaginationService {
   @Autowired
   private CommentService commentService;
 
-  public PaginationDTO getPostPageListByPageNumberAboutBoard(int pageNumber, int boardID, UserDTO user) {
+  public PaginationDTO getPostPageListByPageNumberAboutBoard(int pageNumber, int boardID,
+      UserDTO user) {
     int postCount;
     switch (boardID) {
       case ConstantData.BOARD_MY_POSTS:
@@ -50,27 +54,41 @@ public class PaginationService {
         postCount = postService.getPostsCountByBoardID(boardID);
     }
 
-    PaginationDTO paginationInfo = new PaginationDTO("posts",postCount, pageNumber, PageSize.POST,
+    PaginationDTO paginationInfo = new PaginationDTO("posts", postCount, pageNumber, PageSize.POST,
         RangeSize.POST);
     paginationInfo.rangeSetting(pageNumber);
     return paginationInfo;
   }
-  public PaginationDTO getCommentPageListByPageNumberAboutPost(int pageNumber, int postID, UserDTO user) {
+
+  public PaginationDTO getCommentPageListByPageNumberAboutPost(int pageNumber, int postID,
+      UserDTO user) {
     int commentCount = postService.getCommentsCountByPostID(postID);
-    PaginationDTO paginationInfo = new PaginationDTO("comments",commentCount,pageNumber,PageSize.COMMENT,RangeSize.COMMENT);
+    PaginationDTO paginationInfo = new PaginationDTO("comments", commentCount, pageNumber,
+        PageSize.COMMENT, RangeSize.COMMENT);
     paginationInfo.rangeSetting(pageNumber);
     return paginationInfo;
   }
+
   public PaginationDTO getPageList(int pageNumber, int boardID, int postID, UserDTO user) {
-    if(isBoardPage(boardID)){
-      return getPostPageListByPageNumberAboutBoard(pageNumber,boardID,user);
-    }
-    else{
-      return getCommentPageListByPageNumberAboutPost(pageNumber,postID,user);
+    if (isBoardPage(boardID)) {
+      return getPostPageListByPageNumberAboutBoard(pageNumber, boardID, user);
+    } else {
+      return getCommentPageListByPageNumberAboutPost(pageNumber, postID, user);
     }
   }
 
-
+  public PaginationDTO getSearchPageList(int pageNumber, String keyword, String option,
+      HttpServletRequest request) {
+    Map<String, Object> attributes = new HashMap<>();
+    attributes.put("keyword", keyword);
+    attributes.put("option", option);
+    attributes.put("companyId", request.getAttribute("companyID"));
+    int searchPostCount = postService.getSearchPostCount(attributes);
+    PaginationDTO paginationInfo = new PaginationDTO("search", searchPostCount, pageNumber,
+        PageSize.POST, RangeSize.POST);
+    paginationInfo.rangeSetting(pageNumber);
+    return paginationInfo;
+  }
 
   public boolean isBoardPage(int boardID) {
     return boardID != 0;

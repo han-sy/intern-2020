@@ -4,7 +4,7 @@
  */
 
 //리스트 받아오기
-function getPageList(pageNumber, boardID,postID, successFunction) {
+function getPageList(pageNumber, boardID, postID, successFunction) {
   $.ajax({
     type: 'GET',
     url: `/pages`,
@@ -22,3 +22,25 @@ function getPageList(pageNumber, boardID,postID, successFunction) {
   });
 }
 
+// 검색 결과 리스트 받아오기
+function getSearchPageList(pageNumber, keyword, option, successFunction) {
+  console.log("keyword = ", keyword);
+  console.log("option = ", option);
+  $.ajax({
+    type: 'GET',
+    url: `/pages/search`,
+    contentType: 'charset=UTF-8',
+    data: {
+      keyword: keyword,
+      option: option,
+      pageNumber: pageNumber
+    },
+    error: function () {  //통신 실패시
+      alert('통신실패!');
+    },
+    success: function (data) {
+      console.log("검색 페이징 데이터 = ", data);
+      successFunction(data, data.pageList, true);
+    }
+  });
+}
