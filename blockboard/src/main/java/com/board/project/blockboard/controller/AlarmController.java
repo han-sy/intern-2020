@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -28,8 +29,9 @@ public class AlarmController {
   private PostService postService;
 
   @GetMapping("/alarms")
-  public List<AlarmDTO> getAlarms(HttpServletRequest request) {
-    List<AlarmDTO> alarms = alarmService.selectAlarmsByUser(request);
+  public List<AlarmDTO> getAlarmsByUser(HttpServletRequest request,
+      @RequestParam("pageNum") int pageNum) {
+    List<AlarmDTO> alarms = alarmService.selectAlarmsByUser(request, pageNum);
     if (alarms.isEmpty()) {
       return null;
     }
@@ -41,12 +43,22 @@ public class AlarmController {
     alarmService.deleteAlarm(alarmId);
   }
 
-  @GetMapping("alarms/{alarm-id}")
+  @GetMapping("/alarms/{alarm-id}")
   public AlarmDTO getAlarm(@PathVariable("alarm-id") int alarmId) {
     return alarmService.selectAlarmByAlarmId(alarmId);
   }
 
-  @GetMapping("alarms/{alarm-id}/post")
+  @PutMapping("/alarms/{alarm-id}")
+  public void readAlarm(@PathVariable("alarm-id") int alarmId) {
+    alarmService.readAlarm(alarmId);
+  }
+
+  @GetMapping("/alarms/count")
+  public int getUnreadAlarmCountByUser(HttpServletRequest request) {
+    return alarmService.getUnreadAlarmCountByUser(request);
+  }
+
+  @GetMapping("/alarms/{alarm-id}/post")
   public PostDTO getAlarmContent(@PathVariable("alarm-id") int alarmId) {
     PostDTO post = postService.selectPostByAlarmId(alarmId);
     if (post == null) {
@@ -55,10 +67,7 @@ public class AlarmController {
     return post;
   }
 
-  @PutMapping("alarms/{alarm-id}")
-  public void readAlarm(@PathVariable("alarm-id") int alarmId) {
-    alarmService.readAlarm(alarmId);
-  }
+
 }
 
 

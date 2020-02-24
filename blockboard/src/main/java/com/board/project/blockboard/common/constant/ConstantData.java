@@ -29,6 +29,8 @@ public class ConstantData {
   public static final String BUCKET_INLINE ="block-board-inline";
   public static final String BUCKET_USER_THUMBNAIL = "block-board-user-thumbnail";
 
+  public static final int ALARM_COUNT_PER_PAGE = 6;
+
 
   public static final class FunctionID {
 

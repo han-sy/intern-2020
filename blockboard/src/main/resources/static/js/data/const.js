@@ -26,3 +26,5 @@ const UNICODE_2_BYTE = 7;
 const BYTE_SIZE_3 = 3;
 const BYTE_SIZE_2 = 2;
 const BYTE_SIZE_1 = 1;
+
+const ALARM_COUNT_PER_PAGE = 6;
