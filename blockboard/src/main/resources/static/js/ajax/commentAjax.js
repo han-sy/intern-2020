@@ -21,12 +21,10 @@ function updateRepliesCount(boardID, postID, commentReferencedID) {
   $.ajax({
     type: 'GET',
     url: `/boards/${boardID}/posts/${postID}/comments/${commentReferencedID}/replies/counts`,
-    error: function () {  //통신 실패시
+    error: function () {
       alert('통신실패!');
     },
-    success: function (data) {    //들어오는 data는 boardDTOlist
-      console.log("commentReferencedID : " + commentReferencedID);
-      console.log("count : " + data);
+    success: function (data) {
       updateRepliesCountUI(data, commentReferencedID);
     }
   });

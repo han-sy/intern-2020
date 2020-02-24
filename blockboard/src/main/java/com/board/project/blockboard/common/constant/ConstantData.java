@@ -7,15 +7,9 @@ package com.board.project.blockboard.common.constant;
 
 public class ConstantData {
 
-  public static final int ON_TO_OFF = 1;
-  public static final int OFF_TO_ON = 2;
   public static final int NO_CHANGE = 0;
-  public static final int VIEW_RECORDS_PAGE_SIZE = 10;
-  public static final int REPLY_PAGE_SIZE =5;
-  public static final int POST_PAGE_SIZE = 10;
-  public static final int COMMENT_PAGE_SIZE = 5;
-  public static final int POST_RANGE_SIZE = 10;
-  public static final int COMMENT_RANGE_SIZE = 5;
+
+
   public static final int BOARD_MY_POSTS = -1;
   public static final int BOARD_MY_REPLIES = -2;
   public static final int BOARD_TEMP = -3;
@@ -23,14 +17,30 @@ public class ConstantData {
   public static final int BOARD_RECENT = -5;
   public static final int BOARD_POPULAR = -6;
 
-  public static final String BUCKET_FILE ="block-board";
-  public static final String BUCKET_USER = "block-board-user";
-  public static final String COLLECTION_ID = "collectionUser";
-  public static final String BUCKET_INLINE ="block-board-inline";
-  public static final String BUCKET_USER_THUMBNAIL = "block-board-user-thumbnail";
-
   public static final int ALARM_COUNT_PER_PAGE = 6;
 
+  public static final class FunctionAble{
+    public static final int ON_TO_OFF = 1;
+    public static final int OFF_TO_ON = 2;
+  }
+
+  public static final class PageSize{
+    public static final int REPLY =5;
+    public static final int POST = 10;
+    public static final int COMMENT = 5;
+    public static final int VIEW_RECORDS = 10;
+  }
+  public static final class RangeSize{
+    public static final int POST = 10;
+    public static final int COMMENT = 5;
+  }
+
+  public static final class Bucket{
+    public static final String FILE ="block-board";
+    public static final String USER = "block-board-user";
+    public static final String INLINE ="block-board-inline";
+    public static final String USER_THUMBNAIL = "block-board-user-thumbnail";
+  }
 
   public static final class FunctionID {
 

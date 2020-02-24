@@ -11,7 +11,6 @@ $(document).on("click", ".read_check", function () {
   getViewRecords(postID,boardID,0,loadViewRecordUI);
   //안띄움
   hasRemainData=true;
-  console.log(hasRemainData);
 });
 $('.modal-read-user-container').on("scroll",function () {
   var scrollTop = $(this).scrollTop();
@@ -21,7 +20,6 @@ $('.modal-read-user-container').on("scroll",function () {
   var postID = getPostIDInPost();
   var boardID = getBoardIDInPost();
   if (scrollTop + innerHeight >= scrollHeight-1 && hasRemainData){
-    console.log("resultCount : "+resultCount);
     getViewRecords(postID,boardID,resultCount,loadViewRecordUI);
   }
 });

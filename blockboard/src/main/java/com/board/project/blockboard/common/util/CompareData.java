@@ -5,6 +5,7 @@
 package com.board.project.blockboard.common.util;
 
 import com.board.project.blockboard.common.constant.ConstantData;
+import com.board.project.blockboard.common.constant.ConstantData.FunctionAble;
 import com.board.project.blockboard.dto.FunctionDTO;
 
 
@@ -15,9 +16,9 @@ public class CompareData {
    */
   public static int compareFunctionOnOff(FunctionDTO oldFunction, FunctionDTO newFunction) {
     if (!oldFunction.isFunctionOn() && newFunction.isFunctionOn()) {
-      return ConstantData.OFF_TO_ON;
+      return FunctionAble.OFF_TO_ON;
     } else if (oldFunction.isFunctionOn() && !newFunction.isFunctionOn()) {
-      return ConstantData.ON_TO_OFF;
+      return FunctionAble.ON_TO_OFF;
     } else {
       return ConstantData.NO_CHANGE;
     }

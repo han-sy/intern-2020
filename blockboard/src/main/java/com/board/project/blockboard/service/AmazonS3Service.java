@@ -15,6 +15,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.board.project.blockboard.common.constant.ConstantData;
+import com.board.project.blockboard.common.constant.ConstantData.Bucket;
 import com.board.project.blockboard.common.exception.FileValidException;
 import com.board.project.blockboard.common.util.Thumbnail;
 import com.board.project.blockboard.key.Key;
@@ -72,7 +73,7 @@ public class AmazonS3Service {
         if (!amazonS3.doesObjectExist(bucket, fileName)) { //버킷에 파일이 존재하지 않을때.
           throw new FileValidException();
         }
-        S3Object o = amazonS3.getObject(ConstantData.BUCKET_FILE, fileName);
+        S3Object o = amazonS3.getObject(Bucket.FILE, fileName);
         S3ObjectInputStream s3is = o.getObjectContent();
         return s3is;
       } catch (AmazonServiceException e) {
@@ -93,8 +94,8 @@ public class AmazonS3Service {
         if (!amazonS3.doesObjectExist(bucket, fileName)) { //버킷에 파일이 존재하지 않을때.
           throw new FileValidException();
         }
-        amazonS3.deleteObject(ConstantData.BUCKET_FILE, fileName);
-        if (amazonS3.doesObjectExist(ConstantData.BUCKET_FILE, fileName)) {
+        amazonS3.deleteObject(Bucket.FILE, fileName);
+        if (amazonS3.doesObjectExist(Bucket.FILE, fileName)) {
           return false;
         }
         return true;

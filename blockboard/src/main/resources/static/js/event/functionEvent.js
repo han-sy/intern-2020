@@ -38,7 +38,6 @@ function clickSaveFunctionChange() {
 $(document).on('click', '._function-switch', function () {
   var switchText = $(this).find("._switch");
   var checkBox = $(this).find(".function_checkbox");
-  console.log($(this).closest(".btn-group-toggle").hasClass("first_function"));
 
   if (checkBox.prop("checked")) {
     $(this).removeClass('btn-success');
@@ -58,7 +57,6 @@ $(document).on('click', '._function-switch', function () {
 });
 
 function ChangeFunctionListUI(obj){
-  console.log("첫번째 값:"+obj.find("._switch").html());
   if(obj.find("._switch").html()=="OFF"){
     $('.comment_function').addClass("display_none");
     $('.comment_function').find("._switch").html("OFF");

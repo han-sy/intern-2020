@@ -41,7 +41,6 @@ function clickSaveAddedBoard() {
     $('#input_board_name').val(boardName.substr(0, charLength).trim());
     return;
   }
-  console.log("boardName :" + boardName);
   var isAcceptance = confirm("<" + boardName + ">게시판을 추가하시겠습니까?");
   if (isAcceptance) {
     $(function () {
@@ -66,7 +65,6 @@ function clickSaveDelteBoard() {
     if (checkboxObj.is(":checked")) { //삭제할때 체크 이렇게 불러옴
       var boardData = new Object();
       boardData.boardID = checkboxObj.val();
-      console.log("boardID:" + boardData.boardID);
       boardData.boardName = checkboxObj.attr("data-boardName");
       boardDataList.push(boardData);
     }
@@ -125,7 +123,6 @@ function clickSaveChangeBoard() {
 $(document).on('click', '.normal_post_click', function () {
   var postID = getPostIDInPostList.call(this);
   var boardID = getBoardIDInPostList.call(this);
-  console.log("boardID = " + boardID);
   $(function () {
     getPostDataAfterPostClick(postID, boardID); //boardAjax.js 참고
   });
@@ -135,7 +132,6 @@ $(document).on('click', '.normal_post_click', function () {
 $(document).on('click', '.functionClose', clickConfigClose());
 
 function clickConfigClose() {
-  console.log("닫기버튼");
   $('#config_container').html("");
 }
 
@@ -167,7 +163,6 @@ $(document).on("click", ".tabmenu", function clickTabEvent(event) {
 $(document).on('click', '._function-switch', function () {
   var switchText = $(this).find("._switch");
   var checkBox = $(this).find(".function_checkbox");
-  console.log(switchText.html() == "ON");
   if (checkBox.prop("checked")) {
     $(this).removeClass('btn-success');
     $(this).addClass('btn-default');

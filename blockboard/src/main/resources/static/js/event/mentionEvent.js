@@ -4,7 +4,6 @@
  */
 $(document).on('click', '.name', function () {
   let userID = $(this).attr("data-id");
-  console.log(userID);
   $.ajax({
     type: 'GET',
     url: `/users/${userID}`,

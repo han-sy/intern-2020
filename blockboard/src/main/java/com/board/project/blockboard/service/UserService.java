@@ -5,7 +5,7 @@
 package com.board.project.blockboard.service;
 
 import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.board.project.blockboard.common.constant.ConstantData;
+import com.board.project.blockboard.common.constant.ConstantData.Bucket;
 import com.board.project.blockboard.common.util.Common;
 import com.board.project.blockboard.common.util.Thumbnail;
 import com.board.project.blockboard.dto.UserDTO;
@@ -127,17 +127,18 @@ public class UserService {
 
       String originFileName = mpf.getOriginalFilename(); //파일명
       String storedFileName = userID + originFileName.substring(originFileName.indexOf("."));
-      //zzzzString storedFileName = uuid + "_" + originFileName;
+      //String storedFileName = uuid + "_" + originFileName;
       ObjectMetadata metadata = new ObjectMetadata();
       String fileExt = Common.getFileExt(storedFileName);
 
       try {
         url = amazonS3Service
-            .upload(storedFileName, ConstantData.BUCKET_USER, mpf.getInputStream(), metadata);
+            .upload(storedFileName, Bucket.USER, mpf.getInputStream(), metadata);
         InputStream thumbnailInputStream = Thumbnail.makeThumbnail(mpf, storedFileName, fileExt);
         thumbnailUrl = amazonS3Service
-            .upload(storedFileName, ConstantData.BUCKET_USER_THUMBNAIL, thumbnailInputStream,
+            .upload(storedFileName, Bucket.USER_THUMBNAIL, thumbnailInputStream,
                 metadata);
+        Thumbnail.deleteSubFile(storedFileName);
       } catch (Exception e) {
         e.printStackTrace();
       }
