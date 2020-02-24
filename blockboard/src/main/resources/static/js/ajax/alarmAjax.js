@@ -2,22 +2,45 @@
  * @author Woohyeok Jun <woohyeok.jun@worksmobile.com>
  * @file alarmAjax.js
  */
+var hasMoreAlarm = true;
 
-function getAlarms() {
+function getAlarms(pageNum) {
+  if (pageNum === 1) {
+    hasMoreAlarm = true;
+  }
+  if (!hasMoreAlarm) {
+    return;
+  }
   $.ajax({
     type: 'GET',
     url: '/alarms',
+    data: {pageNum: pageNum},
     error: function (xhr) {
       errorFunction(xhr);
     },
     success: function (data) {
-      if (data === "") {
+      if (data === "" && pageNum === 1) {
         emptyAlarmUI();
+      } else if (data === "" && pageNum > 1) {
+        hasMoreAlarm = false;
       } else {
         updateAlarmUI(data);
       }
     }
   });
+}
+
+function getUnreadAlarmCount() {
+  $.ajax({
+    type: 'GET',
+    url: '/alarms/count',
+    error: function (xhr) {
+      errorFunction(xhr);
+    },
+    success: function (alarmCount) {
+      updateAlarmCount(alarmCount);
+    }
+  })
 }
 
 function removeAlarmItem(alarmId) {
@@ -28,7 +51,7 @@ function removeAlarmItem(alarmId) {
       errorFunction(xhr);
     },
     complete: function () {
-      getAlarms();
+      getUnreadAlarmCount();
     }
   });
 }
@@ -62,7 +85,7 @@ function showAlarmContent(alarmId, commentId) {
       showCommentAlarmContent(commentId);
     },
     complete: function () {
-      getAlarms();
+      getUnreadAlarmCount();
     }
   });
 }

@@ -17,7 +17,7 @@ $(document).on('click', '.btn-alarm-delete', function (event) {
   let alarmID = alarmItem.dataset.id;
   alarmItem.remove();
   removeAlarmItem(alarmID);
-  getAlarms();
+  getUnreadAlarmCount();
 });
 
 $(document).on('click', 'li.alarm-item', function () {
@@ -50,16 +50,6 @@ function deleteAlarmByClass(className) {
   }
 }
 
-function countUnreadAlarm(alarmList) {
-  var unreadAlarmCount = 0;
-  for (let i = 0; i < alarmList.length; i++) {
-    if (alarmList[i].isRead === false) {
-      unreadAlarmCount += 1;
-    }
-  }
-  return unreadAlarmCount;
-}
-
 function showCommentAlarmContent(commentId) {
   if (commentId == 0) {
     return;
@@ -76,8 +66,25 @@ function showCommentAlarmContent(commentId) {
         return false;
       }
     });
-    //if (offset === 0) { // 현재 페이지에 없어 댓글 모달창을 띄웁니다.
-    getCommentForShowModal(commentId);
-    //}
+    if (offset === 0) { // 현재 페이지에 없어 댓글 모달창을 띄웁니다.
+      getCommentForShowModal(commentId);
+    }
   }, 100);
+}
+
+$('#alarm-content').scroll(function () {
+  let scroll_position = $(this).scrollTop();
+  let bottom_position = $(this)[0].scrollHeight - $(this).height();
+  if (scroll_position === bottom_position) {
+    hasMoreAlarmItems();
+  }
+});
+
+function hasMoreAlarmItems() {
+  let currentAlarmCount = $('#alarm-content').children('li').length;
+  let currentPageNumber = currentAlarmCount / ALARM_COUNT_PER_PAGE;
+  if (currentPageNumber - parseInt(currentPageNumber) !== 0) {
+    return;
+  }
+  getAlarms(currentPageNumber + 1);
 }
