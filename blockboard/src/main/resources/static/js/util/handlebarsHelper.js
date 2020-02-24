@@ -211,3 +211,13 @@ Handlebars.registerHelper('isReadAlarm', function (options) {
   }
   return options.inverse(this);// 안 읽은 알람
 });
+
+/**
+ * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
+ */
+Handlebars.registerHelper('hasReferenceCommentId', function (options) {
+  if (this.commentReferencedID > 0) {
+    return options.fn(this);
+  }
+  return options.inverse(this);
+});
