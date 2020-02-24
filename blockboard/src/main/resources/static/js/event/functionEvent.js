@@ -5,9 +5,8 @@
 
 //"기능변경" 버튼 클릭시
 function changeFunction() {
-  var companyID = $('.navbar-brand').attr("value");
   $(function () {
-    getFunctionList(companyID, getFunctionCheckList);
+    getFunctionList(getFunctionCheckList);
   });
 }
 

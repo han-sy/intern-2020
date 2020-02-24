@@ -72,8 +72,8 @@ public class FileController {
   /**
    * 파일 다운로드
    */
-  @GetMapping(value = "/files/{fileid}")
-  public void downloadFile(@PathVariable("fileid") int fileID, HttpServletResponse response,
+  @GetMapping(value = "/files/{file-id}")
+  public void downloadFile(@PathVariable("file-id") int fileID, HttpServletResponse response,
       HttpServletRequest request) {
     fileService.downloadFile(fileID, response, request);
   }

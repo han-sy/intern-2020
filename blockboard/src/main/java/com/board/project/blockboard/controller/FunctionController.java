@@ -33,7 +33,7 @@ public class FunctionController {
    *
    * @return 리스트 반환
    */
-  @GetMapping(value = "/{companyid}")
+  @GetMapping(value = "")
   public List<FunctionDTO> getFunctionInfo(HttpServletRequest request) {
     UserDTO userData = new UserDTO(request);
     List<FunctionDTO> functionInfoList = functionService
@@ -44,7 +44,7 @@ public class FunctionController {
   /**
    * 기능 on/off 정보 업데이트
    */
-  @PostMapping(value = "/{companyid}")
+  @PostMapping(value = "")
   public void insertNewFunctionData(@RequestBody List<FunctionDTO> functionDTOList,
       HttpServletResponse response, HttpServletRequest request)
       throws IOException {

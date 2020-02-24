@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("/boards/{boardid}/posts/{postid}/comments")
+@RequestMapping("/boards/{boardId}/posts/{postId}/comments")
 public class CommentController {
 
   @Autowired
@@ -35,7 +35,7 @@ public class CommentController {
    * postID 일치하는 댓글 목록 리턴 ( 대댓글은 반환하지 않는다.)
    */
   @GetMapping("")
-  public List<CommentDTO> getCommentsByPost(@PathVariable("postid") int postID,@RequestParam int pageNumber,HttpServletRequest request) {
+  public List<CommentDTO> getCommentsByPost(@PathVariable("postId") int postID,@RequestParam int pageNumber,HttpServletRequest request) {
     UserDTO userData = new UserDTO(request);
     List<CommentDTO> commentList = commentService.getCommentListByPostID(postID,pageNumber,userData.getCompanyID());
     return commentList;
@@ -60,7 +60,7 @@ public class CommentController {
    * @return 댓글개수를 반환
    */
   @GetMapping("/counts")
-  public int getCommentsCountsByPostID(@PathVariable("postid") int postID) {
+  public int getCommentsCountsByPostID(@PathVariable("postId") int postID) {
     int commentCount = postService.getCommentsCountByPostID(postID);
     return commentCount;
   }
@@ -69,9 +69,9 @@ public class CommentController {
   /**
    * 댓글 삭제
    */
-  @DeleteMapping("/{commentid}")
-  public void deleteComment(@PathVariable("commentid") int commentID,
-      @PathVariable("postid") int postID) {
+  @DeleteMapping("/{commentId}")
+  public void deleteComment(@PathVariable("commentId") int commentID,
+      @PathVariable("postId") int postID) {
     commentService.deleteComment(commentID);
   }
 
@@ -80,15 +80,15 @@ public class CommentController {
    *
    * @param newComment 변경된 새로운 내용
    */
-  @PutMapping("/{commentid}")
-  public void editComment(@PathVariable("commentid") int commentID,
-      @PathVariable("postid") int postID, @PathVariable("boardid") int boardID,
+  @PutMapping("/{commentId}")
+  public void editComment(@PathVariable("commentId") int commentID,
+      @PathVariable("postId") int postID, @PathVariable("boardId") int boardID,
       @RequestParam("newComment") String newComment) {
     commentService.updateComment(commentID, newComment);
   }
 
-  @GetMapping("/{comment-id}")
-  public CommentDTO selectCommentByCommentId(@PathVariable("comment-id") int commentId) {
+  @GetMapping("/{commentId}")
+  public CommentDTO selectCommentByCommentId(@PathVariable("commentId") int commentId) {
     return commentService.selectCommentByCommentId(commentId);
   }
 }

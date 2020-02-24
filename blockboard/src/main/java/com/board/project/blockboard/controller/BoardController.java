@@ -86,7 +86,7 @@ public class BoardController {
    */
   @DeleteMapping(value = "")
   @ResponseBody
-  public void deleteBoardbyBoardID(@RequestParam("deleteList") String deleteBoards,
+  public void deleteBoardByBoardID(@RequestParam("deleteList") String deleteBoards,
       HttpServletRequest request, HttpServletResponse response) {
     UserDTO userData = new UserDTO(request);
     if (AuthorityValidation.isAdmin(userData, response)) {
