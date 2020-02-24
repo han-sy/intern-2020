@@ -22,7 +22,7 @@ $(document).on('click', '.btn_open_comment', function () {
 //삭제클릭한곳의 부모의 div의 id뽑게했음
 $(document).on('click', '#delete_comment', function () {
   var postID = getPostIDInPost();
-  var boardID = getCurrentBoardID();
+  var boardID = getCurrentActiveBoardID();
   var commentID = getCommentIDInCommentContainer.call(this);
   var commentReferencedID = $(this).closest(".referenceCommentContainer").attr(
       "data-id");
@@ -87,7 +87,7 @@ $(document).on('click', '.reply_btn', function () {
 $(document).on('click', '.btn_openReply', function () {
   var editorName = $(this).closest(".commentHtml").find('textarea').attr('id');
   var postID = getPostIDInPost();
-  var boardID = getCurrentBoardID();
+  var boardID = getCurrentActiveBoardID();
   var commentText = CKEDITOR.instances[editorName].getData();
   var commentReferencedID = getCommentReferencedIDInReferenceCommentContainer.call(this);
   if (commentText == "") {

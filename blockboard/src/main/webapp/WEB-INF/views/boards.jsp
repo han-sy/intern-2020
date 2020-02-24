@@ -478,18 +478,18 @@
                 </div>
             </div>
             <!--게시글 작성 폼-->
-            <div id="writecontent" style="display:none">
+            <div id="write-content" style="display:none">
                 <!--게시글 작성 시 게시판 선택 폼-->
                 <div class="form-group row">
                     <div class="col-sm-2">
                         <label class="font-weight-light"> 게시판 선택 </label>
                     </div>
                     <div class="col-2 d-flex">
-                        <select class="form-control-sm" id="selectedBoardIDinEditor">
+                        <select class="form-control-sm" id="selectableBoardIdInEditor">
                         </select>
                     </div>
                     <!--게시글 작성 시 게시판 목록 템플릿-->
-                    <script id="writecontent-boards-template" type="text/x-handlebars-template">
+                    <script id="selectable-boardId-template" type="text/x-handlebars-template">
                         {{#boards}}
                             <option data-tab={{boardID}} class=tabmenu
                                     id=default>{{boardName}}
@@ -534,25 +534,25 @@
                 </script>
 
 
-                <div id="editorcontent" class="form-group"></div>
-                <script id="editorcontent-template" type="text/x-handlebars-template">
+                <div id="editor-content" class="form-group"></div>
+                <script id="editor-content-template" type="text/x-handlebars-template">
                     <textarea id="editor"></textarea>
                     <button class="btn btn-success btn_post">저장</button>
                     <button class="btn btn-success btn_cancel">작성취소</button>
                     {{#isTempSaveAble}}
                         <button class="btn btn-success btn_tempSave">임시저장</button>
                     {{/isTempSaveAble}}
-                    <div id="editorcontent-hidden"></div>
+                    <div id="editor-content-hidden"></div>
                 </script>
-                <script id="postid-template" type="text/x-handlebars-template">
+                <script id="postId-template" type="text/x-handlebars-template">
                     <a id="postIdInEditor" style="display:none">{{postID}}</a>
                     <a id="boardIdInEditor" style="display:none">{{boardID}}</a>
                 </script>
             </div>
 
-            <div id="postcontent" class="border-primary"></div>
+            <div id="post-content" class="border-primary"></div>
             <!--게시물 내용 템플릿-->
-            <script id="postcontent-template" type="text/x-handlebars-template">
+            <script id="post-content-template" type="text/x-handlebars-template">
                 {{#post}}
                     <p class="h4">{{postTitle}}</p>
                     <p class="h6 writer_info" align="right" data-id="{{userID}}">{{userName}}</p>
@@ -568,11 +568,11 @@
                     <div class="d-block">
                         <p>{{{postContent}}}</p>
                     </div>
-                    <a id="postID" style="visibility: hidden;">{{postID}}</a>
-                    <a id="boardIdInPost" style="visibility: hidden">{{boardID}}</a>
+                    <a id="postID" style="display: none;">{{postID}}</a>
+                    <a id="boardIdInPost" style="display: none">{{boardID}}</a>
                     <br>
-                    <button class="btn btn-success btn_modify" style="visibility:hidden">수정</button>
-                    <button class="btn btn-success btn_delete" style="visibility:hidden">삭제</button>
+                    <button class="btn btn-success btn_modify" style="display: none">수정</button>
+                    <button class="btn btn-success btn_delete" style="display: none">삭제</button>
                 {{/post}}
 
                 {{#isCommentAble}}
@@ -877,7 +877,7 @@
                         {{/isTempBox}}
                     </tr>
                     </thead>
-                    <tbody id="postlist">
+                    <tbody id="post-list">
                     {{#posts}}
                         {{#isTemp}}
                             <tr class="postclick temp_post_click" data-post={{postID}}
@@ -1056,6 +1056,7 @@
 <script src="/static/js/updateUI/postUI.js"></script>
 <script src="/static/js/updateUI/fileUI.js"></script>
 <script src="/static/js/updateUI/alarmUI.js"></script>
+<script src="/static/js/updateUI/editorUI.js"></script>
 <script src="/static/js/util/windowLoad.js"></script>
 
 </body>

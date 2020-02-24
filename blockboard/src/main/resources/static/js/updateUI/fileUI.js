@@ -70,3 +70,15 @@ function openFileAttachForm(postID,commentID,obj) {
 function fileFormClear(){
   $('.file_attach_form').html("");
 }
+
+/**
+ * 게시글 내용 조회시 첨부파일관련 컨텐츠들
+ * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+ */
+function showAttachFileContents(postID) {
+  if (functionOn.postFileAttach) {
+    var container = $("#post-content").find(
+        ".attached_file_list_container_post");
+    getFileList(postID, 0, container, updateFileListInPostUI);
+  }
+}

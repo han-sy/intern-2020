@@ -4,79 +4,56 @@
  */
 var autosave = null;
 
-// 현재 선택된 게시판 id 가져온다.
-function getCurrentBoardID() {
-  var tabs = $('#tab_id').children();
-  var boardID = 0;
-
-  $.each(tabs, function () {
-    if ($(this).hasClass("active_tab")) {
-      boardID = $(this).attr("data-tab");
-    }
-  });
-  return boardID;
-}
-
 // '글쓰기' 버튼 이벤트
 $(document).on("click", "#btn_write", function () {
   postClear();
-  editorAreaCreate("insert");
-  initBoardIdOptionInEditor(getCurrentBoardID());
-  if (functionOn.postFileAttach) {
-    console.log("파일 첨부 on");
-    openFileAttachForm();
-  }
+  createEditorArea("insert");
+  selectOptionOfCurrentBoardId(getCurrentActiveBoardID());
 });
 
-// '임시저장' 이벤트 함수
+// '임시저장' 이벤트
 $(document).on('click', '.btn_tempSave', function () {
-  var postTitle = $('#post_title').val();
-  var postContent = CKEDITOR.instances.editor.getData();
-  var postID = $('#postIdInEditor').html();
-  var boardID = $('#selectedBoardIDinEditor option:selected').attr('data-tab');
-  // 제목 & 내용 비었는지 검사
-  if (checkEmpty()) {
-    insertTempPost(boardID, postID, postTitle, postContent, "temp");
-    refreshPostList();
+  let postTitle = getPostTitleInEditor();
+  let postContent = CKEDITOR.instances.editor.getData();
+  let postId = getPostIdInEditor();
+  let boardId = getSelectedBoardIdInEditor();
+
+  if (isValidPostData()) {
+    insertTempPost(boardId, postId, postTitle, postContent, "temp");
+    refreshPostListAfterPostCRUD();
   }
 });
 
-// '저장' 이벤트 함수
+// '게시글 저장' 이벤트
 $(document).on('click', '.btn_post', function () {
-  var postTitle = $('#post_title').val();
-  var postContent = CKEDITOR.instances.editor.getData();
-  var postID = $('#postIdInEditor').html();
-  var boardID = $('#selectedBoardIDinEditor option:selected').attr('data-tab');
+  let postTitle = getPostTitleInEditor();
+  let postContent = CKEDITOR.instances.editor.getData();
+  let postId = getPostIdInEditor();
+  let selectedBoardId = getSelectedBoardIdInEditor();
 
-  // 제목 & 내용 비었는지 검사
-  if (checkEmpty()) {
-    // 게시글 ID가 존재하지 않으면? 바로 저장
-    console.log("저장 postID = ", postID);
-    if (typeof postID == "undefined") {
-      insertPost(postID,boardID, postTitle, postContent);
+  if (isValidPostData()) {
+    if (typeof postId == "undefined") { // 임시 or 자동 저장 되지 않았을 때
+      insertPost(postId, selectedBoardId, postTitle, postContent);
+    } else {  // 임시 or 자동 저장이 된 후 '저장' 버튼을 누를 때
+      insertTempPost(selectedBoardId, postId, postTitle, postContent, "normal");
+      getPageList(1, getCurrentActiveBoardID(), 0, updatePostPageList);
     }
-    // 임시 or 자동 저장된 글을 한번 더 '저장' 버튼을 누를 때
-    else {
-      insertTempPost(boardID, postID, postTitle, postContent, "normal");
-      getPageList(1, getCurrentBoardID(),0, updatePostPageList);
-    }
-    editorClear();
+    clearEditor();
   }
 });
 
-// 게시글 제목 or 내용 비었는지 검사
-function checkEmpty() {
-  var postTitle = $('#post_title').val();
-  var postContent = CKEDITOR.instances.editor.getData();
-  if (postTitle.trim() == "") {
+// 게시글 제목, 내용 유효성 검사
+function isValidPostData() {
+  let postTitle = getPostTitleInEditor();
+  let postContent = CKEDITOR.instances.editor.getData();
+  if (postTitle.trim() === "") {
     alert("게시글 제목을 입력해주세요.");
     return false;
   }
-  if (postContent.trim() == "") {
+  if (postContent.trim() === "") {
     alert("게시글 내용을 입력해주세요.");
     return false;
   }
-  // 서버에 나중에 적용하기
   if (!isValidLength(postTitle, 150)) {
     alert("게시글 제목 길이를 초과하였습니다.");
     return false;
@@ -84,67 +61,68 @@ function checkEmpty() {
   if (!isValidLength(postContent, 4000)) {
     alert("게시글 내용 길이를 초과하였습니다.");
     return false;
-  } else {
-    return true;
   }
+  return true;
 }
 
 // '수정' 버튼 클릭 후 '수정하기' 버튼 이벤트
 $(document).on('click', '.btn_update', function () {
-  var postID = $("#postIdInEditor").html();
-  var originalBoardID = $("#boardIdInEditor").html();
-  var postTitle = $('#post_title').val();
-  var postContent = CKEDITOR.instances.editor.getData();
-  var boardID = $('#selectedBoardIDinEditor option:selected').attr('data-tab');
-  if(functionOn.postFileAttach){
-    updateIDToFiles("post",postID,"");//postID업데이트
+  let postId = getPostIdInEditor();
+  let originalBoardID = getOriginalBoardIdInEditor();
+  let postTitle = getPostTitleInEditor();
+  let postContent = CKEDITOR.instances.editor.getData();
+  let selectedBoardId = getSelectedBoardIdInEditor();
+
+  if (functionOn.postFileAttach) {
+    updateIDToFiles("post", postId, "");
   }
-  updatePost(boardID, originalBoardID, postID, postTitle, postContent);
+  updatePost(selectedBoardId, originalBoardID, postId, postTitle, postContent);
 });
 
+function updateButtonOfSavePostToUpdatePost() {
+  let post_button = $('.btn_post');
+  post_button.html('수정하기');
+  post_button.removeClass("btn_post");
+  post_button.addClass("btn_update");
+}
 
 // 게시글 조회 후 '수정' 버튼 이벤트
 $(document).on('click', '.btn_modify', function () {
-  var postID = getPostIDInPost();
-  var boardID = getBoardIDInPost();
+  let postId = getPostIDInPost();
+  let boardId = getBoardIDInPost();
   postClear();
-  editorAreaCreate("modify");
-  var post_button = $('.btn_post');
-  post_button.html('수정하기'); // 게시글 올리기 버튼 텍스트 변경
-  post_button.removeClass("btn_post");
-  post_button.addClass("btn_update");
-  setTimeout(function () {
-    loadPost(boardID, postID);
-  }, 100); // 에디터로 게시글 정보 불러옴.
-  openFileAttachForm(postID);//파일첨부폼
-
+  createEditorArea("modify");
+  updateButtonOfSavePostToUpdatePost();
+  CKEDITOR.instances['editor'].on('instanceReady', function() {
+    loadPost(boardId, postId);
+  });
 });
 
 // 게시글 조회 후 삭제 버튼 이벤트
 $(document).on('click', '.btn_delete', function () {
-  var postID = getPostIDInPost();
-  var boardID = parseInt(getCurrentBoardID());
-  if (boardID == BOARD_ID.RECYCLE || boardID == BOARD_ID.TEMP_BOX) {
+  let postId = getPostIDInPost();
+  let boardId = parseInt(getCurrentActiveBoardID());
+  if (boardId === BOARD_ID.RECYCLE || boardId === BOARD_ID.TEMP_BOX) {
     if (confirm("영구 삭제됩니다. 삭제하시겠습니까?")) {
-      deletePost(boardID, postID);
+      deletePost(boardId, postId);
     }
   } else {
-    deletePost(boardID, postID);
+    deletePost(boardId, postId);
   }
 });
 
 // 게시글 검색 버튼 이벤트
 function search() {
-  var option = $('#search_option option:selected').attr('value');
-  var keyword = $('#search_keyword');
+  let option = $('#search_option option:selected').attr('value');
+  let keyword = $('#search_keyword');
   searchPost(option, keyword);
 }
 
 // 작성 취소 버튼 이벤트
 $(document).on('click', '.btn_cancel', function () {
-  if (confirm("작성된 내용이 저장되지 않을 수도 있습니다. 이동하시겠습니까?") == true) {
+  if (confirm("작성된 내용이 저장되지 않을 수도 있습니다. 이동하시겠습니까?") === true) {
     deleteAllAttachedFile();
-    editorClear();
+    clearEditor();
   }
 });
 
@@ -160,18 +138,22 @@ function off_autosave() {
   clearInterval(autosave);
 }
 
-// 임시저장 게시물 클릭 이벤트
-$(document).on('click', '.temp_post_click', function () {
-  var postID = getPostIDInPostList.call(this);
-  var boardID = getBoardIDInPostList.call(this);
-  postClear();
-  editorAreaCreate("insert");
+function updateButtonOfCancelToDeletePost() {
   var btn_cancel = $('.btn_cancel');
   btn_cancel.html("삭제");
   btn_cancel.addClass("btn_delete");
   btn_cancel.removeClass("btn_cancel");
-  loadPost(boardID, postID);
-  openFileAttachForm(postID);//파일첨부폼
+}
+
+// 임시저장 게시물 클릭 이벤트
+$(document).on('click', '.temp_post_click', function () {
+  let postId = getPostIDInPostList.call(this);
+  let boardId = getBoardIDInPostList.call(this);
+  postClear();
+  createEditorArea("insert");
+  updateButtonOfCancelToDeletePost();
+  loadPost(boardId, postId);
+  openFileAttachForm(postId);//파일첨부폼
 });
 
 // length Check 이벤트
@@ -186,7 +168,7 @@ function isValidLength(str, limit) {
 // 휴지통 게시물 클릭 이벤트
 $(document).on('click', '.recycle_post_click', function () {
   var postID = $(this).attr("data-post");
-  var boardID = getCurrentBoardID();
+  var boardID = getCurrentActiveBoardID();
   getRecyclePost(postID, boardID);
 });
 

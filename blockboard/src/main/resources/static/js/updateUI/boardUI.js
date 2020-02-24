@@ -9,7 +9,7 @@ function updateTab(data) {
   var board = {boards: data};
   var itemList = template(board);
   $('#tab_id').html(itemList);
-  updateboardListInEditor(board);
+  updateSelectableBoardIdInEditor(board);
 
   $("#tab_id").children().each(function () {
     if ($(this).attr('data-tab') > 0) {
@@ -19,23 +19,7 @@ function updateTab(data) {
   });
 }
 
-//게시글 내용
-function loadPostContent(data) {
-  var source = $('#postcontent-template').html();
-  var template = Handlebars.compile(source);
-  var post = {post: data};
-  var item = template(post);
-  $('#postcontent').html(item);
-}
 
-//게시글 목록
-function loadPostList(data) {
-  var source = $('#posts-template').html();
-  var template = Handlebars.compile(source);
-  var post = {posts: data};
-  var itemList = template(post);
-  $('#post_table').html(itemList);
-}
 
 //삭제를 위한 UI
 function getBoardListToDelete(data) {
@@ -53,21 +37,4 @@ function getBoardListToChangeName(data) {
   var boardList = {boards: data};
   var itemList = template(boardList);
   $('.modal-body-changeBoardName').html(itemList);
-}
-
-/**
- * @author Woohyeok Jun <woohyeok.jun@worksmobile.com>
- */
-// 내 게시글/댓글 목록
-function loadMyPostList(data) {
-  var source = $('#my-posts-template').html();
-  var template = Handlebars.compile(source);
-  var post = {posts: data};
-  var itemList = template(post);
-  $('#postlist').html(itemList);
-}
-
-function showEmptyList() {
-  var source = $('#empty-posts-template').html();
-  $('#postlist').html(source);
 }

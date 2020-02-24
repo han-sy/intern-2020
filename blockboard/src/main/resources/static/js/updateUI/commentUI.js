@@ -132,3 +132,20 @@ function updateRepliesCountUI(data,commentReferencedID) {
   console.log("!!!!commentReferencedID : "+commentReferencedID);
   showMoreRepliesBtn(commentReferencedID);
 }
+
+/**
+ * 게시글 내용 조회시 댓글관련 컨텐츠들
+ * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+ */
+function showCommentContents(boardID, postID) {
+  if (functionOn.comments) {
+    $(function () {
+      getPageList(1, 0, postID, updateCommentPageList);
+      //getCommentListByPageNum(1,boardID, postID, getCommentAllContents); //삭제이후 tab에 게시판목록 업데이트 //CommentAjax.js 에 있음
+      getCommentInputHtml("댓글", "입력", "", ".comment_input_container",
+          "btn_open_comment", '', "commentText");
+      updateCommentsCount(boardID, postID);
+      fileFormClear();
+    });
+  }
+}

@@ -120,7 +120,6 @@ function clickSaveChangeBoard() {
   $('#config_container').html("");
 }
 
-
 // 게시글 목록에서 게시글 클릭시
 $(document).on('click', '.normal_post_click', function () {
   var postID = getPostIDInPostList.call(this);
@@ -158,9 +157,9 @@ $(document).on("click", ".tabmenu", function clickTabEvent(event) {
   $(this).addClass("active_tab");
   $(this).addClass("font-weight-bold");
   postClear();
-  editorClear();
+  clearEditor();
 
-  getPageList(1, boardID,0, updatePostPageList);
+  getPageList(1, boardID, 0, updatePostPageList);
 });
 
 //기능변경 on/off버튼 텍스트 바꾸기
@@ -182,11 +181,27 @@ $(document).on('click', '._function-switch', function () {
   $(this).removeClass("active");
 });
 
+/**
+ * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
+ */
 function clickBoardEventByBoardId(boardID) {
   $(".tabmenu").each(function (index, item) {
-     if (parseInt(item.dataset.tab) === parseInt(boardID)) {
-       $(item).trigger("click");
-       return false;
-     }
+    if (parseInt(item.dataset.tab) === parseInt(boardID)) {
+      $(item).trigger("click");
+      return false;
+    }
   });
+}
+
+/**
+ * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
+ */
+function getCurrentActiveBoardID() {
+  let boardId = 0;
+  $('#tab_id').children().each(function () {
+    if ($(this).hasClass("active_tab")) {
+      boardId = $(this).attr("data-tab");
+    }
+  });
+  return boardId;
 }

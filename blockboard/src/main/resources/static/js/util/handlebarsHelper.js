@@ -13,7 +13,7 @@ Handlebars.registerHelper('isAbleFunction', function (options) {
 //댓글기능 on인지 체크
 Handlebars.registerHelper('isCommentAble', function (options) {
   if (functionOn.comments) {
-    var boardID = getCurrentBoardID();
+    var boardID = getCurrentActiveBoardID();
     if (boardID > 0 || boardID == BOARD_ID.POPULAR) {
       return options.fn(this);
     } //true
@@ -115,7 +115,7 @@ Handlebars.registerHelper('hasComments', function (option) {
   }
 });
 Handlebars.registerHelper('isPopular', function (option) {
-  var boardID = parseInt(getCurrentBoardID());
+  var boardID = parseInt(getCurrentActiveBoardID());
   if (boardID < 0) {
     return option.fn(this);
   } else {
@@ -160,7 +160,7 @@ Handlebars.registerHelper('isRecycle', function (option) {
  * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
  */
 Handlebars.registerHelper('isTempBox', function (option) {
-  var boardID = parseInt(getCurrentBoardID());
+  var boardID = parseInt(getCurrentActiveBoardID());
   console.log(boardID);
   if (boardID === BOARD_ID.TEMP_BOX) {
     return option.fn(this);
@@ -173,7 +173,7 @@ Handlebars.registerHelper('isTempBox', function (option) {
  * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
  */
 Handlebars.registerHelper('isRecycleBin', function (option) {
-  var boardID = parseInt(getCurrentBoardID());
+  var boardID = parseInt(getCurrentActiveBoardID());
   if (boardID === BOARD_ID.RECYCLE) {
     return option.fn(this);
   } else {

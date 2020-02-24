@@ -123,10 +123,10 @@ public class AmazonRekognitionService {
     ObjectMapper objectMapper = new ObjectMapper();
     String jsonString = objectMapper.writerWithDefaultPrettyPrinter()
         .writeValueAsString(face);
-    Map<String, Object> faceData = JsonParse.getMapFromJsonString(jsonString);
+    Map<String, Object> faceData = JsonParse.convertJsonStringToMap(jsonString);
     String json = objectMapper.writerWithDefaultPrettyPrinter()
         .writeValueAsString(faceData.get("face"));
-    Map<String, Object> imageID = JsonParse.getMapFromJsonString(json);
+    Map<String, Object> imageID = JsonParse.convertJsonStringToMap(json);
 
     return imageID.get("externalImageId").toString();
   }

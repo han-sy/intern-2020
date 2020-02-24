@@ -32,8 +32,10 @@ public class CookieUtils {
   @SneakyThrows
   public static String expireCookie(HttpServletRequest request, String cookieName, HttpServletResponse response) {
     Cookie[] cookies = request.getCookies();
-    assert cookies != null;
-    String token = null;
+    if (cookies == null) {
+      return null;
+    }
+    String token = "";
     for (Cookie cookie : cookies) {
       if (StringUtils.equals(cookie.getName(), cookieName)) {
         cookie.setPath("/");

@@ -33,4 +33,24 @@ public class GlobalExceptionHandler {
       ie.printStackTrace();
     }
   }
+
+  @ExceptionHandler(InputValidException.class)
+  protected void InputValidError(HttpServletResponse response, Exception e) {
+    try {
+      response.sendError(HttpServletResponse.SC_CONFLICT, e.getMessage());
+      e.printStackTrace();
+    } catch (IOException ie) {
+      ie.printStackTrace();
+    }
+  }
+
+  @ExceptionHandler(UserValidException.class)
+  protected void userValidError(HttpServletResponse response, Exception e) {
+    try {
+      response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
+      e.printStackTrace();
+    } catch (IOException ie) {
+      ie.printStackTrace();
+    }
+  }
 }

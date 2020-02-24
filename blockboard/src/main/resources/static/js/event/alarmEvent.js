@@ -24,7 +24,7 @@ $(document).on('click', 'li.alarm-item', function () {
   let alarmId = parseInt($(this)[0].dataset.id);
   $(this).addClass("alarm-read");
   postClear();
-  editorClear();
+  clearEditor();
   getAlarmByAlarmId(alarmId);
 });
 

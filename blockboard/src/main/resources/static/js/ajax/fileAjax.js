@@ -74,7 +74,7 @@ function updateIDToFiles(editor,postID, commentID, boardID, commentReferencedID)
         postID = $('#postID').html();
       }
       if (isNullData(boardID)) {
-        boardID = getCurrentBoardID();
+        boardID = getCurrentActiveBoardID();
       }
       if (editor=="comment" && isNullData(commentReferencedID)) {
         getPageList(1,0,postID,updateCommentPageList);

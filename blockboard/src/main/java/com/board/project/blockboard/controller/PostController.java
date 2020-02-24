@@ -44,43 +44,35 @@ public class PostController {
   }
 
   @PostMapping("")
-  public int insertPost(@PathVariable("boardid") int boardID,
-      @ModelAttribute PostDTO receivePost, HttpServletRequest request,
-      HttpServletResponse response) {
-    return postService.insertPost(receivePost, boardID, request, response);
+  public int insertPost(@ModelAttribute PostDTO receivePost, HttpServletRequest request) {
+    return postService.insertPost(receivePost, request);
   }
 
   @GetMapping("/{postid}")
-  public PostDTO getPostByPostID(@PathVariable("postid") int postID,
-      @PathVariable("boardid") int boardID, HttpServletRequest request,
-      HttpServletResponse response) {
-    return postService.selectPostByPostID(postID, boardID, request, response);
+  public PostDTO getPostByPostID(@PathVariable("postid") int postID, HttpServletRequest request) {
+    return postService.selectPostByPostID(postID, request);
   }
 
   @PutMapping("/{postid}")
   public void updatePost(@PathVariable("postid") int postID,
-      @ModelAttribute PostDTO requestPost, HttpServletRequest request,
-      HttpServletResponse response) {
-    postService.updatePost(requestPost, postID, request, response);
+      @ModelAttribute PostDTO requestPost, HttpServletRequest request) {
+    postService.updatePost(requestPost, postID, request);
   }
 
   @DeleteMapping("/{postid}")
-  public void deletePost(@PathVariable("boardid") int boardID,
-      @PathVariable("postid") int postID, HttpServletRequest request,
-      HttpServletResponse response) {
-    postService.deletePost(postID, boardID, request, response);
+  public void deletePost(@PathVariable("postid") int postID, HttpServletRequest request) {
+    postService.deletePost(postID, request);
   }
 
   @PutMapping("/{postid}/restore")
-  public void restorePost(@PathVariable("postid") int postID, HttpServletRequest request,
-      HttpServletResponse response) {
-    postService.restorePost(postID, request, response);
+  public void restorePost(@PathVariable("postid") int postID, HttpServletRequest request) {
+    postService.restorePost(postID, request);
   }
 
   @GetMapping("/search")
   public List<PostDTO> searchPost(@RequestParam("option") String option,
-      @RequestParam("keyword") String keyword, HttpServletResponse response) {
-    return postService.searchPost(option, keyword, response);
+      @RequestParam("keyword") String keyword) {
+    return postService.searchPost(option, keyword);
   }
 
   @GetMapping("/myArticle")

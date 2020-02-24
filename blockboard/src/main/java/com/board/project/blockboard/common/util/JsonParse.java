@@ -51,35 +51,25 @@ public class JsonParse {
   }
 
   /**
-   * Json String -> Map
-   *
-   * @param json
-   * @return
    * @author Woohyeok Jun <woohyeok.jun@worksmobile.com>
    */
-  public static Map<String, Object> getMapFromJsonString(String json) {
+  public static Map<String, Object> convertJsonStringToMap(String json) {
     Map<String, Object> map = new HashMap<String,Object>();
     try {
       ObjectMapper mapper = new ObjectMapper();
       mapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
       map = mapper.readValue(json, new TypeReference<Map<String, Object>>() {
       });
-    } catch (JsonMappingException e) {
-      e.printStackTrace();
-    } catch (IOException e) {
+    } catch (Exception e) {
       e.printStackTrace();
     }
     return map;
   }
 
   /**
-   * Map -> JSON Object
-   *
-   * @param map Data 저장되어 있는 map
-   * @return map convert to JsonObject
    * @author Woohyeok Jun <woohyeok.jun@worksmobile.com>
    */
-  public static JSONObject getJsonStringFromMap(Map<String, Object> map) {
+  public static JSONObject convertMapToJsonString(Map<String, Object> map) {
     JSONObject jsonObject = new JSONObject();
     for (Map.Entry<String, Object> entry : map.entrySet()) {
       String key = entry.getKey();
