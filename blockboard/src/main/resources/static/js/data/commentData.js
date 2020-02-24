@@ -64,3 +64,14 @@ function getFileContainerInLocalCommentContainer() {
 function getCountPrintedReplies() {
   return $(".replyItem").length;
 }
+
+
+class Comment{
+  constructor(boardID,postID,commentID,commentReferencedID,commentContent) {
+    this.boardID = boardID;
+    this.postID = postID;
+    this.commentReferencedID = commentReferencedID;
+    this.commentContent = commentContent;
+  }
+
+}

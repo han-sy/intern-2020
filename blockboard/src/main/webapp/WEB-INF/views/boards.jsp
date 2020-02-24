@@ -1006,6 +1006,7 @@
 <script src="/static/js/event/fileEvent.js"></script>
 <script src="/static/js/event/modalEvent.js"></script>
 <script src="/static/js/event/viewRecordEvent.js"></script>
+<script src="/static/js/event/replyEvent.js"></script>
 <script src="/static/js/ajax/functionAjax.js"></script>
 <script src="/static/js/ajax/commentAjax.js"></script>
 <script src="/static/js/ajax/postAjax.js"></script>
@@ -1014,6 +1015,7 @@
 <script src="/static/js/ajax/fileAjax.js"></script>
 <script src="/static/js/ajax/userAjax.js"></script>
 <script src="/static/js/ajax/alarmAjax.js"></script>
+<script src="/static/js/ajax/replyAjax.js"></script>
 <script src="/static/js/ajax/viewRecordAjax.js"></script>
 <script src="/static/ckeditor/ckeditor.js"></script>
 <script src="/static/ckeditor/adapters/jquery.js"></script>
@@ -1027,6 +1029,7 @@
 <script src="/static/js/updateUI/postUI.js"></script>
 <script src="/static/js/updateUI/fileUI.js"></script>
 <script src="/static/js/updateUI/alarmUI.js"></script>
+<script src="/static/js/updateUI/replyUI.js"></script>
 <script src="/static/js/util/windowLoad.js"></script>
 
 </body>

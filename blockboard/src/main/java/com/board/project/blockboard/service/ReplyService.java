@@ -46,20 +46,19 @@ public class ReplyService {
   /**
    * 답글 insert
    */
-  public int writeReplyWithUserInfo(String userID, int companyID, int postID,
-      String commentContent, int commentReferencedID) {
-    CommentDTO reply = new CommentDTO();
-    reply.setUserID(userID);
-    reply.setCommentContent(commentContent);
-    reply.setCommentContentExceptHTMLTag(Jsoup.parse(commentContent).text());
-    reply.setCompanyID(companyID);
-    reply.setPostID(postID);
-    reply.setUserName(userMapper.selectUserNameByUserID(userID));
-    reply.setCommentReferencedID(commentReferencedID);
-    replyMapper.insertNewReplyByCommentInfo(reply);
-    commentService.updateRepliesCountPlus1(commentReferencedID);
-    alarmService.insertAlarm(reply);
-    return reply.getCommentID();
+  public int writeReplyWithUserInfo(String userID, int companyID, CommentDTO replyData) {
+    updateReplyData(userID, companyID, replyData);
+    replyMapper.insertNewReplyByCommentInfo(replyData);
+    commentService.updateRepliesCountPlus1(replyData.getCommentReferencedID());
+    alarmService.insertAlarm(replyData);
+    return replyData.getCommentID();
+  }
+
+  private void updateReplyData(String userID, int companyID, CommentDTO replyData) {
+    replyData.setUserID(userID);
+    replyData.setCommentContentExceptHTMLTag(Jsoup.parse(replyData.getCommentContent()).text());
+    replyData.setCompanyID(companyID);
+    replyData.setUserName(userMapper.selectUserNameByUserID(userID));
   }
 
 }

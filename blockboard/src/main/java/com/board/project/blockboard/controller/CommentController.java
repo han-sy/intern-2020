@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,9 +36,8 @@ public class CommentController {
    * postID 일치하는 댓글 목록 리턴 ( 대댓글은 반환하지 않는다.)
    */
   @GetMapping("")
-  public List<CommentDTO> getCommentsByPost(@PathVariable("postId") int postID,@RequestParam int pageNumber,HttpServletRequest request) {
-    UserDTO userData = new UserDTO(request);
-    List<CommentDTO> commentList = commentService.getCommentListByPostID(postID,pageNumber,userData.getCompanyID());
+  public List<CommentDTO> getCommentsByPost(@PathVariable("postId") int postID,@RequestParam int pageNumber) {
+    List<CommentDTO> commentList = commentService.getCommentListByPostID(postID,pageNumber);
     return commentList;
   }
 
@@ -45,12 +45,10 @@ public class CommentController {
    * 댓글 추가
    */
   @PostMapping("")
-  public int insertComment(@RequestParam("postID") int postID,
-      @RequestParam("commentContent") String commentContent, HttpServletRequest request) {
-    UserDTO useeData = new UserDTO(request);
+  public int insertComment(@RequestBody CommentDTO commentData, HttpServletRequest request) {
+    UserDTO userData = new UserDTO(request);
     return commentService
-        .writeCommentWithUserInfo(useeData.getUserID(), commentContent, useeData.getCompanyID(),
-            postID);
+        .writeCommentWithUserInfo(commentData,userData.getUserID(), userData.getCompanyID());
   }
 
   /**
@@ -70,21 +68,17 @@ public class CommentController {
    * 댓글 삭제
    */
   @DeleteMapping("/{commentId}")
-  public void deleteComment(@PathVariable("commentId") int commentID,
-      @PathVariable("postId") int postID) {
+  public void deleteComment(@RequestParam int commentID) {
     commentService.deleteComment(commentID);
   }
 
   /**
    * 댓글 수정하기
    *
-   * @param newComment 변경된 새로운 내용
    */
   @PutMapping("/{commentId}")
-  public void editComment(@PathVariable("commentId") int commentID,
-      @PathVariable("postId") int postID, @PathVariable("boardId") int boardID,
-      @RequestParam("newComment") String newComment) {
-    commentService.updateComment(commentID, newComment);
+  public void editComment(@RequestBody CommentDTO commentData) {
+    commentService.updateComment(commentData);
   }
 
   @GetMapping("/{commentId}")

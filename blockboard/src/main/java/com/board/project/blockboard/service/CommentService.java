@@ -18,6 +18,7 @@ import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,7 +37,7 @@ public class CommentService {
   @Autowired PostService postService;
 
 
-  public List<CommentDTO> getCommentListByPostID(int postID,int pageNumber,int companyID) {
+  public List<CommentDTO> getCommentListByPostID(int postID,int pageNumber) {
     int pageCount = postService.getCommentsCountByPostID(postID);
     PaginationDTO pageInfo = new PaginationDTO("comments",pageCount,pageNumber,
         PageSize.COMMENT, RangeSize.COMMENT);
@@ -44,42 +45,40 @@ public class CommentService {
   }
 
   //TODO 카운트는 비동기로 트랜잭션 처리보다야
-  public int writeCommentWithUserInfo(String userID, String commentContent, int companyID,
-      int postID) {
-    CommentDTO comment = new CommentDTO();
-    comment.setCommentContent(commentContent);
-    comment.setCommentContentExceptHTMLTag(Jsoup.parse(commentContent).text());
-    comment.setUserName(userMapper.selectUserNameByUserID(userID));
-    comment.setPostID(postID);
-    comment.setUserID(userID);
-    comment.setCompanyID(companyID);
-    commentMapper.insertNewCommentByCommentInfo(comment);
-    postService.updateCommentCountPlus1(postID);
-    alarmService.insertAlarm(comment);
-    return comment.getCommentID();
+  public int writeCommentWithUserInfo(CommentDTO commentData, String userID, int companyID) {
+    updateCommentData(commentData, userID, companyID);
+
+    commentMapper.insertNewCommentByCommentInfo(commentData);
+    postService.updateCommentCountPlus1(commentData.getPostID());
+    alarmService.insertAlarm(commentData);
+    return commentData.getCommentID();
   }
 
+
+
   //TODO 카운트는 비동기로 트랜잭션 처리보다야
+  //
   public void deleteComment(int commentID) {
     int postID = postService.getPostIDByCommentID(commentID);
     Integer commentReferencedID = commentMapper.selectCommentReferencedIDByCommentID(commentID);
     commentMapper.deleteCommentByCommentReferencedID(commentID);
     commentMapper.deleteCommentByCommentID(commentID);
-    if(commentReferencedID!=null){//답글일때
+    updateCountMinus1(postID, commentReferencedID);
 
+  }
+
+  @Async
+  public void updateCountMinus1(int postID, Integer commentReferencedID) {
+    if(commentReferencedID!=null){//답글일때
       updateRepliesCountMinus1(commentReferencedID);
     } else{//댓글일때
       postService.updateCommentCountMinus1(postID);
     }
-
   }
 
-  public void updateComment(int commentID, String newComment) {
-    Map<String, Object> commentAttribute = new HashMap<String, Object>();
-    commentAttribute.put("commentID", commentID);
-    commentAttribute.put("commentContent", newComment);
-    commentAttribute.put("commentContentExceptHTMLTag", Jsoup.parse(newComment).text());
-    commentMapper.updateComment(commentAttribute);
+  public void updateComment(CommentDTO commentData) {
+    commentData.setCommentContentExceptHTMLTag( Jsoup.parse(commentData.getCommentContent()).text());
+    commentMapper.updateComment(commentData);
   }
 
   public void updateRepliesCountPlus1(int commentID) {
@@ -97,20 +96,15 @@ public class CommentService {
     return count;
   }
 
-  public int getCommentCountByPostID(int postID, int companyID) {
-    boolean isCommentOn = functionService.isUseFunction(companyID, FunctionID.COMMENT);
-    boolean isReplyOn = functionService.isUseFunction(companyID, FunctionID.REPLY);
-    if (isCommentOn) {//댓글ON
-      if (isReplyOn) {//답글ON
-        return commentMapper.getAllCommentsCountByPostID(postID);
-      } else {//답글 OFF
-        return commentMapper.getOnlyCommentsCountByPostID(postID);
-      }
-    }
-    return 0;//댓글OFF
-  }
-
   public CommentDTO selectCommentByCommentId(int commentId) {
     return commentMapper.selectCommentByCommentId(commentId);
+  }
+
+  private void updateCommentData(CommentDTO commentData, String userID, int companyID) {
+    log.info("getCommentContent : "+commentData.getCommentContent());
+    commentData.setCommentContentExceptHTMLTag(Jsoup.parse(commentData.getCommentContent()).text());
+    commentData.setUserName(userMapper.selectUserNameByUserID(userID));
+    commentData.setUserID(userID);
+    commentData.setCompanyID(companyID);
   }
 }

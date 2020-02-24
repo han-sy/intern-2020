@@ -4,9 +4,17 @@
  */
 package com.board.project.blockboard.dto;
 
+import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-@Data
+@Setter
+@Getter
+@ToString
+@NoArgsConstructor
 public class CommentDTO {
 
   private int commentID;

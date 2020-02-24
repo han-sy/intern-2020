@@ -16,19 +16,7 @@ function updateCommentsCount(boardID, postID) {
   });
 }
 
-function updateRepliesCount(boardID, postID, commentReferencedID) {
 
-  $.ajax({
-    type: 'GET',
-    url: `/boards/${boardID}/posts/${postID}/comments/${commentReferencedID}/replies/counts`,
-    error: function () {
-      alert('통신실패!');
-    },
-    success: function (data) {
-      updateRepliesCountUI(data, commentReferencedID);
-    }
-  });
-}
 
 //댓글리스트 받아오기
 function getCommentListByPageNum(pageNum, boardID, postID, successFunction) {
@@ -48,24 +36,29 @@ function getCommentListByPageNum(pageNum, boardID, postID, successFunction) {
 }
 
 //댓글 추가
-function insertComment(boardID, postID, commentText) {//댓글 임시저장 기능이 추가될수도있어 commentID 파라미터 추가해놓음
+function insertComment(boardID, postID, commentContent) {//댓글 임시저장 기능이 추가될수도있어 commentID 파라미터 추가해놓음
+  var commentDTO = new Comment(boardID,postID,0,0,commentContent);
+
+  console.log("aaa"+","+boardID+","+postID+","+commentContent)
+  var commentData = JSON.stringify(commentDTO);
+  console.log("commentData",commentData);
   $.ajax({
     type: 'POST',
     url: `/boards/${boardID}/posts/${postID}/comments`,
-    data: {boardID: boardID, postID: postID, commentContent: commentText},
+    data: commentData,
+    dataType: "json",
+    contentType: 'application/json',
     error: function () {  //통신 실패시
       alert('통신실패!');
     },
-    success: function (data) {
+    complete : function (data) {
       if (functionOn.commentFileAttach) {
         updateIDToFiles("comment",postID, data, boardID);
       }
       getPageList(1, 0, postID, updateCommentPageList);
-      //getCommentListByPageNum(1,boardID, postID, updateCommentListUI);//성공하면 댓글목록 갱신
       updateCommentsCount(boardID, postID);
       CKEDITOR.instances['commentText'].setData("");
-      /*      var commentReferencedID = getCommentReferencedIDInReferenceCommentContainer();
-            updateRepliesCount(boardID,postID,commentReferencedID);*/
+
     }
   });
 }
@@ -76,6 +69,7 @@ function deleteCommentByCommentID(postID, boardID, commentID,
   $.ajax({
     type: 'DELETE',
     url: `/boards/${boardID}/posts/${postID}/comments/${commentID}`,
+    data: {commentID:commentID},
     error: function () {  //통신 실패시
       alert('통신실패!');
     },
@@ -92,66 +86,24 @@ function deleteCommentByCommentID(postID, boardID, commentID,
 
 //댓글 수정
 function editComment(postID, boardID, commentID, newComment) {
+  var commentDTO = new Comment(boardID,postID,commentID,0,newComment);
+  var commentData = JSON.stringify(commentDTO);
+  console.log("commentData" ,commentData);
   $.ajax({
     type: 'PUT',
     url: `/boards/${boardID}/posts/${postID}/comments/${commentID}`,
-    data: {newComment: newComment},
+    data: commentData,
+    dataType: "json",
+    contentType: 'application/json',
     error: function () {  //통신 실패시
       alert('통신실패!수정');
     },
-    success: function (data) {
+    complete: function (data) {
       getPageList(1, 0, postID, updateCommentPageList);
-      //getCommentListByPageNum(1,boardID, postID, updateCommentListUI);//성공하면 댓글목록 갱신
     }
   });
 }
 
-//답글리스트 받아오기
-function getReplyList(boardID, postID, commentReferencedID, startIndex, successFunction) {
-  $.ajax({
-    type: 'GET',
-    url: `/boards/${boardID}/posts/${postID}/comments/${commentReferencedID}/replies`,
-    data: {startIndex: startIndex},
-    error: function (error) {  //통신 실패시
-      alert('통신실패!' + error);
-    },
-    success: function (data) {
-      updateRepliesCount(boardID, postID, commentReferencedID);
-      successFunction(commentReferencedID, data);
-    }
-  });
-}
-
-//답글 추가
-function insertReply(boardID, postID, commentContent, commentReferencedID, editorName) {
-  //alert(commentReferencedUserID);
-  $.ajax({
-    type: 'POST',
-    url: `/boards/${boardID}/posts/${postID}/comments/${commentReferencedID}/replies`,
-    data: {
-      boardID: boardID,
-      postID: postID,
-      commentContent: commentContent,
-      commentReferencedID: commentReferencedID
-    },
-    error: function () {  //통신 실패시
-      alert('통신실패!');
-    },
-    success: function (data) {
-      if (data != null) {
-        if (functionOn.commentFileAttach) {
-          updateIDToFiles("reply",postID, data, boardID, commentReferencedID);
-        }
-        updateRepliesCount(boardID, postID, commentReferencedID);
-      }
-      var printedRepliesCount =  getCountPrintedReplies();
-      getReplyList(boardID, postID, commentReferencedID,printedRepliesCount, getReplyListUI);
-      updateCommentsCount(boardID, postID);
-      CKEDITOR.instances[editorName].setData("");
-      $('#comment-alarm-modal').modal('hide');
-    }
-  });
-}
 
 function getCommentForShowModal(commentId) {
   $.ajax({

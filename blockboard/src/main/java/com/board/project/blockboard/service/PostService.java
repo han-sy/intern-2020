@@ -22,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.StringUtils;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -271,10 +272,13 @@ public class PostService {
     return postMapper.getPopularPostsCount(companyID);
   }
 
+  @Async
   public void updateCommentCountPlus1(int postID) {
     log.info("post"+postID+" : plus1");
     postMapper.updateCommentCountPlus1(postID);
   }
+
+  @Async
   public void updateCommentCountMinus1(int postID){
     log.info("post"+postID+" : minus1");
     postMapper.updateCommentCountMinus1(postID);
