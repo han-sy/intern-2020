@@ -3,10 +3,10 @@
  * @file commentAjax.js
  */
 
-function updateCommentsCount(boardID, postID) {
+function updateCommentsCount(boardId, postId) {
   $.ajax({
     type: 'GET',
-    url: `/boards/${boardID}/posts/${postID}/comments/counts`,
+    url: `/boards/${boardId}/posts/${postId}/comments/counts`,
     error: function () {  //통신 실패시
       alert('통신실패!');
     },
@@ -16,27 +16,11 @@ function updateCommentsCount(boardID, postID) {
   });
 }
 
-function updateRepliesCount(boardID, postID, commentReferencedID) {
-
-  $.ajax({
-    type: 'GET',
-    url: `/boards/${boardID}/posts/${postID}/comments/${commentReferencedID}/replies/counts`,
-    error: function () {  //통신 실패시
-      alert('통신실패!');
-    },
-    success: function (data) {    //들어오는 data는 boardDTOlist
-      console.log("commentReferencedID : " + commentReferencedID);
-      console.log("count : " + data);
-      updateRepliesCountUI(data, commentReferencedID);
-    }
-  });
-}
-
 //댓글리스트 받아오기
-function getCommentListByPageNum(pageNum, boardID, postID, successFunction) {
+function getCommentListByPageNum(pageNum, boardId, postId, successFunction) {
   $.ajax({
     type: 'GET',
-    url: `/boards/${boardID}/posts/${postID}/comments`,
+    url: `/boards/${boardId}/posts/${postId}/comments`,
     data: {
       pageNumber: pageNum
     },
@@ -50,110 +34,70 @@ function getCommentListByPageNum(pageNum, boardID, postID, successFunction) {
 }
 
 //댓글 추가
-function insertComment(boardID, postID, commentText) {//댓글 임시저장 기능이 추가될수도있어 commentID 파라미터 추가해놓음
+function insertComment(boardId, postId, commentContent) {//댓글 임시저장 기능이 추가될수도있어 commentId 파라미터 추가해놓음
+  let commentDTO = new Comment(boardId,postId,0,0,commentContent);
+  let commentData = JSON.stringify(commentDTO);
+
   $.ajax({
     type: 'POST',
-    url: `/boards/${boardID}/posts/${postID}/comments`,
-    data: {boardID: boardID, postID: postID, commentContent: commentText},
+    url: `/boards/${boardId}/posts/${postId}/comments`,
+    data: commentData,
+    dataType: "json",
+    contentType: 'application/json',
     error: function () {  //통신 실패시
       alert('통신실패!');
     },
-    success: function (data) {
+    complete : function (data) {
       if (functionOn.commentFileAttach) {
-        updateIDToFiles("comment",postID, data, boardID);
+        updateIDToFiles("comment",postId, data, boardId);
       }
-      getPageList(1, 0, postID, updateCommentPageList);
-      //getCommentListByPageNum(1,boardID, postID, updateCommentListUI);//성공하면 댓글목록 갱신
-      updateCommentsCount(boardID, postID);
+      getPageList(1, 0, postId, updateCommentPageList);
+      updateCommentsCount(boardId, postId);
       CKEDITOR.instances['commentText'].setData("");
-      /*      var commentReferencedID = getCommentReferencedIDInReferenceCommentContainer();
-            updateRepliesCount(boardID,postID,commentReferencedID);*/
+
     }
   });
 }
 
 //댓글삭제
-function deleteCommentByCommentID(postID, boardID, commentID,
-    commentReferencedID) {
+function deleteCommentByCommentId(postId, boardId, commentId,
+    commentReferencedId) {
   $.ajax({
     type: 'DELETE',
-    url: `/boards/${boardID}/posts/${postID}/comments/${commentID}`,
+    url: `/boards/${boardId}/posts/${postId}/comments/${commentId}`,
+    data: {commentId:commentId},
     error: function () {  //통신 실패시
       alert('통신실패!');
     },
-    success: function (data) {
-      getPageList(1, 0, postID, updateCommentPageList);
-      //getCommentListByPageNum(1,boardID, postID, updateCommentListUI);//성공하면 댓글목록 갱신
-      updateCommentsCount(boardID, postID);
-      if (!isNullData(commentReferencedID)) {
-        updateRepliesCount(boardID, postID, commentReferencedID);
+    success: function () {
+      getPageList(1, 0, postId, updateCommentPageList);
+      updateCommentsCount(boardId, postId);
+      if (!isNullData(commentReferencedId)) {
+        updateRepliesCount(boardId, postId, commentReferencedId);
       }
     }
   });
 }
 
 //댓글 수정
-function editComment(postID, boardID, commentID, newComment) {
+function editComment(postId, boardId, commentId, newComment) {
+  let commentDTO = new Comment(boardId,postId,commentId,0,newComment);
+  let commentData = JSON.stringify(commentDTO);
   $.ajax({
     type: 'PUT',
-    url: `/boards/${boardID}/posts/${postID}/comments/${commentID}`,
-    data: {newComment: newComment},
-    error: function () {  //통신 실패시
-      alert('통신실패!수정');
-    },
-    success: function (data) {
-      getPageList(1, 0, postID, updateCommentPageList);
-      //getCommentListByPageNum(1,boardID, postID, updateCommentListUI);//성공하면 댓글목록 갱신
-    }
-  });
-}
-
-//답글리스트 받아오기
-function getReplyList(boardID, postID, commentReferencedID, startIndex, successFunction) {
-  $.ajax({
-    type: 'GET',
-    url: `/boards/${boardID}/posts/${postID}/comments/${commentReferencedID}/replies`,
-    data: {startIndex: startIndex},
+    url: `/boards/${boardId}/posts/${postId}/comments/${commentId}`,
+    data: commentData,
+    dataType: "json",
+    contentType: 'application/json',
     error: function (error) {  //통신 실패시
-      alert('통신실패!' + error);
+      errorFunction(error)
     },
-    success: function (data) {
-      updateRepliesCount(boardID, postID, commentReferencedID);
-      successFunction(commentReferencedID, data);
+    complete: function () {
+      getPageList(1, 0, postId, updateCommentPageList);
     }
   });
 }
 
-//답글 추가
-function insertReply(boardID, postID, commentContent, commentReferencedID, editorName) {
-  //alert(commentReferencedUserID);
-  $.ajax({
-    type: 'POST',
-    url: `/boards/${boardID}/posts/${postID}/comments/${commentReferencedID}/replies`,
-    data: {
-      boardID: boardID,
-      postID: postID,
-      commentContent: commentContent,
-      commentReferencedID: commentReferencedID
-    },
-    error: function () {  //통신 실패시
-      alert('통신실패!');
-    },
-    success: function (data) {
-      if (data != null) {
-        if (functionOn.commentFileAttach) {
-          updateIDToFiles("reply",postID, data, boardID, commentReferencedID);
-        }
-        updateRepliesCount(boardID, postID, commentReferencedID);
-      }
-      var printedRepliesCount =  getCountPrintedReplies();
-      getReplyList(boardID, postID, commentReferencedID,printedRepliesCount, getReplyListUI);
-      updateCommentsCount(boardID, postID);
-      CKEDITOR.instances[editorName].setData("");
-      $('#comment-alarm-modal').modal('hide');
-    }
-  });
-}
 
 function getCommentForShowModal(commentId) {
   $.ajax({

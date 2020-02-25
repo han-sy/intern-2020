@@ -5,40 +5,39 @@
 
 var hasRemainData;
 $(document).on("click", ".read_check", function () {
-  var postID = $('#postID').html();
-  var boardID = $('#selectedBoardIDinEditor option:selected').attr('data-tab');
+  let postId = getPostIdInPost();
+  let boardId = getBoardIdInPost();
   $('.modal-body-viewRecordList-container').html("");
-  getViewRecords(postID,boardID,0,loadViewRecordUI);
+  hasRemainData = true;
+  getViewRecords(postId, boardId, 0, loadViewRecordUI);
   //안띄움
-  hasRemainData=true;
-  console.log(hasRemainData);
+
 });
-$('.modal-read-user-container').on("scroll",function () {
-  var scrollTop = $(this).scrollTop();
-  var innerHeight = $(this).innerHeight();
-  var scrollHeight = $(this).prop('scrollHeight');
-  var resultCount =  $(".view_record_data").length;
-  var postID = getPostIDInPost();
-  var boardID = getBoardIDInPost();
-  if (scrollTop + innerHeight >= scrollHeight-1 && hasRemainData){
-    console.log("resultCount : "+resultCount);
-    getViewRecords(postID,boardID,resultCount,loadViewRecordUI);
+$('.modal-read-user-container').on("scroll", function () {
+  let scrollTop = $(this).scrollTop();
+  let innerHeight = $(this).innerHeight();
+  let scrollHeight = $(this).prop('scrollHeight');
+  let resultCount = $(".view_record_data").length;
+  let postId = getPostIdInPost();
+  let boardId = getBoardIdInPost();
+  if (scrollTop + innerHeight >= scrollHeight - 0.25 && hasRemainData) {
+    console.log(scrollTop + innerHeight - scrollHeight);
+    getViewRecords(postId, boardId, resultCount, loadViewRecordUI);
   }
 });
 
-
-function isWriter(){
+function isWriter() {
   var writerId = getWriterId($(this));
   var user = new User();
-  if(user.getUserID ==writerId){
+  if (user.getUserId == writerId) {
     return true;
-  }else{
+  } else {
     return false;
   }
 
 }
 
-function getWriterId(obj){
+function getWriterId(obj) {
   return obj.closest('.postcontent').find('.writer_info').attr("data-id");
 
 }

@@ -3,10 +3,10 @@
  * @file functionAjax.js
  */
 //리스트 받아오기
-function getFunctionList(companyID, successFunction) {
+function getFunctionList(successFunction) {
   $.ajax({
     type: 'GET',
-    url: `functions/${companyID}`,
+    url: `/functions`,
     error: function () {  //통신 실패시
       alert('통신실패!');
     },
@@ -18,20 +18,19 @@ function getFunctionList(companyID, successFunction) {
 
 //기능변경후 새로운 사용중인기능목록 불러오기
 function updateNewFunctionInfo(functionDTOList) {
-  var userData = new User();
   $.ajax({
     type: 'POST',
-    url: `/functions/${userData.companyID}`,
+    url: `/functions`,
     data: functionDTOList,
     dataType: "json",
     contentType: 'application/json',
-    error: function (error, msg) {  //통신 실패시
+    error: function (error) {  //통신 실패시
       errorFunction(error);
     },
     success: function () {
     },
     complete: function () {
-      getFunctionList(userData.companyID, updateNewFunctionInfoUI);
+      getFunctionList(updateNewFunctionInfoUI);
     }
   });
 }

@@ -45,17 +45,17 @@ public class MainController {
 
     UserDTO userData = new UserDTO(request);
 
-    List<BoardDTO> boardList = boardService.getBoardListByCompanyID(userData.getCompanyID());
+    List<BoardDTO> boardList = boardService.getBoardListByCompanyId(userData.getCompanyId());
 
     model.addAttribute("boardList", boardList); //게시판 목록
     model.addAttribute("companyName",
-        companyService.getCompanyNameByUserID(userData.getUserID()));//회사이름
-    model.addAttribute("userType", userService.getUserTypeByUserID(userData.getUserID()));
-    model.addAttribute("companyID", userData.getCompanyID());
-    model.addAttribute("userID", userData.getUserID());
-    model.addAttribute("userName", userService.getUserNameByUserID(userData.getUserID()));
+        companyService.getCompanyNameByUserId(userData.getUserId()));//회사이름
+    model.addAttribute("userType", userService.getUserTypeByUserId(userData.getUserId()));
+    model.addAttribute("companyId", userData.getCompanyId());
+    model.addAttribute("userId", userData.getUserId());
+    model.addAttribute("userName", userService.getUserNameByUserId(userData.getUserId()));
     model.addAttribute("functionInfoList",
-        functionService.getfunctionInfoListByCompanyID(userData.getCompanyID()));
+        functionService.getFunctionInfoListByCompanyId(userData.getCompanyId()));
 
     return "boards";
   }

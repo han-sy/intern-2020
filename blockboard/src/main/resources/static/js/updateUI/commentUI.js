@@ -4,13 +4,11 @@
  */
 //댓글 출력
 function updateCommentListUI(data) {
-  var source = $('#commentList-template').html();
-  var template = Handlebars.compile(source);
-  var comments = {comments: data};
-  var itemList = template(comments);
+  let source = $('#commentList-template').html();
+  let template = Handlebars.compile(source);
+  let comments = {comments: data};
+  let itemList = template(comments);
   $('.comment_list_container').html(itemList);
-  var boardID = getBoardIDInPost();
-  var postID = getPostIDInPost();
 }
 
 //댓글 inputform 받아오기
@@ -25,10 +23,10 @@ function getCommentInputHtml(type, buttonName, tag, className, buttonSelector,
     isReplyInput: isReplyInput,
     editorName: editorName
   };
-  var source = $('#commentInputForm-template').html();
-  var template = Handlebars.compile(source);
-  var attribute = {attribute: data};
-  var itemList = template(attribute);
+  let source = $('#commentInputForm-template').html();
+  let template = Handlebars.compile(source);
+  let attribute = {attribute: data};
+  let itemList = template(attribute);
   $(className).append(itemList + "</div>");
 
   createCommentEditor(editorName, type, tag);
@@ -67,68 +65,18 @@ function createCommentEditor(editorName, type, tag, oldText) {
 }
 
 //댓글수정모드
-function editCommentByCommentID(postID, boardID, commentID) {
-  var oldText = $('#comment' + commentID).find(".comment_content").html();
+function editCommentByCommentId(postId, boardId, commentId) {
+  let oldText = $('#comment' + commentId).find(".comment_content").html();
   data = {oldText: oldText};
-  var source = $('#editCommentForm-template').html();
-  var template = Handlebars.compile(source);
-  var attribute = {attribute: data};
-  var itemList = template(attribute);
-  $('#comment' + commentID).html(itemList + "</div>");
+  let source = $('#editCommentForm-template').html();
+  let template = Handlebars.compile(source);
+  let attribute = {attribute: data};
+  let itemList = template(attribute);
+  $('#comment' + commentId).html(itemList + "</div>");
   createCommentEditor("commentEditText", "수정", '', oldText);
-}
-
-//답글 ui 구성
-function getReplyListUI(commentReferencedID, data) {
-  $(".more-replies").remove();
-  var source = $('#replyList-template').html();
-  var template = Handlebars.compile(source);
-  var replies = {replies: data};
-  var itemList = template(replies);
-  console.log("getReplyListUI->commentReferencedID : "+commentReferencedID);
-  $("#reply_container" + commentReferencedID).append(itemList);
-  console.log("@@@@commentReferencedID : "+commentReferencedID);
-  //makeMoreBtn(commentReferencedID);
-  showMoreRepliesBtn(commentReferencedID);
-}
-
-function makeMoreBtn(commentReferencedID) {
-  console.log("makeMoreBtn");
-  var source = $('#more-replies-template').html();
-  var template = Handlebars.compile(source);
-  var item = template();
-  $("#reply_container" + commentReferencedID).append(item);
-}
-
-function showMoreRepliesBtn(commentReferencedID) {
-  var repliesCount = $('#replies_count' + commentReferencedID).html();
-  var length = getCountPrintedReplies();
-
-
-  console.log("commentReferencedID : "+commentReferencedID);
-  console.log("showMoreRepliesBtn -> replyCount: "+repliesCount+","+length);
-  if (length >= repliesCount) {
-    $('.more-replies').remove();
-  }
-  else{
-    if($('.more-replies').length<1){
-      makeMoreBtn(commentReferencedID);
-    }
-  }
-}
-
-function replyFormClear() {
-  $('.is_reply_input').html("");
 }
 
 function updateCommentsCountUI(data) {
   console.log("commentsCount : " + data);
   $(".commentCount").html(data);
-}
-
-function updateRepliesCountUI(data,commentReferencedID) {
-  console.log("repliesCount : " + data);
-  $('#replies_count'+commentReferencedID).html(data);
-  console.log("!!!!commentReferencedID : "+commentReferencedID);
-  showMoreRepliesBtn(commentReferencedID);
 }

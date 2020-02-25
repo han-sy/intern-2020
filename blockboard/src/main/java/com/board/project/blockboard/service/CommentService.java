@@ -4,111 +4,99 @@
  */
 package com.board.project.blockboard.service;
 
-import com.board.project.blockboard.common.constant.ConstantData;
-import com.board.project.blockboard.common.constant.ConstantData.FunctionID;
+import com.board.project.blockboard.common.constant.ConstantData.PageSize;
+import com.board.project.blockboard.common.constant.ConstantData.RangeSize;
 import com.board.project.blockboard.dto.CommentDTO;
 import com.board.project.blockboard.dto.PaginationDTO;
 import com.board.project.blockboard.mapper.CommentMapper;
 import com.board.project.blockboard.mapper.UserMapper;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
 public class CommentService {
 
   @Autowired
-  private FunctionService functionService;
-  @Autowired
   private AlarmService alarmService;
   @Autowired
   private CommentMapper commentMapper;
   @Autowired
   private UserMapper userMapper;
-  @Autowired PostService postService;
+  @Autowired
+  PostService postService;
 
 
-  public List<CommentDTO> getCommentListByPostID(int postID,int pageNumber,int companyID) {
-    int pageCount = postService.getCommentsCountByPostID(postID);
-    PaginationDTO pageInfo = new PaginationDTO("comments",pageCount,pageNumber,
-        ConstantData.COMMENT_PAGE_SIZE,ConstantData.COMMENT_RANGE_SIZE);
-    return commentMapper.selectCommentsByPostID(postID,pageInfo.getStartIndex(),ConstantData.COMMENT_PAGE_SIZE);
+  public List<CommentDTO> getCommentListByPostId(int postId, int pageNumber) {
+    int pageCount = postService.getCommentsCountByPostId(postId);
+    PaginationDTO pageInfo = new PaginationDTO("comments", pageCount, pageNumber,
+        PageSize.COMMENT, RangeSize.COMMENT);
+    return commentMapper.selectCommentsByPostId(postId, pageInfo.getStartIndex(), PageSize.COMMENT);
   }
 
   //TODO 카운트는 비동기로 트랜잭션 처리보다야
-  public int writeCommentWithUserInfo(String userID, String commentContent, int companyID,
-      int postID) {
-    CommentDTO comment = new CommentDTO();
-    comment.setCommentContent(commentContent);
-    comment.setCommentContentExceptHTMLTag(Jsoup.parse(commentContent).text());
-    comment.setUserName(userMapper.selectUserNameByUserID(userID));
-    comment.setPostID(postID);
-    comment.setUserID(userID);
-    comment.setCompanyID(companyID);
-    commentMapper.insertNewCommentByCommentInfo(comment);
-    postService.updateCommentCountPlus1(postID);
-    alarmService.insertAlarm(comment);
-    return comment.getCommentID();
+  public int writeCommentWithUserInfo(CommentDTO commentData, String userId, int companyId) {
+    updateCommentData(commentData, userId, companyId);
+
+    commentMapper.insertNewCommentByCommentInfo(commentData);
+    postService.updateCommentCountPlus1(commentData.getPostId());
+    alarmService.insertAlarm(commentData);
+    return commentData.getCommentId();
   }
 
-  //TODO 카운트는 비동기로 트랜잭션 처리보다야
-  public void deleteComment(int commentID) {
-    int postID = postService.getPostIDByCommentID(commentID);
-    Integer commentReferencedID = commentMapper.selectCommentReferencedIDByCommentID(commentID);
-    commentMapper.deleteCommentByCommentReferencedID(commentID);
-    commentMapper.deleteCommentByCommentID(commentID);
-    if(commentReferencedID!=null){//답글일때
 
-      updateRepliesCountMinus1(commentReferencedID);
-    } else{//댓글일때
-      postService.updateCommentCountMinus1(postID);
+  //TODO 카운트는 비동기로 트랜잭션 처리보다야
+  //
+  public void deleteComment(int commentId) {
+    int postId = postService.getPostIdByCommentId(commentId);
+    Integer commentReferencedId = commentMapper.selectCommentReferencedIdByCommentId(commentId);
+    commentMapper.deleteCommentByCommentReferencedId(commentId);
+    commentMapper.deleteCommentByCommentId(commentId);
+    updateCountMinus1(postId, commentReferencedId);
+
+  }
+
+  public void updateCountMinus1(int postId, Integer commentReferencedId) {
+    if (commentReferencedId != null) {//답글일때
+      updateRepliesCountMinus1(commentReferencedId);
+    } else {//댓글일때
+      postService.updateCommentCountMinus1(postId);
     }
-
   }
 
-  public void updateComment(int commentID, String newComment) {
-    Map<String, Object> commentAttribute = new HashMap<String, Object>();
-    commentAttribute.put("commentID", commentID);
-    commentAttribute.put("commentContent", newComment);
-    commentAttribute.put("commentContentExceptHTMLTag", Jsoup.parse(newComment).text());
-    commentMapper.updateComment(commentAttribute);
+  public void updateComment(CommentDTO commentData) {
+    commentData.setCommentContentExceptHTMLTag(Jsoup.parse(commentData.getCommentContent()).text());
+    commentMapper.updateComment(commentData);
   }
 
-  public void updateRepliesCountPlus1(int commentID) {
-    commentMapper.updateRepliesCountPlus1(commentID);
+  public void updateRepliesCountPlus1(int commentId) {
+    commentMapper.updateRepliesCountPlus1(commentId);
   }
-  private void updateRepliesCountMinus1(int commentReferencedID) {
-    commentMapper.updateRepliesCountMinus1(commentReferencedID);
+
+  private void updateRepliesCountMinus1(int commentReferencedId) {
+    commentMapper.updateRepliesCountMinus1(commentReferencedId);
   }
 
 
-  public int getRepliesCountByCommentReferencedID(int commentReferencedID) {
-    Integer count = commentMapper.selectRepliesCountByCommentReferencedID(commentReferencedID);
-    if (count == null)
+  public int getRepliesCountByCommentReferencedId(int commentReferencedId) {
+    Integer count = commentMapper.selectRepliesCountByCommentReferencedId(commentReferencedId);
+    if (count == null) {
       return 0;
-    return count;
-  }
-
-  public int getCommentCountByPostID(int postID, int companyID) {
-    boolean isCommentOn = functionService.isUseFunction(companyID, FunctionID.COMMENT);
-    boolean isReplyOn = functionService.isUseFunction(companyID, FunctionID.REPLY);
-    if (isCommentOn) {//댓글ON
-      if (isReplyOn) {//답글ON
-        return commentMapper.getAllCommentsCountByPostID(postID);
-      } else {//답글 OFF
-        return commentMapper.getOnlyCommentsCountByPostID(postID);
-      }
     }
-    return 0;//댓글OFF
+    return count;
   }
 
   public CommentDTO selectCommentByCommentId(int commentId) {
     return commentMapper.selectCommentByCommentId(commentId);
+  }
+
+  private void updateCommentData(CommentDTO commentData, String userId, int companyId) {
+    commentData.setCommentContentExceptHTMLTag(Jsoup.parse(commentData.getCommentContent()).text());
+    commentData.setUserName(userMapper.selectUserNameByUserId(userId));
+    commentData.setUserId(userId);
+    commentData.setCompanyId(companyId);
   }
 }

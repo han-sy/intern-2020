@@ -15,25 +15,25 @@ import org.springframework.stereotype.Repository;
 @Mapper
 public interface PostMapper {
 
-  List<PostDTO> searchPost(String option, String keyword);
+  List<PostDTO> searchPost(Map<String, Object> attributes);
 
-  List<PostDTO> selectMyPosts(Map<String, Object> map);
+  List<PostDTO> selectMyPostsByPostStatus(Map<String, Object> map);
 
   List<PostDTO> selectMyPostsIncludeMyReplies(Map<String, Object> map);
 
-  List<PostDTO> selectMyRecyclePosts(Map<String, Object> map);
-
   List<PostDTO> selectRecentPosts(Map<String, Object> map);
 
-  List<PostDTO> selectMyTempPosts(Map<String, Object> map);
+  List<PostDTO> selectPostByBoardId(int boardId, int startIndex, int pageSize);
 
-  List<PostDTO> selectPostByBoardID(int boardID, int startIndex, int pageSize);
+  List<PostDTO> selectPopularPostListByCompanyId(int companyId);
 
-  List<PostDTO> selectPopularPostListByCompanyID(int companyID);
-
-  PostDTO selectPostByPostID(int postID);
+  PostDTO selectPostByPostId(int postId);
 
   PostDTO selectPostByAlarmId(int alarmId);
+
+  String selectUserIdByPostId(int postId);
+
+  Integer selectPostIdByCommentId(int commentId);
 
   void temporaryDeletePost(PostDTO post);
 
@@ -41,34 +41,27 @@ public interface PostMapper {
 
   void insertPost(PostDTO post);
 
-  void deletePostByPostID(int postID);
+  void deletePostByPostId(int postId);
 
   void updatePost(PostDTO post);
 
-  void updateViewCnt(int postID);
+  void updateViewCnt(int postId);
 
-  String selectUserIDByPostID(int postId);
+  void updateCommentCountPlus1(int postId);
 
-  int selectPostCountByBoardID(int boardID);
+  void updateCommentCountMinus1(int postId);
 
-  int getMyPostsCount(UserDTO user);
+  int selectPostCountByBoardId(int boardId);
+
+  int getMyPostsCountByPostStatus(Map<String, Object> attributes);
 
   int getPostsCountIncludeMyReplies(UserDTO user);
 
-  int getMyTempPostsCount(UserDTO user);
+  int getRecentPostsCount(int companyId);
 
-  int getMyRecyclePostsCount(UserDTO user);
+  int getPopularPostsCount(int companyId);
 
-  int getRecentPostsCount(int companyID);
+  int selectCommentsCountByPostId(int postId);
 
-  int getPopularPostsCount(int companyID);
-
-
-  void updateCommentCountPlus1(int postID);
-
-  void updateCommentCountMinus1(int postID);
-
-  Integer selectPostIDByCommentID(int commentID);
-
-  int selectCommentsCountByPostID(int postID);
+  int selectSearchPostCount(Map<String, Object> attributes);
 }

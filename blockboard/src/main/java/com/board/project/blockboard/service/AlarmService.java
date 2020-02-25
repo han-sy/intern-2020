@@ -32,10 +32,10 @@ public class AlarmService {
   public void insertAlarm(PostDTO post) {
     Set<String> taggedUsers = tagCheckUtils.getTaggedUsers(post);
     if (taggedUsers != null) {
-      for (String taggedUserID : taggedUsers) {
+      for (String taggedUserId : taggedUsers) {
         AlarmDTO alarm = new AlarmDTO();
-        alarm.setPostID(post.getPostID());
-        alarm.setTaggedUserID(taggedUserID);
+        alarm.setPostId(post.getPostId());
+        alarm.setTaggedUserId(taggedUserId);
         alarmMapper.insertAlarm(alarm);
       }
     }
@@ -43,13 +43,12 @@ public class AlarmService {
 
   public void insertAlarm(CommentDTO comment) {
     Set<String> taggedUsers = tagCheckUtils.getTaggedUsers(comment);
-    log.info(taggedUsers.toString());
     if (taggedUsers != null) {
-      for (String taggedUserID : taggedUsers) {
+      for (String taggedUserId : taggedUsers) {
         AlarmDTO alarm = new AlarmDTO();
-        alarm.setCommentID(comment.getCommentID());
-        alarm.setPostID(comment.getPostID());
-        alarm.setTaggedUserID(taggedUserID);
+        alarm.setCommentId(comment.getCommentId());
+        alarm.setPostId(comment.getPostId());
+        alarm.setTaggedUserId(taggedUserId);
         alarmMapper.insertAlarm(alarm);
       }
     }
@@ -69,16 +68,15 @@ public class AlarmService {
     return alarmMapper.selectAlarmByAlarmId(alarmId);
   }
 
-  public void deleteAlarm(int alarmID) {
-    alarmMapper.deleteAlarm(alarmID);
+  public void deleteAlarm(int alarmId) {
+    alarmMapper.deleteAlarm(alarmId);
   }
 
-  public void readAlarm(int alarmId) {
-    alarmMapper.readAlarm(alarmId);
+  public void readMarkToAlarm(int alarmId) {
+    alarmMapper.readMarkToAlarm(alarmId);
   }
 
   public int getUnreadAlarmCountByUser(HttpServletRequest request) {
-    log.info(request.getAttribute("userID").toString());
     UserDTO user = new UserDTO(request);
     return alarmMapper.getUnreadAlarmCountByUser(user);
   }

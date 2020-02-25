@@ -5,7 +5,7 @@
 
 package com.board.project.blockboard.service;
 
-import com.board.project.blockboard.common.constant.ConstantData;
+import com.board.project.blockboard.common.constant.ConstantData.PageSize;
 import com.board.project.blockboard.dto.ViewRecordDTO;
 import com.board.project.blockboard.mapper.ViewRecordMapper;
 import java.util.HashMap;
@@ -18,26 +18,31 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 public class ViewRecordService {
+
   @Autowired
   private ViewRecordMapper viewRecordMapper;
 
-  public void readPostByUser(String userID, int postID){
-    ViewRecordDTO record = new ViewRecordDTO(postID,userID);
+  public void readPostByUser(String userId, int postId) {
+    ViewRecordDTO record = new ViewRecordDTO(postId, userId);
     viewRecordMapper.insertViewRecord(record);
   }
 
-  public boolean isReadPostByUser(String userID, int postID){
-    ViewRecordDTO record = new ViewRecordDTO(postID,userID);
+  public boolean isReadPostByUser(String userId, int postId) {
+    ViewRecordDTO record = new ViewRecordDTO(postId, userId);
     return viewRecordMapper.selectRecordExist(record);
   }
 
+  public List<ViewRecordDTO> getViewRecords(int postId, String userId, int startIndex) {
+    Map<String, Object> recordData = getRecordMapData(postId, userId, startIndex);
+    return viewRecordMapper.selectViewRecordsByPostId(recordData);
+  }
 
-  public List<ViewRecordDTO> getViewRecords(int postID, String userID,int startIndex) {
+  private Map<String, Object> getRecordMapData(int postId, String userId, int startIndex) {
     Map<String, Object> recordData = new HashMap<>();
-    recordData.put("postID",postID);
-    recordData.put("userID",userID);
-    recordData.put("startIndex",startIndex);
-    recordData.put("pageSize", ConstantData.VIEW_RECORDS_PAGE_SIZE);
-    return viewRecordMapper.selectViewRecordsByPostID(recordData);
+    recordData.put("postId", postId);
+    recordData.put("userId", userId);
+    recordData.put("startIndex", startIndex);
+    recordData.put("pageSize", PageSize.VIEW_RECORDS);
+    return recordData;
   }
 }

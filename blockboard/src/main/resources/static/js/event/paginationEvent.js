@@ -11,15 +11,21 @@
  * */
 
 $(document).on('click', '.posts-page-item', function () {
-  var boardID = getCurrentBoardID();
-  var pageNum = $(this).find(".page-link").attr("data-page");
-  getPageList(pageNum, boardID,0, updatePostPageList);
+  let boardId = getCurrentActiveBoardId();
+  let pageNum = $(this).find(".page-link").attr("data-page");
+  getPageList(pageNum, boardId, 0, updatePostPageList);
 });
 
 $(document).on('click', '.comments-page-item', function () {
-  var postID = getPostIDInPost();
-  var pageNum = $(this).find(".page-link").attr("data-page");
-  getPageList(pageNum, 0,postID, updateCommentPageList);
+  let postId = getPostIdInPost();
+  let pageNum = $(this).find(".page-link").attr("data-page");
+  getPageList(pageNum, 0, postId, updateCommentPageList);
 });
 
+$(document).on('click', '.search-page-item', function () {
+  let pageNum = $(this).find(".page-link").attr("data-page");
+  let keyword = getSearchBannerKeyword();
+  let option = getSearchBannerOption();
+  getSearchPageList(pageNum, keyword, option, updateSearchPostPageList);
+});
 

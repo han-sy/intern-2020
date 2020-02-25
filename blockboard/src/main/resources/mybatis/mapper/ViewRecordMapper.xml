@@ -9,30 +9,30 @@
 <mapper namespace="com.board.project.blockboard.mapper.ViewRecordMapper">
   <insert id="insertViewRecord" parameterType="com.board.project.blockboard.dto.ViewRecordDTO">
     INSERT INTO view_records
-    VALUES     (#{postID},
-                #{userID});
+    VALUES     (#{postId},
+                #{userId});
   </insert>
 
   <select id="selectRecordExist" parameterType="com.board.project.blockboard.dto.ViewRecordDTO"
     resultType="boolean">
     SELECT IF(Count(post_id) > 0, TRUE, FALSE)
     FROM   view_records
-    WHERE  post_id = #{postID}
-           AND user_id = #{userID};
+    WHERE  post_id = #{postId}
+           AND user_id = #{userId};
   </select>
 
-  <select id="selectViewRecordsByPostID"
+  <select id="selectViewRecordsByPostId"
     parameterType="int"
     resultType="com.board.project.blockboard.dto.ViewRecordDTO">
 
-    SELECT view_records.post_id AS postID,
-           view_records.user_id AS userID,
+    SELECT view_records.post_id AS postId,
+           view_records.user_id AS userId,
            users.user_name      AS userName,
            users.thumbnail_url  AS thumbnailUrl
     FROM   view_records view_records
            LEFT OUTER JOIN users users
                         ON view_records.user_id = users.user_id
-    WHERE  view_records.post_id = #{postID}
+    WHERE  view_records.post_id = #{postId}
     LIMIT #{startIndex}, #{pageSize};
   </select>
 </mapper>

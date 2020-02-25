@@ -32,9 +32,9 @@ public class JwtInterceptor implements HandlerInterceptor {
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object object)
       throws Exception {
     String token = CookieUtils.getCookie(request, AUTH_HEADER);
-    // JWT Token 만료 검사 + 유저 일치검사 + CSRF 검사
+    // JWT Token 만료 검사 + CSRF Protection
     if (token != null && jwtService.isUsable(token)) {
-      jwtService.setUserDataToRequest(request);
+      jwtService.setUserDataToRequest(request); // set UserData to request
       checkCsrfToken(request, response);
       return true;
     }
@@ -62,10 +62,7 @@ public class JwtInterceptor implements HandlerInterceptor {
     response.setContentType("text/html; charset=UTF-8");
     PrintWriter out = response.getWriter();
     out.println("<script>alert('" + message + "');</script>");
-  }
-
-  private boolean isAjaxRequest(HttpServletRequest request) {
-    return StringUtils.equals("XMLHttpRequest", request.getHeader(AJAX_HEADER));
+    out.flush();
   }
 
   private void checkCsrfToken(HttpServletRequest request, HttpServletResponse response)
@@ -79,5 +76,9 @@ public class JwtInterceptor implements HandlerInterceptor {
       sendErrorToNotAjaxWithAlertMessage(response, "CSRF 공격 탐지. 해당 요청을 실행하지 않습니다.");
     }
     CookieUtils.expireCookie(request, CSRF_COOKIE, response);
+  }
+
+  private boolean isAjaxRequest(HttpServletRequest request) {
+    return StringUtils.equals("XMLHttpRequest", request.getHeader(AJAX_HEADER));
   }
 }

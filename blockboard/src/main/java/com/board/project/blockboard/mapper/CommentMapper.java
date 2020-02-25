@@ -6,7 +6,6 @@ package com.board.project.blockboard.mapper;
 
 import com.board.project.blockboard.dto.CommentDTO;
 import java.util.List;
-import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -14,33 +13,28 @@ import org.springframework.stereotype.Repository;
 @Mapper
 public interface CommentMapper {
 
+  List<CommentDTO> selectCommentsByPostId(int postId, int startIndex, int pageSize);
 
   CommentDTO selectCommentByCommentId(int commentId);
 
-  void deleteCommentByCommentID(int commentID);
+  String selectUserIdByCommentId(int commentId);
 
-  void deleteCommentsByPostID(int postID);
+  Integer selectCommentReferencedIdByCommentId(int commentId);
 
-  void updateComment(Map<String, Object> commentAttribute);
-
-  void deleteCommentByCommentReferencedID(int commentID);
-
-  String selectUserIDByCommentID(int commentID);
+  Integer selectRepliesCountByCommentReferencedId(int commentReferencedId);
 
   int insertNewCommentByCommentInfo(CommentDTO commentInfo);
 
-  int getAllCommentsCountByPostID(int postID);
+  void deleteCommentByCommentId(int commentId);
 
-  int getOnlyCommentsCountByPostID(int postID);
+  void updateComment(CommentDTO commentData);
 
-  List<CommentDTO> selectCommentsByPostID(int postID, int startIndex, int pageSize);
-
-  void updateRepliesCountPlus1(int commentReferencedID);
-
-  void updateRepliesCountMinus1(int commentReferencedID);
-
-  Integer selectCommentReferencedIDByCommentID(int commentID);
+  void deleteCommentByCommentReferencedId(int commentId);
 
 
-  Integer selectRepliesCountByCommentReferencedID(int commentReferencedID);
+  void updateRepliesCountPlus1(int commentReferencedId);
+
+  void updateRepliesCountMinus1(int commentReferencedId);
+
+
 }

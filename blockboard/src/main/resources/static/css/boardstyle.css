@@ -1,140 +1,143 @@
 .modal-read-user-container {
-  overflow-x: hidden;
-  height: 200px;
+    overflow-x: hidden;
+    height: 200px;
 }
 
 
-.name{
-  cursor:pointer;
+.name {
+    cursor: pointer;
 }
-.read_check{
-  cursor: pointer;
-  color:blue;
-  font-weight:bold;
+
+.read_check {
+    cursor: pointer;
+    color: blue;
+    font-weight: bold;
 }
-.display_none{
-  display: none;
+
+.display_none {
+    display: none;
 }
+
 .checkbox {
-  padding-left: 20px;
+    padding-left: 20px;
 }
 
 .checkbox label {
-  display: inline-block;
-  position: relative;
-  padding-left: 5px;
+    display: inline-block;
+    position: relative;
+    padding-left: 5px;
 }
 
 .checkbox label::before {
-  content: "";
-  display: inline-block;
-  position: absolute;
-  width: 17px;
-  height: 17px;
-  left: 0;
-  margin-left: -20px;
-  border: 1px solid #cccccc;
-  border-radius: 3px;
-  background-color: #fff;
-  -webkit-transition: border 0.15s ease-in-out, color 0.15s ease-in-out;
-  -o-transition: border 0.15s ease-in-out, color 0.15s ease-in-out;
-  transition: border 0.15s ease-in-out, color 0.15s ease-in-out;
+    content: "";
+    display: inline-block;
+    position: absolute;
+    width: 17px;
+    height: 17px;
+    left: 0;
+    margin-left: -20px;
+    border: 1px solid #cccccc;
+    border-radius: 3px;
+    background-color: #fff;
+    -webkit-transition: border 0.15s ease-in-out, color 0.15s ease-in-out;
+    -o-transition: border 0.15s ease-in-out, color 0.15s ease-in-out;
+    transition: border 0.15s ease-in-out, color 0.15s ease-in-out;
 }
 
 .checkbox label::after {
-  display: inline-block;
-  position: absolute;
-  width: 16px;
-  height: 16px;
-  left: 0;
-  top: 0;
-  margin-left: -20px;
-  padding-left: 3px;
-  padding-top: 1px;
-  font-size: 11px;
-  color: #555555;
+    display: inline-block;
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    left: 0;
+    top: 0;
+    margin-left: -20px;
+    padding-left: 3px;
+    padding-top: 1px;
+    font-size: 11px;
+    color: #555555;
 }
 
 .checkbox input[type="checkbox"] {
-  opacity: 0;
+    opacity: 0;
 }
 
 .checkbox input[type="checkbox"]:focus + label::before {
-  outline: thin dotted;
-  outline: 5px auto -webkit-focus-ring-color;
-  outline-offset: -2px;
+    outline: thin dotted;
+    outline: 5px auto -webkit-focus-ring-color;
+    outline-offset: -2px;
 }
 
 .checkbox input[type="checkbox"]:checked + label::after {
-  font-family: 'FontAwesome';
-  content: "\f00c";
+    font-family: 'FontAwesome';
+    content: "\f00c";
 }
 
 .checkbox input[type="checkbox"]:disabled + label {
-  opacity: 0.65;
+    opacity: 0.65;
 }
 
 .checkbox input[type="checkbox"]:disabled + label::before {
-  background-color: #eeeeee;
-  cursor: not-allowed;
+    background-color: #eeeeee;
+    cursor: not-allowed;
 }
 
 .checkbox.checkbox-circle label::before {
-  border-radius: 50%;
+    border-radius: 50%;
 }
 
 .checkbox.checkbox-inline {
-  margin-top: 0;
+    margin-top: 0;
 }
 
 
 .checkbox-success input[type="checkbox"]:checked + label::before {
-  background-color: #5cb85c;
-  border-color: #5cb85c;
+    background-color: #5cb85c;
+    border-color: #5cb85c;
 }
 
 .checkbox-success input[type="checkbox"]:checked + label::after {
-  color: #fff;
+    color: #fff;
 }
 
 .jb-xx-small {
-  font-size: xx-small;
+    font-size: xx-small;
 }
 
 .jb-x-small {
-  font-size: x-small;
+    font-size: x-small;
 }
 
 .jb-small {
-  font-size: small;
+    font-size: small;
 }
 
 .jb-medium {
-  font-size: medium;
+    font-size: medium;
 }
 
 .jb-large {
-  font-size: large;
+    font-size: large;
 }
 
 .jb-x-large {
-  font-size: x-large;
+    font-size: x-large;
 }
 
 .jb-xx-large {
-  font-size: xx-large;
+    font-size: xx-large;
 }
 
 .text-button {
-  font-size: medium;
-  padding: 5px 20px 5px 1px;
-  cursor: pointer;
+    font-size: medium;
+    padding: 5px 20px 5px 1px;
+    cursor: pointer;
 }
 
 .border-left-comment {
-  border-left-width: 10px;
-  border-left-color: #28A745;
-  border-left-style: solid;
+    border-left-width: 10px;
+    border-left-color: #28A745;
+    border-left-style: solid;
 }
 
 <!--
@@ -143,8 +146,8 @@
 -->
 
 .active-page {
-  background-color: #28A745;
-  color: white;
+    background-color: #28A745;
+    color: white;
 }
 
 <!--
@@ -152,93 +155,97 @@
 
 -->
 .dragAndDropDiv {
-  width: 650px;
-  height: 150px;
-  border: 2px dashed #92AAB0;
-  color: #92AAB0;
-  text-align: center;
-  vertical-align: middle;
-  padding: 10px 0px 10px 10px;
-  font-size: 200%;
-  display: table-cell;
+    width: 650px;
+    height: 150px;
+    border: 2px dashed #92AAB0;
+    color: #92AAB0;
+    text-align: center;
+    vertical-align: middle;
+    padding: 10px 0px 10px 10px;
+    font-size: 200%;
+    display: table-cell;
 }
 
 .progressBar {
-  width: 200px;
-  height: 22px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  overflow: hidden;
-  display: inline-block;
-  margin: 0px 10px 5px 5px;
-  vertical-align: top;
+    width: 200px;
+    height: 22px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    overflow: hidden;
+    display: inline-block;
+    margin: 0px 10px 5px 5px;
+    vertical-align: top;
 }
 
 .progressBar div {
-  height: 100%;
-  color: #fff;
-  text-align: right;
-  line-height: 22px; /* same as #progressBar height if we want text middle aligned */
-  width: 0;
-  background-color: #28A745;
-  border-radius: 3px;
+    height: 100%;
+    color: #fff;
+    text-align: right;
+    line-height: 22px; /* same as #progressBar height if we want text middle aligned */
+    width: 0;
+    background-color: #28A745;
+    border-radius: 3px;
 }
 
 .statusbar {
-  border-top: 1px solid #A9CCD1;
-  min-height: 25px;
-  width: 99%;
-  padding: 10px 10px 0px 10px;
-  vertical-align: top;
+    border-top: 1px solid #A9CCD1;
+    min-height: 25px;
+    width: 99%;
+    padding: 10px 10px 0px 10px;
+    vertical-align: top;
 }
 
 .statusbar:nth-child(odd) {
-  background: #EBEFF0;
+    background: #EBEFF0;
 }
 
 .filename {
-  display: inline-block;
-  vertical-align: top;
-  width: 250px;
+    display: inline-block;
+    vertical-align: top;
+    width: 250px;
 }
 
 .filesize {
-  display: inline-block;
-  vertical-align: top;
-  color: #30693D;
-  width: 100px;
-  margin-left: 10px;
-  margin-right: 5px;
+    display: inline-block;
+    vertical-align: top;
+    color: #30693D;
+    width: 100px;
+    margin-left: 10px;
+    margin-right: 5px;
 }
 
 .abort {
-  background-color: #A8352F;
-  -moz-border-radius: 4px;
-  -webkit-border-radius: 4px;
-  border-radius: 4px;
-  display: inline-block;
-  color: #fff;
-  font-family: arial;
-  font-size: 13px;
-  font-weight: normal;
-  padding: 4px 15px;
-  cursor: pointer;
-  vertical-align: top
+    background-color: #A8352F;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    border-radius: 4px;
+    display: inline-block;
+    color: #fff;
+    font-family: arial;
+    font-size: 13px;
+    font-weight: normal;
+    padding: 4px 15px;
+    cursor: pointer;
+    vertical-align: top
 }
 
 .delete-statusbar {
-  margin-left: 40px;
+    margin-left: 40px;
 }
 
 .dragAndDropBox {
-  height: 150px;
-  text-align: center;
-  border-style: solid;
-  border-color: #5cb85c;
-  margin: 3px;
-  vertical-align: center;
+    height: 150px;
+    text-align: center;
+    border-style: solid;
+    border-color: #5cb85c;
+    margin: 3px;
+    vertical-align: center;
 }
 
 .modal-open {
-  overflow-y: scroll;
+    overflow-y: scroll;
+}
+
+.btn_logout {
+    cursor: pointer;
 }

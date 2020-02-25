@@ -39,6 +39,7 @@ function showCommentInputModalOfAlarm(data) {
   $('#comment-alarm-input').html(item);
   getCommentInputHtml("답글", "입력",
       `<a class="mentions_tag" style="cursor:pointer; text-decoration: none;" href="javascript:void(0)"`
-      + ` data-id="${data.userID}"><strong>@${data.userName}</strong></a>&nbsp;`,
-      "#comment-alarm-container", "btn_openReply", 'is_reply_input', "commentTextInAlarm");
+      + ` data-id="${data.userId}"><strong>@${data.userName}</strong></a>&nbsp;`,
+      "#comment-alarm-container", "btn_openReply", 'is_reply_input',
+      "commentTextInAlarm");
 }

@@ -31,7 +31,7 @@
 
 <nav class="navbar navbar-expand navbar-dark bg-success">
     <a class="navbar-brand" id="companyInfo" href="JavaScript:window.location.reload()"
-       value="${companyID}">${companyName}</a>
+       value="${companyId}">${companyName}</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse"
             data-target="#navbarsExample02"
             aria-controls="navbarsExample02" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,7 +51,7 @@
                 <li class="nav-item active">
                     <a class="nav-link" id='changeBoardsNameBtn' data-toggle="modal"
                        data-target="#changeBoardNameModal"
-                       onclick="javascript:clickchangeBoardBtn(this)" style="cursor:pointer">게시판
+                       onclick="javascript:clickChangeBoardBtn(this)" style="cursor:pointer">게시판
                         이름변경</a>
                 </li>
                 <li class="nav-item active">
@@ -86,12 +86,12 @@
                     <c:forEach items="${functionInfoList}" var="functionList"
                                varStatus="status">
                         <c:if test="${functionList.functionOn}">
-                            <a class="dropdown-item" id=functionAble${functionList.functionID}
+                            <a class="dropdown-item" id=functionAble${functionList.functionId}
                                value=on> ${functionList.functionName} </a>
                         </c:if>
                         <c:if test="${!(functionList.functionOn)}">
                             <a class="dropdown-item d-none"
-                               id=functionAble${functionList.functionID}
+                               id=functionAble${functionList.functionId}
                                value=off> ${functionList.functionName}</a>
                         </c:if>
                     </c:forEach>
@@ -109,10 +109,10 @@
             <hr>
             {{#functions}}
                 {{#isAbleFunction}}
-                    <a class="dropdown-item d-none" id='functionAble{{functionID}}'
+                    <a class="dropdown-item d-none" id='functionAble{{functionId}}'
                        value='off'>{{functionName}}</a>
                 {{else}}
-                    <a class="dropdown-item" id='functionAble{{functionID}}'
+                    <a class="dropdown-item" id='functionAble{{functionId}}'
                        value='on'>{{functionName}}</a>
                 {{/isAbleFunction}}
             {{/functions}}
@@ -140,9 +140,9 @@
         <script id="alarmList-template" type="text/x-handlebars-template">
             {{#alarms}}
                 {{#isReadAlarm}}
-                    <li class="dropdown-item alarm-item alarm-read" data-id="{{alarmID}}">
+                    <li class="dropdown-item alarm-item alarm-read" data-id="{{alarmId}}">
                 {{else}}
-                    <li class="dropdown-item alarm-item" data-id="{{alarmID}}">
+                    <li class="dropdown-item alarm-item" data-id="{{alarmId}}">
                 {{/isReadAlarm}}
 
                     <button type="button" class="btn-alarm-delete">X</button>
@@ -175,17 +175,17 @@
             {{#comment}}
                 {{#hasReferenceCommentId}}
                     <div class='referenceCommentContainer' id='comment-alarm-container'
-                         data-id='{{commentReferencedID}}'>
+                         data-id='{{commentReferencedId}}'>
                 {{else}}
                     <div class='referenceCommentContainer' id='comment-alarm-container'
-                         data-id='{{commentID}}'>
+                         data-id='{{commentId}}'>
                 {{/hasReferenceCommentId}}
                     <div class="row border-left-comment localCommentContainer">
                         <div></div>
-                        <div class='commentContainer col-8' id='comment{{commentID}}'
+                        <div class='commentContainer col-8' id='comment{{commentId}}'
                              style="padding-left: 50px">
                             <div class="user"><h5><strong class=name
-                                                          data-id={{userID}}>{{userName}}</strong>
+                                                          data-id={{userId}}>{{userName}}</strong>
                             </h5></div>
                             <div>
                                 <div>
@@ -210,7 +210,7 @@
             {{/comment}}
         </script>
         <a class="nav-link text-white" id="current_user_info" style="nav-right: auto"
-           data-id="${userID}" data-type="${userType}">${userName}</a>
+           data-id="${userId}" data-type="${userType}">${userName}</a>
         <a class="nav-link text-white btn_logout" style="nav-right: auto">로그아웃</a>
     </div>
 </nav>
@@ -233,7 +233,7 @@
                 <li data-tab="-2" class="tabmenu" id=default style="cursor:pointer"> 내가 쓴 댓글</li>
                 <hr>
                 {{#boards}}
-                    <li data-tab={{boardID}} class=tabmenu id=default style="cursor:pointer">
+                    <li data-tab={{boardId}} class=tabmenu id=default style="cursor:pointer">
                         {{boardName}}
                     </li>
                 {{/boards}}
@@ -263,7 +263,7 @@
                                 </div>
                                 <div class="col">
                                     <p>회원 이름: <a id="modal_userName">전우혁</a></p>
-                                    <p>회원 ID : <a id="modal_userID"></a></p>
+                                    <p>회원 ID : <a id="modal_userId"></a></p>
                                     <p>회원 유형: <a id="modal_userType"></a></p>
                                     <p>회사명 : <a id="modal_companyName"></a></p>
                                 </div>
@@ -327,7 +327,7 @@
                                 Close
                             </button>
                             <button type="button" id='deleteBoardBtn' class="btn btn-success"
-                                    onclick=javascript:clickSaveDelteBoard(this)
+                                    onclick=javascript:clickSaveDeleteBoard(this)
                                     data-dismiss="modal">Save changes
                             </button>
                         </div>
@@ -341,9 +341,9 @@
                     <div class="custom-control custom-checkbox checkbox-success"
                          style="padding: 15px 1px 10px 30px;">
                         <input class="custom-control-input" type='checkbox' name='boardDelete'
-                               id="checkDelBoard{{boardID}}" value='{{boardID}}'/>
+                               id="checkDelBoard{{boardId}}" value='{{boardId}}'/>
                         <label class="custom-control-label"
-                               for="checkDelBoard{{boardID}}">{{boardName}}</label>
+                               for="checkDelBoard{{boardId}}">{{boardName}}</label>
                     </div>
                 {{/boards}}
             </script>
@@ -376,13 +376,13 @@
             <!--게시판 이름변경 템플릿-->
             <script id="changeBoardName-template" type="text/x-handlebars-template">
                 {{#boards}}
-                    <div class='boardInfo' id='board{{boardID}}'
+                    <div class='boardInfo' id='board{{boardId}}'
                          style="padding: 15px 1px 5px 10px;">
                         <span class='deleteBoard'
-                              data-board='board{{boardID}}'> {{boardName}} </span>
+                              data-board='board{{boardId}}'> {{boardName}} </span>
                         <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
                         <input class="form-control" type='text' name='boardname'
-                               data-boardid={{boardID}} data-oldname="{{boardName}}"
+                               data-boardId={{boardId}} data-oldname="{{boardName}}"
                                value="{{boardName}}">
                     </div>
                 {{/boards}}
@@ -422,7 +422,7 @@
                             <label class="btn btn-default _function-switch">
                                 <span>{{functionName}}</span>
                                 <input class='function_checkbox' type='checkbox' name='function'
-                                       value={{functionID}}>
+                                       value={{functionId}}>
                                 <span class='_switch'>OFF</span>
                             </label>
                         </li>
@@ -432,7 +432,7 @@
                             <label class="btn btn-success _function-switch">
                                 <span>{{functionName}}</span>
                                 <input class='function_checkbox' type='checkbox' name='function'
-                                       value={{functionID}} checked>
+                                       value={{functionId}} checked>
                                 <span class='_switch'>ON</span>
                             </label>
                         </li>
@@ -454,8 +454,8 @@
                             <form id="userForm" name="userForm" method="post" class="form-group"
                                   style="padding: 10px 30px 10px 10px;">
                                 <label class="col-form-label">회원 ID (최대 20자, 한글 X)</label>
-                                <input type="text" class="form-control" name="userID"
-                                       id="form-userID"
+                                <input type="text" class="form-control" name="userId"
+                                       id="form-userId"
                                        placeholder="회원 ID (최대 20자)" maxlength="20">
                                 <label class="col-form-label">회원 이름</label>
                                 <input type="text" class="form-control" name="userName"
@@ -478,20 +478,20 @@
                 </div>
             </div>
             <!--게시글 작성 폼-->
-            <div id="writecontent" style="display:none">
+            <div id="write-content" style="display:none">
                 <!--게시글 작성 시 게시판 선택 폼-->
                 <div class="form-group row">
                     <div class="col-sm-2">
                         <label class="font-weight-light"> 게시판 선택 </label>
                     </div>
                     <div class="col-2 d-flex">
-                        <select class="form-control-sm" id="selectedBoardIDinEditor">
+                        <select class="form-control-sm" id="selectableBoardIdInEditor">
                         </select>
                     </div>
                     <!--게시글 작성 시 게시판 목록 템플릿-->
-                    <script id="writecontent-boards-template" type="text/x-handlebars-template">
+                    <script id="selectable-boardId-template" type="text/x-handlebars-template">
                         {{#boards}}
-                            <option data-tab={{boardID}} class=tabmenu
+                            <option data-tab={{boardId}} class=tabmenu
                                     id=default>{{boardName}}
                             </option>
                         {{/boards}}
@@ -534,28 +534,28 @@
                 </script>
 
 
-                <div id="editorcontent" class="form-group"></div>
-                <script id="editorcontent-template" type="text/x-handlebars-template">
+                <div id="editor-content" class="form-group"></div>
+                <script id="editor-content-template" type="text/x-handlebars-template">
                     <textarea id="editor"></textarea>
                     <button class="btn btn-success btn_post">저장</button>
                     <button class="btn btn-success btn_cancel">작성취소</button>
                     {{#isTempSaveAble}}
                         <button class="btn btn-success btn_tempSave">임시저장</button>
                     {{/isTempSaveAble}}
-                    <div id="editorcontent-hidden"></div>
+                    <div id="editor-content-hidden"></div>
                 </script>
-                <script id="postid-template" type="text/x-handlebars-template">
-                    <a id="postIdInEditor" style="display:none">{{postID}}</a>
-                    <a id="boardIdInEditor" style="display:none">{{boardID}}</a>
+                <script id="postId-template" type="text/x-handlebars-template">
+                    <a id="postIdInEditor" style="display:none">{{postId}}</a>
+                    <a id="boardIdInEditor" style="display:none">{{boardId}}</a>
                 </script>
             </div>
 
-            <div id="postcontent" class="border-primary"></div>
+            <div id="post-content" class="border-primary"></div>
             <!--게시물 내용 템플릿-->
-            <script id="postcontent-template" type="text/x-handlebars-template">
+            <script id="post-content-template" type="text/x-handlebars-template">
                 {{#post}}
                     <p class="h4">{{postTitle}}</p>
-                    <p class="h6 writer_info" align="right" data-id="{{userID}}">{{userName}}</p>
+                    <p class="h6 writer_info" align="right" data-id="{{userId}}">{{userName}}</p>
                     <p class="h6" align="right">{{postRegisterTime}}</p>
                     <p align="right"><a class="h6 read_check" data-toggle="modal"
                                         data-target="#check_read_user"
@@ -568,11 +568,11 @@
                     <div class="d-block">
                         <p>{{{postContent}}}</p>
                     </div>
-                    <a id="postID" style="visibility: hidden;">{{postID}}</a>
-                    <a id="boardIdInPost" style="visibility: hidden">{{boardID}}</a>
+                    <a id="postId" style="display: none;">{{postId}}</a>
+                    <a id="boardIdInPost" style="display: none">{{boardId}}</a>
                     <br>
-                    <button class="btn btn-success btn_modify" style="visibility:hidden">수정</button>
-                    <button class="btn btn-success btn_delete" style="visibility:hidden">삭제</button>
+                    <button class="btn btn-success btn_modify" style="display: none">수정</button>
+                    <button class="btn btn-success btn_delete" style="display: none">삭제</button>
                 {{/post}}
 
                 {{#isCommentAble}}
@@ -631,7 +631,7 @@
                             </div>
                             <div class="col">
                                 <a style="padding-left: 30px; padding-top: 15px"><strong class=name
-                                                                                         data-id='{{userID}}'>{{userName}}</strong>({{userID}}
+                                                                                         data-id='{{userId}}'>{{userName}}</strong>({{userId}}
                                     )</a>
                             </div>
                         </div>
@@ -643,8 +643,8 @@
                 <a class='text-success font-weight-bold'>첨부파일</a>
                 {{#files}}
                     <div class="form-group">
-                        <p><a class="attached-file-download" data-fileid='{{fileID}}'
-                              href="/files/{{fileID}}">{{originFileName}} ( {{printFileSize}} )</a>
+                        <p><a class="attached-file-download" data-fileid='{{fileId}}'
+                              href="/files/{{fileId}}">{{originFileName}} ( {{printFileSize}} )</a>
                         </p>
                     </div>
 
@@ -671,17 +671,17 @@
             <script id="commentList-template" type="text/x-handlebars-template">
                 {{#comments}}
                     <hr>
-                    <div class='referenceCommentContainer ' data-id='{{commentID}}'>
+                    <div class='referenceCommentContainer ' data-id='{{commentId}}'>
 
                         <div class="row border-left-comment localCommentContainer">
                             <div class="col-1">
                                 <img class="profile" name="profile" width="75px" height="75px"
                                      src='{{thumbnailUrl}}'>
                             </div>
-                            <div class='commentContainer col-8' id='comment{{commentID}}'
+                            <div class='commentContainer col-8' id='comment{{commentId}}'
                                  style="padding-left: 50px">
                                 <div class="user"><h5><strong class=name
-                                                              data-id={{userID}}>{{userName}}</strong>
+                                                              data-id={{userId}}>{{userName}}</strong>
                                 </h5></div>
                                 <div>
                                     <div>
@@ -694,7 +694,7 @@
                                     <div class="btn">
                                         {{#isReplyAble}}
                                             <a class='text-success text-button font-weight-bold reply_btn'>답글(<span
-                                                    id="replies_count{{commentID}}">{{repliesCount}}</span>)
+                                                    id="replies_count{{commentId}}">{{repliesCount}}</span>)
                                                 달기</a>
                                             <a class='text-success text-button font-weight-bold open_reply_list_btn'>답글
                                                 보기</a>
@@ -720,10 +720,10 @@
                             </div>
                         </div>
                         {{#isReplyAble}}
-                            <ul class='replyContainer' id='reply_container{{commentID}}'
+                            <ul class='replyContainer' id='reply_container{{commentId}}'
                                 style='padding: 5px 1px 3px 30px;list-style: none'>
                             </ul>
-                            <div id='reply_input_container{{commentID}}'
+                            <div id='reply_input_container{{commentId}}'
                                  style='padding: 5px 1px 3px 30px;'></div>
                         {{else}}
                         {{/isReplyAble}}
@@ -744,16 +744,16 @@
                             <img class="profile" name="profile" width="75px" height="75px"
                                  src='{{thumbnailUrl}}'>
                         </div>
-                        <div class='commentContainer col-7' id='comment{{commentID}}'
+                        <div class='commentContainer col-7' id='comment{{commentId}}'
                              style="padding-left: 30px">
                             <div class="user"><h5><strong class=name
-                                                          data-id={{userID}}>{{userName}}</strong>
+                                                          data-id={{userId}}>{{userName}}</strong>
                             </h5>
                             </div>
                             <div>
                                 <div class="comment_area row" id=translate_area">
                                     <strong class="nametag text-primary "
-                                            data-id={{commentReferencedUserID}}
+                                            data-id={{commentReferencedUserId}}
                                             style="cursor:pointer;padding: 0px 0px 0px 15px">{{commentReferencedUserName}}</strong>
                                     <div class="comment_content col-10" style="float:left;">
                                         {{{commentContent}}}
@@ -853,7 +853,13 @@
                     </div>
                 {{/attribute}}
             </script>
-
+            <div id="search-banner"></div>
+            <script id="search-banner-template" type="text/x-handlebars-template">
+                <h4 class="search-banner">
+                    <span id="search-banner-option">{{option}}</span>:'
+                    <span id="search-banner-keyword">{{keyword}}</span>'로 검색한 결과입니다.
+                </h4>
+            </script>
             <div id="tabcontent" class="container-fluid">
                 <table id="post_table" class="table table-hover" cellpadding="0" cellspacing="0"
                        border="0"></table>
@@ -877,22 +883,22 @@
                         {{/isTempBox}}
                     </tr>
                     </thead>
-                    <tbody id="postlist">
+                    <tbody id="post-list">
                     {{#posts}}
                         {{#isTemp}}
-                            <tr class="postclick temp_post_click" data-post={{postID}}
-                                data-board={{boardID}}>
+                            <tr class="postclick temp_post_click" data-post={{postId}}
+                                data-board={{boardId}}>
                                 <td>{{boardName}}</td>
                                 <td>{{postTitle}}</td>
                         {{else}}
                             {{#isRecycle}}
-                                <tr class="postclick recycle_post_click" data-post={{postID}}
-                                    data-board={{boardID}}>
+                                <tr class="postclick recycle_post_click" data-post={{postId}}
+                                    data-board={{boardId}}>
                                     <td>{{boardName}}</td>
                                     <td>{{postTitle}}</td>
                             {{else}}
-                                <tr class="postclick normal_post_click" data-post={{postID}}
-                                    data-board={{boardID}}>
+                                <tr class="postclick normal_post_click" data-post={{postId}}
+                                    data-board={{boardId}}>
                                 {{#isPopular}}
                                         <td>{{boardName}}</td>
                                 {{else}}
@@ -982,13 +988,23 @@
                                 </li>
                             {{/each}}
                         {{else}}
-                            {{#each pageList}}
-                                <li class='comments-page-item' id='comments_page{{this}}'><a
-                                        class='page-link page-index'
-                                        style='cursor: pointer;'
-                                        data-page='{{this}}'>{{this}}</a>
-                                </li>
-                            {{/each}}
+                            {{#isSearchPage}}
+                                {{#each pageList}}
+                                    <li class='search-page-item' id='search_page{{this}}'><a
+                                            class='page-link page-index'
+                                            style='cursor: pointer;'
+                                            data-page='{{this}}'>{{this}}</a>
+                                    </li>
+                                {{/each}}
+                            {{else}}
+                                {{#each pageList}}
+                                    <li class='comments-page-item' id='comments_page{{this}}'><a
+                                            class='page-link page-index'
+                                            style='cursor: pointer;'
+                                            data-page='{{this}}'>{{this}}</a>
+                                    </li>
+                                {{/each}}
+                            {{/isSearchPage}}
                         {{/isPostPage}}
 
                         {{#isLastRange}}
@@ -1007,7 +1023,6 @@
                         {{/isLastPage}}
                     {{/pagesInfo}}
                 </script>
-
             </div>
         </div>
     </div>
@@ -1022,6 +1037,7 @@
 <script src="/static/js/data/functionData.js"></script>
 <script src="/static/js/data/postData.js"></script>
 <script src="/static/js/data/boardData.js"></script>
+<script src="/static/js/data/fileData.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/handlebars@latest/dist/handlebars.js"></script>
 <script src="/static/js/event/boardEvent.js"></script>
 <script src="/static/js/event/postEvent.js"></script>
@@ -1035,6 +1051,7 @@
 <script src="/static/js/event/fileEvent.js"></script>
 <script src="/static/js/event/modalEvent.js"></script>
 <script src="/static/js/event/viewRecordEvent.js"></script>
+<script src="/static/js/event/replyEvent.js"></script>
 <script src="/static/js/ajax/functionAjax.js"></script>
 <script src="/static/js/ajax/commentAjax.js"></script>
 <script src="/static/js/ajax/postAjax.js"></script>
@@ -1043,6 +1060,7 @@
 <script src="/static/js/ajax/fileAjax.js"></script>
 <script src="/static/js/ajax/userAjax.js"></script>
 <script src="/static/js/ajax/alarmAjax.js"></script>
+<script src="/static/js/ajax/replyAjax.js"></script>
 <script src="/static/js/ajax/viewRecordAjax.js"></script>
 <script src="/static/ckeditor/ckeditor.js"></script>
 <script src="/static/ckeditor/adapters/jquery.js"></script>
@@ -1056,6 +1074,8 @@
 <script src="/static/js/updateUI/postUI.js"></script>
 <script src="/static/js/updateUI/fileUI.js"></script>
 <script src="/static/js/updateUI/alarmUI.js"></script>
+<script src="/static/js/updateUI/replyUI.js"></script>
+<script src="/static/js/updateUI/editorUI.js"></script>
 <script src="/static/js/util/windowLoad.js"></script>
 
 </body>

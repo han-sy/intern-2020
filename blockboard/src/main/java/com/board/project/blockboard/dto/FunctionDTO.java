@@ -4,12 +4,18 @@
  */
 package com.board.project.blockboard.dto;
 
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
-@Data
+@Getter
+@Setter
+@ToString
+@Builder
 public class FunctionDTO {
 
-  private int functionID;
+  private int functionId;
   private boolean functionOn;
   private String functionName;
   private String functionData;

@@ -11,14 +11,13 @@ import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
 
-
 @Repository
 @Mapper
 public interface ViewRecordMapper {
 
-  void insertViewRecord(ViewRecordDTO record);
+  List<ViewRecordDTO> selectViewRecordsByPostId(Map<String, Object> recordData);
 
   boolean selectRecordExist(ViewRecordDTO record);
 
-  List<ViewRecordDTO> selectViewRecordsByPostID(Map<String,Object> recordData);
+  void insertViewRecord(ViewRecordDTO record);
 }

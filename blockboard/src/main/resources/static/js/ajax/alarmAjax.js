@@ -64,7 +64,7 @@ function getAlarmByAlarmId(alarmId) {
       errorFunction(xhr);
     },
     success: function (data) {
-      showAlarmContent(data.alarmID, data.commentID);
+      showAlarmContent(data.alarmId, data.commentId);
     }
   });
 }
@@ -79,9 +79,9 @@ function showAlarmContent(alarmId, commentId) {
     success: function (data) {
       readMarkToAlarmItem(alarmId);
       // 해당 알람이 온 게시판으로 이동
-      clickBoardEventByBoardId(data.boardID);
+      clickBoardEventByBoardId(data.boardId);
       // 게시물 목록에서 게시글 클릭할 때의 이벤트 재사용
-      getPostDataAfterPostClick(data.postID, data.boardID);
+      getPostDataAfterPostClick(data.postId, data.boardId);
       showCommentAlarmContent(commentId);
     },
     complete: function () {
