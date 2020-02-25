@@ -119,15 +119,6 @@ function clickSaveChangeBoard() {
   $('#config_container').html("");
 }
 
-// 게시글 목록에서 게시글 클릭시
-$(document).on('click', '.normal_post_click', function () {
-  var postId = getPostIdInPostList.call(this);
-  var boardId = getBoardIdInPostList.call(this);
-  $(function () {
-    getPostDataAfterPostClick(postId, boardId); //boardAjax.js 참고
-  });
-});
-
 //닫기 버튼 클릭
 $(document).on('click', '.functionClose', clickConfigClose());
 

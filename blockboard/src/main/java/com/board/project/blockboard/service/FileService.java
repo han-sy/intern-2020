@@ -7,6 +7,7 @@ package com.board.project.blockboard.service;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.board.project.blockboard.common.constant.ConstantData.Bucket;
+import com.board.project.blockboard.common.constant.ConstantData.EditorName;
 import com.board.project.blockboard.common.constant.ConstantData.FunctionId;
 import com.board.project.blockboard.common.exception.FileValidException;
 import com.board.project.blockboard.common.exception.FunctionValidException;
@@ -32,9 +33,9 @@ import java.util.Iterator;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.StringUtils;
-import org.jsoup.internal.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -251,9 +252,9 @@ public class FileService {
   /**
    * @author Woohyeok Jun <woohyeok.jun@worksmobile.com>
    */
-  // TODO 추후 디비 저장 & 삭제 구현할 것 ( 로컬 or AWS S3)
-  public String uploadImage(HttpServletResponse response,
-      MultipartHttpServletRequest multiFile, HttpServletRequest request, String editorName) {
+  @SneakyThrows
+  public String uploadImage(HttpServletResponse response, MultipartHttpServletRequest multiFile,
+      HttpServletRequest request, String editorName) {
     int companyId = Integer.parseInt(request.getAttribute("companyId").toString());
     if (StringUtils.equals(editorName, "editor")) {
       if (!(functionValidation.isFunctionOn(companyId, FunctionId.POST_INLINE_IMAGE))) {
@@ -264,53 +265,45 @@ public class FileService {
         return null;
       }
     }
-
     response.setCharacterEncoding("UTF-8");
     response.setContentType("text/html;charset=UTF-8");
-    JsonObject json = new JsonObject();
-    PrintWriter printWriter = null;
-    OutputStream out = null;
     MultipartFile file = multiFile.getFile("upload");
-    if (file != null) {
-      if (file.getSize() > 0 && !StringUtil.isBlank(file.getName())) {
-        if (file.getContentType().toLowerCase().startsWith("image/")) {
-          try {
-            String fileName = file.getName();
-            ObjectMetadata metadata = new ObjectMetadata();
-            //AmazonS3Service amazonS3Service = new AmazonS3Service();
-            fileName = Common.getNewUUID();
-            String fileUrl = amazonS3Service
-                .upload(fileName, Bucket.INLINE, file.getInputStream(), metadata);
-
-            printWriter = response.getWriter();
-
-            json.addProperty("uploaded", 1);
-            json.addProperty("fileName", fileName);
-            json.addProperty("url", fileUrl);
-
-            if (StringUtils.equals(editorName, "editor")) {
-              if (functionService.isUseFunction(companyId, FunctionId.POST_AUTO_TAG)) {
-                List<UserDTO> detectedUsers = detectedUserList(fileName, companyId);
-                json.add("detectedUser", new Gson().toJsonTree(detectedUsers));
-              }
-            } else {
-              if (functionService.isUseFunction(companyId, FunctionId.COMMENT_AUTO_TAG)) {
-                List<UserDTO> detectedUsers = detectedUserList(fileName, companyId);
-                json.add("detectedUser", new Gson().toJsonTree(detectedUsers));
-              }
-            }
-            printWriter.println(json);
-          } catch (IOException e) {
-            e.printStackTrace();
-          } finally {
-            if (printWriter != null) {
-              printWriter.close();
-            }
-          }
-        }
-      }
-    }
+    fileValidation.validateUploadImageFile(file);
+    executeUploadImage(response, editorName, companyId, file);
     return null;
+  }
+
+  private void executeUploadImage(HttpServletResponse response, String editorName, int companyId,
+      MultipartFile file) throws IOException {
+    ObjectMetadata metadata = new ObjectMetadata();
+    String fileName = Common.getNewUUID();
+    String fileUrl = amazonS3Service
+        .upload(fileName, Bucket.INLINE, file.getInputStream(), metadata);
+    JsonObject json = makeJsonObjectToReturnEditor(editorName, companyId, fileName, fileUrl);
+    PrintWriter printWriter = response.getWriter();
+    printWriter.println(json);
+    printWriter.close();
+  }
+
+  private JsonObject makeJsonObjectToReturnEditor(String editorName, int companyId, String fileName,
+      String fileUrl) {
+    JsonObject json = new JsonObject();
+    json.addProperty("uploaded", 1);
+    json.addProperty("fileName", fileName);
+    json.addProperty("url", fileUrl);
+    checkEditorAndAutoTagIsOn(editorName, companyId, fileName, json);
+    return json;
+  }
+
+  private void checkEditorAndAutoTagIsOn(String editorName, int companyId, String fileName,
+      JsonObject json) {
+    int functionIdToCheck = editorName.equals(EditorName.POST_EDITOR) ? FunctionId.POST_AUTO_TAG
+        : FunctionId.COMMENT_AUTO_TAG;
+    if (StringUtils.equals(editorName, EditorName.POST_EDITOR) && functionService
+        .isUseFunction(companyId, functionIdToCheck)) {
+      List<UserDTO> detectedUsers = detectedUserList(fileName, companyId);
+      json.add("detectedUser", new Gson().toJsonTree(detectedUsers));
+    }
   }
 
   /**

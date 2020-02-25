@@ -17,15 +17,11 @@ public interface PostMapper {
 
   List<PostDTO> searchPost(String option, String keyword);
 
-  List<PostDTO> selectMyPosts(Map<String, Object> map);
+  List<PostDTO> selectMyPostsByPostStatus(Map<String, Object> map);
 
   List<PostDTO> selectMyPostsIncludeMyReplies(Map<String, Object> map);
 
-  List<PostDTO> selectMyRecyclePosts(Map<String, Object> map);
-
   List<PostDTO> selectRecentPosts(Map<String, Object> map);
-
-  List<PostDTO> selectMyTempPosts(Map<String, Object> map);
 
   List<PostDTO> selectPostByBoardId(int boardId, int startIndex, int pageSize);
 
@@ -51,18 +47,13 @@ public interface PostMapper {
 
   int selectPostCountByBoardId(int boardId);
 
-  int getMyPostsCount(UserDTO user);
+  int getMyPostsCountByPostStatus(Map<String, Object> attributes);
 
   int getPostsCountIncludeMyReplies(UserDTO user);
-
-  int getMyTempPostsCount(UserDTO user);
-
-  int getMyRecyclePostsCount(UserDTO user);
 
   int getRecentPostsCount(int companyId);
 
   int getPopularPostsCount(int companyId);
-
 
   void updateCommentCountPlus1(int postId);
 

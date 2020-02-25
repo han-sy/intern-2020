@@ -166,6 +166,15 @@ function isValidLength(str, limit) {
   }
 }
 
+// 게시글 목록에서 게시글 클릭시
+$(document).on('click', '.normal_post_click', function () {
+  var postId = getPostIdInPostList.call(this);
+  var boardId = getBoardIdInPostList.call(this);
+  $(function () {
+    getPostDataAfterPostClick(postId, boardId); //boardAjax.js 참고
+  });
+});
+
 // 휴지통 게시물 클릭 이벤트
 $(document).on('click', '.recycle_post_click', function () {
   var postId = $(this).attr("data-post");

@@ -5,9 +5,9 @@
 
 function clickAddUser() {
   let formData = new FormData($("#userForm")[0]);
-
+  console.log("비밀번호 = ", formData.get("userPassword"));
   if (!isValidPasswordPattern(formData.get("userPassword"))) {
-    alert("비밀번호는 8자리 이상 문자, 숫자, 특수문자로 구성하여야 합니다.");
+    alert("비밀번호는 8 ~ 20자 이내 문자, 숫자, 특수문자로 구성하여야 합니다.");
     $("#form-userPassword").val('');
     return;
   }

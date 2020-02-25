@@ -2,8 +2,11 @@
  * @license Copyright (c) 2003-2019, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
  */
-
+/**
+ * @customAuthor Woohyeok.jun@worksmobile.com
+ */
 'use strict';
+const mentionNameInSessionStorage = "userList";
 
 (function () {
 
@@ -16,25 +19,27 @@
       cache = CKEDITOR._.mentions.cache,
       arrTools = CKEDITOR.tools.array;
 
+
   CKEDITOR.plugins.add('mentions', {
     requires: 'autocomplete,textmatch,ajax',
     instances: [],
     beforeInit: function (editor) {
-      var userList = [];
+      let userList = [];
+      let userListInSessionStorage = sessionStorage.getItem(mentionNameInSessionStorage);
 
-      CKEDITOR.ajax.load("/users", function (data) {
-        arrTools.forEach(JSON.parse(data), function (item) {
-          userList.push(item);
-        });
-      });
+      if (userListInSessionStorage == null) {
+        getUserList(userList);
+      } else {
+        loadUserListInSessionStorage(userListInSessionStorage, userList);
+      }
 
       editor.config.mentions = [{
         feed: userList,
         minChars: 0,
         itemTemplate: '<li data-id="{id}" class="mentions list-group-item">'
             + '<div class="row">'
-            + '<div class="col-2">'
-            + '<img src="http://cdn2-aka.makeshop.co.kr/design/jogunshop/MakeshopRenewal/img/wish_icon.png">'
+            + '<div class="col-3">'
+            + '<img src="{thumbnailUrl}" width=70px height=auto>'
             + '</div>'
             + '<div class="col">'
             + '<div class="row mentions_list_top">'
@@ -64,97 +69,16 @@
     }
   });
 
-  /**
-   * The [Mentions](https://ckeditor.com/cke4/addon/mentions) plugin allows you to type a marker character and get suggested values for the
-   * text matches so that you do not have to write it on your own.
-   *
-   * The recommended way to add the mentions feature to an editor is by setting the {@link CKEDITOR.config#mentions config.mentions} option:
-   *
-   * ```javascript
-   * // Passing mentions configuration when creating the editor.
-   * CKEDITOR.replace( 'editor', {
-   * 		mentions: [ { feed: ['Anna', 'Thomas', 'John'], minChars: 0 } ]
-   * } );
-   *
-   * // Simple usage with the CKEDITOR.config.mentions property.
-   * CKEDITOR.config.mentions = [ { feed: ['Anna', 'Thomas', 'John'], minChars: 0 } ];
-   * ```
-   *
-   * @class CKEDITOR.plugins.mentions
-   * @since 4.10.0
-   * @constructor Creates a new instance of mentions and attaches it to the editor.
-   * @param {CKEDITOR.editor} editor The editor to watch.
-   * @param {CKEDITOR.plugins.mentions.configDefinition} config Configuration object keeping information about how to instantiate the mentions plugin.
-   */
   function Mentions(editor, config) {
     var feed = config.feed;
 
-    /**
-     * Indicates that a mentions instance is case-sensitive for simple items feed, i.e. an array feed.
-     *
-     * **Note:** This will take no effect on feeds using a callback or URLs, as in this case the results are expected to
-     * be already filtered.
-     *
-     * @property {Boolean} [caseSensitive=false]
-     * @readonly
-     */
     this.caseSensitive = config.caseSensitive;
-
-    /**
-     * The character that should trigger autocompletion.
-     *
-     * @property {String} [marker='@']
-     * @readonly
-     */
     this.marker = config.hasOwnProperty('marker') ? config.marker : MARKER;
-
-    /**
-     * The number of characters that should follow the marker character in order to trigger the mentions feature.
-     *
-     * @property {Number} [minChars=2]
-     * @readonly
-     */
     this.minChars = config.minChars !== null && config.minChars !== undefined
         ? config.minChars : MIN_CHARS;
-
-    /**
-     * The pattern used to match queries.
-     *
-     * The default pattern matches words with the query including the {@link #marker config.marker} and {@link #minChars config.minChars} properties.
-     *
-     * ```javascript
-     * // Match only words starting with "a".
-     * var pattern = /^a+\w*$/;
-     * ```
-     *
-     * @property {RegExp} pattern
-     * @readonly
-     */
     this.pattern = config.pattern || createPattern(this.marker, this.minChars);
-
-    /**
-     * Indicates if the URL feed responses will be cached.
-     *
-     * The cache is based on the URL request and is shared between all mentions instances (including different editors).
-     *
-     * @property {Boolean} [cache=true]
-     * @readonly
-     */
     this.cache = config.cache !== undefined ? config.cache : true;
-
-    /**
-     * @inheritdoc CKEDITOR.plugins.mentions.configDefinition#throttle
-     * @property {Number} [throttle=200]
-     * @readonly
-     */
     this.throttle = config.throttle !== undefined ? config.throttle : 200;
-
-    /**
-     * {@link CKEDITOR.plugins.autocomplete Autocomplete} instance used by the mentions feature to implement autocompletion logic.
-     *
-     * @property {CKEDITOR.plugins.autocomplete}
-     * @private
-     */
     this._autocomplete = new CKEDITOR.plugins.autocomplete(editor, {
       textTestCallback: getTextTestCallback(this.marker, this.minChars,
           this.pattern),
@@ -167,19 +91,33 @@
   }
 
   Mentions.prototype = {
-
-    /**
-     * Destroys the mentions instance.
-     *
-     * The view element and event listeners will be removed from the DOM.
-     */
     destroy: function () {
       this._autocomplete.destroy();
     }
   };
 
+  function loadUserListInSessionStorage(userListInSessionStorage, userList) {
+    CKEDITOR.ajax.load(CKEDITOR.getUrl('/users/count'), function (countUser) {
+      if (countUser != JSON.parse(userListInSessionStorage).length) {
+        getUserList(userList);
+        return;
+      }
+      arrTools.forEach(JSON.parse(userListInSessionStorage), function (item) {
+        userList.push(item);
+      });
+    });
+  }
+
+  function getUserList(userList) {
+    CKEDITOR.ajax.load(CKEDITOR.getUrl('/users'), function (data) {
+      arrTools.forEach(JSON.parse(data), function (item) {
+        userList.push(item);
+      });
+      sessionStorage.setItem(mentionNameInSessionStorage, data);
+    });
+  }
+
   function createPattern(marker, minChars) {
-    // Match also diacritic characters (#2491).
     var pattern = '\\' + marker + '[_a-zA-Z0-9À-ž]';
 
     if (minChars) {
@@ -187,7 +125,6 @@
     } else {
       pattern += '*';
     }
-
     pattern += '$';
 
     return new RegExp(pattern);
@@ -265,6 +202,7 @@
             userId: item.userId,
             userType: item.userType,
             companyName: item.companyName,
+            thumbnailUrl: item.thumbnailUrl,
             id: index++
           });
           return current;

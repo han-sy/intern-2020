@@ -14,7 +14,6 @@ import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -95,7 +94,6 @@ public class CommentService {
   }
 
   private void updateCommentData(CommentDTO commentData, String userId, int companyId) {
-    log.info("getCommentContent : "+commentData.getCommentContent());
     commentData.setCommentContentExceptHTMLTag(Jsoup.parse(commentData.getCommentContent()).text());
     commentData.setUserName(userMapper.selectUserNameByUserId(userId));
     commentData.setUserId(userId);

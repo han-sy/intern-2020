@@ -4,8 +4,8 @@
  */
 package com.board.project.blockboard.service;
 
-import com.board.project.blockboard.common.constant.ConstantData;
 import com.board.project.blockboard.common.constant.ConstantData.PageSize;
+import com.board.project.blockboard.common.constant.ConstantData.PostStatus;
 import com.board.project.blockboard.common.constant.ConstantData.RangeSize;
 import com.board.project.blockboard.common.util.LengthCheckUtils;
 import com.board.project.blockboard.common.validation.PostValidation;
@@ -21,7 +21,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.StringUtils;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -46,7 +45,7 @@ public class PostService {
     }
     postMapper.insertPost(receivePost);
     // 일반 게시물에 삽입이 되면 태그된 유저 알람에 등록
-    if (StringUtils.equals(receivePost.getPostStatus(), "normal")) {
+    if (StringUtils.equals(receivePost.getPostStatus(), PostStatus.NORMAL)) {
       alarmService.insertAlarm(receivePost);
     }
     return receivePost.getPostId();
@@ -65,7 +64,7 @@ public class PostService {
     PostValidation.validateDelete(post, user);
 
     // 휴지통에 있는 게시글이면 바로삭제하고, 아니면 휴지통으로 보낸다.
-    if (StringUtils.equals(post.getPostStatus(), "recycle")) {
+    if (StringUtils.equals(post.getPostStatus(), PostStatus.RECYCLE)) {
       postMapper.deletePostByPostId(postId);
     } else {
       postMapper.temporaryDeletePost(post);
@@ -108,9 +107,10 @@ public class PostService {
   }
 
   public List<PostDTO> selectMyPosts(UserDTO user, int pageNumber) {
-    int pageCount = postMapper.getMyPostsCount(user);
-    Map<String, Object> map = makeMapUserAndPageInfo(user, pageCount, pageNumber);
-    return postMapper.selectMyPosts(map);
+    Map<String, Object> attributes = makeMapUserAndPostStatus(user, PostStatus.NORMAL);
+    int pageCount = postMapper.getMyPostsCountByPostStatus(attributes);
+    attributes = makeMapUserAndPageInfoPostStatus(user, pageCount, pageNumber, PostStatus.NORMAL);
+    return postMapper.selectMyPostsByPostStatus(attributes);
   }
 
   public List<PostDTO> selectPostsIncludeMyReplies(UserDTO user, int pageNumber) {
@@ -120,15 +120,17 @@ public class PostService {
   }
 
   public List<PostDTO> selectMyTempPosts(UserDTO user, int pageNumber) {
-    int pageCount = postMapper.getMyTempPostsCount(user);
-    Map<String, Object> map = makeMapUserAndPageInfo(user, pageCount, pageNumber);
-    return postMapper.selectMyTempPosts(map);
+    Map<String, Object> attributes = makeMapUserAndPostStatus(user, PostStatus.TEMP);
+    int pageCount = postMapper.getMyPostsCountByPostStatus(attributes);
+    attributes = makeMapUserAndPageInfoPostStatus(user, pageCount, pageNumber, PostStatus.TEMP);
+    return postMapper.selectMyPostsByPostStatus(attributes);
   }
 
   public List<PostDTO> getMyRecyclePosts(UserDTO user, int pageNumber) {
-    int pageCount = postMapper.getMyRecyclePostsCount(user);
-    Map<String, Object> map = makeMapUserAndPageInfo(user, pageCount, pageNumber);
-    return postMapper.selectMyRecyclePosts(map);
+    Map<String, Object> attributes = makeMapUserAndPostStatus(user, PostStatus.RECYCLE);
+    int pageCount = postMapper.getMyPostsCountByPostStatus(attributes);
+    attributes = makeMapUserAndPageInfoPostStatus(user, pageCount, pageNumber, PostStatus.RECYCLE);
+    return postMapper.selectMyPostsByPostStatus(attributes);
   }
 
   public List<PostDTO> selectRecentPosts(UserDTO user, int pageNumber) {
@@ -138,7 +140,8 @@ public class PostService {
   }
 
   public int getMyPostsCount(UserDTO user) {
-    return postMapper.getMyPostsCount(user);
+    Map<String, Object> attributes = makeMapUserAndPostStatus(user, PostStatus.NORMAL);
+    return postMapper.getMyPostsCountByPostStatus(attributes);
   }
 
   public int getMyRepliesCount(UserDTO user) {
@@ -146,11 +149,13 @@ public class PostService {
   }
 
   public int getMyTempPostsCount(UserDTO user) {
-    return postMapper.getMyTempPostsCount(user);
+    Map<String, Object> attributes = makeMapUserAndPostStatus(user, PostStatus.TEMP);
+    return postMapper.getMyPostsCountByPostStatus(attributes);
   }
 
   public int getMyRecyclePostsCount(UserDTO user) {
-    return postMapper.getMyRecyclePostsCount(user);
+    Map<String, Object> attributes = makeMapUserAndPostStatus(user, PostStatus.RECYCLE);
+    return postMapper.getMyPostsCountByPostStatus(attributes);
   }
 
   public int getRecentPostsCount(int companyId) {
@@ -159,12 +164,31 @@ public class PostService {
 
   public Map<String, Object> makeMapUserAndPageInfo(UserDTO user, int pageCount, int pageNumber) {
     Map<String, Object> map = new HashMap<>();
-    PaginationDTO pageInfo = new PaginationDTO("posts",pageCount, pageNumber, PageSize.POST,
+    PaginationDTO pageInfo = new PaginationDTO("posts", pageCount, pageNumber, PageSize.POST,
         RangeSize.POST);
     map.put("user", user);
     map.put("startIndex", pageInfo.getStartIndex());
     map.put("pageSize", PageSize.POST);
     return map;
+  }
+
+  public Map<String, Object> makeMapUserAndPageInfoPostStatus(UserDTO user, int pageCount,
+      int pageNumber, String postStatus) {
+    Map<String, Object> map = new HashMap<>();
+    PaginationDTO pageInfo = new PaginationDTO("posts", pageCount, pageNumber, PageSize.POST,
+        RangeSize.POST);
+    map.put("user", user);
+    map.put("startIndex", pageInfo.getStartIndex());
+    map.put("pageSize", PageSize.POST);
+    map.put("postStatus", postStatus);
+    return map;
+  }
+
+  private Map<String, Object> makeMapUserAndPostStatus(UserDTO user, String postStatus) {
+    Map<String, Object> attributes = new HashMap<>();
+    attributes.put("user", user);
+    attributes.put("postStatus", postStatus);
+    return attributes;
   }
 
   /**
@@ -190,7 +214,7 @@ public class PostService {
    */
   public List<PostDTO> getPostListByBoardId(int boardId, int pageNumber, int companyId) {
     int pageCount = getPostsCountByBoardId(boardId);
-    PaginationDTO pageInfo = new PaginationDTO("posts",pageCount, pageNumber, PageSize.POST,
+    PaginationDTO pageInfo = new PaginationDTO("posts", pageCount, pageNumber, PageSize.POST,
         RangeSize.POST);
     List<PostDTO> postList = postMapper
         .selectPostByBoardId(boardId, pageInfo.getStartIndex(), PageSize.POST);
@@ -255,7 +279,7 @@ public class PostService {
     return postMapper.getPopularPostsCount(companyId);
   }
 
-  
+
   /**
    * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
    */
@@ -266,7 +290,7 @@ public class PostService {
   /**
    * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
    */
-  public void updateCommentCountMinus1(int postId){
+  public void updateCommentCountMinus1(int postId) {
     postMapper.updateCommentCountMinus1(postId);
   }
 

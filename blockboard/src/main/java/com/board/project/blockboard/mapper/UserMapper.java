@@ -16,8 +16,6 @@ public interface UserMapper {
 
   List<UserDTO> selectUsersByCompanyId(int companyId);
 
-  void insertUser(UserDTO user);
-
   UserDTO selectUserByID(String userId);
 
   UserDTO selectUserByUserIdAndCompanyId(UserDTO user);
@@ -27,4 +25,8 @@ public interface UserMapper {
   String selectUserTypeByUserId(String userId);
 
   void updateUserImage(UserDTO userData);
+
+  int countUsersByCompanyId(int CompanyId);
+
+  void insertUser(UserDTO user);
 }
