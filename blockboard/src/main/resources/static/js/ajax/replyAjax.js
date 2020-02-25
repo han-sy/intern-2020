@@ -8,7 +8,7 @@ function updateRepliesCount(boardId, postId, commentReferencedId) {
     type: 'GET',
     url: `/boards/${boardId}/posts/${postId}/comments/${commentReferencedId}/replies/counts`,
     error: function () {
-      alert('통신실패!');
+      errorFunction(error);
     },
     success: function (data) {
       updateRepliesCountUI(data, commentReferencedId);
@@ -46,7 +46,7 @@ function insertReply(boardId, postId, commentContent, commentReferencedId,
     dataType: "json",
     contentType: 'application/json',
     error: function () {  //통신 실패시
-      alert('통신실패!');
+      errorFunction(error);
     },
     complete: function (data) {
       if (data != null) {

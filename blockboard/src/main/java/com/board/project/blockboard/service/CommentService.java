@@ -6,6 +6,7 @@ package com.board.project.blockboard.service;
 
 import com.board.project.blockboard.common.constant.ConstantData.PageSize;
 import com.board.project.blockboard.common.constant.ConstantData.RangeSize;
+import com.board.project.blockboard.common.util.LengthCheckUtils;
 import com.board.project.blockboard.dto.CommentDTO;
 import com.board.project.blockboard.dto.PaginationDTO;
 import com.board.project.blockboard.mapper.CommentMapper;
@@ -39,8 +40,8 @@ public class CommentService {
 
   //TODO 카운트는 비동기로 트랜잭션 처리보다야
   public int writeCommentWithUserInfo(CommentDTO commentData, String userId, int companyId) {
+    LengthCheckUtils.validCommentData(commentData);
     updateCommentData(commentData, userId, companyId);
-
     commentMapper.insertNewCommentByCommentInfo(commentData);
     postService.updateCommentCountPlus1(commentData.getPostId());
     alarmService.insertAlarm(commentData);
@@ -94,6 +95,7 @@ public class CommentService {
   }
 
   private void updateCommentData(CommentDTO commentData, String userId, int companyId) {
+    LengthCheckUtils.validCommentData(commentData);
     commentData.setCommentContentExceptHTMLTag(Jsoup.parse(commentData.getCommentContent()).text());
     commentData.setUserName(userMapper.selectUserNameByUserId(userId));
     commentData.setUserId(userId);

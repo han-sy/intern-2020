@@ -7,8 +7,8 @@ function getFunctionList(successFunction) {
   $.ajax({
     type: 'GET',
     url: `/functions`,
-    error: function () {  //통신 실패시
-      alert('통신실패!');
+    error: function (error) {  //통신 실패시
+      errorFunction(error);
     },
     success: function (data) {
       successFunction(data);

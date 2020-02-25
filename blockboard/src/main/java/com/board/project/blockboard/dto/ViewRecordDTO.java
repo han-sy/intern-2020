@@ -5,21 +5,18 @@
 package com.board.project.blockboard.dto;
 
 
+import lombok.Builder;
 import lombok.Getter;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
+@Builder
 public class ViewRecordDTO {
 
-  @NonNull
   private int postId;
-  @NonNull
   private String userId;
   private String userName;
   private String thumbnailUrl;

@@ -4,6 +4,7 @@
  */
 package com.board.project.blockboard.service;
 
+import com.board.project.blockboard.common.util.LengthCheckUtils;
 import com.board.project.blockboard.dto.BoardDTO;
 import com.board.project.blockboard.mapper.BoardMapper;
 import java.util.List;
@@ -28,6 +29,7 @@ public class BoardService {
         .companyId(companyId)
         .boardName(newBoardName)
         .build();
+    LengthCheckUtils.validateBoardName(newBoard);
     boardMapper.insertBoard(newBoard);
   }
 
@@ -36,6 +38,7 @@ public class BoardService {
         .boardId(boardId)
         .boardName(boardName)
         .build();
+    LengthCheckUtils.validateBoardName(boardData);
     boardMapper.updateBoardName(boardData);
   }
 

@@ -14,7 +14,7 @@ function getPageList(pageNumber, boardId, postId, successFunction) {
       pageNumber: pageNumber
     },
     error: function () {  //통신 실패시
-      alert('통신실패!');
+      errorFunction(error);
     },
     success: function (data) {
       successFunction(data, data.pageList);
@@ -34,7 +34,7 @@ function getSearchPageList(pageNumber, keyword, option, successFunction) {
       pageNumber: pageNumber
     },
     error: function () {  //통신 실패시
-      alert('통신실패!');
+      errorFunction(error);
     },
     success: function (data) {
       successFunction(data, data.pageList, true);
