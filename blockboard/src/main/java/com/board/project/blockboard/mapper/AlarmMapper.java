@@ -19,11 +19,11 @@ public interface AlarmMapper {
 
   AlarmDTO selectAlarmByAlarmId(int alarmId);
 
-  int getUnreadAlarmCountByUser(UserDTO userID);
+  int getUnreadAlarmCountByUser(UserDTO userId);
 
   void insertAlarm(AlarmDTO alarm);
 
-  void deleteAlarm(int alarmID);
+  void deleteAlarm(int alarmId);
 
-  void readAlarm(int alarmId);
+  void readMarkToAlarm(int alarmId);
 }

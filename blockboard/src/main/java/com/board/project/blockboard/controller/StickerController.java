@@ -22,21 +22,21 @@ public class StickerController {
   @Autowired
   private StickerService stickerService;
 
-  @GetMapping("/sticker/{page-num}")
+  @GetMapping("/sticker/{pageNum}")
   public JSONObject getNavigationItemAndStickerAtFirst(HttpServletRequest request,
-      @PathVariable("page-num") int pageNum) {
+      @PathVariable int pageNum) {
     return stickerService.getNavigationItemAndStickerAtFirst(request, pageNum);
   }
 
-  @GetMapping("/sticker/groups/{group-name}")
+  @GetMapping("/sticker/groups/{groupName}")
   public JSONObject getStickerByGroupNameInPage(HttpServletRequest request,
-      @PathVariable("group-name") String groupName) {
+      @PathVariable String groupName) {
     return stickerService.getStickersByGroupName(request, groupName);
   }
 
-  @GetMapping(value = "/sticker/{group-name}/{filename}", produces = MediaType.IMAGE_PNG_VALUE)
-  public byte[] getSticker(@PathVariable("group-name") String groupName,
-      @PathVariable("filename") String fileName) throws IOException {
+  @GetMapping(value = "/sticker/{groupName}/{fileName}", produces = MediaType.IMAGE_PNG_VALUE)
+  public byte[] getSticker(@PathVariable String groupName,
+      @PathVariable String fileName) throws IOException {
     return stickerService.getSticker(groupName, fileName);
   }
 }

@@ -8,10 +8,8 @@ import com.board.project.blockboard.common.validation.AuthorityValidation;
 import com.board.project.blockboard.dto.FunctionDTO;
 import com.board.project.blockboard.dto.UserDTO;
 import com.board.project.blockboard.service.FunctionService;
-import java.io.IOException;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,24 +31,23 @@ public class FunctionController {
    *
    * @return 리스트 반환
    */
-  @GetMapping(value = "/{companyid}")
+  @GetMapping(value = "")
   public List<FunctionDTO> getFunctionInfo(HttpServletRequest request) {
     UserDTO userData = new UserDTO(request);
     List<FunctionDTO> functionInfoList = functionService
-        .getfunctionInfoListByCompanyID(userData.getCompanyID());
+        .getFunctionInfoListByCompanyId(userData.getCompanyId());
     return functionInfoList;
   }
 
   /**
    * 기능 on/off 정보 업데이트
    */
-  @PostMapping(value = "/{companyid}")
+  @PostMapping(value = "")
   public void insertNewFunctionData(@RequestBody List<FunctionDTO> functionDTOList,
-      HttpServletResponse response, HttpServletRequest request)
-      throws IOException {
+      HttpServletRequest request) {
     UserDTO userData = new UserDTO(request);
-    if (AuthorityValidation.isAdmin(userData, response)) {
-      functionService.updateNewFunctionsInfo(userData.getCompanyID(), functionDTOList);
+    if (AuthorityValidation.isAdmin(userData)) {
+      functionService.updateNewFunctionsInfo(userData.getCompanyId(), functionDTOList);
     }
 
   }

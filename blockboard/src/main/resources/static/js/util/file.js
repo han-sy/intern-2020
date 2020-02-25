@@ -4,25 +4,22 @@
  */
 
 function handleFileUpload(files) {
-  for (var i = 0; i < files.length; i++) {
-    var fd = new FormData();
+  for (let i = 0; i < files.length; i++) {
+    let fd = new FormData();
     fd.append('file', files[i]);
-    var status = new createStatusbar($(".upload_list_start_point"));
-
+    let status = new createStatusbar($(".upload_list_start_point"));
     status.setFileNameSize(files[i].name, files[i].size);
-    //console.log("status : "+status.filename.attr("data-filename"));
     sendFileToServer(fd, status);
-
   }
 }
 
 var rowCount = 0;
 
 function getFileSize(size) {
-  var sizeStr = "";
-  var sizeKB = size / 1024;
+  let sizeStr = "";
+  let sizeKB = size / 1024;
   if (parseInt(sizeKB) > 1024) {
-    var sizeMB = sizeKB / 1024;
+    let sizeMB = sizeKB / 1024;
     sizeStr = sizeMB.toFixed(2) + " MB";
   } else {
     sizeStr = sizeKB.toFixed(2) + " KB";
@@ -33,21 +30,17 @@ function getFileSize(size) {
 /**
  * 첨부할 파일 리스트가져오기
  */
-function getAttachedFileList(postID,commentID) {
-  var fileList = new Array();
-  console.log(postID);
-  console.log(commentID);
+function getAttachedFileList(postId, commentId) {
+  let fileList = new Array();
   $(".filename").each(function () {
-    var fileData = new Object();
-    if(!isNullData(postID)){
-      fileData.postID = postID;
+    let fileData = new Object();
+    if (!isNullData(postId)) {
+      fileData.postId = postId;
     }
-    if(!isNullData(commentID)){
-      fileData.commentID = commentID;
+    if (!isNullData(commentId)) {
+      fileData.commentId = commentId;
     }
     fileData.storedFileName = $(this).attr("data-filename");
-    console.log("id : "+fileData.postID+","+fileData.commentID);
-    console.log("data-filename : "+ fileData.storedFileName);
     fileList.push(fileData);
 
   });
@@ -55,8 +48,8 @@ function getAttachedFileList(postID,commentID) {
 }
 
 function deleteAllAttachedFile() {
-  var fileList = getAttachedFileList();
-  $.each(fileList,function (index,item) {
+  let fileList = getAttachedFileList();
+  $.each(fileList, function (index, item) {
     deleteFile(item.storedFileName);
   })
 }
@@ -75,13 +68,13 @@ function createStatusbar(obj) {
   obj.after(this.statusbar);
 
   this.setFileNameSize = function (name, size) {
-    var sizeStr = getFileSize(size);
+    let sizeStr = getFileSize(size);
     this.filename.html(name);
     this.size.html(sizeStr);
   };
 
   this.setProgress = function (progress) {
-    var progressBarWidth = progress * this.progressBar.width() / 100;
+    let progressBarWidth = progress * this.progressBar.width() / 100;
     this.progressBar.find('div').animate({width: progressBarWidth}, 10).html(
         progress + "% ");
     if (parseInt(progress) >= 100) {
@@ -90,7 +83,7 @@ function createStatusbar(obj) {
   };
 
   this.setAbort = function (jqxhr) {
-    var sb = this.statusbar;
+    let sb = this.statusbar;
     this.abort.click(function () {
       jqxhr.abort();
       sb.hide();

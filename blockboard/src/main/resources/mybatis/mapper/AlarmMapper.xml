@@ -12,27 +12,27 @@
     alarms (
     tagged_user_id,
     post_id
-    <if test="commentID != 0">
+    <if test="commentId != 0">
       ,comment_id
     </if>)
-    VALUES (#{taggedUserID},
-    #{postID}
-    <if test="commentID != 0">
-      ,#{commentID}
+    VALUES (#{taggedUserId},
+    #{postId}
+    <if test="commentId != 0">
+      ,#{commentId}
     </if>);
   </insert>
 
   <delete id="deleteAlarm" parameterType="int">
     DELETE
     FROM alarms
-    WHERE alarm_id = #{alarmID};
+    WHERE alarm_id = #{alarmId};
   </delete>
 
   <select id="selectAlarmsByUser" parameterType="hashMap"
     resultType="com.board.project.blockboard.dto.AlarmDTO">
-    SELECT alarm.alarm_id                         AS alarmID,
-           alarm.post_id                          AS postID,
-           alarm.comment_id                       AS commentID,
+    SELECT alarm.alarm_id                         AS alarmId,
+           alarm.post_id                          AS postId,
+           alarm.comment_id                       AS commentId,
            comment.comment_content_except_htmltag AS alarmContent,
            users.user_name                        AS userName,
            comment.comment_register_time          AS registerTime,
@@ -41,13 +41,13 @@
            JOIN comments comment ON alarm.comment_id = comment.comment_id
            JOIN users ON comment.user_id = users.user_id
            JOIN posts ON comment.post_id = posts.post_id
-    WHERE alarm.tagged_user_id = #{user.userID}
-      AND users.company_id = #{user.companyID}
+    WHERE alarm.tagged_user_id = #{user.userId}
+      AND users.company_id = #{user.companyId}
       AND posts.post_status = 'normal'
     UNION
-    SELECT alarm.alarm_id          AS alarmID,
-           alarm.post_id           AS postID,
-           alarm.comment_id        AS commentID,
+    SELECT alarm.alarm_id          AS alarmId,
+           alarm.post_id           AS postId,
+           alarm.comment_id        AS commentId,
            ''                      AS alarmContent,
            users.user_name         AS userName,
            post.post_register_time AS registerTime,
@@ -55,15 +55,15 @@
     FROM alarms alarm
            JOIN posts post ON alarm.post_id = post.post_id
            JOIN users ON post.user_id = users.user_id
-    WHERE alarm.tagged_user_id = #{user.userID}
-      AND users.company_id = #{user.companyID}
+    WHERE alarm.tagged_user_id = #{user.userId}
+      AND users.company_id = #{user.companyId}
       AND alarm.comment_id IS NULL
       AND post.post_status = 'normal'
     ORDER BY registerTime DESC
     LIMIT #{startIndex}, #{pageSize};
   </select>
 
-  <update id="readAlarm" parameterType="int">
+  <update id="readMarkToAlarm" parameterType="int">
     UPDATE alarms
     SET alarms.is_read = true
     WHERE alarm_id = #{alarmId};
@@ -71,10 +71,10 @@
 
   <select id="selectAlarmByAlarmId" parameterType="int"
     resultType="com.board.project.blockboard.dto.AlarmDTO">
-    SELECT alarm_id       AS alarmID,
-           tagged_user_id AS taggedUserID,
-           post_id        AS postID,
-           comment_id     AS commentID,
+    SELECT alarm_id       AS alarmId,
+           tagged_user_id AS taggedUserId,
+           post_id        AS postId,
+           comment_id     AS commentId,
            is_read        AS isRead
     FROM alarms
     WHERE alarm_id = #{alarmId};
@@ -85,8 +85,8 @@
     SELECT COUNT(alarm_id)
     FROM alarms
            JOIN posts ON posts.post_id = alarms.post_id
-    WHERE alarms.tagged_user_id = #{userID}
-      AND posts.company_id = #{companyID}
+    WHERE alarms.tagged_user_id = #{userId}
+      AND posts.company_id = #{companyId}
       AND posts.post_status = 'normal'
       AND alarms.is_read = false;
   </select>

@@ -91,9 +91,9 @@ public class JwtService {
   // Interceptor 의 request 에 JWT 에서 가져온 유저정보를 넣어준다.
   public void setUserDataToRequest(HttpServletRequest request) {
     Map<String, Object> jwtClaims = this.get();
-    request.setAttribute("userID", jwtClaims.get("userID").toString());
+    request.setAttribute("userId", jwtClaims.get("userId").toString());
     request.setAttribute("userName", jwtClaims.get("userName").toString());
     request.setAttribute("userType", jwtClaims.get("userType").toString());
-    request.setAttribute("companyID", Integer.parseInt(jwtClaims.get("companyID").toString()));
+    request.setAttribute("companyId", Integer.parseInt(jwtClaims.get("companyId").toString()));
   }
 }

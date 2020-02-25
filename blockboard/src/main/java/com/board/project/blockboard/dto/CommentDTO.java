@@ -4,20 +4,26 @@
  */
 package com.board.project.blockboard.dto;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
-@Data
+@Setter
+@Getter
+@ToString
+@NoArgsConstructor
 public class CommentDTO {
 
-  private int commentID;
-  private int postID;
-  private int companyID;
-  private String userID;
+  private int commentId;
+  private int postId;
+  private int companyId;
+  private String userId;
   private String userName;
   private String thumbnailUrl;
   private String commentContent;
   private String commentContentExceptHTMLTag;
   private String commentRegisterTime;
-  private int commentReferencedID;
+  private int commentReferencedId;
   private int repliesCount;
 }

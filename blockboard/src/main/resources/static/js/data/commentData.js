@@ -1,5 +1,5 @@
 /**
- * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
+ * @author  @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
  * @file    commentData.js
  */
 
@@ -7,16 +7,17 @@
  * commentReferenceID 반환
  * @returns
  */
-function getCommentReferencedIDInReferenceCommentContainer() {
+function getCommentReferencedIdInReferenceCommentContainer() {
   return $(this).closest(".referenceCommentContainer").attr(
       "data-id");
 }
 
 /**
- * comment Container에서 commentID 반환
+ * comment Container에서 commentId 반환
  */
-function getCommentIDInCommentContainer() {
-  return $(this).closest(".commentContainer").attr("id").substring(COMMENT_PREFIX.length);
+function getCommentIdInCommentContainer() {
+  return $(this).closest(".commentContainer").attr("id").substring(
+      COMMENT_PREFIX.length);
 }
 
 /**
@@ -30,7 +31,7 @@ function getReferenceUserName() {
 /**
  * 참조한 유저아이디 반환
  */
-function getReferenceUserID() {
+function getReferenceUserId() {
   return $(this).closest(".commentContainer").find(".name").attr(
       "data-id");
 }
@@ -63,4 +64,14 @@ function getFileContainerInLocalCommentContainer() {
  */
 function getCountPrintedReplies() {
   return $(".replyItem").length;
+}
+
+class Comment {
+  constructor(boardId, postId, commentId, commentReferencedId, commentContent) {
+    this.boardId = boardId;
+    this.postId = postId;
+    this.commentReferencedId = commentReferencedId;
+    this.commentContent = commentContent;
+  }
+
 }

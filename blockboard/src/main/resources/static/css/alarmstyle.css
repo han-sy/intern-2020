@@ -1,117 +1,118 @@
 li.alarm-item:hover {
-  background-color: #e0f6ff;
-  text-decoration: black;
-  cursor: pointer;
+    background-color: #e0f6ff;
+    text-decoration: black;
+    cursor: pointer;
 }
 
 p.alarm-item > span {
-  float: right;
+    float: right;
 }
 
 li.alarm-read {
-  color: #adb1b1 !important;
-  font-weight: normal !important;
+    color: #adb1b1 !important;
+    font-weight: normal !important;
 }
 
 .dropdown-alarm {
-  color: white;
+    color: white;
 }
 
 .alarm-items {
-  font-size: 13px;
-  height: 300px;
-  width: 400px;
-  overflow-x: hidden;
-  overflow-y: hidden;
-  color: black;
+    font-size: 13px;
+    height: 300px;
+    width: 400px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    color: black;
 }
 
 .alarm-item {
-  font-weight: bold;
+    font-weight: bold;
 }
 
 #alarm-content {
-  overflow-y: auto;
-  height: 240px;
-}
-.alarm-item .alarm-read {
-  font-weight: normal;
+    overflow-y: auto;
+    height: 240px;
 }
 
-.alarm-item .alarm-read:hover{
-  font-weight: normal;
+.alarm-item .alarm-read {
+    font-weight: normal;
+}
+
+.alarm-item .alarm-read:hover {
+    font-weight: normal;
 }
 
 .btn-alarm-delete {
-  background-color: inherit;
-  color: darkgray;
-  border: none;
-  padding: 4px;
-  float: right;
-  position: relative;
-  left: 20px;
-  top: 7px;
-  font-size: 13px;
+    background-color: inherit;
+    color: darkgray;
+    border: none;
+    padding: 4px;
+    float: right;
+    position: relative;
+    left: 20px;
+    top: 7px;
+    font-size: 13px;
 }
 
 .btn-alarm-delete:hover {
-  color: #1a1a1a;
+    color: #1a1a1a;
 }
 
 .btn-alarm-delete-all {
-  background-color: white;
-  font-weight: bold;
-  color: dimgray;
-  border: 1px solid dimgray;
-  font-size: 13px;
-  float: right;
-  padding: 8px;
+    background-color: white;
+    font-weight: bold;
+    color: dimgray;
+    border: 1px solid dimgray;
+    font-size: 13px;
+    float: right;
+    padding: 8px;
 }
 
 .btn-alarm-delete-all:hover {
-  background-color: dimgray;
-  color: white;
-  float: right;
-  padding: 8px;
+    background-color: dimgray;
+    color: white;
+    float: right;
+    padding: 8px;
 }
 
 .btn-alarm-delete-read {
-  background-color: white;
-  font-weight: bold;
-  color: dimgray;
-  border: 1px solid dimgray;
-  font-size: 13px;
-  float: right;
-  padding: 8px;
-  margin-right: 10px;
-  margin-left: 5px;
+    background-color: white;
+    font-weight: bold;
+    color: dimgray;
+    border: 1px solid dimgray;
+    font-size: 13px;
+    float: right;
+    padding: 8px;
+    margin-right: 10px;
+    margin-left: 5px;
 }
 
 .btn-alarm-delete-read:hover {
-  background-color: dimgray;
-  color: white;
+    background-color: dimgray;
+    color: white;
 }
 
 #alarmCount {
-  border-radius: 50%;
-  background-color: orangered;
-  color: white;
-  font-size: 10px;
-  position: relative;
-  left: -15px;
-  top: 5px;
+    border-radius: 50%;
+    background-color: orangered;
+    color: white;
+    font-size: 10px;
+    position: relative;
+    left: -15px;
+    top: 5px;
 }
 
 #comment-alarm-modal {
-  width: 100%;
-  height: auto;
-  margin: 0;
-  padding: 0;
-  text-align: left;
+    width: 100%;
+    height: auto;
+    margin: 0;
+    padding: 0;
+    text-align: left;
 }
 
 #tagged-comment {
-  height: auto;
-  min-width: 100%;
-  border-radius: 0;
+    height: auto;
+    min-width: 100%;
+    border-radius: 0;
 }

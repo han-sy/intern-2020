@@ -7,19 +7,19 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.board.project.blockboard.mapper.BoardMapper">
-  <select id="selectBoardsByCompanyID" parameterType="int"
+  <select id="selectBoardsByCompanyId" parameterType="int"
     resultType="com.board.project.blockboard.dto.BoardDTO">
-    SELECT board_id   AS boardID,
-           company_id AS companyID,
+    SELECT board_id   AS boardId,
+           company_id AS companyId,
            board_name AS boardName
     FROM boards
-    WHERE company_id = #{companyID};
+    WHERE company_id = #{companyId};
   </select>
 
   <select id="selectBoardByBoardName" parameterType="string"
     resultType="com.board.project.blockboard.dto.BoardDTO">
-    SELECT board_id   AS boardID,
-           company_id AS companyID,
+    SELECT board_id   AS boardId,
+           company_id AS companyId,
            board_name AS boardName
     FROM boards
     WHERE board_name = #{boardName};
@@ -29,28 +29,28 @@
     INSERT INTO boards
     (company_id,
      board_name)
-    VALUES (#{companyID},
+    VALUES (#{companyId},
             #{boardName});
   </insert>
 
-  <!--게시글 작성 시 선택한 게시판 ID 반환-->
-  <select id="selectBoardIDByComIDAndBoardName" parameterType="hashMap" resultType="int">
-    SELECT board_id AS boardID
+  <!--게시글 작성 시 선택한 게시판 Id 반환-->
+  <select id="selectBoardIdByCompanyIdAndBoardName" parameterType="hashMap" resultType="int">
+    SELECT board_id AS boardId
     FROM boards
-    WHERE company_id = #{companyID}
+    WHERE company_id = #{companyId}
       AND board_name = #{boardName};
   </select>
 
   <update id="updateBoardName" parameterType="hashmap">
     UPDATE boards
     SET board_name = #{boardName}
-    WHERE board_id = #{boardID};
+    WHERE board_id = #{boardId};
   </update>
 
   <delete id="deleteBoard" parameterType="int">
     DELETE
     FROM boards
-    WHERE board_id = #{boardID};
+    WHERE board_id = #{boardId};
   </delete>
 
 </mapper>

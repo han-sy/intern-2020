@@ -7,21 +7,21 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.board.project.blockboard.mapper.ReplyMapper">
-  <select id="selectRepliesByCommentID" parameterType="int"
+  <select id="selectRepliesByCommentId" parameterType="int"
     resultType="com.board.project.blockboard.dto.CommentDTO">
-    SELECT comments.comment_id            AS commentID,
-           comments.post_id               AS postID,
-           comments.user_id               AS userID,
+    SELECT comments.comment_id            AS commentId,
+           comments.post_id               AS postId,
+           comments.user_id               AS userId,
            users.user_name                AS userName,
            users.thumbnail_url            AS thumbnailUrl,
-           comments.company_id            AS companyID,
+           comments.company_id            AS companyId,
            comments.comment_content       AS commentContent,
            comments.comment_register_time AS commentRegisterTime,
-           comments.comment_referenced_id AS commentReferencedID
+           comments.comment_referenced_id AS commentReferencedId
     FROM comments comments
            LEFT OUTER JOIN users users
                            ON comments.user_id = users.user_id
-    WHERE comments.comment_referenced_id = #{commentReferencedID}
+    WHERE comments.comment_referenced_id = #{commentReferencedId}
     LIMIT #{startIndex}, #{pageSize};
   </select>
 
@@ -33,17 +33,17 @@
      comment_content,
      comment_content_except_htmltag,
      comment_referenced_id)
-    VALUES (#{postID},
-            #{userID},
-            #{companyID},
+    VALUES (#{postId},
+            #{userId},
+            #{companyId},
             #{commentContent},
             #{commentContentExceptHTMLTag},
-            #{commentReferencedID});
-    <selectKey keyProperty="commentID" resultType="int" order="AFTER">
-      <if test='commentID != 0'>
-        SELECT #{commentID};
+            #{commentReferencedId});
+    <selectKey keyProperty="commentId" resultType="int" order="AFTER">
+      <if test='commentId != 0'>
+        SELECT #{commentId};
       </if>
-      <if test='commentID == 0'>
+      <if test='commentId == 0'>
         SELECT LAST_INSERT_ID();
       </if>
     </selectKey>

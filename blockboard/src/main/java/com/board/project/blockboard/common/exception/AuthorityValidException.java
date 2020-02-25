@@ -1,13 +1,12 @@
 /**
  * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
- * @file FunctionValidException.java
+ * @file AuthorityValidException.java
  */
 package com.board.project.blockboard.common.exception;
 
+public class AuthorityValidException extends Exception {
 
-public class FunctionValidException extends Exception {
-
-  public FunctionValidException(String msg) {
+  public AuthorityValidException(String msg) {
     super(msg);
   }
 }
