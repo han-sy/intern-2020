@@ -210,9 +210,8 @@ public class FileService {
   /**
    * 파일삭제
    */
-  public void deleteFile(String storedFileName, HttpServletRequest request,
-      HttpServletResponse response)
-      throws FileValidException, FunctionValidException {
+  public void deleteFile(String storedFileName, HttpServletRequest request)
+      throws FileValidException {
     UserDTO userData = new UserDTO(request);
     if (!canDeleteFile(storedFileName, userData)) {
       return;
@@ -221,14 +220,14 @@ public class FileService {
     if (!authorityValidation.isWriter(fileData, userData)) {
       return;
     }
-    deleteFileInAmazonS3(storedFileName, response);
+    deleteFileInAmazonS3(storedFileName);
   }
 
   /**
    * 파일삭제가능여부 반환
    */
   private boolean canDeleteFile(String storedFileName,
-      UserDTO userData) throws FileValidException, FunctionValidException {
+      UserDTO userData) {
     return functionValidation
         .isFunctionOn(userData.getCompanyId(), FunctionId.POST_ATTACH_FILE,
             FunctionId.COMMENT_ATTACH_FILE)
@@ -238,9 +237,9 @@ public class FileService {
   /**
    * amazonS3파일 삭제
    */
-  private void deleteFileInAmazonS3(String storedFileName, HttpServletResponse response)
+  private void deleteFileInAmazonS3(String storedFileName)
       throws FileValidException {
-    if (amazonS3Service.deleteFile(storedFileName, Bucket.FILE, response)) {
+    if (amazonS3Service.deleteFile(storedFileName, Bucket.FILE)) {
       log.info("파일삭제 성공");
       fileMapper.deleteFileByStoredFileName(storedFileName);
     } else {
@@ -254,8 +253,8 @@ public class FileService {
    */
   @SneakyThrows
   public String uploadImage(HttpServletResponse response, MultipartHttpServletRequest multiFile,
-      HttpServletRequest request, String editorName) {
-    int companyId = Integer.parseInt(request.getAttribute("companyId").toString());
+      int companyId, String editorName) {
+
     if (StringUtils.equals(editorName, "editor")) {
       if (!(functionValidation.isFunctionOn(companyId, FunctionId.POST_INLINE_IMAGE))) {
         return null;
@@ -369,16 +368,12 @@ public class FileService {
     @Override
     public void run() {
       if (user.getImageFileName() != null) {
-        try {
-          detected = amazonRekognitionService
-              .searchFaceMatchingImageCollection(Bucket.USER,
-                  user.getImageFileName(),
-                  collectionID);
-          if (detected) {
-            detectedUsers.add(user);
-          }
-        } catch (IOException e) {
-          e.printStackTrace();
+        detected = amazonRekognitionService
+            .searchFaceMatchingImageCollection(Bucket.USER,
+                user.getImageFileName(),
+                collectionID);
+        if (detected) {
+          detectedUsers.add(user);
         }
       }
     }

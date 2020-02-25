@@ -8,7 +8,6 @@ import com.board.project.blockboard.common.util.CookieUtils;
 import com.board.project.blockboard.dto.UserDTO;
 import com.board.project.blockboard.service.JwtService;
 import com.board.project.blockboard.service.UserService;
-import java.io.IOException;
 import java.util.List;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -100,17 +98,17 @@ public class UserController {
     return userService.selectUsersByCompanyId(companyId);
   }
 
-  @GetMapping("/users/{userid}")
+  @GetMapping("/users/{userId}")
   @ResponseBody
   public UserDTO getUserByUserIdAndCompanyId(HttpServletRequest request,
-      @PathVariable("userid") String userId) {
+      @PathVariable String userId) {
     int companyId = Integer.parseInt(request.getAttribute("companyId").toString());
     return userService.selectUserByUserIdAndCompanyId(userId, companyId);
   }
 
-  @PutMapping("/users/{userid}/Image")
+  @PutMapping("/users/{userId}/image")
   public void updateUserImage(MultipartHttpServletRequest multipartRequest,
-      @PathVariable("userid") String userId) {
+      @PathVariable String userId) {
     userService.updateUserImage(multipartRequest, userId);
   }
 

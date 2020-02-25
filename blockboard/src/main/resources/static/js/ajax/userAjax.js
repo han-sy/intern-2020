@@ -35,7 +35,7 @@ function sendUserImageToServer(userId){
 
   $.ajax({
     type: "PUT",
-    url: `/users/${userId}/Image`,
+    url: `/users/${userId}/image`,
     data: formData,
     contentType: false,
     processData: false,

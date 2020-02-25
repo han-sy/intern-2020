@@ -28,14 +28,15 @@ public class CommentService {
   private CommentMapper commentMapper;
   @Autowired
   private UserMapper userMapper;
-  @Autowired PostService postService;
+  @Autowired
+  PostService postService;
 
 
-  public List<CommentDTO> getCommentListByPostId(int postId,int pageNumber) {
+  public List<CommentDTO> getCommentListByPostId(int postId, int pageNumber) {
     int pageCount = postService.getCommentsCountByPostId(postId);
-    PaginationDTO pageInfo = new PaginationDTO("comments",pageCount,pageNumber,
+    PaginationDTO pageInfo = new PaginationDTO("comments", pageCount, pageNumber,
         PageSize.COMMENT, RangeSize.COMMENT);
-    return commentMapper.selectCommentsByPostId(postId,pageInfo.getStartIndex(),PageSize.COMMENT);
+    return commentMapper.selectCommentsByPostId(postId, pageInfo.getStartIndex(), PageSize.COMMENT);
   }
 
   //TODO 카운트는 비동기로 트랜잭션 처리보다야
@@ -47,7 +48,6 @@ public class CommentService {
     alarmService.insertAlarm(commentData);
     return commentData.getCommentId();
   }
-
 
 
   //TODO 카운트는 비동기로 트랜잭션 처리보다야
@@ -62,21 +62,22 @@ public class CommentService {
   }
 
   public void updateCountMinus1(int postId, Integer commentReferencedId) {
-    if(commentReferencedId!=null){//답글일때
+    if (commentReferencedId != null) {//답글일때
       updateRepliesCountMinus1(commentReferencedId);
-    } else{//댓글일때
+    } else {//댓글일때
       postService.updateCommentCountMinus1(postId);
     }
   }
 
   public void updateComment(CommentDTO commentData) {
-    commentData.setCommentContentExceptHTMLTag( Jsoup.parse(commentData.getCommentContent()).text());
+    commentData.setCommentContentExceptHTMLTag(Jsoup.parse(commentData.getCommentContent()).text());
     commentMapper.updateComment(commentData);
   }
 
   public void updateRepliesCountPlus1(int commentId) {
     commentMapper.updateRepliesCountPlus1(commentId);
   }
+
   private void updateRepliesCountMinus1(int commentReferencedId) {
     commentMapper.updateRepliesCountMinus1(commentReferencedId);
   }
@@ -84,8 +85,9 @@ public class CommentService {
 
   public int getRepliesCountByCommentReferencedId(int commentReferencedId) {
     Integer count = commentMapper.selectRepliesCountByCommentReferencedId(commentReferencedId);
-    if (count == null)
+    if (count == null) {
       return 0;
+    }
     return count;
   }
 

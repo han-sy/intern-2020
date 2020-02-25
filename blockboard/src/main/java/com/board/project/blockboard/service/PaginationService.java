@@ -22,10 +22,9 @@ public class PaginationService {
 
   @Autowired
   private PostService postService;
-  @Autowired
-  private CommentService commentService;
 
-  public PaginationDTO getPostPageListByPageNumberAboutBoard(int pageNumber, int boardId, UserDTO user) {
+  public PaginationDTO getPostPageListByPageNumberAboutBoard(int pageNumber, int boardId,
+      UserDTO user) {
     int postCount;
     switch (boardId) {
       case ConstantData.BOARD_MY_POSTS:
@@ -61,17 +60,17 @@ public class PaginationService {
 
   public PaginationDTO getCommentPageListByPageNumberAboutPost(int pageNumber, int postId) {
     int commentCount = postService.getCommentsCountByPostId(postId);
-    PaginationDTO paginationInfo = new PaginationDTO("comments",commentCount,pageNumber,PageSize.COMMENT,RangeSize.COMMENT);
+    PaginationDTO paginationInfo = new PaginationDTO("comments", commentCount, pageNumber,
+        PageSize.COMMENT, RangeSize.COMMENT);
     paginationInfo.rangeSetting(pageNumber);
     return paginationInfo;
   }
 
   public PaginationDTO getPageList(int pageNumber, int boardId, int postId, UserDTO user) {
-    if(isBoardPage(boardId)){
-      return getPostPageListByPageNumberAboutBoard(pageNumber,boardId,user);
-    }
-    else{
-      return getCommentPageListByPageNumberAboutPost(pageNumber,postId);
+    if (isBoardPage(boardId)) {
+      return getPostPageListByPageNumberAboutBoard(pageNumber, boardId, user);
+    } else {
+      return getCommentPageListByPageNumberAboutPost(pageNumber, postId);
     }
   }
 
@@ -91,5 +90,5 @@ public class PaginationService {
   public boolean isBoardPage(int boardId) {
     return boardId != 0;
   }
-  
+
 }

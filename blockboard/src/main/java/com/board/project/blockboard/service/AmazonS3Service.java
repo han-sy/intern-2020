@@ -33,7 +33,6 @@ public class AmazonS3Service {
 
 
   public AmazonS3Service() {
-    log.info("!!!AmazonS3Service");
     AWSCredentials awsCredentials = new BasicAWSCredentials(Key.ACCESS_KEY, Key.SECRET_KEY);
     amazonS3 = new AmazonS3Client(awsCredentials);
   }
@@ -43,17 +42,14 @@ public class AmazonS3Service {
    */
   public String upload(String fileName, String bucket, InputStream inputStream,
       ObjectMetadata metadata) throws IOException {
-
     if (amazonS3 != null) {
       try {
         amazonS3.putObject(
             new PutObjectRequest(bucket, fileName, inputStream, metadata));
-
         return amazonS3.getUrl(bucket, fileName).toString();
       } catch (AmazonClientException ace) {
         ace.printStackTrace();
       } finally {
-        //amazonS3 = null;
         inputStream.close();
         Thumbnail.deleteSubFile(fileName);
       }
@@ -80,7 +76,7 @@ public class AmazonS3Service {
     return null;
   }
 
-  public boolean deleteFile(String fileName, String bucket, HttpServletResponse response)
+  public boolean deleteFile(String fileName, String bucket)
       throws FileValidException {
     if (amazonS3 != null) {
       try {

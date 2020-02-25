@@ -382,7 +382,7 @@
                               data-board='board{{boardId}}'> {{boardName}} </span>
                         <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
                         <input class="form-control" type='text' name='boardname'
-                               data-boardid={{boardId}} data-oldname="{{boardName}}"
+                               data-boardId={{boardId}} data-oldname="{{boardName}}"
                                value="{{boardName}}">
                     </div>
                 {{/boards}}

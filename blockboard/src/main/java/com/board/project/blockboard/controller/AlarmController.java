@@ -39,21 +39,21 @@ public class AlarmController {
   }
 
   @DeleteMapping("/alarms/{alarmId}")
-  public void deleteAlarm(@PathVariable("alarmId") int alarmId) {
+  public void deleteAlarm(@PathVariable int alarmId) {
     AlarmDTO alarm = alarmService.selectAlarmByAlarmId(alarmId);
     existAlarmValidation(alarm);
     alarmService.deleteAlarm(alarmId);
   }
 
   @GetMapping("/alarms/{alarmId}")
-  public AlarmDTO getAlarm(@PathVariable("alarmId") int alarmId) {
+  public AlarmDTO getAlarm(@PathVariable int alarmId) {
     AlarmDTO alarm = alarmService.selectAlarmByAlarmId(alarmId);
     existAlarmValidation(alarm);
     return alarm;
   }
 
   @PutMapping("/alarms/{alarmId}")
-  public void readMarkToAlarm(@PathVariable("alarmId") int alarmId) {
+  public void readMarkToAlarm(@PathVariable int alarmId) {
     AlarmDTO alarm = alarmService.selectAlarmByAlarmId(alarmId);
     existAlarmValidation(alarm);
     alarmService.readMarkToAlarm(alarmId);
@@ -65,7 +65,7 @@ public class AlarmController {
   }
 
   @GetMapping("/alarms/{alarmId}/post")
-  public PostDTO getAlarmContent(@PathVariable("alarmId") int alarmId) {
+  public PostDTO getAlarmContent(@PathVariable int alarmId) {
     return postService.selectPostByAlarmId(alarmId);
   }
 

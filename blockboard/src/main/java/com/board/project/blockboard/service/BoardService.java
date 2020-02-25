@@ -49,7 +49,8 @@ public class BoardService {
   }
 
   public void updateChangedName(List<BoardDTO> newTitleList, int companyId) {
-    newTitleList.forEach(boardDTO -> changeBoardName(boardDTO.getBoardId(),boardDTO.getBoardName()));
+    newTitleList
+        .forEach(boardDTO -> changeBoardName(boardDTO.getBoardId(), boardDTO.getBoardName()));
   }
 }
 

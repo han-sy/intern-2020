@@ -168,13 +168,13 @@ public class PostService {
   }
 
   public Map<String, Object> makeMapUserAndPageInfo(UserDTO user, int pageCount, int pageNumber) {
-    Map<String, Object> map = new HashMap<>();
+    Map<String, Object> paginationDataMap = new HashMap<>();
     PaginationDTO pageInfo = new PaginationDTO("posts", pageCount, pageNumber, PageSize.POST,
         RangeSize.POST);
-    map.put("user", user);
-    map.put("startIndex", pageInfo.getStartIndex());
-    map.put("pageSize", PageSize.POST);
-    return map;
+    paginationDataMap.put("user", user);
+    paginationDataMap.put("startIndex", pageInfo.getStartIndex());
+    paginationDataMap.put("pageSize", PageSize.POST);
+    return paginationDataMap;
   }
 
   public Map<String, Object> makeMapUserAndPageInfoPostStatus(UserDTO user, int pageCount,

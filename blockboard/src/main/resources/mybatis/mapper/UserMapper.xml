@@ -55,7 +55,7 @@
     WHERE user_id = #{userId};
   </select>
 
-  <!--userid로 회원 타입 반환-->
+  <!--userId로 회원 타입 반환-->
   <!--@author Dongwook Kim <dongwook.kim1211@worksmobile.com>-->
   <select id="selectUserTypeByUserId" parameterType="string" resultType="string">
     SELECT user_type AS userType

@@ -48,23 +48,23 @@ public class PostController {
   }
 
   @GetMapping("/{postId}")
-  public PostDTO getPostByPostId(@PathVariable("postId") int postId, HttpServletRequest request) {
+  public PostDTO getPostByPostId(@PathVariable int postId, HttpServletRequest request) {
     return postService.selectPostByPostId(postId, request);
   }
 
   @PutMapping("/{postId}")
-  public void updatePost(@PathVariable("postId") int postId,
+  public void updatePost(@PathVariable int postId,
       @ModelAttribute PostDTO requestPost, HttpServletRequest request) {
     postService.updatePost(requestPost, postId, request);
   }
 
   @DeleteMapping("/{postId}")
-  public void deletePost(@PathVariable("postId") int postId, HttpServletRequest request) {
+  public void deletePost(@PathVariable int postId, HttpServletRequest request) {
     postService.deletePost(postId, request);
   }
 
   @PutMapping("/{postId}/restore")
-  public void restorePost(@PathVariable("postId") int postId, HttpServletRequest request) {
+  public void restorePost(@PathVariable int postId, HttpServletRequest request) {
     postService.restorePost(postId, request);
   }
 

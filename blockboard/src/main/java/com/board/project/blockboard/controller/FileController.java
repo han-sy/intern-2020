@@ -86,10 +86,11 @@ public class FileController {
   /**
    * @author Woohyeok Jun <woohyeok.jun@worksmobile.com>
    */
-  @PostMapping("/imageUpload")
+  @PostMapping("/image-upload")
   public String uploadImage(HttpServletResponse response, MultipartHttpServletRequest multiFile,
       HttpServletRequest request, @RequestParam("editorName") String editorName) {
-    return fileService.uploadImage(response, multiFile, request, editorName);
+    UserDTO userData = new UserDTO(request);
+    return fileService.uploadImage(response, multiFile, userData.getCompanyId(), editorName);
   }
 
 

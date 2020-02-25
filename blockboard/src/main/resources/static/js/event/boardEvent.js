@@ -105,7 +105,7 @@ function clickSaveChangeBoard() {
       alert("기존" + oldBoardName + "게시판 제목이 비었습니다.");
       return;
     }
-    var boardId = $(this).attr("data-boardid");
+    var boardId = $(this).attr("data-boardId");
     insertChangeBoard(oldBoardName, newBoardName, boardId, boardDataList);
   });
 

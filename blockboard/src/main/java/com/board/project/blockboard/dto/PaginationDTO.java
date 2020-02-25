@@ -10,22 +10,60 @@ import lombok.ToString;
 @ToString
 @Getter
 public class PaginationDTO {
+
   private String pageType;
-  private int pageSize; /**1페이지에 들어가는 게시물개수*/
-  private int rangeSize; /**한 범위안에 들어가는 페이지개수*/
-  private int currentPage; /**현재 페이지*/
-  private int currentRange; /**현재 블록*/
-  private int dataCount; /**게시물 개수*/
-  private int pageCount; /** 페이지 개수*/
-  private int rangeCount; /**범위 개수*/
-  private int startPage; /**시작 페이지*/
-  private int endPage; /**끝페이지*/
-  private int prevPage; /**이전범위*/
-  private int nextPage; /**다음페이지*/
-  private int startIndex; /** 페이지 첫번째 게시물 번호*/
+  private int pageSize;
+  /**
+   * 1페이지에 들어가는 게시물개수
+   */
+  private int rangeSize;
+  /**
+   * 한 범위안에 들어가는 페이지개수
+   */
+  private int currentPage;
+  /**
+   * 현재 페이지
+   */
+  private int currentRange;
+  /**
+   * 현재 블록
+   */
+  private int dataCount;
+  /**
+   * 게시물 개수
+   */
+  private int pageCount;
+  /**
+   * 페이지 개수
+   */
+  private int rangeCount;
+  /**
+   * 범위 개수
+   */
+  private int startPage;
+  /**
+   * 시작 페이지
+   */
+  private int endPage;
+  /**
+   * 끝페이지
+   */
+  private int prevPage;
+  /**
+   * 이전범위
+   */
+  private int nextPage;
+  /**
+   * 다음페이지
+   */
+  private int startIndex;
+  /**
+   * 페이지 첫번째 게시물 번호
+   */
   private int[] pageList;
 
-  public PaginationDTO(String pageType,int dataCount, int currentPage, int pageSize, int rangeSize) {
+  public PaginationDTO(String pageType, int dataCount, int currentPage, int pageSize,
+      int rangeSize) {
     setPageType(pageType);
     setCurrentPage(currentPage);
     setDataCount(dataCount);
