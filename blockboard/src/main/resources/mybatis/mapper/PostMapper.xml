@@ -7,40 +7,41 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.board.project.blockboard.mapper.PostMapper">
-  <insert id="insertPost" parameterType="com.board.project.blockboard.dto.PostDTO" >
+  <insert id="insertPost" parameterType="com.board.project.blockboard.dto.PostDTO">
     INSERT INTO posts (
-    <if test='postId != 0'>
+      <if test='postId != 0'>
       post_id,
-    </if>
-    user_id,
-    board_id,
-    company_id,
-    post_title,
-    post_content,
-    post_register_time,
-    post_content_except_htmltag,
-    post_status
+      </if>
+      user_id,
+      board_id,
+      company_id,
+      post_title,
+      post_content,
+      post_register_time,
+      post_content_except_htmltag,
+      post_status
     )
     VALUES (
-    <if test='postId != 0'>
+      <if test='postId != 0'>
       #{postId},
-    </if>
-    #{userId},
-    #{boardId},
-    #{companyId},
-    #{postTitle},
-    #{postContent},
-    NOW(),
-    #{postContentExceptHTMLTag},
-    #{postStatus}
+      </if>
+      #{userId},
+      #{boardId},
+      #{companyId},
+      #{postTitle},
+      #{postContent},
+      NOW(),
+      #{postContentExceptHTMLTag},
+      #{postStatus}
     )
     ON DUPLICATE KEY UPDATE
-    board_id=#{boardId},
-    post_title=#{postTitle},
-    post_content=#{postContent},
-    post_content_except_htmltag=#{postContentExceptHTMLTag},
-    post_register_time=NOW(),
-    post_status=#{postStatus}
+      board_id=#{boardId},
+      post_title=#{postTitle},
+      post_content=#{postContent},
+      post_content_except_htmltag=#{postContentExceptHTMLTag},
+      post_register_time=NOW(),
+      post_status=#{postStatus}
+
     <selectKey keyProperty="postId" resultType="int" order="AFTER">
       <if test='postId != 0'>
         SELECT #{postId};
@@ -69,19 +70,23 @@
 
   <select id="searchPost" parameterType="string"
     resultType="com.board.project.blockboard.dto.PostDTO">
-    SELECT post.post_id AS postId,
-    post.user_id AS userId,
-    post.board_id AS boardId,
-    post.company_id AS companyId,
-    post.post_title AS postTitle,
-    post.post_content AS postContent,
-    post.post_register_time AS postRegisterTime,
-    post.post_last_update_time AS postLastUpdateTime,
-    board.board_name AS boardName,
-    users.user_name AS userName
+    SELECT  post.post_id               AS postId,
+            post.user_id               AS userId,
+            users.user_name            AS userName,
+            users.thumbnail_url        AS thumbnailUrl,
+            post.board_id              AS boardId,
+            boards.board_name          AS boardName,
+            post.company_id            AS companyId,
+            post.post_title            AS postTitle,
+            post.post_content          AS postContent,
+            post.post_register_time    AS postRegisterTime,
+            post.post_last_update_time AS postLastUpdateTime,
+            post.post_status           AS postStatus,
+            post.view_count            AS viewCount,
+            post.comments_count        AS commentsCount
     FROM posts post
-    JOIN boards board ON post.board_id = board.board_id
-    JOIN users users ON post.user_id = users.user_id
+        JOIN boards board ON post.board_id = board.board_id
+        JOIN users users ON post.user_id = users.user_id
     WHERE post.post_status = "normal"
     <include refid="searchOption"/>
     ORDER BY postRegisterTime DESC;
@@ -119,7 +124,7 @@
         AND post.post_status = "normal";
   </select>
 
-  <select id="selectMyPosts" parameterType="hashMap"
+  <select id="selectMyPostsByPostStatus" parameterType="hashMap"
     resultType="com.board.project.blockboard.dto.PostDTO">
     SELECT post.post_id               AS postId,
            post.user_id               AS userId,
@@ -138,114 +143,71 @@
            JOIN users users ON post.user_id = users.user_id
            JOIN boards board ON post.board_id = board.board_id
     WHERE  post.user_id = #{user.userId} AND
-           post.post_status = "normal"
+           post.company_id = #{user.companyId} AND
+           post.post_status = #{postStatus}
     ORDER  BY post.post_register_time DESC
     LIMIT  #{startIndex},#{pageSize};
   </select>
 
   <select id="selectMyPostsIncludeMyReplies" parameterType="hashMap"
     resultType="com.board.project.blockboard.dto.PostDTO">
-    SELECT  DISTINCT post.post_id AS postId,
-            post.user_id AS userId,
-            post.board_id AS boardId,
-            post.company_id AS companyId,
-            post.post_title AS postTitle,
-            post.post_content AS postContent,
-            post.post_register_time AS postRegisterTime,
-            users.user_name AS userName,
-            users.thumbnail_url AS thumbnailUrl,
-            board.board_name AS boardName,
-            post.view_count AS viewCount
+    SELECT DISTINCT
+            post.post_id                AS postId,
+            post.user_id                AS userId,
+            users.user_name             AS userName,
+            users.thumbnail_url         AS thumbnailUrl,
+            post.board_id               AS boardId,
+            board.board_name            AS boardName,
+            post.company_id             AS companyId,
+            post.post_title             AS postTitle,
+            post.post_content           AS postContent,
+            post.post_register_time     AS postRegisterTime,
+            post.post_last_update_time  AS postLastUpdateTime,
+            post.post_status            AS postStatus,
+            post.view_count             AS viewCount,
+            post.comments_count         AS commentsCount
+            post.view_count             AS viewCount
     FROM    posts post
        JOIN  users users ON post.user_id = users.user_id
        JOIN  boards board ON post.board_id = board.board_id
        JOIN  comments comment ON post.post_id = comment.post_id
     WHERE  comment.user_id = #{user.userId} AND
-           post.post_status = "normal"
+           post.post_status = 'normal'
     ORDER BY post.post_register_time DESC
     LIMIT  #{startIndex},#{pageSize};
-  </select>
-
-  <select id="selectMyRecyclePosts" parameterType="hashMap"
-    resultType="com.board.project.blockboard.dto.PostDTO">
-    SELECT  post.post_id AS postId,
-            post.user_id AS userId,
-            post.board_id AS boardId,
-            board.board_name AS boardName,
-            post.company_id AS companyId,
-            post.post_title AS postTitle,
-            post.post_content AS postContent,
-            post.post_register_time AS postRegisterTime,
-            users.user_name AS userName,
-            users.thumbnail_url AS thumbnailUrl,
-            post.post_status AS postStatus
-    FROM    posts post
-       JOIN users users ON post.user_id = users.user_id
-       JOIN boards board ON post.board_id = board.board_id
-    WHERE
-            post.user_id=#{user.userId} AND
-            post.company_id=#{user.companyId} AND
-            post.post_status="recycle"
-    ORDER BY postRegisterTime DESC
-    LIMIT  #{startIndex},#{pageSize};
-  </select>
-
-  <select id="selectMyTempPosts" parameterType="hashMap"
-    resultType="com.board.project.blockboard.dto.PostDTO">
-    SELECT post.post_id AS postId,
-        post.user_id AS userId,
-        post.board_id AS boardId,
-        post.company_id AS companyId,
-        post.post_title AS postTitle,
-        post.post_content AS postContent,
-        post.post_register_time AS postRegisterTime,
-        users.user_name AS userName,
-        users.thumbnail_url AS thumbnailUrl,
-        board.board_name AS boardName,
-        post.post_status AS postStatus
-    FROM   posts post
-           JOIN users users
-            ON post.user_id = users.user_id
-           JOIN boards board
-            ON post.board_id = board.board_id
-    WHERE
-        post.user_id=#{user.userId} AND
-        post.post_status="temp"
-    ORDER BY
-        postRegisterTime DESC
-    LIMIT  #{startIndex}, #{pageSize};
   </select>
 
   <select id="selectRecentPosts" parameterType="hashMap"
     resultType="com.board.project.blockboard.dto.PostDTO">
-    SELECT  post.post_id AS postId,
-        post.user_id AS userId,
-        post.board_id AS boardId,
-        board.board_name AS boardName,
-        post.company_id AS companyId,
-        post.post_title AS postTitle,
-        post.post_content AS postContent,
-        post.post_register_time AS postRegisterTime,
-        users.user_name AS userName,
-        users.thumbnail_url AS thumbnailUrl,
-        post.view_count AS viewCount,
-        post.comments_count AS commentsCount
+    SELECT  post.post_id            AS postId,
+        post.user_id                AS userId,
+        users.user_name             AS userName,
+        users.thumbnail_url         AS thumbnailUrl,
+        post.board_id               AS boardId,
+        board.board_name            AS boardName,
+        post.company_id             AS companyId,
+        post.post_title             AS postTitle,
+        post.post_content           AS postContent,
+        post.post_register_time     AS postRegisterTime,
+        post.post_last_update_time  AS postLastUpdateTime,
+        post.post_status            AS postStatus,
+        post.view_count             AS viewCount,
+        post.comments_count         AS commentsCount
     FROM    posts post
        JOIN users users ON post.user_id = users.user_id
        JOIN boards board ON post.board_id = board.board_id
-    WHERE  DATE(post.post_register_time) >= DATE(SUBDATE(NOW(), INTERVAL 30 DAY)) AND
+    WHERE DATE(post.post_register_time) >= DATE(SUBDATE(NOW(), INTERVAL 30 DAY)) AND
            post.company_id = #{user.companyId} AND
-           post.post_status = "normal"
+           post.post_status = 'normal'
     ORDER BY post.post_register_time DESC
     LIMIT  #{startIndex},#{pageSize};
   </select>
 
-  <select id="getMyPostsCount" parameterType="com.board.project.blockboard.dto.UserDTO"
-    resultType="int">
-    SELECT Count(post_id)
+  <select id="getMyPostsCountByPostStatus" parameterType="hashMap" resultType="int">
+    SELECT COUNT(*)
     FROM   posts
     WHERE  user_id = #{userId} AND
-           post_status = "normal"
+           post_status = #{postStatus};
   </select>
 
   <select id="getPostsCountIncludeMyReplies"
@@ -258,24 +220,8 @@
            post_status = "normal"
   </select>
 
-  <select id="getMyTempPostsCount" parameterType="com.board.project.blockboard.dto.UserDTO"
-    resultType="int">
-    SELECT Count(post_id)
-    FROM   posts
-    WHERE  user_id = #{userId} AND
-           post_status = "temp"
-  </select>
-
-  <select id="getMyRecyclePostsCount" parameterType="com.board.project.blockboard.dto.UserDTO"
-    resultType="int">
-    SELECT Count(post_id)
-    FROM   posts
-    WHERE  user_id = #{userId} AND
-           post_status = "recycle"
-  </select>
-
   <select id="getRecentPostsCount" parameterType="int" resultType="int">
-    SELECT Count(post_id)
+    SELECT COUNT(*)
     FROM   posts
     WHERE  DATE(post_register_time) >= DATE(SUBDATE(NOW(), INTERVAL 30 DAY)) AND
            company_id = #{companyId} AND
@@ -355,7 +301,7 @@
   </select>
 
   <select id="selectPostCountByBoardId" resultType="int" parameterType="int">
-    SELECT Count(post_id)
+    SELECT Count(*)
     FROM   posts
     WHERE  board_id = #{boardId};
   </select>
@@ -394,13 +340,13 @@
            JOIN boards boards
              ON post.board_id = boards.board_id
     WHERE  post.company_id = #{companyId} AND
-           post.post_status = "normal"
+           post.post_status = 'normal'
     ORDER  BY post.view_count DESC
     LIMIT  0, 10;
   </select>
 
   <select id="getPopularPostsCount" parameterType="int" resultType="int">
-    SELECT Count(post_id)
+    SELECT Count(*)
     FROM   posts
     WHERE  company_id = #{companyId} AND
            post_status = "normal"

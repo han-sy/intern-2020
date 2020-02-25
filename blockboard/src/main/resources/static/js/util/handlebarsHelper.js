@@ -14,7 +14,9 @@ Handlebars.registerHelper('isAbleFunction', function (options) {
 Handlebars.registerHelper('isCommentAble', function (options) {
   if (functionOn.comments) {
     var boardId = getCurrentActiveBoardId();
-    if (boardId > 0 || boardId == BOARD_ID.POPULAR) {
+    if (boardId > 0 || boardId == BOARD_ID.POPULAR || boardId
+        == BOARD_ID.MY_POST || boardId == BOARD_ID.MY_REPLY || boardId
+        == BOARD_ID.RECENT) {
       return options.fn(this);
     } //true
   }
@@ -123,8 +125,8 @@ Handlebars.registerHelper('isPopular', function (option) {
   }
 });
 Handlebars.registerHelper('isCommentFunction', function (option) {
-  var isCommentFunction = (this.functionID%2);
-  console.log(this.functionID +" : "+isCommentFunction );
+  var isCommentFunction = (this.functionID % 2);
+  console.log(this.functionID + " : " + isCommentFunction);
   if (isCommentFunction == 0) {
     return "comment_function";
   } else {
@@ -139,7 +141,6 @@ Handlebars.registerHelper('isPostPage', function (option) {
     return option.inverse(this);
   }
 });
-
 
 Handlebars.registerHelper('printFileSize', function (option) {
   return getFileSize(this.fileSize);
@@ -195,7 +196,8 @@ Handlebars.registerHelper('isTempSaveAble', function (options) {
  * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
  */
 Handlebars.registerHelper('isPostAlarm', function (options) {
-  this.registerTime = this.registerTime.substring(0, this.registerTime.length - 3);
+  this.registerTime = this.registerTime.substring(0,
+      this.registerTime.length - 3);
   if (this.commentId == 0) {
     return options.fn(this); // 게시물 태그 알람
   }

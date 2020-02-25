@@ -8,6 +8,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.board.project.blockboard.common.constant.ConstantData;
 import com.board.project.blockboard.common.constant.ConstantData.Bucket;
+import com.board.project.blockboard.common.constant.ConstantData.EditorName;
 import com.board.project.blockboard.common.constant.ConstantData.FunctionID;
 import com.board.project.blockboard.common.exception.UserValidException;
 import com.board.project.blockboard.common.util.Common;
@@ -82,7 +83,9 @@ public class FileService {
       HttpServletResponse response) throws IOException {
     String uuid = Common.getNewUUID();
     Iterator<String> itr = multipartRequest.getFileNames();
-    if (!functionValidation.isFunctionOn(companyId, FunctionID.POST_ATTACH_FILE,FunctionID.COMMENT_ATTACH_FILE, response)) {
+    if (!functionValidation
+        .isFunctionOn(companyId, FunctionID.POST_ATTACH_FILE, FunctionID.COMMENT_ATTACH_FILE,
+            response)) {
       return null;
     }
     FileDTO fileData = FileDTO.builder().build();
@@ -99,9 +102,6 @@ public class FileService {
       long fileSize = mpf.getSize();
       //파일 전체 경로
 
-
-
-
       fileMapper.insertFile(fileData);
 
     }
@@ -112,7 +112,9 @@ public class FileService {
   public void updateIDs(List<FileDTO> fileList, HttpServletRequest request,
       HttpServletResponse response) {
     int companyId = Integer.parseInt(request.getAttribute("companyId").toString());
-    if (!functionValidation.isFunctionOn(companyId, FunctionID.POST_ATTACH_FILE,FunctionID.COMMENT_ATTACH_FILE, response)) {
+    if (!functionValidation
+        .isFunctionOn(companyId, FunctionID.POST_ATTACH_FILE, FunctionID.COMMENT_ATTACH_FILE,
+            response)) {
       return;
     }
     for (FileDTO file : fileList) {
@@ -136,7 +138,8 @@ public class FileService {
   public void downloadFile(int fileId, HttpServletResponse response, HttpServletRequest request) {
     UserDTO userData = new UserDTO(request);
     if (!functionValidation
-        .isFunctionOn(userData.getCompanyId(), FunctionID.POST_ATTACH_FILE,FunctionID.COMMENT_ATTACH_FILE, response)) {
+        .isFunctionOn(userData.getCompanyId(), FunctionID.POST_ATTACH_FILE,
+            FunctionID.COMMENT_ATTACH_FILE, response)) {
       return;
     }
     FileDTO fileData = fileMapper.selectFileByFileId(fileId);
@@ -193,7 +196,8 @@ public class FileService {
       HttpServletResponse response) {
     UserDTO userData = new UserDTO(request);
     if (!functionValidation
-        .isFunctionOn(userData.getCompanyId(), FunctionID.POST_ATTACH_FILE,FunctionID.COMMENT_ATTACH_FILE, response)
+        .isFunctionOn(userData.getCompanyId(), FunctionID.POST_ATTACH_FILE,
+            FunctionID.COMMENT_ATTACH_FILE, response)
         || !fileValidation.isExistFileInDatabase(storedFileName, response)) {
       return;
     }
@@ -214,67 +218,61 @@ public class FileService {
   /**
    * @author Woohyeok Jun <woohyeok.jun@worksmobile.com>
    */
-  // TODO 추후 디비 저장 & 삭제 구현할 것 ( 로컬 or AWS S3)
   public String uploadImage(HttpServletResponse response,
       MultipartHttpServletRequest multiFile, HttpServletRequest request, String editorName)
       throws Exception {
+    response.setCharacterEncoding("UTF-8");
+    response.setContentType("text/html;charset=UTF-8");
+
+    // TODO 동욱이형꺼랑 합치면 줄이기
     int companyId = Integer.parseInt(request.getAttribute("companyId").toString());
-    if (StringUtils.equals(editorName, "editor")) {
+    if (StringUtils.equals(editorName, EditorName.POST_EDITOR)) {
       if (!(functionValidation.isFunctionOn(companyId, FunctionID.POST_INLINE_IMAGE, response))) {
         return null;
       }
     } else {
-      if (!(functionValidation.isFunctionOn(companyId, FunctionID.COMMENT_INLINE_IMAGE, response))) {
+      if (!(functionValidation
+          .isFunctionOn(companyId, FunctionID.COMMENT_INLINE_IMAGE, response))) {
         return null;
       }
     }
-
-    response.setCharacterEncoding("UTF-8");
-    response.setContentType("text/html;charset=UTF-8");
-    JsonObject json = new JsonObject();
-    PrintWriter printWriter = null;
-    OutputStream out = null;
     MultipartFile file = multiFile.getFile("upload");
-    if (file != null) {
-      if (file.getSize() > 0 && !StringUtil.isBlank(file.getName())) {
-        if (file.getContentType().toLowerCase().startsWith("image/")) {
-          try {
-            String fileName = file.getName();
-            ObjectMetadata metadata = new ObjectMetadata();
-            //AmazonS3Service amazonS3Service = new AmazonS3Service();
-            fileName = Common.getNewUUID();
-            String fileUrl = amazonS3Service
-                .upload(fileName, Bucket.INLINE, file.getInputStream(), metadata);
-
-            printWriter = response.getWriter();
-
-            json.addProperty("uploaded", 1);
-            json.addProperty("fileName", fileName);
-            json.addProperty("url", fileUrl);
-
-            if (StringUtils.equals(editorName, "editor")) {
-              if (functionService.isUseFunction(companyId, FunctionID.POST_AUTO_TAG)) {
-                List<UserDTO> detectedUsers = detectedUserList(fileName, companyId);
-                json.add("detectedUser", new Gson().toJsonTree(detectedUsers));
-              }
-            } else {
-              if (functionService.isUseFunction(companyId, FunctionID.COMMENT_AUTO_TAG)) {
-                List<UserDTO> detectedUsers = detectedUserList(fileName, companyId);
-                json.add("detectedUser", new Gson().toJsonTree(detectedUsers));
-              }
-            }
-            printWriter.println(json);
-          } catch (IOException e) {
-            e.printStackTrace();
-          } finally {
-            if (printWriter != null) {
-              printWriter.close();
-            }
-          }
-        }
-      }
-    }
+    fileValidation.validateUploadImageFile(file);
+    executeUploadImage(response, editorName, companyId, file);
     return null;
+  }
+
+  private void executeUploadImage(HttpServletResponse response, String editorName, int companyId,
+      MultipartFile file) throws IOException {
+    ObjectMetadata metadata = new ObjectMetadata();
+    String fileName = Common.getNewUUID();
+    String fileUrl = amazonS3Service
+        .upload(fileName, Bucket.INLINE, file.getInputStream(), metadata);
+    JsonObject json = makeJsonObjectToReturnEditor(editorName, companyId, fileName, fileUrl);
+    PrintWriter printWriter = response.getWriter();
+    printWriter.println(json);
+    printWriter.close();
+  }
+
+  private JsonObject makeJsonObjectToReturnEditor(String editorName, int companyId, String fileName,
+      String fileUrl) {
+    JsonObject json = new JsonObject();
+    json.addProperty("uploaded", 1);
+    json.addProperty("fileName", fileName);
+    json.addProperty("url", fileUrl);
+    checkEditorAndAutoTagIsOn(editorName, companyId, fileName, json);
+    return json;
+  }
+
+  private void checkEditorAndAutoTagIsOn(String editorName, int companyId, String fileName,
+      JsonObject json) {
+    int functionIdToCheck = editorName.equals(EditorName.POST_EDITOR) ? FunctionID.POST_AUTO_TAG
+        : FunctionID.COMMENT_AUTO_TAG;
+    if (StringUtils.equals(editorName, EditorName.POST_EDITOR) && functionService
+        .isUseFunction(companyId, functionIdToCheck)) {
+      List<UserDTO> detectedUsers = detectedUserList(fileName, companyId);
+      json.add("detectedUser", new Gson().toJsonTree(detectedUsers));
+    }
   }
 
   /**
