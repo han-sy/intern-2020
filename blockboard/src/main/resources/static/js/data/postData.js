@@ -1,13 +1,13 @@
 /**
- * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
+ * @author  @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
  * @file    postData.js
  */
 
-function getPostIDInPost() {
-  return $("#postID").html();
+function getPostIdInPost() {
+  return $("#postId").html();
 }
 
-function getPostIDInPostList() {
+function getPostIdInPostList() {
   return $(this).attr("data-post");
 }
 

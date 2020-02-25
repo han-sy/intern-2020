@@ -4,7 +4,7 @@
  */
 package com.board.project.blockboard.common.exception;
 
-public class InputValidException extends Exception{
+public class InputValidException extends Exception {
 
   public InputValidException(String msg) {
     super(msg);

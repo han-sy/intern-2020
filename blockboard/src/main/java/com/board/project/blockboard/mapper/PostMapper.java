@@ -17,21 +17,17 @@ public interface PostMapper {
 
   List<PostDTO> searchPost(Map<String, Object> attributes);
 
-  List<PostDTO> selectMyPosts(Map<String, Object> map);
+  List<PostDTO> selectMyPostsByPostStatus(Map<String, Object> map);
 
   List<PostDTO> selectMyPostsIncludeMyReplies(Map<String, Object> map);
 
-  List<PostDTO> selectMyRecyclePosts(Map<String, Object> map);
-
   List<PostDTO> selectRecentPosts(Map<String, Object> map);
 
-  List<PostDTO> selectMyTempPosts(Map<String, Object> map);
+  List<PostDTO> selectPostByBoardId(int boardId, int startIndex, int pageSize);
 
-  List<PostDTO> selectPostByBoardID(int boardID, int startIndex, int pageSize);
+  List<PostDTO> selectPopularPostListByCompanyId(int companyId);
 
-  List<PostDTO> selectPopularPostListByCompanyID(int companyID);
-
-  PostDTO selectPostByPostID(int postID);
+  PostDTO selectPostByPostId(int postId);
 
   PostDTO selectPostByAlarmId(int alarmId);
 
@@ -41,35 +37,31 @@ public interface PostMapper {
 
   void insertPost(PostDTO post);
 
-  void deletePostByPostID(int postID);
+  void deletePostByPostId(int postId);
 
   void updatePost(PostDTO post);
 
-  void updateViewCnt(int postID);
+  void updateViewCnt(int postId);
 
-  String selectUserIDByPostID(int postId);
+  String selectUserIdByPostId(int postId);
 
-  int selectPostCountByBoardID(int boardID);
+  int selectPostCountByBoardId(int boardId);
 
-  int getMyPostsCount(UserDTO user);
+  int getMyPostsCountByPostStatus(Map<String, Object> attributes);
 
   int getPostsCountIncludeMyReplies(UserDTO user);
 
-  int getMyTempPostsCount(UserDTO user);
+  int getRecentPostsCount(int companyId);
 
-  int getMyRecyclePostsCount(UserDTO user);
+  int getPopularPostsCount(int companyId);
 
-  int getRecentPostsCount(int companyID);
+  void updateCommentCountPlus1(int postId);
 
-  int getPopularPostsCount(int companyID);
+  void updateCommentCountMinus1(int postId);
 
-  void updateCommentCountPlus1(int postID);
+  Integer selectPostIdByCommentId(int commentId);
 
-  void updateCommentCountMinus1(int postID);
-
-  Integer selectPostIDByCommentID(int commentID);
-
-  int selectCommentsCountByPostID(int postID);
+  int selectCommentsCountByPostId(int postId);
 
   int selectSearchPostCount(Map<String, Object> attributes);
 }

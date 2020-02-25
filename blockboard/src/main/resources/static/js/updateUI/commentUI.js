@@ -9,8 +9,8 @@ function updateCommentListUI(data) {
   var comments = {comments: data};
   var itemList = template(comments);
   $('.comment_list_container').html(itemList);
-  var boardID = getBoardIDInPost();
-  var postID = getPostIDInPost();
+  var boardId = getBoardIdInPost();
+  var postId = getPostIdInPost();
 }
 
 //댓글 inputform 받아오기
@@ -67,14 +67,14 @@ function createCommentEditor(editorName, type, tag, oldText) {
 }
 
 //댓글수정모드
-function editCommentByCommentID(postID, boardID, commentID) {
-  var oldText = $('#comment' + commentID).find(".comment_content").html();
+function editCommentByCommentId(postId, boardId, commentId) {
+  var oldText = $('#comment' + commentId).find(".comment_content").html();
   data = {oldText: oldText};
   var source = $('#editCommentForm-template').html();
   var template = Handlebars.compile(source);
   var attribute = {attribute: data};
   var itemList = template(attribute);
-  $('#comment' + commentID).html(itemList + "</div>");
+  $('#comment' + commentId).html(itemList + "</div>");
   createCommentEditor("commentEditText", "수정", '', oldText);
 }
 

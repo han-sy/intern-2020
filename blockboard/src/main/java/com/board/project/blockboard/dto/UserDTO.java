@@ -17,8 +17,8 @@ import lombok.ToString;
 @ToString
 public class UserDTO {
 
-  private String userID;
-  private int companyID;
+  private String userId;
+  private int companyId;
   private String companyName;
   private String userName;
   private String userPassword;
@@ -28,23 +28,32 @@ public class UserDTO {
   private String thumbnailUrl;
   private String thumbnailFileName;
 
-  public UserDTO(String userID, int companyID, String userName,
+  public UserDTO(String userId, int companyId, String userName,
       String userType) {
-    this.userID = userID;
-    this.companyID = companyID;
+    this.userId = userId;
+    this.companyId = companyId;
     this.userName = userName;
     this.userType = userType;
   }
 
   public UserDTO(HttpServletRequest request) {
-    this.userID = request.getAttribute("userID").toString();
+    this.userId = request.getAttribute("userId").toString();
     this.userName = request.getAttribute("userName").toString();
     this.userType = request.getAttribute("userType").toString();
-    this.companyID = Integer.parseInt(request.getAttribute("companyID").toString());
+    this.companyId = Integer.parseInt(request.getAttribute("companyId").toString());
   }
 
-  public UserDTO(String userID, int companyID) {
-    this.userID = userID;
-    this.companyID = companyID;
+  public UserDTO(String userId, int companyId) {
+    this.userId = userId;
+    this.companyId = companyId;
+  }
+
+  public UserDTO(String userId, String imageUrl, String imageFileName, String thumbnailUrl,
+      String thumbnailFileName) {
+    this.userId = userId;
+    this.imageUrl = imageUrl;
+    this.imageFileName = imageFileName;
+    this.thumbnailUrl = thumbnailUrl;
+    this.thumbnailFileName = thumbnailFileName;
   }
 }

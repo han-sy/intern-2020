@@ -4,38 +4,35 @@
  */
 
 //답글 ui 구성
-function getReplyListUI(commentReferencedID, data) {
+function getReplyListUI(commentReferencedId, data) {
   $(".more-replies").remove();
   var source = $('#replyList-template').html();
   var template = Handlebars.compile(source);
   var replies = {replies: data};
   var itemList = template(replies);
-  $("#reply_container" + commentReferencedID).append(itemList);
-  //makeMoreBtn(commentReferencedID);
-  showMoreRepliesBtn(commentReferencedID);
+  $("#reply_container" + commentReferencedId).append(itemList);
+  //makeMoreBtn(commentReferencedId);
+  showMoreRepliesBtn(commentReferencedId);
 }
 
-function makeMoreBtn(commentReferencedID) {
+function makeMoreBtn(commentReferencedId) {
   console.log("makeMoreBtn");
   var source = $('#more-replies-template').html();
   var template = Handlebars.compile(source);
   var item = template();
-  $("#reply_container" + commentReferencedID).append(item);
+  $("#reply_container" + commentReferencedId).append(item);
 }
 
-function showMoreRepliesBtn(commentReferencedID) {
-  var repliesCount = $('#replies_count' + commentReferencedID).html();
+function showMoreRepliesBtn(commentReferencedId) {
+  var repliesCount = $('#replies_count' + commentReferencedId).html();
   var length = getCountPrintedReplies();
 
-
-  console.log("commentReferencedID : "+commentReferencedID);
-  console.log("showMoreRepliesBtn -> replyCount: "+repliesCount+","+length);
   if (length >= repliesCount) {
     $('.more-replies').remove();
   }
   else{
     if($('.more-replies').length<1){
-      makeMoreBtn(commentReferencedID);
+      makeMoreBtn(commentReferencedId);
     }
   }
 }
@@ -45,9 +42,7 @@ function replyFormClear() {
 }
 
 
-function updateRepliesCountUI(data,commentReferencedID) {
-  console.log("repliesCount : " + data);
-  $('#replies_count'+commentReferencedID).html(data);
-  console.log("!!!!commentReferencedID : "+commentReferencedID);
-  showMoreRepliesBtn(commentReferencedID);
+function updateRepliesCountUI(data,commentReferencedId) {
+  $('#replies_count'+commentReferencedId).html(data);
+  showMoreRepliesBtn(commentReferencedId);
 }

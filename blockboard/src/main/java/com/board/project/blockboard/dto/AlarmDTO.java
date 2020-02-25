@@ -9,10 +9,10 @@ import lombok.Data;
 @Data
 public class AlarmDTO {
 
-  private int alarmID;
-  private String taggedUserID;
-  private int postID;
-  private int commentID;
+  private int alarmId;
+  private String taggedUserId;
+  private int postId;
+  private int commentId;
   private Boolean isRead;
   private String boardName;
   private String alarmContent;

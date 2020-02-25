@@ -8,9 +8,7 @@ import com.board.project.blockboard.common.constant.ConstantData;
 import com.board.project.blockboard.common.constant.ConstantData.FunctionAble;
 import com.board.project.blockboard.dto.FunctionDTO;
 
-
 public class CompareData {
-
   /**
    * functionDTO ON OFF 비교
    */

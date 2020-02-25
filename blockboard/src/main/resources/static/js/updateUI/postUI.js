@@ -61,7 +61,7 @@ function updateButtonOnRecycleBoard() {
 
 // 게시글 작성, 수정, 삭제 시 해당 게시판 refresh 하는 함수
 function refreshPostListAfterPostCRUD() {
-  let boardId = getCurrentActiveBoardID();
+  let boardId = getCurrentActiveBoardId();
   postClear();
   getPageList(1, boardId, 0, updatePostPageList)
 }
@@ -85,14 +85,31 @@ function clearSearchKeyword() {
  * 수정 삭제 버튼 나타내기
  * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
  */
-function showEditAndDeleteButtonInPost(data, userID) {
+function showEditAndDeleteButtonInPost(data, userId) {
   var btn_deletePost = $('.btn_delete');
   var btn_updatePost = $('.btn_modify');
-  if (data.userID == userID) {
+  if (data.userId == userId) {
     btn_deletePost.show();
     btn_updatePost.show();
   } else {
     btn_deletePost.hide();
     btn_updatePost.hide();
+  }
+}
+
+/**
+ * 게시글 내용 조회시 댓글관련 컨텐츠들
+ * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+ */
+function showCommentContents(boardId, postId) {
+  if (functionOn.comments) {
+    $(function () {
+      getPageList(1,0,postId,updateCommentPageList);
+      //getCommentListByPageNum(1,boardId, postId, getCommentAllContents); //삭제이후 tab에 게시판목록 업데이트 //CommentAjax.js 에 있음
+      getCommentInputHtml("댓글", "입력", "", ".comment_input_container",
+          "btn_open_comment", '', "commentText");
+      updateCommentsCount(boardId, postId);
+      fileFormClear();
+    });
   }
 }

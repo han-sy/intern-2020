@@ -9,25 +9,28 @@ import java.util.UUID;
  * @file Time.java
  */
 public class Common {
-  public static String getTime(){
+
+  public static String getTime() {
     long time = System.currentTimeMillis();
     SimpleDateFormat dayTime = new SimpleDateFormat("HHmmssSSS");
     String strTime = dayTime.format(new Date(time));
     return strTime;
   }
-  public static String getNewUUID(){
+
+  public static String getNewUUID() {
     UUID uuid = UUID.randomUUID();
-    String prefix = uuid.toString().replaceAll("-","_");
+    String prefix = uuid.toString().replaceAll("-", "_");
     return prefix;
 
   }
 
-  public static String getFileName(String originalFileName){
+  public static String getFileName(String originalFileName) {
     int index = originalFileName.lastIndexOf(".");
     String fileName = originalFileName.substring(0, index);
     return fileName;
   }
-  public static String getFileExt(String originalFileName){
+
+  public static String getFileExt(String originalFileName) {
     int index = originalFileName.lastIndexOf(".");
     String fileExt = originalFileName.substring(index + 1);
     return fileExt;

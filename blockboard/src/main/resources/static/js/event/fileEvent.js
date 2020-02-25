@@ -17,7 +17,7 @@ $(document).on('click', '.file_drag_and_drop_btn', function () {
   var switchText = $(this);
   if (switchText.html() == "열기") {
     openDragAndDropForm($(this));
-    $(this).html("닫기");
+    switchText.html("닫기");
   } else if (switchText.html() == "닫기") {
     $(function () {
       $(".file_drop_container").html("");

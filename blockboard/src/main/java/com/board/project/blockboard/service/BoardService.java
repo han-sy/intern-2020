@@ -18,38 +18,38 @@ public class BoardService {
   @Autowired
   private BoardMapper boardMapper;
 
-  public List<BoardDTO> getBoardListByCompanyID(int companyID) {
-    List<BoardDTO> boardList = boardMapper.selectBoardsByCompanyID(companyID);
+  public List<BoardDTO> getBoardListByCompanyId(int companyId) {
+    List<BoardDTO> boardList = boardMapper.selectBoardsByCompanyId(companyId);
     return boardList;
   }
 
-  public void insertNewBoard(String newBoardName, int companyID) {
+  public void insertNewBoard(String newBoardName, int companyId) {
     BoardDTO newBoard = BoardDTO.builder()
-        .companyID(companyID)
+        .companyId(companyId)
         .boardName(newBoardName)
         .build();
     boardMapper.insertBoard(newBoard);
   }
 
-  public void changeBoardName(int boardID, String boardName) {
+  public void changeBoardName(int boardId, String boardName) {
     BoardDTO boardData = BoardDTO.builder()
-        .boardID(boardID)
+        .boardId(boardId)
         .boardName(boardName)
         .build();
     boardMapper.updateBoardName(boardData);
   }
 
 
-  public void deleteBoard(int boardID) {
-    boardMapper.deleteBoard(boardID);
+  public void deleteBoard(int boardId) {
+    boardMapper.deleteBoard(boardId);
   }
 
   public void deleteBoardsByDeleteBoardList(List<BoardDTO> deleteBoards) {
-    deleteBoards.forEach(boardDTO -> deleteBoard(boardDTO.getBoardID()));
+    deleteBoards.forEach(boardDTO -> deleteBoard(boardDTO.getBoardId()));
   }
 
-  public void updateChangedName(List<BoardDTO> newTitleList, int companyID) {
-    newTitleList.forEach(boardDTO -> changeBoardName(boardDTO.getBoardID(),boardDTO.getBoardName()));
+  public void updateChangedName(List<BoardDTO> newTitleList, int companyId) {
+    newTitleList.forEach(boardDTO -> changeBoardName(boardDTO.getBoardId(),boardDTO.getBoardName()));
   }
 }
 

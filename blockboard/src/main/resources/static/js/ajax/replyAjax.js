@@ -3,45 +3,45 @@
  * @file replyAjax.js
  */
 
-function updateRepliesCount(boardID, postID, commentReferencedID) {
+function updateRepliesCount(boardId, postId, commentReferencedId) {
 
   $.ajax({
     type: 'GET',
-    url: `/boards/${boardID}/posts/${postID}/comments/${commentReferencedID}/replies/counts`,
+    url: `/boards/${boardId}/posts/${postId}/comments/${commentReferencedId}/replies/counts`,
     error: function () {
       alert('통신실패!');
     },
     success: function (data) {
-      updateRepliesCountUI(data, commentReferencedID);
+      updateRepliesCountUI(data, commentReferencedId);
     }
   });
 }
 
 //답글리스트 받아오기
-function getReplyList(boardID, postID, commentReferencedID, startIndex, successFunction) {
+function getReplyList(boardId, postId, commentReferencedId, startIndex, successFunction) {
+  console.log("startIndex",startIndex);
+
   $.ajax({
     type: 'GET',
-    url: `/boards/${boardID}/posts/${postID}/comments/${commentReferencedID}/replies`,
+    url: `/boards/${boardId}/posts/${postId}/comments/${commentReferencedId}/replies`,
     data: {startIndex: startIndex},
-    dataType: "json",
-    contentType: 'application/json',
     error: function (error) {  //통신 실패시
-      alert('통신실패!' + error);
+      errorFunction(error);
     },
-    complete : function (data) {
-      updateRepliesCount(boardID, postID, commentReferencedID);
-      successFunction(commentReferencedID, data);
+    success : function (data) {
+      updateRepliesCount(boardId, postId, commentReferencedId);
+      successFunction(commentReferencedId, data);
     }
   });
 }
 
 //답글 추가
-function insertReply(boardID, postID, commentContent, commentReferencedID, editorName) {
-  var commentDTO = new Comment(boardID, postID,0, commentReferencedID, commentContent);
+function insertReply(boardId, postId, commentContent, commentReferencedId, editorName) {
+  var commentDTO = new Comment(boardId, postId,0, commentReferencedId, commentContent);
   var replyData = JSON.stringify(commentDTO);
   $.ajax({
     type: 'POST',
-    url: `/boards/${boardID}/posts/${postID}/comments/${commentReferencedID}/replies`,
+    url: `/boards/${boardId}/posts/${postId}/comments/${commentReferencedId}/replies`,
     data: replyData,
     dataType: "json",
     contentType: 'application/json',
@@ -51,13 +51,13 @@ function insertReply(boardID, postID, commentContent, commentReferencedID, edito
     complete : function (data) {
       if (data != null) {
         if (functionOn.commentFileAttach) {
-          updateIDToFiles("reply",postID, data, boardID, commentReferencedID);
+          updateIDToFiles("reply",postId, data, boardId, commentReferencedId);
         }
-        updateRepliesCount(boardID, postID, commentReferencedID);
+        updateRepliesCount(boardId, postId, commentReferencedId);
       }
       var printedRepliesCount =  getCountPrintedReplies();
-      getReplyList(boardID, postID, commentReferencedID,printedRepliesCount, getReplyListUI);
-      updateCommentsCount(boardID, postID);
+      getReplyList(boardId, postId, commentReferencedId,printedRepliesCount, getReplyListUI);
+      updateCommentsCount(boardId, postId);
       CKEDITOR.instances[editorName].setData("");
       $('#comment-alarm-modal').modal('hide');
     }

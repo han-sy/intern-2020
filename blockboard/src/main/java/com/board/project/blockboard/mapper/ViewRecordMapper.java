@@ -20,5 +20,5 @@ public interface ViewRecordMapper {
 
   boolean selectRecordExist(ViewRecordDTO record);
 
-  List<ViewRecordDTO> selectViewRecordsByPostID(Map<String,Object> recordData);
+  List<ViewRecordDTO> selectViewRecordsByPostId(Map<String,Object> recordData);
 }

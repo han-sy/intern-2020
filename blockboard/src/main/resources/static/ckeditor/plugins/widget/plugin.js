@@ -460,10 +460,10 @@
 				if (widget.data.alt !== "") {
 					var detectedUsers = JSON.parse(widget.data.alt);
 					var tag_template = new CKEDITOR.template('<a class="mentions_tag name"'
-							+ 'href="javascript:void(0)" data-id="{userID}">@{userName}</a>');
+							+ 'href="javascript:void(0)" data-id="{userId}">@{userName}</a>');
 					for (var i = 0; i < detectedUsers.length; i++) {
 						this.editor.insertHtml(tag_template.output({
-							userID: detectedUsers[i].userID,
+							userId: detectedUsers[i].userId,
 							userName: detectedUsers[i].userName
 						}), 'unfiltered_html');
 					}

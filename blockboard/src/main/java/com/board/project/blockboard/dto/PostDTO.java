@@ -9,12 +9,12 @@ import lombok.Data;
 @Data
 public class PostDTO {
 
-  private int postID;
-  private String userID;
+  private int postId;
+  private String userId;
   private String userName;
-  private int boardID;
+  private int boardId;
   private String boardName;
-  private int companyID;
+  private int companyId;
   private String postTitle;
   private String postContent;
   private String postContentExceptHTMLTag;

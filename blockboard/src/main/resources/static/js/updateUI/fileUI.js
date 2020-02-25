@@ -33,7 +33,6 @@ function createStatusbarUI(data,container){
 
 /**
  * 드래그앤 드랍 영역
- * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
  */
 function openDragAndDropForm(obj) {
   source = $('#file-attach-drag-and-drop-form-template').html();
@@ -43,28 +42,48 @@ function openDragAndDropForm(obj) {
 
 }
 
+function makePostFileAttachForm() {
+  $('.file_attach_form').html(item);
+}
+
+function makeCommentFileAttachForm(obj) {
+  obj.find('.file_attach_form').html(item);
+}
+
+function makeFileAttachForm(obj, container) {
+  if (isNullData(obj)) {//게시판 파일첨부
+    makePostFileAttachForm();
+    container = $('.file_attach_form').find(".upload_list_start_point");
+  } else {//댓글 파일첨부
+    makeCommentFileAttachForm(obj);
+    container = obj.find('.file_attach_form').find(".upload_list_start_point");
+  }
+  return container;
+}
+
+/**
+ * 구분하고 fileList가져오기
+ */
+function distinguishEditorForGetFileList(postId, container, commentId) {
+  console.log("distinguishEditorForGetFileList : "+postId+","+commentId);
+  if (!isNullData(postId)) {
+    getFileList(postId, 0, container, createStatusbarUI);
+  }
+  if (!isNullData(commentId)) {
+    getFileList(0, commentId, container, createStatusbarUI);
+  }
+}
+
 /**
  * 파일첨부 폼
- * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
  */
-function openFileAttachForm(postID,commentID,obj) {
+function openFileAttachForm(postId,commentId,obj) {
   source = $('#file-attach-form-template').html();
   template = Handlebars.compile(source);
   item = template();
   var container = null;
-  if(isNullData(obj)){
-    $('.file_attach_form').html(item);
-    container = $('.file_attach_form').find(".upload_list_start_point");
-  }else{
-    obj.find('.file_attach_form').html(item);
-    container = obj.find('.file_attach_form').find(".upload_list_start_point");
-  }
-  if(!isNullData(postID)){
-    getFileList(postID,0,container,createStatusbarUI);
-  }
-  if(!isNullData(commentID)){
-    getFileList(0,commentID,container,createStatusbarUI);
-  }
+  container = makeFileAttachForm(obj, container);
+  distinguishEditorForGetFileList(postId, container, commentId);
 }
 
 function fileFormClear(){
@@ -73,12 +92,13 @@ function fileFormClear(){
 
 /**
  * 게시글 내용 조회시 첨부파일관련 컨텐츠들
- * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
  */
-function showAttachFileContents(postID) {
+function showAttachFileContents(postId) {
+  console.log("!!!!showAttachFileContents");
   if (functionOn.postFileAttach) {
+    console.log("fileAttach ON postID : ",postId);
     var container = $("#post-content").find(
         ".attached_file_list_container_post");
-    getFileList(postID, 0, container, updateFileListInPostUI);
+    getFileList(postId, 0, container, updateFileListInPostUI);
   }
 }

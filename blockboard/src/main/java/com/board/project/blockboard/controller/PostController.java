@@ -9,7 +9,6 @@ import com.board.project.blockboard.dto.UserDTO;
 import com.board.project.blockboard.service.PostService;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,11 +35,11 @@ public class PostController {
    * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
    */
   @GetMapping("")
-  public List<PostDTO> getPostListByBoardID(@PathVariable("boardId") int boardID,
-      @RequestParam("pageNumber") int pageNumber, HttpServletRequest request) {
+  public List<PostDTO> getPostListByBoardId(@PathVariable int boardId,
+      @RequestParam int pageNumber, HttpServletRequest request) {
     UserDTO userDTO = new UserDTO(request);
     return postService
-        .getPostListByBoardID(boardID, pageNumber, userDTO.getCompanyID());
+        .getPostListByBoardId(boardId, pageNumber, userDTO.getCompanyId());
   }
 
   @PostMapping("")
@@ -48,25 +47,25 @@ public class PostController {
     return postService.insertPost(receivePost, request);
   }
 
-  @GetMapping("/{postid}")
-  public PostDTO getPostByPostID(@PathVariable("postid") int postID, HttpServletRequest request) {
-    return postService.selectPostByPostID(postID, request);
+  @GetMapping("/{postId}")
+  public PostDTO getPostByPostId(@PathVariable("postId") int postId, HttpServletRequest request) {
+    return postService.selectPostByPostId(postId, request);
   }
 
-  @PutMapping("/{postid}")
-  public void updatePost(@PathVariable("postid") int postID,
+  @PutMapping("/{postId}")
+  public void updatePost(@PathVariable("postId") int postId,
       @ModelAttribute PostDTO requestPost, HttpServletRequest request) {
-    postService.updatePost(requestPost, postID, request);
+    postService.updatePost(requestPost, postId, request);
   }
 
-  @DeleteMapping("/{postid}")
-  public void deletePost(@PathVariable("postid") int postID, HttpServletRequest request) {
-    postService.deletePost(postID, request);
+  @DeleteMapping("/{postId}")
+  public void deletePost(@PathVariable("postId") int postId, HttpServletRequest request) {
+    postService.deletePost(postId, request);
   }
 
-  @PutMapping("/{postid}/restore")
-  public void restorePost(@PathVariable("postid") int postID, HttpServletRequest request) {
-    postService.restorePost(postID, request);
+  @PutMapping("/{postId}/restore")
+  public void restorePost(@PathVariable("postId") int postId, HttpServletRequest request) {
+    postService.restorePost(postId, request);
   }
 
   @GetMapping("/search")
@@ -75,14 +74,14 @@ public class PostController {
     return postService.searchPost(option, keyword, pageNumber);
   }
 
-  @GetMapping("/myArticle")
+  @GetMapping("/my-article")
   public List<PostDTO> selectMyPosts(HttpServletRequest request,
       @RequestParam("pageNumber") int pageNumber) {
     UserDTO user = new UserDTO(request);
     return postService.selectMyPosts(user, pageNumber);
   }
 
-  @GetMapping("/myReply")
+  @GetMapping("/my-reply")
   public List<PostDTO> selectMyPostsIncludeMyReplies(HttpServletRequest request,
       @RequestParam("pageNumber") int pageNumber) {
     UserDTO user = new UserDTO(request);
@@ -96,14 +95,14 @@ public class PostController {
     return postService.selectRecentPosts(user, pageNumber);
   }
 
-  @GetMapping("/tempBox")
+  @GetMapping("/temp-box")
   public List<PostDTO> getTempPosts(HttpServletRequest request,
       @RequestParam("pageNumber") int pageNumber) {
     UserDTO requestUser = new UserDTO(request);
     return postService.selectMyTempPosts(requestUser, pageNumber);
   }
 
-  @GetMapping("/recycleBin")
+  @GetMapping("/recycle-bin")
   public List<PostDTO> getRecyclePosts(HttpServletRequest request,
       @RequestParam("pageNumber") int pageNumber) {
     UserDTO requestUser = new UserDTO(request);
@@ -113,6 +112,6 @@ public class PostController {
   @GetMapping("/popular-board")
   public List<PostDTO> getPopularPosts(HttpServletRequest request) {
     UserDTO userData = new UserDTO(request);
-    return postService.getPopularPostList(userData.getCompanyID());
+    return postService.getPopularPostList(userData.getCompanyId());
   }
 }

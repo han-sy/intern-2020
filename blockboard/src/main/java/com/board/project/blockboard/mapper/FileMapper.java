@@ -1,6 +1,7 @@
 package com.board.project.blockboard.mapper;
 
 import com.board.project.blockboard.dto.FileDTO;
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
@@ -14,13 +15,13 @@ import org.springframework.stereotype.Repository;
 @Mapper
 public interface FileMapper {
 
-  void insertFile(Map<String, Object> fileAttributes);
+  void insertFile(FileDTO fileData);
 
-  void updateIDsByStoredFileName(Map<String, Object> fileAttributes);
+  void updateIDsByStoredFileName(FileDTO fileData);
 
-  List<FileDTO> selectFileListByEditorID(Map<String, Object> fileAttributes);
+  List<FileDTO> selectFileListByEditorID(FileDTO fileData);
 
-  FileDTO selectFileByFileID(int fileID);
+  FileDTO selectFileByFileId(int fileId);
 
   void deleteFileByStoredFileName(String storedFileName);
 

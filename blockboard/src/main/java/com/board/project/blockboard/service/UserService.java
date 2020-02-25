@@ -8,9 +8,9 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.board.project.blockboard.common.constant.ConstantData.Bucket;
 import com.board.project.blockboard.common.util.Common;
 import com.board.project.blockboard.common.util.Thumbnail;
+import com.board.project.blockboard.dto.FileDTO;
 import com.board.project.blockboard.dto.UserDTO;
 import com.board.project.blockboard.mapper.UserMapper;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -21,6 +21,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.User;
 import org.apache.commons.codec.binary.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,7 +42,7 @@ public class UserService {
   private final String HEADER_NAME = "Authorization";
 
   public boolean loginCheck(UserDTO requestUser, HttpServletResponse response) {
-    UserDTO login_user = userMapper.selectUserByID(requestUser.getUserID());
+    UserDTO login_user = userMapper.selectUserByID(requestUser.getUserId());
     String login_userPassword = login_user.getUserPassword();
     String requestPassword = requestUser.getUserPassword();
     String jwtToken = "";
@@ -57,12 +58,12 @@ public class UserService {
     return false;
   }
 
-  public String getUserNameByUserID(String userID) {
-    return userMapper.selectUserNameByUserID(userID);
+  public String getUserNameByUserId(String userId) {
+    return userMapper.selectUserNameByUserId(userId);
   }
 
   public UserDTO insertUser(HttpServletRequest request, UserDTO user) {
-    user.setCompanyID(Integer.parseInt(request.getAttribute("companyID").toString()));
+    user.setCompanyId(Integer.parseInt(request.getAttribute("companyId").toString()));
     user.setUserType("일반");
     validateUser(user);
     userMapper.insertUser(user);
@@ -74,7 +75,7 @@ public class UserService {
       throw new IllegalArgumentException("중복된 유저입니다.");
     }
     Pattern korean = Pattern.compile(".*[ㄱ-ㅎㅏ-ㅣ가-힣]+.*");
-    if (korean.matcher(user.getUserID()).find()) {
+    if (korean.matcher(user.getUserId()).find()) {
       throw new IllegalArgumentException("ID에 한글이 포함되어 있습니다.");
     }
     Pattern specialChar = Pattern.compile("[ !@#$%^&*(),.?\\\":{}|<>]");
@@ -87,25 +88,30 @@ public class UserService {
   }
 
   public boolean isDuplicateUser(UserDTO user) {
-    return userMapper.selectUserByUserIdAndCompanyID(user) != null;
+    return userMapper.selectUserByUserIdAndCompanyId(user) != null;
   }
 
-  public List<UserDTO> selectUsersByCompanyID(int companyID) {
-    return userMapper.selectUsersByCompanyID(companyID);
+  public List<UserDTO> selectUsersByCompanyId(int companyId) {
+    return userMapper.selectUsersByCompanyId(companyId);
   }
 
-  public UserDTO selectUserByUserIdAndCompanyId(String userID, int companyID) {
-    UserDTO user = new UserDTO(userID, companyID);
-    return userMapper.selectUserByUserIdAndCompanyID(user);
+  public UserDTO selectUserByUserIdAndCompanyId(String userId, int companyId) {
+    UserDTO user = new UserDTO(userId, companyId);
+    return userMapper.selectUserByUserIdAndCompanyId(user);
+  }
+
+  public int countUsersByCompanyId(HttpServletRequest request) {
+    int companyId = Integer.parseInt(request.getAttribute("companyId").toString());
+    return userMapper.countUsersByCompanyId(companyId);
   }
 
   /**
-   * @param userID
+   * @param userId
    * @return
    * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
    */
-  public String getUserTypeByUserID(String userID) {
-    String type = userMapper.selectUserTypeByUserID(userID);
+  public String getUserTypeByUserId(String userId) {
+    String type = userMapper.selectUserTypeByUserId(userId);
     return type;
   }
 
@@ -114,20 +120,15 @@ public class UserService {
    *
    * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
    */
-  public void updateUserImage(MultipartHttpServletRequest multipartRequest, String userID,
-      HttpServletResponse response, HttpServletRequest request)
-      throws IOException {
-    String uuid = Common.getNewUUID();
-
+  public void updateUserImage(MultipartHttpServletRequest multipartRequest, String userId){
     Iterator<String> itr = multipartRequest.getFileNames();
-    String url = "";
-    String thumbnailUrl = "";
+    String url="";
+    String thumbnailUrl ="";
     while (itr.hasNext()) {
       MultipartFile mpf = multipartRequest.getFile(itr.next());
 
       String originFileName = mpf.getOriginalFilename(); //파일명
-      String storedFileName = userID + originFileName.substring(originFileName.indexOf("."));
-      //String storedFileName = uuid + "_" + originFileName;
+      String storedFileName = userId + originFileName.substring(originFileName.indexOf("."));
       ObjectMetadata metadata = new ObjectMetadata();
       String fileExt = Common.getFileExt(storedFileName);
 
@@ -143,17 +144,7 @@ public class UserService {
         e.printStackTrace();
       }
 
-      log.info("url -->" + url);
-      log.info("thumbnailUrl -->" + thumbnailUrl);
-      //파일 전체 경로
-      //log.info("fileName => " + mpf.getName());
-
-      Map<String, Object> userData = new HashMap<String, Object>();
-      userData.put("userID", userID);
-      userData.put("imageUrl", url);
-      userData.put("imageFileName", storedFileName);
-      userData.put("thumbnailUrl", thumbnailUrl);
-      userData.put("thumbnailFileName", storedFileName);
+      UserDTO userData = new UserDTO(userId,url,storedFileName,thumbnailUrl,storedFileName);
       userMapper.updateUserImage(userData);
     }
   }

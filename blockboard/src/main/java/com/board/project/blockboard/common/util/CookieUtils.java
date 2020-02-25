@@ -30,7 +30,8 @@ public class CookieUtils {
   }
 
   @SneakyThrows
-  public static String expireCookie(HttpServletRequest request, String cookieName, HttpServletResponse response) {
+  public static String expireCookie(HttpServletRequest request, String cookieName,
+      HttpServletResponse response) {
     Cookie[] cookies = request.getCookies();
     if (cookies == null) {
       return null;

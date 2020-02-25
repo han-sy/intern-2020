@@ -4,53 +4,69 @@
  */
 package com.board.project.blockboard.common.exception;
 
-import java.io.IOException;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
   @ExceptionHandler(NullPointerException.class)
-  protected void NullPointerError(HttpServletResponse response, Exception e) {
-    try {
-      response.sendError(HttpServletResponse.SC_CONFLICT, e.getMessage());
-      e.printStackTrace();
-    } catch (IOException ie) {
-      ie.printStackTrace();
-    }
+  @ResponseBody
+  protected ResponseEntity<?> NullPointerError(Exception e) {
+    return new ResponseEntity<>(e, HttpStatus.CONFLICT);
   }
 
   @ExceptionHandler(IllegalArgumentException.class)
-  protected void IllegalArgumentError(HttpServletResponse response, Exception e) {
-    try {
-      e.printStackTrace();
-      response.sendError(HttpServletResponse.SC_CONFLICT, e.getMessage());
-    } catch (IOException ie) {
-      ie.printStackTrace();
-    }
+  @ResponseBody
+  protected ResponseEntity<?> IllegalArgumentError(Exception e) {
+    return new ResponseEntity<>(e, HttpStatus.CONFLICT);
   }
 
   @ExceptionHandler(InputValidException.class)
-  protected void InputValidError(HttpServletResponse response, Exception e) {
-    try {
-      response.sendError(HttpServletResponse.SC_CONFLICT, e.getMessage());
-      e.printStackTrace();
-    } catch (IOException ie) {
-      ie.printStackTrace();
-    }
+  @ResponseBody
+  protected ResponseEntity<?> InputValidError(Exception e) {
+    return new ResponseEntity<>(e, HttpStatus.CONFLICT);
   }
 
   @ExceptionHandler(UserValidException.class)
-  protected void userValidError(HttpServletResponse response, Exception e) {
-    try {
-      response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
-      e.printStackTrace();
-    } catch (IOException ie) {
-      ie.printStackTrace();
-    }
+  @ResponseBody
+  protected ResponseEntity<?> userValidError(Exception e) {
+    return new ResponseEntity<>(e, HttpStatus.UNAUTHORIZED);
   }
+
+  /**
+   * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+   */
+  @ExceptionHandler(FunctionValidException.class)
+  @ResponseBody
+  protected ResponseEntity<?> FunctionValidError(Exception e) {
+    return new ResponseEntity<>(e, HttpStatus.FORBIDDEN);
+  }
+
+  /**
+   * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+   */
+  @ExceptionHandler(FileValidException.class)
+  @ResponseBody
+  protected ResponseEntity<?> FileValidException(Exception e) {
+
+    return new ResponseEntity<>(e, HttpStatus.CONFLICT);
+  }
+
+  /**
+   * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+   */
+  @ExceptionHandler(AuthorityValidException.class)
+  @ResponseBody
+  protected ResponseEntity<?> AuthorityValidException(Exception e) {
+
+    return new ResponseEntity<>(e, HttpStatus.FORBIDDEN);
+  }
+
 }

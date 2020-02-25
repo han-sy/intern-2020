@@ -15,9 +15,9 @@ $(document).on('click', '.btn-alarm-delete', function (event) {
       confirm("확인하지 않은 알람입니다. 삭제하시겠습니까?") === false) {
     return;
   }
-  let alarmID = alarmItem.dataset.id;
+  let alarmId = alarmItem.dataset.id;
   alarmItem.remove();
-  removeAlarmItem(alarmID);
+  removeAlarmItem(alarmId);
   getUnreadAlarmCount();
 });
 
@@ -45,9 +45,9 @@ $(document).on('click', '.btn-alarm-delete-read', function () {
 function deleteAlarmByClass(className) {
   let alarmItems = $(className);
   for (let i = 0; i < alarmItems.length; i++) {
-    let alarmID = $(alarmItems)[i].dataset.id;
+    let alarmId = $(alarmItems)[i].dataset.id;
     $(alarmItems)[i].remove();
-    removeAlarmItem(alarmID);
+    removeAlarmItem(alarmId);
   }
 }
 

@@ -3,10 +3,10 @@
  * @file commentAjax.js
  */
 
-function updateCommentsCount(boardID, postID) {
+function updateCommentsCount(boardId, postId) {
   $.ajax({
     type: 'GET',
-    url: `/boards/${boardID}/posts/${postID}/comments/counts`,
+    url: `/boards/${boardId}/posts/${postId}/comments/counts`,
     error: function () {  //통신 실패시
       alert('통신실패!');
     },
@@ -19,10 +19,10 @@ function updateCommentsCount(boardID, postID) {
 
 
 //댓글리스트 받아오기
-function getCommentListByPageNum(pageNum, boardID, postID, successFunction) {
+function getCommentListByPageNum(pageNum, boardId, postId, successFunction) {
   $.ajax({
     type: 'GET',
-    url: `/boards/${boardID}/posts/${postID}/comments`,
+    url: `/boards/${boardId}/posts/${postId}/comments`,
     data: {
       pageNumber: pageNum
     },
@@ -36,15 +36,15 @@ function getCommentListByPageNum(pageNum, boardID, postID, successFunction) {
 }
 
 //댓글 추가
-function insertComment(boardID, postID, commentContent) {//댓글 임시저장 기능이 추가될수도있어 commentID 파라미터 추가해놓음
-  var commentDTO = new Comment(boardID,postID,0,0,commentContent);
+function insertComment(boardId, postId, commentContent) {//댓글 임시저장 기능이 추가될수도있어 commentId 파라미터 추가해놓음
+  var commentDTO = new Comment(boardId,postId,0,0,commentContent);
 
-  console.log("aaa"+","+boardID+","+postID+","+commentContent)
+  console.log("aaa"+","+boardId+","+postId+","+commentContent)
   var commentData = JSON.stringify(commentDTO);
   console.log("commentData",commentData);
   $.ajax({
     type: 'POST',
-    url: `/boards/${boardID}/posts/${postID}/comments`,
+    url: `/boards/${boardId}/posts/${postId}/comments`,
     data: commentData,
     dataType: "json",
     contentType: 'application/json',
@@ -53,10 +53,10 @@ function insertComment(boardID, postID, commentContent) {//댓글 임시저장 �
     },
     complete : function (data) {
       if (functionOn.commentFileAttach) {
-        updateIDToFiles("comment",postID, data, boardID);
+        updateIDToFiles("comment",postId, data, boardId);
       }
-      getPageList(1, 0, postID, updateCommentPageList);
-      updateCommentsCount(boardID, postID);
+      getPageList(1, 0, postId, updateCommentPageList);
+      updateCommentsCount(boardId, postId);
       CKEDITOR.instances['commentText'].setData("");
 
     }
@@ -64,42 +64,42 @@ function insertComment(boardID, postID, commentContent) {//댓글 임시저장 �
 }
 
 //댓글삭제
-function deleteCommentByCommentID(postID, boardID, commentID,
-    commentReferencedID) {
+function deleteCommentByCommentId(postId, boardId, commentId,
+    commentReferencedId) {
   $.ajax({
     type: 'DELETE',
-    url: `/boards/${boardID}/posts/${postID}/comments/${commentID}`,
-    data: {commentID:commentID},
+    url: `/boards/${boardId}/posts/${postId}/comments/${commentId}`,
+    data: {commentId:commentId},
     error: function () {  //통신 실패시
       alert('통신실패!');
     },
     success: function (data) {
-      getPageList(1, 0, postID, updateCommentPageList);
-      //getCommentListByPageNum(1,boardID, postID, updateCommentListUI);//성공하면 댓글목록 갱신
-      updateCommentsCount(boardID, postID);
-      if (!isNullData(commentReferencedID)) {
-        updateRepliesCount(boardID, postID, commentReferencedID);
+      getPageList(1, 0, postId, updateCommentPageList);
+      //getCommentListByPageNum(1,boardId, postId, updateCommentListUI);//성공하면 댓글목록 갱신
+      updateCommentsCount(boardId, postId);
+      if (!isNullData(commentReferencedId)) {
+        updateRepliesCount(boardId, postId, commentReferencedId);
       }
     }
   });
 }
 
 //댓글 수정
-function editComment(postID, boardID, commentID, newComment) {
-  var commentDTO = new Comment(boardID,postID,commentID,0,newComment);
+function editComment(postId, boardId, commentId, newComment) {
+  var commentDTO = new Comment(boardId,postId,commentId,0,newComment);
   var commentData = JSON.stringify(commentDTO);
   console.log("commentData" ,commentData);
   $.ajax({
     type: 'PUT',
-    url: `/boards/${boardID}/posts/${postID}/comments/${commentID}`,
+    url: `/boards/${boardId}/posts/${postId}/comments/${commentId}`,
     data: commentData,
     dataType: "json",
     contentType: 'application/json',
-    error: function () {  //통신 실패시
-      alert('통신실패!수정');
+    error: function (error) {  //통신 실패시
+      errorFunction(error)
     },
     complete: function (data) {
-      getPageList(1, 0, postID, updateCommentPageList);
+      getPageList(1, 0, postId, updateCommentPageList);
     }
   });
 }

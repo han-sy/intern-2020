@@ -5,9 +5,9 @@
 
 function clickAddUser() {
   let formData = new FormData($("#userForm")[0]);
-
+  console.log("비밀번호 = ", formData.get("userPassword"));
   if (!isValidPasswordPattern(formData.get("userPassword"))) {
-    alert("비밀번호는 8자리 이상 문자, 숫자, 특수문자로 구성하여야 합니다.");
+    alert("비밀번호는 8 ~ 20자 이내 문자, 숫자, 특수문자로 구성하여야 합니다.");
     $("#form-userPassword").val('');
     return;
   }
@@ -27,8 +27,8 @@ function isValidPasswordPattern(str) {
   return true;
 }
 
-// userID 에 한글입력 제한
-$("#form-userID").on('keyup blur keydown', function (event) {
+// userId 에 한글입력 제한
+$("#form-userId").on('keyup blur keydown', function (event) {
   if (event.keyCode == 8 || event.keyCode == 9 || event.keyCode == 37
       || event.KeyCode == 39 || event.keyCode == 46) {
     return;

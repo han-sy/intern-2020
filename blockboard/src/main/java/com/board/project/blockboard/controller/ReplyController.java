@@ -23,31 +23,30 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
-@RequestMapping("/boards/{boardid}/posts/{postid}/comments/{commentid}/replies")
+@RequestMapping("/boards/{boardId}/posts/{postId}/comments/{commentReferencedId}/replies")
 public class ReplyController {
 
   @Autowired
-  private ReplyService replyService;
-  @Autowired
   private CommentService commentService;
+  @Autowired
+  private ReplyService replyService;
+
 
   /**
    * 답글 조회
    */
   @GetMapping("")
-  public List<CommentDTO> getRepliesByComment(@PathVariable("postid") int postID,
-      @PathVariable("commentid") int commentReferencedID, @RequestParam int startIndex,HttpServletRequest request) {
-    List<CommentDTO> replyList = replyService.getReplyListByCommentID(commentReferencedID,startIndex);
-    return replyList;
+  public List<CommentDTO> getRepliesByComment(@PathVariable int commentReferencedId,
+      @RequestParam int startIndex) {
+    return replyService.getReplyListByCommentId(commentReferencedId, startIndex);
   }
+
   /**
    * 답글수 조회
    */
   @GetMapping("/counts")
-  public int getRepliesByComment(@PathVariable("postid") int postID,
-      @PathVariable("commentid") int commentReferencedID) {
-    int repliesCount = commentService.getRepliesCountByCommentReferencedID(commentReferencedID);
-    return repliesCount;
+  public int getRepliesCountByCommentReferencedId(@PathVariable int commentReferencedId) {
+    return commentService.getRepliesCountByCommentReferencedId(commentReferencedId);
   }
 
   /**
@@ -58,6 +57,6 @@ public class ReplyController {
       HttpServletRequest request) {
     UserDTO userData = new UserDTO(request);
     return replyService
-        .writeReplyWithUserInfo(userData.getUserID(), userData.getCompanyID(), replyData);
+        .writeReplyWithUserInfo(userData.getUserId(), userData.getCompanyId(), replyData);
   }
 }

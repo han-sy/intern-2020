@@ -1,8 +1,19 @@
+function openPostFileAttachForm(postId) {
+  if (functionOn.postFileAttach) {
+    if (isNullData(postId)) {
+      openFileAttachForm();
+    } else {
+      console.log("postID : "+postId);
+      openFileAttachForm(postId);
+    }
+  }
+}
+
 /**
  * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
  * @file    editorUI.js
  */
-function createEditorArea(method) { // 에디터 div 생성
+function createEditorArea(method,postId) { // 에디터 div 생성
   clearEditor();
   createEditorTemplate();
   applyFunctionPluginOnEditor();
@@ -18,11 +29,9 @@ function createEditorArea(method) { // 에디터 div 생성
     case "modify":
       hideTempSaveButton();
       break;
-    default:
-      if (functionOn.postFileAttach) {
-        openFileAttachForm();
-      }
   }
+  console.log("postId = "+postId);
+  openPostFileAttachForm(postId);
 }
 
 function clearEditor() {  // 작성 폼 초기화
@@ -59,11 +68,11 @@ function applyFunctionPluginOnEditor() {
 }
 
 // 작성, 수정 버튼 클릭시 해당 게시판 선택 되어있게
-function selectOptionOfCurrentBoardId(currentBoardID) {
-  let selectableBoardId = $('#selectedBoardIDinEditor').children();
+function selectOptionOfCurrentBoardId(currentBoardId) {
+  let selectableBoardId = $('#selectedBoardIdinEditor').children();
   $(selectableBoardId).each(function (index, item) {
     let boardId = $(item).attr('data-tab');
-    if (boardId === currentBoardID) {
+    if (boardId === currentBoardId) {
       $(item).prop("selected", true);
     } else {
       $(item).prop("selected", false);
@@ -84,10 +93,10 @@ function updateSelectableBoardIdInEditor(board) {
   $('#selectableBoardIdInEditor').html(itemList);
 }
 
-function addHiddenTypePostIdAndBoardIdToEditor(postID, boardID) {
+function addHiddenTypePostIdAndBoardIdToEditor(postId, boardId) {
   let source = $('#postId-template').html();
   let template = Handlebars.compile(source);
-  let item = {postID: postID, boardID: boardID};
+  let item = {postId: postId, boardId: boardId};
   let itemList = template(item);
   $('#editor-content-hidden').html(itemList);
 }

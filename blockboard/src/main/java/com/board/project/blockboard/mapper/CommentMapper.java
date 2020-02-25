@@ -17,30 +17,30 @@ public interface CommentMapper {
 
   CommentDTO selectCommentByCommentId(int commentId);
 
-  void deleteCommentByCommentID(int commentID);
+  void deleteCommentByCommentId(int commentId);
 
-  void deleteCommentsByPostID(int postID);
+  void deleteCommentsByPostId(int postId);
 
   void updateComment(CommentDTO commentData);
 
-  void deleteCommentByCommentReferencedID(int commentID);
+  void deleteCommentByCommentReferencedId(int commentId);
 
-  String selectUserIDByCommentID(int commentID);
+  String selectUserIdByCommentId(int commentId);
 
   int insertNewCommentByCommentInfo(CommentDTO commentInfo);
 
-  int getAllCommentsCountByPostID(int postID);
+  int getAllCommentsCountByPostId(int postId);
 
-  int getOnlyCommentsCountByPostID(int postID);
+  int getOnlyCommentsCountByPostId(int postId);
 
-  List<CommentDTO> selectCommentsByPostID(int postID, int startIndex, int pageSize);
+  List<CommentDTO> selectCommentsByPostId(int postId, int startIndex, int pageSize);
 
-  void updateRepliesCountPlus1(int commentReferencedID);
+  void updateRepliesCountPlus1(int commentReferencedId);
 
-  void updateRepliesCountMinus1(int commentReferencedID);
+  void updateRepliesCountMinus1(int commentReferencedId);
 
-  Integer selectCommentReferencedIDByCommentID(int commentID);
+  Integer selectCommentReferencedIdByCommentId(int commentId);
 
 
-  Integer selectRepliesCountByCommentReferencedID(int commentReferencedID);
+  Integer selectRepliesCountByCommentReferencedId(int commentReferencedId);
 }

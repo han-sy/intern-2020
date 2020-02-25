@@ -2,21 +2,21 @@
  * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
  * @file    postAjax.js
  */
-function insertPost(postID, boardID, postTitle, postContent) {
+function insertPost(postId, boardId, postTitle, postContent) {
   $.ajax({
     type: 'POST',
-    url: `/boards/${boardID}/posts`,
+    url: `/boards/${boardId}/posts`,
     data: {
       postTitle: postTitle,
       postContent: postContent,
       postStatus: "normal",
-      boardID: boardID
+      boardId: boardId
     },
     error: function (xhr) {
       errorFunction(xhr);
     },
     success: function (data) {
-      attachFileToPost(postID, data);
+      attachFileToPost(postId, data);
     },
     complete: function () {
       refreshPostListAfterPostCRUD();
@@ -24,24 +24,24 @@ function insertPost(postID, boardID, postTitle, postContent) {
   });
 }
 
-function attachFileToPost(postID, data) {
+function attachFileToPost(postId, data) {
   if (functionOn.postFileAttach) {
-    if (isNullData(postID)) {
+    if (isNullData(postId)) {
       updateIDToFiles("post", data, "");
     } else {
-      updateIDToFiles("post", postID, "");
+      updateIDToFiles("post", postId, "");
     }
   }
 }
 
-function insertTempPost(boardID, postID, temp_title, temp_content,
+function insertTempPost(boardId, postId, temp_title, temp_content,
     new_post_status) {
   $.ajax({
     type: 'POST',
-    url: `/boards/${boardID}/posts`,
+    url: `/boards/${boardId}/posts`,
     async: false,
     data: {
-      postID: postID,
+      postId: postId,
       postTitle: temp_title,
       postContent: temp_content,
       postStatus: new_post_status
@@ -55,37 +55,37 @@ function insertTempPost(boardID, postID, temp_title, temp_content,
       if (new_post_status === "normal") {
         alert("게시물이 작성되었습니다.");
       } else {
-        addHiddenTypePostIdAndBoardIdToEditor(data, boardID);
-        attachFileToPost(postID, data);
+        addHiddenTypePostIdAndBoardIdToEditor(data, boardId);
+        attachFileToPost(postId, data);
         alert("임시저장 되었습니다.");
       }
     }
   });
 }
 
-function loadPost(boardID, postID) {
+function loadPost(boardId, postId) {
   $.ajax({
     type: 'GET',
-    url: `/boards/${boardID}/posts/${postID}`,
+    url: `/boards/${boardId}/posts/${postId}`,
     async: false,
     error: function (xhr) {
       errorFunction(xhr);
     },
     success: function (data) {
-      addHiddenTypePostIdAndBoardIdToEditor(postID, boardID);
-      selectOptionOfCurrentBoardId(boardID);
+      addHiddenTypePostIdAndBoardIdToEditor(postId, boardId);
+      selectOptionOfCurrentBoardId(boardId);
       $('#post_title').val(data.postTitle);
       CKEDITOR.instances['editor'].setData(data.postContent);
     }
   });
 }
 
-function updatePost(selectedBoardId, originalBoardID, postID, postTitle, postContent) {
+function updatePost(selectedBoardId, originalBoardId, postId, postTitle, postContent) {
   $.ajax({
     type: 'PUT',
-    url: `/boards/${originalBoardID}/posts/${postID}`,
+    url: `/boards/${originalBoardId}/posts/${postId}`,
     data: {
-      boardID: selectedBoardId,
+      boardId: selectedBoardId,
       postTitle: postTitle,
       postContent: postContent
     },
@@ -102,10 +102,10 @@ function updatePost(selectedBoardId, originalBoardID, postID, postTitle, postCon
   });
 }
 
-function deletePost(boardID, postID) {
+function deletePost(boardId, postId) {
   $.ajax({
     type: 'DELETE',
-    url: `/boards/${boardID}/posts/${postID}`,
+    url: `/boards/${boardId}/posts/${postId}`,
     error: function (xhr) {
       errorFunction(xhr);
     },
@@ -119,7 +119,7 @@ function deletePost(boardID, postID) {
 }
 
 function getSearchPost(keyword, option, pageNum) {
-  let boardId = getCurrentActiveBoardID();
+  let boardId = getCurrentActiveBoardId();
   $.ajax({
     type: 'GET',
     url: `/boards/${boardId}/posts/search`,
@@ -149,7 +149,7 @@ function getSearchPost(keyword, option, pageNum) {
 function getTempPosts(pageNum) {
   $.ajax({
     type: 'GET',
-    url: "/boards/-1/posts/tempBox",
+    url: "/boards/-1/posts/temp-box",
     data: {
       pageNumber: pageNum
     },
@@ -170,7 +170,7 @@ function getTempPosts(pageNum) {
 function getRecyclePosts(pageNum) {
   $.ajax({
     type: 'GET',
-    url: `/boards/-4/posts/recycleBin`,
+    url: `/boards/-4/posts/recycle-bin`,
     data: {
       pageNumber: pageNum
     },
@@ -188,10 +188,10 @@ function getRecyclePosts(pageNum) {
 }
 
 // 휴지통에 있는 게시글 복원하기
-function restorePost(postID) {
+function restorePost(postId) {
   $.ajax({
     type: 'PUT',
-    url: `/boards/0/posts/${postID}/restore`,
+    url: `/boards/0/posts/${postId}/restore`,
     error: function (xhr) {
       errorFunction(xhr);
     },
@@ -206,7 +206,7 @@ function restorePost(postID) {
 function getMyPosts(pageNum) {
   $.ajax({
     type: 'GET',
-    url: `/boards/-1/posts/myArticle`,
+    url: `/boards/-1/posts/my-article`,
     data: {
       pageNumber: pageNum
     },
@@ -227,7 +227,7 @@ function getMyPosts(pageNum) {
 function getMyReplies(pageNum) {
   $.ajax({
     type: 'GET',
-    url: `/boards/-2/posts/myReply`,
+    url: `/boards/-2/posts/my-reply`,
     data: {
       pageNumber: pageNum
     },
@@ -245,11 +245,11 @@ function getMyReplies(pageNum) {
 }
 
 // 휴지통 게시글 받아오기
-function getRecyclePost(postID, boardID) {
+function getRecyclePost(postId, boardId) {
   postClear();
   $.ajax({
     type: 'GET',
-    url: `/boards/${boardID}/posts/${postID}`,
+    url: `/boards/${boardId}/posts/${postId}`,
     error: function (xhr) {
       errorFunction(xhr);
       refreshPostListAfterPostCRUD();

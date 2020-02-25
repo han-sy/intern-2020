@@ -5,11 +5,8 @@
 package com.board.project.blockboard.common.util;
 
 
-import com.board.project.blockboard.dto.FunctionDTO;
-import com.board.project.blockboard.dto.PostDTO;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.Arrays;
@@ -54,7 +51,7 @@ public class JsonParse {
    * @author Woohyeok Jun <woohyeok.jun@worksmobile.com>
    */
   public static Map<String, Object> convertJsonStringToMap(String json) {
-    Map<String, Object> map = new HashMap<String,Object>();
+    Map<String, Object> map = new HashMap<String, Object>();
     try {
       ObjectMapper mapper = new ObjectMapper();
       mapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);

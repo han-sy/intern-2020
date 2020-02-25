@@ -15,7 +15,7 @@ import lombok.ToString;
 @Builder
 public class BoardDTO {
 
-  private int boardID;
-  private int companyID;
+  private int boardId;
+  private int companyId;
   private String boardName;
 }

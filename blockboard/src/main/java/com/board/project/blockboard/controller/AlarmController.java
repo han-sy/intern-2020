@@ -38,22 +38,22 @@ public class AlarmController {
     return alarms;
   }
 
-  @DeleteMapping("/alarms/{alarm-id}")
-  public void deleteAlarm(@PathVariable("alarm-id") int alarmId) {
+  @DeleteMapping("/alarms/{alarmId}")
+  public void deleteAlarm(@PathVariable("alarmId") int alarmId) {
     AlarmDTO alarm = alarmService.selectAlarmByAlarmId(alarmId);
     existAlarmValidation(alarm);
     alarmService.deleteAlarm(alarmId);
   }
 
-  @GetMapping("/alarms/{alarm-id}")
-  public AlarmDTO getAlarm(@PathVariable("alarm-id") int alarmId) {
+  @GetMapping("/alarms/{alarmId}")
+  public AlarmDTO getAlarm(@PathVariable("alarmId") int alarmId) {
     AlarmDTO alarm = alarmService.selectAlarmByAlarmId(alarmId);
     existAlarmValidation(alarm);
     return alarm;
   }
 
-  @PutMapping("/alarms/{alarm-id}")
-  public void readMarkToAlarm(@PathVariable("alarm-id") int alarmId) {
+  @PutMapping("/alarms/{alarmId}")
+  public void readMarkToAlarm(@PathVariable("alarmId") int alarmId) {
     AlarmDTO alarm = alarmService.selectAlarmByAlarmId(alarmId);
     existAlarmValidation(alarm);
     alarmService.readMarkToAlarm(alarmId);
@@ -64,8 +64,8 @@ public class AlarmController {
     return alarmService.getUnreadAlarmCountByUser(request);
   }
 
-  @GetMapping("/alarms/{alarm-id}/post")
-  public PostDTO getAlarmContent(@PathVariable("alarm-id") int alarmId) {
+  @GetMapping("/alarms/{alarmId}/post")
+  public PostDTO getAlarmContent(@PathVariable("alarmId") int alarmId) {
     return postService.selectPostByAlarmId(alarmId);
   }
 

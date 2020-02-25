@@ -43,7 +43,8 @@ public class UserController {
    * @return 로그인 메인화면으로 redirect
    */
   @PostMapping("/login")
-  public String loginCheck(@ModelAttribute UserDTO requestUser, HttpServletResponse response, HttpServletRequest request) {
+  public String loginCheck(@ModelAttribute UserDTO requestUser, HttpServletResponse response,
+      HttpServletRequest request) {
     boolean isValid = userService.loginCheck(requestUser, response);
     if (isValid) {
       return "redirect:/main";
@@ -95,26 +96,28 @@ public class UserController {
   @GetMapping("/users")
   @ResponseBody
   public List<UserDTO> getAllUserByCompanyId(HttpServletRequest request) {
-    int companyID = Integer.parseInt(request.getAttribute("companyID").toString());
-    return userService.selectUsersByCompanyID(companyID);
+    int companyId = Integer.parseInt(request.getAttribute("companyId").toString());
+    return userService.selectUsersByCompanyId(companyId);
   }
 
   @GetMapping("/users/{userid}")
   @ResponseBody
   public UserDTO getUserByUserIdAndCompanyId(HttpServletRequest request,
-      @PathVariable("userid") String userID) {
-    int companyID = Integer.parseInt(request.getAttribute("companyID").toString());
-    return userService.selectUserByUserIdAndCompanyId(userID, companyID);
+      @PathVariable("userid") String userId) {
+    int companyId = Integer.parseInt(request.getAttribute("companyId").toString());
+    return userService.selectUserByUserIdAndCompanyId(userId, companyId);
   }
 
   @PutMapping("/users/{userid}/Image")
   public void updateUserImage(MultipartHttpServletRequest multipartRequest,
-      @PathVariable("userid") String userID, HttpServletResponse response,
-      HttpServletRequest request)
-      throws IOException {
-
-    userService.updateUserImage(multipartRequest, userID, response, request);
+      @PathVariable("userid") String userId) {
+    userService.updateUserImage(multipartRequest, userId);
   }
 
-
+  @GetMapping("/users/count")
+  @ResponseBody
+  public int countUsersByCompanyId(HttpServletRequest request) {
+    log.info(request.getRequestURL().toString());
+    return userService.countUsersByCompanyId(request);
+  }
 }
