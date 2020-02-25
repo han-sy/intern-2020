@@ -27,15 +27,16 @@ function getContextPath() {
 }
 
 function errorFunction(xhr) {
-  if (xhr.status == 401) { // Token 만료 에러
-    returnToLoginPage();
-  } else if (xhr.status == 400) {
+  if (xhr.status == HTTP_STATUS.UNAUTHORIZED) { // Token 만료 에러
     alert(JSON.parse(xhr.responseText).message);
-  } else if (xhr.status == 409) {
+    redirectLogout();
+  } else if (xhr.status == HTTP_STATUS.BAD_REQUEST) {
     alert(JSON.parse(xhr.responseText).message);
-  } else if (xhr.status == 403) {
+  } else if (xhr.status == HTTP_STATUS.CONFLICT) {
+    alert(JSON.parse(xhr.responseText).message);
+  } else if (xhr.status == HTTP_STATUS.FORBIDDEN) {
     var jsonResponse = JSON.parse(xhr.responseText);
-    alert(jsonResponse.message);
+    alert(JSON.parse(xhr.responseText).message);
     redirectLogout();
   }
 }
