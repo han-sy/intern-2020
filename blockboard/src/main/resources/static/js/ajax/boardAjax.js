@@ -69,7 +69,7 @@ function getBoardList(successFunction) {
 
 //게시물 클릭후 게시물 데이터 받아오기
 function getPostDataAfterPostClick(postId, boardId) {
-  var userId = $('#current_user_info').attr('data-id');
+  let userId = $('#current_user_info').attr('data-id');
   postClear();
   $.ajax({
     type: 'GET',
@@ -98,7 +98,7 @@ function getSearchPostListByPageNum(pageNum) {
 //탭클릭후 게시판 목록 불러오기
 function getPostListByPageNum(pageNum, boardId) {
   clearSearchBanner();
-  var btn_write = $('#btn_write');
+  let btn_write = $('#btn_write');
   if (boardId < 0) {
     btn_write.attr('style', 'visibility:hidden');
   }

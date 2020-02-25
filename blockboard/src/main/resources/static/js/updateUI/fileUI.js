@@ -3,19 +3,19 @@
  * @file fileUI.js
  */
 
-function updateFileListInPostUI(data,obj){
-  var source = $('#attached-file-list-template').html();
-  var template = Handlebars.compile(source);
-  var files = {files: data};
-  var itemList = template(files);
+function updateFileListInPostUI(data, obj) {
+  let source = $('#attached-file-list-template').html();
+  let template = Handlebars.compile(source);
+  let files = {files: data};
+  let itemList = template(files);
   obj.html(itemList);
 }
 
-function updateFileListInCommentUI(data,obj){
-  var source = $('#attached-file-list-template').html();
-  var template = Handlebars.compile(source);
-  var files = {files: data};
-  var itemList = template(files);
+function updateFileListInCommentUI(data, obj) {
+  let source = $('#attached-file-list-template').html();
+  let template = Handlebars.compile(source);
+  let files = {files: data};
+  let itemList = template(files);
   obj.html(itemList);
 }
 
@@ -23,11 +23,11 @@ function deleteStatusbarUI(obj) {
   obj.remove();
 }
 
-function createStatusbarUI(data,container){
-  var source = $('#attached-file-statusbar-template').html();
-  var template = Handlebars.compile(source);
-  var files = {files: data};
-  var itemList = template(files);
+function createStatusbarUI(data, container) {
+  let source = $('#attached-file-statusbar-template').html();
+  let template = Handlebars.compile(source);
+  let files = {files: data};
+  let itemList = template(files);
   container.html(itemList);
 }
 
@@ -65,7 +65,7 @@ function makeFileAttachForm(obj, container) {
  * 구분하고 fileList가져오기
  */
 function distinguishEditorForGetFileList(postId, container, commentId) {
-  console.log("distinguishEditorForGetFileList : "+postId+","+commentId);
+  console.log("distinguishEditorForGetFileList : " + postId + "," + commentId);
   if (!isNullData(postId)) {
     getFileList(postId, 0, container, createStatusbarUI);
   }
@@ -77,16 +77,16 @@ function distinguishEditorForGetFileList(postId, container, commentId) {
 /**
  * 파일첨부 폼
  */
-function openFileAttachForm(postId,commentId,obj) {
+function openFileAttachForm(postId, commentId, obj) {
   source = $('#file-attach-form-template').html();
   template = Handlebars.compile(source);
   item = template();
-  var container = null;
+  let container = null;
   container = makeFileAttachForm(obj, container);
   distinguishEditorForGetFileList(postId, container, commentId);
 }
 
-function fileFormClear(){
+function fileFormClear() {
   $('.file_attach_form').html("");
 }
 
@@ -94,10 +94,8 @@ function fileFormClear(){
  * 게시글 내용 조회시 첨부파일관련 컨텐츠들
  */
 function showAttachFileContents(postId) {
-  console.log("!!!!showAttachFileContents");
   if (functionOn.postFileAttach) {
-    console.log("fileAttach ON postID : ",postId);
-    var container = $("#post-content").find(
+    let container = $("#post-content").find(
         ".attached_file_list_container_post");
     getFileList(postId, 0, container, updateFileListInPostUI);
   }

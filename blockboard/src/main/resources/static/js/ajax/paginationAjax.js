@@ -4,7 +4,7 @@
  */
 
 //리스트 받아오기
-function getPageList(pageNumber, boardId,postId, successFunction) {
+function getPageList(pageNumber, boardId, postId, successFunction) {
   $.ajax({
     type: 'GET',
     url: `/pages`,

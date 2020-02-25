@@ -39,7 +39,7 @@ public class FileController {
    */
   @PostMapping(value = "/files")
   public String uploadFile(MultipartHttpServletRequest multipartRequest, HttpServletRequest request)
-      throws IOException, FunctionValidException {
+      throws IOException{
     UserDTO userData = new UserDTO(request);
     return fileService.uploadFile(multipartRequest, userData.getCompanyId());
 
@@ -49,8 +49,7 @@ public class FileController {
    * 파일 테이블에 postId 업데이트 최종으로 리스트에 추가된 목록을 기준으로
    */
   @PutMapping(value = "/files")
-  public void updateIdToFile(@RequestBody List<FileDTO> fileList, HttpServletRequest request)
-      throws FunctionValidException {
+  public void updateIdToFile(@RequestBody List<FileDTO> fileList, HttpServletRequest request) {
     UserDTO userData = new UserDTO(request);
     fileService.updateIDs(fileList, userData.getCompanyId());
   }
@@ -68,9 +67,9 @@ public class FileController {
    * 파일 삭제
    */
   @DeleteMapping(value = "/files")
-  public void deleteFile(@RequestParam String storedFileName, HttpServletRequest request,
-      HttpServletResponse response) throws FileValidException, FunctionValidException {
-    fileService.deleteFile(storedFileName, request, response);
+  public void deleteFile(@RequestParam String storedFileName, HttpServletRequest request)
+      throws FileValidException {
+    fileService.deleteFile(storedFileName, request);
   }
 
   /**

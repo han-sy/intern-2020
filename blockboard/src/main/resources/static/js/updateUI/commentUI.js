@@ -4,13 +4,11 @@
  */
 //댓글 출력
 function updateCommentListUI(data) {
-  var source = $('#commentList-template').html();
-  var template = Handlebars.compile(source);
-  var comments = {comments: data};
-  var itemList = template(comments);
+  let source = $('#commentList-template').html();
+  let template = Handlebars.compile(source);
+  let comments = {comments: data};
+  let itemList = template(comments);
   $('.comment_list_container').html(itemList);
-  var boardId = getBoardIdInPost();
-  var postId = getPostIdInPost();
 }
 
 //댓글 inputform 받아오기
@@ -25,10 +23,10 @@ function getCommentInputHtml(type, buttonName, tag, className, buttonSelector,
     isReplyInput: isReplyInput,
     editorName: editorName
   };
-  var source = $('#commentInputForm-template').html();
-  var template = Handlebars.compile(source);
-  var attribute = {attribute: data};
-  var itemList = template(attribute);
+  let source = $('#commentInputForm-template').html();
+  let template = Handlebars.compile(source);
+  let attribute = {attribute: data};
+  let itemList = template(attribute);
   $(className).append(itemList + "</div>");
 
   createCommentEditor(editorName, type, tag);
@@ -68,16 +66,15 @@ function createCommentEditor(editorName, type, tag, oldText) {
 
 //댓글수정모드
 function editCommentByCommentId(postId, boardId, commentId) {
-  var oldText = $('#comment' + commentId).find(".comment_content").html();
+  let oldText = $('#comment' + commentId).find(".comment_content").html();
   data = {oldText: oldText};
-  var source = $('#editCommentForm-template').html();
-  var template = Handlebars.compile(source);
-  var attribute = {attribute: data};
-  var itemList = template(attribute);
+  let source = $('#editCommentForm-template').html();
+  let template = Handlebars.compile(source);
+  let attribute = {attribute: data};
+  let itemList = template(attribute);
   $('#comment' + commentId).html(itemList + "</div>");
   createCommentEditor("commentEditText", "수정", '', oldText);
 }
-
 
 function updateCommentsCountUI(data) {
   console.log("commentsCount : " + data);

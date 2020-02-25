@@ -32,7 +32,6 @@ public class ViewRecordService {
     return viewRecordMapper.selectRecordExist(record);
   }
 
-
   public List<ViewRecordDTO> getViewRecords(int postId, String userId, int startIndex) {
     Map<String, Object> recordData = getRecordMapData(postId, userId, startIndex);
     return viewRecordMapper.selectViewRecordsByPostId(recordData);

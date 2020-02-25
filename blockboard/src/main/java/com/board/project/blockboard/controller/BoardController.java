@@ -75,7 +75,7 @@ public class BoardController {
       HttpServletRequest request) {
     UserDTO userData = new UserDTO(request);
     if (AuthorityValidation.isAdmin(userData)) {
-      boardService.updateChangedName(newTitleList, userData.getCompanyId());
+      boardService.updateChangedName(newTitleList);
     }
   }
 

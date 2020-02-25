@@ -23,8 +23,8 @@ function getCheckedBoardName() {
   return $(this).attr("data-boardName");
 }
 
-class Boards{
-  constructor(boardId,boardName) {
+class Boards {
+  constructor(boardId, boardName) {
     this.boardId = boardId;
     this.boardName = boardName;
   }

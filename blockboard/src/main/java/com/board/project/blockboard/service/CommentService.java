@@ -21,8 +21,6 @@ import org.springframework.stereotype.Service;
 public class CommentService {
 
   @Autowired
-  private FunctionService functionService;
-  @Autowired
   private AlarmService alarmService;
   @Autowired
   private CommentMapper commentMapper;

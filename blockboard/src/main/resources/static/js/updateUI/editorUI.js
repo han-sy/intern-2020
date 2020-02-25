@@ -1,19 +1,19 @@
+/**
+ * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
+ * @file    editorUI.js
+ */
+
 function openPostFileAttachForm(postId) {
   if (functionOn.postFileAttach) {
     if (isNullData(postId)) {
       openFileAttachForm();
     } else {
-      console.log("postID : "+postId);
       openFileAttachForm(postId);
     }
   }
 }
 
-/**
- * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
- * @file    editorUI.js
- */
-function createEditorArea(method,postId) { // 에디터 div 생성
+function createEditorArea(method, postId) { // 에디터 div 생성
   clearEditor();
   createEditorTemplate();
   applyFunctionPluginOnEditor();
@@ -30,7 +30,7 @@ function createEditorArea(method,postId) { // 에디터 div 생성
       hideTempSaveButton();
       break;
   }
-  console.log("postId = "+postId);
+  console.log("postId = " + postId);
   openPostFileAttachForm(postId);
 }
 

@@ -16,8 +16,6 @@ function updateCommentsCount(boardId, postId) {
   });
 }
 
-
-
 //댓글리스트 받아오기
 function getCommentListByPageNum(pageNum, boardId, postId, successFunction) {
   $.ajax({
@@ -37,11 +35,9 @@ function getCommentListByPageNum(pageNum, boardId, postId, successFunction) {
 
 //댓글 추가
 function insertComment(boardId, postId, commentContent) {//댓글 임시저장 기능이 추가될수도있어 commentId 파라미터 추가해놓음
-  var commentDTO = new Comment(boardId,postId,0,0,commentContent);
+  let commentDTO = new Comment(boardId,postId,0,0,commentContent);
+  let commentData = JSON.stringify(commentDTO);
 
-  console.log("aaa"+","+boardId+","+postId+","+commentContent)
-  var commentData = JSON.stringify(commentDTO);
-  console.log("commentData",commentData);
   $.ajax({
     type: 'POST',
     url: `/boards/${boardId}/posts/${postId}/comments`,
@@ -73,9 +69,8 @@ function deleteCommentByCommentId(postId, boardId, commentId,
     error: function () {  //통신 실패시
       alert('통신실패!');
     },
-    success: function (data) {
+    success: function () {
       getPageList(1, 0, postId, updateCommentPageList);
-      //getCommentListByPageNum(1,boardId, postId, updateCommentListUI);//성공하면 댓글목록 갱신
       updateCommentsCount(boardId, postId);
       if (!isNullData(commentReferencedId)) {
         updateRepliesCount(boardId, postId, commentReferencedId);
@@ -86,9 +81,8 @@ function deleteCommentByCommentId(postId, boardId, commentId,
 
 //댓글 수정
 function editComment(postId, boardId, commentId, newComment) {
-  var commentDTO = new Comment(boardId,postId,commentId,0,newComment);
-  var commentData = JSON.stringify(commentDTO);
-  console.log("commentData" ,commentData);
+  let commentDTO = new Comment(boardId,postId,commentId,0,newComment);
+  let commentData = JSON.stringify(commentDTO);
   $.ajax({
     type: 'PUT',
     url: `/boards/${boardId}/posts/${postId}/comments/${commentId}`,
@@ -98,7 +92,7 @@ function editComment(postId, boardId, commentId, newComment) {
     error: function (error) {  //통신 실패시
       errorFunction(error)
     },
-    complete: function (data) {
+    complete: function () {
       getPageList(1, 0, postId, updateCommentPageList);
     }
   });

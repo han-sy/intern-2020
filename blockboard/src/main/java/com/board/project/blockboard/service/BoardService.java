@@ -48,7 +48,7 @@ public class BoardService {
     deleteBoards.forEach(boardDTO -> deleteBoard(boardDTO.getBoardId()));
   }
 
-  public void updateChangedName(List<BoardDTO> newTitleList, int companyId) {
+  public void updateChangedName(List<BoardDTO> newTitleList) {
     newTitleList
         .forEach(boardDTO -> changeBoardName(boardDTO.getBoardId(), boardDTO.getBoardName()));
   }

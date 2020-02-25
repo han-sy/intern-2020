@@ -41,8 +41,7 @@ public class UserController {
    * @return 로그인 메인화면으로 redirect
    */
   @PostMapping("/login")
-  public String loginCheck(@ModelAttribute UserDTO requestUser, HttpServletResponse response,
-      HttpServletRequest request) {
+  public String loginCheck(@ModelAttribute UserDTO requestUser, HttpServletResponse response) {
     boolean isValid = userService.loginCheck(requestUser, response);
     if (isValid) {
       return "redirect:/main";
@@ -115,7 +114,6 @@ public class UserController {
   @GetMapping("/users/count")
   @ResponseBody
   public int countUsersByCompanyId(HttpServletRequest request) {
-    log.info(request.getRequestURL().toString());
     return userService.countUsersByCompanyId(request);
   }
 }

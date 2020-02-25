@@ -4,10 +4,10 @@
  */
 //새로운 탭 내용으로 교체
 function updateTab(data) {
-  var source = $('#boards-template').html();
-  var template = Handlebars.compile(source);
-  var board = {boards: data};
-  var itemList = template(board);
+  let source = $('#boards-template').html();
+  let template = Handlebars.compile(source);
+  let board = {boards: data};
+  let itemList = template(board);
   $('#tab_id').html(itemList);
   updateSelectableBoardIdInEditor(board);
 
@@ -19,22 +19,20 @@ function updateTab(data) {
   });
 }
 
-
-
 //삭제를 위한 UI
 function getBoardListToDelete(data) {
-  var source = $('#deleteboards-template').html();
-  var template = Handlebars.compile(source);
-  var boardList = {boards: data};
-  var itemList = template(boardList);
+  let source = $('#deleteboards-template').html();
+  let template = Handlebars.compile(source);
+  let boardList = {boards: data};
+  let itemList = template(boardList);
   $('.modal-body-deleteBoard').html(itemList);
 }
 
 //이름변경을 위한 UI
 function getBoardListToChangeName(data) {
-  var source = $('#changeBoardName-template').html();
-  var template = Handlebars.compile(source);
-  var boardList = {boards: data};
-  var itemList = template(boardList);
+  let source = $('#changeBoardName-template').html();
+  let template = Handlebars.compile(source);
+  let boardList = {boards: data};
+  let itemList = template(boardList);
   $('.modal-body-changeBoardName').html(itemList);
 }

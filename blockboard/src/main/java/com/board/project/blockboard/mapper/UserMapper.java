@@ -5,7 +5,6 @@
 package com.board.project.blockboard.mapper;
 
 import com.board.project.blockboard.dto.UserDTO;
-import java.util.Map;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
@@ -24,9 +23,9 @@ public interface UserMapper {
 
   String selectUserTypeByUserId(String userId);
 
-  void updateUserImage(UserDTO userData);
-
   int countUsersByCompanyId(int CompanyId);
+
+  void updateUserImage(UserDTO userData);
 
   void insertUser(UserDTO user);
 }

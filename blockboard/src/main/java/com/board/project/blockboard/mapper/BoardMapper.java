@@ -6,7 +6,6 @@ package com.board.project.blockboard.mapper;
 
 import com.board.project.blockboard.dto.BoardDTO;
 import java.util.List;
-import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
@@ -15,8 +14,6 @@ import org.springframework.stereotype.Repository;
 public interface BoardMapper {
 
   List<BoardDTO> selectBoardsByCompanyId(int companyId);
-
-  BoardDTO selectBoardByBoardName(String newBoardName);
 
   void insertBoard(BoardDTO newBoard);
 

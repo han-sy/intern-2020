@@ -12,7 +12,7 @@ function getPostIdInPostList() {
 }
 
 function getPostIdInEditor() {
- return $("#postIdInEditor").html();
+  return $("#postIdInEditor").html();
 }
 
 function getOriginalBoardIdInEditor() {

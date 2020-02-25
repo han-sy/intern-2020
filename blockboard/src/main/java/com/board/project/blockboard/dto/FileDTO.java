@@ -6,7 +6,6 @@ package com.board.project.blockboard.dto;
 
 import lombok.Data;
 
-
 @Data
 public class FileDTO {
 

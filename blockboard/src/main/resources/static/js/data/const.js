@@ -23,11 +23,17 @@ const BOARD_ID = {
 };
 
 const HTTP_STATUS = {
-  BAD_REQUEST:400,
-  UNAUTHORIZED:401,
-  FORBIDDEN:403,
-  NOT_FOUND:404,
-  CONFLICT:409
+  BAD_REQUEST: 400,
+  UNAUTHORIZED: 401,
+  FORBIDDEN: 403,
+  NOT_FOUND: 404,
+  CONFLICT: 409
+};
+
+const POST_STATUS = {
+  NORMAL: "normal",
+  TEMP: "temp",
+  RECYCLE: "recycle"
 };
 
 const UNICODE_3_BYTE = 11;

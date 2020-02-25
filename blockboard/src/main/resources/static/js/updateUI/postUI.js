@@ -69,7 +69,7 @@ function refreshPostListAfterPostCRUD() {
 function addBannerOfSearchResult(keyword, option) {
   let source = $('#search-banner-template').html();
   let template = Handlebars.compile(source);
-  let searchItems = {keyword: keyword, option:option};
+  let searchItems = {keyword: keyword, option: option};
   let searchBanner = template(searchItems);
   $('#search-banner').html(searchBanner);
 }
@@ -81,6 +81,7 @@ function clearSearchBanner() {
 function clearSearchKeyword() {
   $('#search_keyword').val('');
 }
+
 /**
  * 수정 삭제 버튼 나타내기
  * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
@@ -104,8 +105,7 @@ function showEditAndDeleteButtonInPost(data, userId) {
 function showCommentContents(boardId, postId) {
   if (functionOn.comments) {
     $(function () {
-      getPageList(1,0,postId,updateCommentPageList);
-      //getCommentListByPageNum(1,boardId, postId, getCommentAllContents); //삭제이후 tab에 게시판목록 업데이트 //CommentAjax.js 에 있음
+      getPageList(1, 0, postId, updateCommentPageList);
       getCommentInputHtml("댓글", "입력", "", ".comment_input_container",
           "btn_open_comment", '', "commentText");
       updateCommentsCount(boardId, postId);
