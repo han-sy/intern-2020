@@ -4,8 +4,8 @@
  */
 
 class Files {
-  constructor(postId,commentId) {
-    this.postId =postId;
+  constructor(postId, commentId) {
+    this.postId = postId;
     this.commentId = commentId;
   }
 

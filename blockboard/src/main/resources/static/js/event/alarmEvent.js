@@ -73,7 +73,6 @@ function showCommentAlarmContent(commentId) {
   }, 100);
 }
 
-
 alarmContent.scroll(function () {
   let scroll_position = alarmContent.scrollTop();
   let bottom_position = alarmContent[0].scrollHeight - alarmContent.height();

@@ -18,14 +18,13 @@ function getFunctionList(successFunction) {
 
 //기능변경후 새로운 사용중인기능목록 불러오기
 function updateNewFunctionInfo(functionDTOList) {
-  var userData = new User();
   $.ajax({
     type: 'POST',
     url: `/functions`,
     data: functionDTOList,
     dataType: "json",
     contentType: 'application/json',
-    error: function (error, msg) {  //통신 실패시
+    error: function (error) {  //통신 실패시
       errorFunction(error);
     },
     success: function () {

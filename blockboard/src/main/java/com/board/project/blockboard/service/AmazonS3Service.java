@@ -31,9 +31,7 @@ public class AmazonS3Service {
 
   private AmazonS3 amazonS3;
 
-
   public AmazonS3Service() {
-    log.info("!!!AmazonS3Service");
     AWSCredentials awsCredentials = new BasicAWSCredentials(Key.ACCESS_KEY, Key.SECRET_KEY);
     amazonS3 = new AmazonS3Client(awsCredentials);
   }
@@ -53,7 +51,6 @@ public class AmazonS3Service {
       } catch (AmazonClientException ace) {
         ace.printStackTrace();
       } finally {
-        //amazonS3 = null;
         inputStream.close();
         Thumbnail.deleteSubFile(fileName);
       }

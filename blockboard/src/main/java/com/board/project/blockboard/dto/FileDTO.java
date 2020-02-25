@@ -6,10 +6,9 @@ package com.board.project.blockboard.dto;
 
 import lombok.Data;
 
-
-
 @Data
 public class FileDTO {
+
   private int fileId;
   private int postId;
   private int commentId;

@@ -8,20 +8,16 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.board.project.blockboard.common.constant.ConstantData.Bucket;
 import com.board.project.blockboard.common.util.Common;
 import com.board.project.blockboard.common.util.Thumbnail;
-import com.board.project.blockboard.dto.FileDTO;
 import com.board.project.blockboard.dto.UserDTO;
 import com.board.project.blockboard.mapper.UserMapper;
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Pattern;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.User;
 import org.apache.commons.codec.binary.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -120,10 +116,10 @@ public class UserService {
    *
    * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
    */
-  public void updateUserImage(MultipartHttpServletRequest multipartRequest, String userId){
+  public void updateUserImage(MultipartHttpServletRequest multipartRequest, String userId) {
     Iterator<String> itr = multipartRequest.getFileNames();
-    String url="";
-    String thumbnailUrl ="";
+    String url = "";
+    String thumbnailUrl = "";
     while (itr.hasNext()) {
       MultipartFile mpf = multipartRequest.getFile(itr.next());
 
@@ -144,7 +140,7 @@ public class UserService {
         e.printStackTrace();
       }
 
-      UserDTO userData = new UserDTO(userId,url,storedFileName,thumbnailUrl,storedFileName);
+      UserDTO userData = new UserDTO(userId, url, storedFileName, thumbnailUrl, storedFileName);
       userMapper.updateUserImage(userData);
     }
   }

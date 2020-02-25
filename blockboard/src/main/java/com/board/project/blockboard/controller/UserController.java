@@ -8,7 +8,6 @@ import com.board.project.blockboard.common.util.CookieUtils;
 import com.board.project.blockboard.dto.UserDTO;
 import com.board.project.blockboard.service.JwtService;
 import com.board.project.blockboard.service.UserService;
-import java.io.IOException;
 import java.util.List;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -43,8 +41,7 @@ public class UserController {
    * @return 로그인 메인화면으로 redirect
    */
   @PostMapping("/login")
-  public String loginCheck(@ModelAttribute UserDTO requestUser, HttpServletResponse response,
-      HttpServletRequest request) {
+  public String loginCheck(@ModelAttribute UserDTO requestUser, HttpServletResponse response) {
     boolean isValid = userService.loginCheck(requestUser, response);
     if (isValid) {
       return "redirect:/main";
@@ -117,7 +114,6 @@ public class UserController {
   @GetMapping("/users/count")
   @ResponseBody
   public int countUsersByCompanyId(HttpServletRequest request) {
-    log.info(request.getRequestURL().toString());
     return userService.countUsersByCompanyId(request);
   }
 }

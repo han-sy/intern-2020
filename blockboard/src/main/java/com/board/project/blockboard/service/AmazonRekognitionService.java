@@ -42,8 +42,9 @@ public class AmazonRekognitionService {
 
   /**
    * 이미지를 collection에 등록
-   * @param fileName 등록할 이미지 파일이름
-   * @param bucket 이미지버킷
+   *
+   * @param fileName     등록할 이미지 파일이름
+   * @param bucket       이미지버킷
    * @param collectionID collecion ID 분석할 사진단위로 생성된 collection
    */
   public void registerImageToCollection(String fileName, String bucket, String collectionID) {
@@ -58,9 +59,10 @@ public class AmazonRekognitionService {
 
   /**
    * collection 생성시 조건들
-   * @param fileName 파일이름
+   *
+   * @param fileName     파일이름
    * @param collectionID collectionID 유니크함
-   * @param image 이미지 객체
+   * @param image        이미지 객체
    * @return
    */
   private IndexFacesRequest getIndexFacesRequestInstance(String fileName, String collectionID,
@@ -76,6 +78,7 @@ public class AmazonRekognitionService {
 
   /**
    * collection 등록
+   *
    * @param collectionID 유니크하게 생성한 collectionID를 가지고
    */
   public void registerCollection(String collectionID) {
@@ -85,6 +88,7 @@ public class AmazonRekognitionService {
 
   /**
    * collection 분석후 collection 삭제
+   *
    * @param collectionID
    */
   public void deleteCollection(String collectionID) {
@@ -92,21 +96,18 @@ public class AmazonRekognitionService {
     DeleteCollectionRequest request = new DeleteCollectionRequest()
         .withCollectionId(collectionID);
     DeleteCollectionResult deleteCollectionResult = rekognitionClient.deleteCollection(request);
-
-    log.info(collectionID + ": " + deleteCollectionResult.getStatusCode()
-        .toString());
   }
 
   /**
    * collection에서 해당 얼굴이 있는지 찾는다.
-   * @param bucket 버킷이름
-   * @param fileName 파일이름
+   *
+   * @param bucket       버킷이름
+   * @param fileName     파일이름
    * @param collectionID collection이름
    * @return 얼굴이 있으면 true 반환 아니면 false반환
    */
   public boolean searchFaceMatchingImageCollection(String bucket, String fileName,
-      String collectionID)
-      throws IOException {
+      String collectionID) {
     Image image = getImageInstance(bucket, fileName);
 
     SearchFacesByImageRequest searchFacesByImageRequest = getSearchFacesByImageRequestInstance(
@@ -127,7 +128,6 @@ public class AmazonRekognitionService {
 
       List<FaceMatch> faceImageMatches = searchFacesByImageResult.getFaceMatches();
       if (faceImageMatches.size() > 0) {
-        log.info("감지 : " + fileName);
         return true;
       }
       return false;

@@ -16,7 +16,8 @@ function getCommentReferencedIdInReferenceCommentContainer() {
  * comment Container에서 commentId 반환
  */
 function getCommentIdInCommentContainer() {
-  return $(this).closest(".commentContainer").attr("id").substring(COMMENT_PREFIX.length);
+  return $(this).closest(".commentContainer").attr("id").substring(
+      COMMENT_PREFIX.length);
 }
 
 /**
@@ -65,9 +66,8 @@ function getCountPrintedReplies() {
   return $(".replyItem").length;
 }
 
-
-class Comment{
-  constructor(boardId,postId,commentId,commentReferencedId,commentContent) {
+class Comment {
+  constructor(boardId, postId, commentId, commentReferencedId, commentContent) {
     this.boardId = boardId;
     this.postId = postId;
     this.commentReferencedId = commentReferencedId;

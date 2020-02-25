@@ -31,6 +31,10 @@ public interface PostMapper {
 
   PostDTO selectPostByAlarmId(int alarmId);
 
+  String selectUserIdByPostId(int postId);
+
+  Integer selectPostIdByCommentId(int commentId);
+
   void temporaryDeletePost(PostDTO post);
 
   void restorePost(PostDTO post);
@@ -43,7 +47,9 @@ public interface PostMapper {
 
   void updateViewCnt(int postId);
 
-  String selectUserIdByPostId(int postId);
+  void updateCommentCountPlus1(int postId);
+
+  void updateCommentCountMinus1(int postId);
 
   int selectPostCountByBoardId(int boardId);
 
@@ -54,12 +60,6 @@ public interface PostMapper {
   int getRecentPostsCount(int companyId);
 
   int getPopularPostsCount(int companyId);
-
-  void updateCommentCountPlus1(int postId);
-
-  void updateCommentCountMinus1(int postId);
-
-  Integer selectPostIdByCommentId(int commentId);
 
   int selectCommentsCountByPostId(int postId);
 

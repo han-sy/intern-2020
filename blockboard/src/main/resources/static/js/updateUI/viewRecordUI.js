@@ -3,13 +3,10 @@
  * @file    viewRecordUI.js
  */
 
-
-
-function loadViewRecordUI(data){
-  console.log("loadViewRecordUI");
-  var source = $('#view_record-list-template').html();
-  var template = Handlebars.compile(source);
-  var records = {records: data};
-  var itemList = template(records);
+function loadViewRecordUI(data) {
+  let source = $('#view_record-list-template').html();
+  let template = Handlebars.compile(source);
+  let records = {records: data};
+  let itemList = template(records);
   $('.modal-body-viewRecordList-container').append(itemList);
 }

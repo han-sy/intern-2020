@@ -10,5 +10,3 @@ window.onload = function () {
   resetFunctionAble();
 };
 
-
-

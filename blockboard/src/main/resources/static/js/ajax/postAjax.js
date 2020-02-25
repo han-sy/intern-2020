@@ -9,7 +9,7 @@ function insertPost(postId, boardId, postTitle, postContent) {
     data: {
       postTitle: postTitle,
       postContent: postContent,
-      postStatus: "normal",
+      postStatus: POST_STATUS.NORMAL,
       boardId: boardId
     },
     error: function (xhr) {
@@ -52,7 +52,7 @@ function insertTempPost(boardId, postId, temp_title, temp_content,
       refreshPostListAfterPostCRUD();
     },
     success: function (data) {
-      if (new_post_status === "normal") {
+      if (new_post_status === POST_STATUS.NORMAL) {
         alert("게시물이 작성되었습니다.");
       } else {
         addHiddenTypePostIdAndBoardIdToEditor(data, boardId);
@@ -80,7 +80,8 @@ function loadPost(boardId, postId) {
   });
 }
 
-function updatePost(selectedBoardId, originalBoardId, postId, postTitle, postContent) {
+function updatePost(selectedBoardId, originalBoardId, postId, postTitle,
+    postContent) {
   $.ajax({
     type: 'PUT',
     url: `/boards/${originalBoardId}/posts/${postId}`,

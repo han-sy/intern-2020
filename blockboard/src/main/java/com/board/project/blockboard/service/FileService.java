@@ -81,7 +81,7 @@ public class FileService {
    * @return 파일이름
    */
   public String uploadFile(MultipartHttpServletRequest multipartRequest, int companyId)
-      throws IOException, FunctionValidException {
+      throws IOException {
     String uuid = Common.getNewUUID();
     Iterator<String> itr = multipartRequest.getFileNames();
     if (!functionValidation
@@ -94,7 +94,6 @@ public class FileService {
       //파일 전체 경로
       fileMapper.insertFile(fileData);
     }
-    log.info("fileData", fileData);
     return fileData.getStoredFileName();
   }
 
@@ -118,7 +117,7 @@ public class FileService {
   /**
    * id 업데이트 to 파일테이블
    */
-  public void updateIDs(List<FileDTO> fileList, int companyId) throws FunctionValidException {
+  public void updateIDs(List<FileDTO> fileList, int companyId) {
     if (!functionValidation
         .isFunctionOn(companyId, FunctionId.POST_ATTACH_FILE, FunctionId.COMMENT_ATTACH_FILE)) {
       return;
@@ -228,7 +227,7 @@ public class FileService {
    * 파일삭제가능여부 반환
    */
   private boolean canDeleteFile(String storedFileName,
-      UserDTO userData) throws FileValidException, FunctionValidException {
+      UserDTO userData) {
     return functionValidation
         .isFunctionOn(userData.getCompanyId(), FunctionId.POST_ATTACH_FILE,
             FunctionId.COMMENT_ATTACH_FILE)
@@ -336,7 +335,6 @@ public class FileService {
     } catch (InterruptedException e) {
       e.printStackTrace();
     } finally {
-      log.info("종료");
       if (collectionID != null) {
         amazonRekognitionService.deleteCollection(collectionID);
       }
@@ -369,16 +367,12 @@ public class FileService {
     @Override
     public void run() {
       if (user.getImageFileName() != null) {
-        try {
-          detected = amazonRekognitionService
-              .searchFaceMatchingImageCollection(Bucket.USER,
-                  user.getImageFileName(),
-                  collectionID);
-          if (detected) {
-            detectedUsers.add(user);
-          }
-        } catch (IOException e) {
-          e.printStackTrace();
+        detected = amazonRekognitionService
+            .searchFaceMatchingImageCollection(Bucket.USER,
+                user.getImageFileName(),
+                collectionID);
+        if (detected) {
+          detectedUsers.add(user);
         }
       }
     }

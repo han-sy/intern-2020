@@ -24,7 +24,7 @@
                            ON comments.user_id = users.user_id
     WHERE comments.post_id = #{postId}
       AND comments.comment_referenced_id IS NULL
-    LIMIT  #{startIndex},#{pageSize};
+    LIMIT #{startIndex},#{pageSize};
   </select>
 
   <select id="getAllCommentsCountByPostId" parameterType="int" resultType="int">

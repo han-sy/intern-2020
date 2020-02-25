@@ -4,12 +4,12 @@
  */
 
 function operateProgressBar(status) {
-  var xhrobj = $.ajaxSettings.xhr();
+  let xhrobj = $.ajaxSettings.xhr();
   if (xhrobj.upload) {
     xhrobj.upload.addEventListener('progress', function (event) {
-      var percent = 0;
-      var position = event.loaded || event.position;
-      var total = event.total;
+      let percent = 0;
+      let position = event.loaded || event.position;
+      let total = event.total;
       if (event.lengthComputable) {
         percent = Math.ceil(position / total * 100);
       }
@@ -26,9 +26,9 @@ function operateProgressBar(status) {
  * @param status statusbar ui를 위한 객체
  */
 function sendFileToServer(formData, status) {
-  var uploadURL = "/files"; //Upload URL
-  var extraData = {}; //Extra Data.
-  var jqXHR = $.ajax({
+  let uploadURL = "/files"; //Upload URL
+  let extraData = {}; //Extra Data.
+  let jqXHR = $.ajax({
     xhr: function () {
       return operateProgressBar(status);
     },
@@ -61,7 +61,8 @@ function resetBoardIdAndPostId(postId, boardId) {
   return {postId, boardId};
 }
 
-function checkCommentFileForGetCommentPageList(editor, commentReferencedId, postId) {
+function checkCommentFileForGetCommentPageList(editor, commentReferencedId,
+    postId) {
   //댓글인경우(답글말고)
   if (editor == "comment" && isNullData(commentReferencedId)) {
     getPageList(1, 0, postId, updateCommentPageList);
@@ -73,7 +74,7 @@ function checkCommentFileForGetCommentPageList(editor, commentReferencedId, post
  */
 function updateIDToFiles(editor, postId, commentId, boardId,
     commentReferencedId) {
-  var fileList = getAttachedFileList(postId, commentId);
+  let fileList = getAttachedFileList(postId, commentId);
   $.ajax({
     type: 'PUT',
     url: `/files`,
@@ -86,7 +87,8 @@ function updateIDToFiles(editor, postId, commentId, boardId,
       const __ret = resetBoardIdAndPostId(postId, boardId);
       postId = __ret.postId;
       boardId = __ret.boardId;
-      checkCommentFileForGetCommentPageList(editor, commentReferencedId, postId);
+      checkCommentFileForGetCommentPageList(editor, commentReferencedId,
+          postId);
       updateCommentsCount(boardId, postId);
       fileFormClear();
     }

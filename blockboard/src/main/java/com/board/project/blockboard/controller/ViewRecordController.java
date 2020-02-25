@@ -4,7 +4,6 @@
  */
 package com.board.project.blockboard.controller;
 
-import com.board.project.blockboard.dto.PostDTO;
 import com.board.project.blockboard.dto.UserDTO;
 import com.board.project.blockboard.dto.ViewRecordDTO;
 import com.board.project.blockboard.service.ViewRecordService;
@@ -22,13 +21,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/boards/{boardid}/posts/{postid}/view-records")
 public class ViewRecordController {
+
   @Autowired
   private ViewRecordService viewRecordService;
+
   //select 필요
   @GetMapping("")
-  public List<ViewRecordDTO> getViewRecords(@PathVariable("boardid") int boardId,
-      @PathVariable("postid") int postId, @RequestParam int startIndex,HttpServletRequest request) {
+  public List<ViewRecordDTO> getViewRecords(@PathVariable("postid") int postId,
+      @RequestParam int startIndex, HttpServletRequest request) {
     UserDTO userData = new UserDTO(request);
-    return viewRecordService.getViewRecords(postId,userData.getUserId(),startIndex);
+    return viewRecordService.getViewRecords(postId, userData.getUserId(), startIndex);
   }
 }

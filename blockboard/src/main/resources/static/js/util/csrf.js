@@ -3,7 +3,7 @@
  * @file csrf.js
  */
 
-var generateCsrfToken = function() {
+var generateCsrfToken = function () {
   function generateRandomString(length) {
     let text = "";
     let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -12,6 +12,7 @@ var generateCsrfToken = function() {
     }
     return text;
   }
+
   return btoa(generateRandomString(32));
 };
 
@@ -20,7 +21,7 @@ var setCookie = function (cname, cvalue) {
 };
 
 $.ajaxSetup({
-  beforeSend: function(xhr, settings) {
+  beforeSend: function (xhr, settings) {
     if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
       let csrfToken = generateCsrfToken();
       setCookie('CSRF_TOKEN', encodeURIComponent(csrfToken));

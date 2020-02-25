@@ -16,9 +16,9 @@ public interface FunctionMapper {
 
   List<FunctionDTO> selectFunctionCheckByCompanyId(int companyId);
 
+  boolean selectFunctionCheckByCompanyIdAndFunctionId(Map<String, Object> functionPrimaryKey);
+
   void insertFunctionCheckData(Map<String, Object> functionPrimaryKey);
 
   void deleteFunctionCheckData(Map<String, Object> functionPrimaryKey);
-
-  boolean selectFunctionCheckByCompanyIdAndFunctionId(Map<String, Object> functionPrimaryKey);
 }

@@ -15,13 +15,14 @@ function returnToLoginPage() {
 function redirectLogout() {
   window.location.href = "/logout";
 }
-function changedDataError(){
+
+function changedDataError() {
   alert("페이지가 임의로 변경되었습니다.");
   redirectLogout();
 }
 
 function getContextPath() {
-  var hostIndex = location.href.indexOf(location.host) + location.host.length;
+  let hostIndex = location.href.indexOf(location.host) + location.host.length;
   return location.href.substring(hostIndex,
       location.href.indexOf('/', hostIndex + 1));
 }
@@ -35,7 +36,7 @@ function errorFunction(xhr) {
   } else if (xhr.status == HTTP_STATUS.CONFLICT) {
     alert(JSON.parse(xhr.responseText).message);
   } else if (xhr.status == HTTP_STATUS.FORBIDDEN) {
-    var jsonResponse = JSON.parse(xhr.responseText);
+    let jsonResponse = JSON.parse(xhr.responseText);
     alert(JSON.parse(xhr.responseText).message);
     redirectLogout();
   }
@@ -46,7 +47,7 @@ function errorFunction(xhr) {
  * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
  */
 function getByteLength(text, maxLength) {
-  var charLength, byte, i, unicodeValue;
+  let charLength, byte, i, unicodeValue;
   for (byte = i = 0; uniCodeValue = text.charCodeAt(i++);
       byte += unicodeValue >> UNICODE_3_BYTE ? BYTE_SIZE_3 : unicodeValue
       >> UNICODE_2_BYTE ? BYTE_SIZE_2 : BYTE_SIZE_1) {
@@ -61,10 +62,10 @@ function getByteLength(text, maxLength) {
  * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
  */
 function bytesHandler(obj, selector, maxLength) {
-  var text = $(obj).val();
-  var textLength = getByteLength(text, maxLength);
-  var byteLength = textLength[0];
-  var charLength = textLength[1];
+  let text = $(obj).val();
+  let textLength = getByteLength(text, maxLength);
+  let byteLength = textLength[0];
+  let charLength = textLength[1];
   $(selector).text(byteLength + "/" + maxLength);
   if (byteLength > maxLength) {
     $(selector).text("입력글자수 제한(" + byteLength + "/" + maxLength + ")");
@@ -79,20 +80,21 @@ function bytesHandler(obj, selector, maxLength) {
   }
   $(selector).focus();
 }
+
 /**
  * Data의 값유무를 리턴하는 함수
  * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
  */
-function isNullData(data){
-  if(data==""||data ==null || data ==undefined){
+function isNullData(data) {
+  if (data == "" || data == null || data == undefined) {
     return true;
   }
   return false;
 }
 
 function loadImage(value) {
-  if(value.files && value.files[0]) {
-    var reader = new FileReader();
+  if (value.files && value.files[0]) {
+    let reader = new FileReader();
     reader.onload = function (e) {
       $("#load_user_image").attr('src', e.target.result);
     };

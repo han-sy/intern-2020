@@ -3,19 +3,18 @@
  * @file    functionData.js
  */
 
-function isFunctionTagValueOn(functionId){
-  var functionTagID = "#functionAble"+ functionId;
-  if($(functionTagID).attr("value") == "on"){
+function isFunctionTagValueOn(functionId) {
+  var functionTagID = "#functionAble" + functionId;
+  if ($(functionTagID).attr("value") == "on") {
     return true;
-  }else if($(functionTagID).attr("value") == "off"){
+  } else if ($(functionTagID).attr("value") == "off") {
     return false;
-  }
-  else{
+  } else {
     changedDataError();
   }
 }
 
-class FunctionOn{
+class FunctionOn {
 
   set comments(functionId) {
     this._comments = isFunctionTagValueOn(functionId);
@@ -103,19 +102,17 @@ class FunctionOn{
 
 }
 
-function resetFunctionAble(){
+function resetFunctionAble() {
   functionOn.comments = 1;
-  functionOn.reply=2;
-  functionOn.postFileAttach =3;
-  functionOn.commentFileAttach= 4;
-  functionOn.postInlineImage=5;
-  functionOn.commentInlineImage= 6;
-  functionOn.postTempSave= 7;
-  functionOn.postSticker= 9;
-  functionOn.commentSticker= 10;
-  functionOn.postAutoTag= 11;
+  functionOn.reply = 2;
+  functionOn.postFileAttach = 3;
+  functionOn.commentFileAttach = 4;
+  functionOn.postInlineImage = 5;
+  functionOn.commentInlineImage = 6;
+  functionOn.postTempSave = 7;
+  functionOn.postSticker = 9;
+  functionOn.commentSticker = 10;
+  functionOn.postAutoTag = 11;
 }
-
-
 
 var functionOn = new FunctionOn();

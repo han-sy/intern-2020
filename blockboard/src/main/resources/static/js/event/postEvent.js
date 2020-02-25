@@ -19,7 +19,7 @@ $(document).on('click', '.btn_tempSave', function () {
   let boardId = getSelectedBoardIdInEditor();
 
   if (isValidPostData()) {
-    insertTempPost(boardId, postId, postTitle, postContent, "temp");
+    insertTempPost(boardId, postId, postTitle, postContent, POST_STATUS.TEMP);
     refreshPostListAfterPostCRUD();
   }
 });
@@ -35,7 +35,8 @@ $(document).on('click', '.btn_post', function () {
     if (typeof postId == "undefined") { // 임시 or 자동 저장 되지 않았을 때
       insertPost(postId, selectedBoardId, postTitle, postContent);
     } else {  // 임시 or 자동 저장이 된 후 '저장' 버튼을 누를 때
-      insertTempPost(selectedBoardId, postId, postTitle, postContent, "normal");
+      insertTempPost(selectedBoardId, postId, postTitle, postContent,
+          POST_STATUS.NORMAL);
       getPageList(1, getCurrentActiveBoardId(), 0, updatePostPageList);
     }
     clearEditor();
@@ -90,11 +91,11 @@ function updateButtonOfSavePostToUpdatePost() {
 $(document).on('click', '.btn_modify', function () {
   let postId = getPostIdInPost();
   let boardId = getBoardIdInPost();
-  console.log("postId : "+postId);
+  console.log("postId : " + postId);
   postClear();
-  createEditorArea("modify",postId);
+  createEditorArea("modify", postId);
   updateButtonOfSavePostToUpdatePost();
-  CKEDITOR.instances['editor'].on('instanceReady', function() {
+  CKEDITOR.instances['editor'].on('instanceReady', function () {
     loadPost(boardId, postId);
   });
 });

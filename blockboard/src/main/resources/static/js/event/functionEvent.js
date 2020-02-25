@@ -12,7 +12,7 @@ function changeFunction() {
 
 //기능변경사항 저장하기 버튼
 function clickSaveFunctionChange() {
-  var functionDataList = new Array();
+  let functionDataList = new Array();
   $("input[name=function]").each(function () {
     var functionData = new Object();
     functionData.functionId = $(this).val();
@@ -24,8 +24,8 @@ function clickSaveFunctionChange() {
     functionDataList.push(functionData);
   });
 
-  var jsonData = JSON.stringify(functionDataList);
-  var isAcceptance = confirm("기능변경 내용을 저장하시겠습니까?");
+  let jsonData = JSON.stringify(functionDataList);
+  let isAcceptance = confirm("기능변경 내용을 저장하시겠습니까?");
   if (isAcceptance) {
     $(function () {
       updateNewFunctionInfo(jsonData);//새로운 기능목록 불러와 기능목록 변경
@@ -36,8 +36,8 @@ function clickSaveFunctionChange() {
 
 //기능변경 on/off버튼 텍스트 바꾸기
 $(document).on('click', '._function-switch', function () {
-  var switchText = $(this).find("._switch");
-  var checkBox = $(this).find(".function_checkbox");
+  let switchText = $(this).find("._switch");
+  let checkBox = $(this).find(".function_checkbox");
 
   if (checkBox.prop("checked")) {
     $(this).removeClass('btn-success');
@@ -51,20 +51,19 @@ $(document).on('click', '._function-switch', function () {
     checkBox.prop("checked", true);
   }
   $(this).removeClass("active");
-  if($(this).closest(".btn-group-toggle").hasClass("first_function")){
+  if ($(this).closest(".btn-group-toggle").hasClass("first_function")) {
     ChangeFunctionListUI($(".first_function").find("._function-switch"));
   }
 });
 
-function ChangeFunctionListUI(obj){
-  if(obj.find("._switch").html()=="OFF"){
+function ChangeFunctionListUI(obj) {
+  if (obj.find("._switch").html() == "OFF") {
     $('.comment_function').addClass("display_none");
     $('.comment_function').find("._switch").html("OFF");
     $('.comment_function').find('._function-switch').removeClass('btn-success');
     $('.comment_function').find('._function-switch').addClass('btn-default');
     $('.comment_function').find(".function_checkbox").removeAttr("checked");
-  }
-  else{
+  } else {
     $('.comment_function').removeClass("display_none");
   }
 }
