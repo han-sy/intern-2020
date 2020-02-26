@@ -1,6 +1,6 @@
 /**
  * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
- * @file CommentVaildException.java
+ * @file CommentValidException.java
  */
 package com.board.project.blockboard.common.exception;
 

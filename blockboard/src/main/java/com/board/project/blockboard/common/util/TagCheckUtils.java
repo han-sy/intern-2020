@@ -35,14 +35,12 @@ public class TagCheckUtils {
     Set<String> taggedUsers = new HashSet<>();
     Document doc = Jsoup.parse(comment.getCommentContent());
     Elements body = doc.select("a.mentions_tag");
-    log.info(body.toString());
+
     for (int i = 0; i < body.size(); i++) {
       Element tagItem = body.get(i);
       String userId = tagItem.dataset().get("id");
-      log.info(userId);
       taggedUsers.add(userId);
     }
-    log.info(taggedUsers.toString());
     return taggedUsers;
   }
 }

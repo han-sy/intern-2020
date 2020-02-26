@@ -253,7 +253,6 @@ public class FileService {
   @SneakyThrows
   public String uploadImage(HttpServletResponse response, MultipartHttpServletRequest multiFile,
       int companyId, String editorName) {
-
     if (StringUtils.equals(editorName, "editor")) {
       if (!(functionValidation.isFunctionOn(companyId, FunctionId.POST_INLINE_IMAGE))) {
         return null;
@@ -273,6 +272,7 @@ public class FileService {
 
   private void executeUploadImage(HttpServletResponse response, String editorName, int companyId,
       MultipartFile file) throws IOException {
+
     ObjectMetadata metadata = new ObjectMetadata();
     String fileName = Common.getNewUUID();
     String fileUrl = amazonS3Service
@@ -295,6 +295,7 @@ public class FileService {
 
   private void checkEditorAndAutoTagIsOn(String editorName, int companyId, String fileName,
       JsonObject json) {
+
     int functionIdToCheck = editorName.equals(EditorName.POST_EDITOR) ? FunctionId.POST_AUTO_TAG
         : FunctionId.COMMENT_AUTO_TAG;
     if (functionService.isUseFunction(companyId, functionIdToCheck)) {
@@ -307,6 +308,7 @@ public class FileService {
    * 이미지에 존재하는 유저리스트 반환
    */
   public List<UserDTO> detectedUserList(String fileName, int companyId) {
+
     String collectionID = Common.getNewUUID();
     //collection 등록
     amazonRekognitionService.registerCollection(collectionID);
@@ -321,12 +323,15 @@ public class FileService {
    * 유저별로 얼굴이 이미지에 있는지검사 쓰레드를 통해
    */
   private List<UserDTO> getDetectedUsers(int companyId, String collectionID) {
+
     List<UserDTO> detectedUsers = new ArrayList<>();
     List<UserDTO> userList = userMapper.selectUsersByCompanyId(companyId);
-    int subListSize = userList.size() / 100;
+    int subListSize = (userList.size() / 100)+1;
     List<List<UserDTO>> userSubLists = Lists.partition(userList, subListSize);
+
     DetectThread detectThread = null;
     for (List<UserDTO> users : userSubLists) {
+
       detectThread = new DetectThread(users, collectionID, amazonRekognitionService, detectedUsers);
       detectThread.start();
     }
@@ -373,6 +378,7 @@ public class FileService {
                   user.getImageFileName(),
                   collectionID);
           if (detected) {
+            log.info("감지  : "+user.getUserName());
             detectedUsers.add(user);
           }
         }
