@@ -47,10 +47,14 @@ function insertComment(boardId, postId, commentContent) {//댓글 임시저장 �
     error: function (error) {  //통신 실패시
       errorFunction(error);
     },
-    complete : function (data) {
+    success :function(data){
       if (functionOn.commentFileAttach) {
+        console.log("functionOn.commentFileAttach");
         updateIDToFiles("comment",postId, data, boardId);
       }
+
+    },
+    complete : function (data) {
       getPageList(1, 0, postId, updateCommentPageList);
       updateCommentsCount(boardId, postId);
       CKEDITOR.instances['commentText'].setData("");

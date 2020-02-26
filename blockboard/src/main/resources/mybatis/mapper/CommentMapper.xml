@@ -46,7 +46,7 @@
     WHERE comment_id = #{commentId};
   </select>
 
-  <insert id="insertNewCommentByCommentInfo" parameterType="hashmap">
+  <insert id="insertNewCommentByCommentInfo" parameterType="com.board.project.blockboard.dto.CommentDTO">
     INSERT INTO comments
     (post_id,
      user_id,

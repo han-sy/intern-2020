@@ -120,8 +120,10 @@ public class FileService {
   public void updateIDs(List<FileDTO> fileList, int companyId) {
     if (!functionValidation
         .isFunctionOn(companyId, FunctionId.POST_ATTACH_FILE, FunctionId.COMMENT_ATTACH_FILE)) {
+      log.info("onCheck");
       return;
     }
+    log.info("fileList :" +fileList);
     fileList.forEach(fileDTO -> fileMapper.updateIDsByStoredFileName(fileDTO));
   }
 

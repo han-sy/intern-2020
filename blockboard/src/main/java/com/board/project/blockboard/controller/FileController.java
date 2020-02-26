@@ -51,6 +51,8 @@ public class FileController {
   @PutMapping(value = "/files")
   public void updateIdToFile(@RequestBody List<FileDTO> fileList, HttpServletRequest request) {
     UserDTO userData = new UserDTO(request);
+    log.info("!!!updateIdToFile");
+    log.info("!!1fileList :" +fileList);
     fileService.updateIDs(fileList, userData.getCompanyId());
   }
 

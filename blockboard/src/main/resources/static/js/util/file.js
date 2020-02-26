@@ -34,10 +34,12 @@ function getAttachedFileList(postId, commentId) {
   let fileList = new Array();
   $(".filename").each(function () {
     let fileData = new Object();
-    if (!isNullData(postId)) {
+    if (isNullData(commentId)) {
       fileData.postId = postId;
+      fileData.commentId = 0;
     }
-    if (!isNullData(commentId)) {
+    else{
+      fileData.postId = 0;
       fileData.commentId = commentId;
     }
     fileData.storedFileName = $(this).attr("data-filename");

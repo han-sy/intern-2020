@@ -48,6 +48,7 @@ public class CommentService {
     commentMapper.insertNewCommentByCommentInfo(commentData);
     postService.updateCommentCountPlus1(commentData.getPostId());
     alarmService.insertAlarm(commentData);
+    log.info("commentID : "+commentData.getCommentId()+"");
     return commentData.getCommentId();
   }
 

@@ -30,7 +30,6 @@ function createEditorArea(method, postId) { // 에디터 div 생성
       hideTempSaveButton();
       break;
   }
-  console.log("postId = " + postId);
   openPostFileAttachForm(postId);
 }
 

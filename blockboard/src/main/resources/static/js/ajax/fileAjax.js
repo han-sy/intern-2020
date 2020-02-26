@@ -73,11 +73,12 @@ function checkCommentFileForGetCommentPageList(editor, commentReferencedId,
  */
 function updateIDToFiles(editor, postId, commentId, boardId,
     commentReferencedId) {
-  let fileList = getAttachedFileList(postId, commentId);
+  let fileList = JSON.stringify(getAttachedFileList(postId, commentId));
+  console.log("fileList : " ,fileList);
   $.ajax({
     type: 'PUT',
     url: `/files`,
-    data: JSON.stringify(fileList),
+    data: fileList,
     dataType: "json",
     contentType: 'application/json',
     error: function (error) {  //통신 실패시
