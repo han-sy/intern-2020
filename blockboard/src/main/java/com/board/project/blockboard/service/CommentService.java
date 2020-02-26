@@ -108,14 +108,10 @@ public class CommentService {
   }
 
   public boolean isExistComment(int commentId) {
-    log.info(commentId+"");
     CommentDTO comment = commentMapper.selectCommentByCommentIdForCheckExisted(commentId);
-    log.info("isExistComment");
     if(comment==null){
-      log.info("null");
       return false;
     }
-    log.info("mot null");
     return true;
   }
 }

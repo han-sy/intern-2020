@@ -60,7 +60,6 @@ public class Thumbnail {
     File file = new File(fileName);
     if (file.exists()) {
       if (file.delete()) {
-        log.info("file delete");
       }
     }
   }

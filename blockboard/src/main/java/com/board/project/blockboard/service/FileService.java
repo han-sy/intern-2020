@@ -239,11 +239,7 @@ public class FileService {
   private void deleteFileInAmazonS3(String storedFileName)
       throws FileValidException {
     if (amazonS3Service.deleteFile(storedFileName, Bucket.FILE)) {
-      log.info("파일삭제 성공");
       fileMapper.deleteFileByStoredFileName(storedFileName);
-    } else {
-      log.info("파일삭제 실패");
-      //TODO 파일삭제 실패에 대한 에러처리
     }
   }
 
@@ -378,7 +374,6 @@ public class FileService {
                   user.getImageFileName(),
                   collectionID);
           if (detected) {
-            log.info("감지  : "+user.getUserName());
             detectedUsers.add(user);
           }
         }

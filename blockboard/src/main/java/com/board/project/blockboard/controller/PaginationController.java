@@ -37,7 +37,6 @@ public class PaginationController {
   @GetMapping("/search")
   public PaginationDTO getSearchPageList(@RequestParam int pageNumber, @RequestParam String keyword,
       @RequestParam String option, HttpServletRequest request) {
-    log.info("keyword = " + keyword + ", options = " + option);
     return paginationService.getSearchPageList(pageNumber, keyword, option, request);
   }
 }

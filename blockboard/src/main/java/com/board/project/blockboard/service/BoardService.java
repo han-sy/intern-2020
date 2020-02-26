@@ -64,12 +64,9 @@ public class BoardService {
 
   public boolean isExistBoard(int boardId) {
     BoardDTO board = boardMapper.selectBoardByBoardIDForCheckExisted(boardId);
-    log.info("selectBoardByBoardIDForCheckExisted");
     if(board==null){
-      log.info("null");
       return false;
     }
-    log.info("not null");
     return true;
   }
 }
