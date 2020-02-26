@@ -63,8 +63,9 @@ public class PostService {
     UserDTO user = new UserDTO(request);
     PostValidation.validateDelete(post, user);
 
-    // 휴지통에 있는 게시글이면 바로삭제하고, 아니면 휴지통으로 보낸다.
-    if (StringUtils.equals(post.getPostStatus(), PostStatus.RECYCLE)) {
+    // 휴지통 or 임시보관함에 있는 게시글이면 바로삭제하고, 아니면 휴지통으로 보낸다.
+    if (StringUtils.equals(post.getPostStatus(), PostStatus.RECYCLE) || StringUtils
+        .equals(post.getPostStatus(), PostStatus.TEMP)) {
       postMapper.deletePostByPostId(postId);
     } else {
       postMapper.temporaryDeletePost(post);

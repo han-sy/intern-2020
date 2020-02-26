@@ -90,7 +90,6 @@ function updateIDToFiles(editor, postId, commentId, boardId,
       checkCommentFileForGetCommentPageList(editor, commentReferencedId,
           postId);
       updateCommentsCount(boardId, postId);
-      fileFormClear();
     }
   });
 }
