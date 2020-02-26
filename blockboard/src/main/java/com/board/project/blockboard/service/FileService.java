@@ -297,8 +297,7 @@ public class FileService {
       JsonObject json) {
     int functionIdToCheck = editorName.equals(EditorName.POST_EDITOR) ? FunctionId.POST_AUTO_TAG
         : FunctionId.COMMENT_AUTO_TAG;
-    if (StringUtils.equals(editorName, EditorName.POST_EDITOR) && functionService
-        .isUseFunction(companyId, functionIdToCheck)) {
+    if (functionService.isUseFunction(companyId, functionIdToCheck)) {
       List<UserDTO> detectedUsers = detectedUserList(fileName, companyId);
       json.add("detectedUser", new Gson().toJsonTree(detectedUsers));
     }
