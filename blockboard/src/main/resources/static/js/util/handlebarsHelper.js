@@ -121,7 +121,6 @@ Handlebars.registerHelper('isPopular', function (option) {
 
 Handlebars.registerHelper('isCommentFunction', function () {
   let isCommentFunction = (this.functionId % 2);
-  console.log("isCommentFunction ")
   if (isCommentFunction == 0) {
     return "comment_function";
   } else {
