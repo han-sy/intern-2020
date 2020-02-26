@@ -7,7 +7,7 @@ function updateRepliesCount(boardId, postId, commentReferencedId) {
   $.ajax({
     type: 'GET',
     url: `/boards/${boardId}/posts/${postId}/comments/${commentReferencedId}/replies/counts`,
-    error: function () {
+    error: function (error) {
       errorFunction(error);
     },
     success: function (data) {
@@ -45,7 +45,7 @@ function insertReply(boardId, postId, commentContent, commentReferencedId,
     data: replyData,
     dataType: "json",
     contentType: 'application/json',
-    error: function () {  //통신 실패시
+    error: function (error) {  //통신 실패시
       errorFunction(error);
     },
     complete: function (data) {

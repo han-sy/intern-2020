@@ -10,7 +10,6 @@ import com.board.project.blockboard.common.constant.ConstantData.Bucket;
 import com.board.project.blockboard.common.constant.ConstantData.EditorName;
 import com.board.project.blockboard.common.constant.ConstantData.FunctionId;
 import com.board.project.blockboard.common.exception.FileValidException;
-import com.board.project.blockboard.common.exception.FunctionValidException;
 import com.board.project.blockboard.common.util.Common;
 import com.board.project.blockboard.common.validation.AuthorityValidation;
 import com.board.project.blockboard.common.validation.FileValidation;
@@ -21,6 +20,7 @@ import com.board.project.blockboard.mapper.CommentMapper;
 import com.board.project.blockboard.mapper.FileMapper;
 import com.board.project.blockboard.mapper.PostMapper;
 import com.board.project.blockboard.mapper.UserMapper;
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import java.io.IOException;
@@ -324,9 +324,11 @@ public class FileService {
   private List<UserDTO> getDetectedUsers(int companyId, String collectionID) {
     List<UserDTO> detectedUsers = new ArrayList<>();
     List<UserDTO> userList = userMapper.selectUsersByCompanyId(companyId);
+    int subListSize = userList.size() / 100;
+    List<List<UserDTO>> userSubLists = Lists.partition(userList, subListSize);
     DetectThread detectThread = null;
-    for (UserDTO user : userList) {
-      detectThread = new DetectThread(user, collectionID, amazonRekognitionService, detectedUsers);
+    for (List<UserDTO> users : userSubLists) {
+      detectThread = new DetectThread(users, collectionID, amazonRekognitionService, detectedUsers);
       detectThread.start();
     }
     try {
@@ -348,15 +350,15 @@ public class FileService {
 
   class DetectThread extends Thread {
 
-    private UserDTO user;
+    private List<UserDTO> users;
     private String collectionID;
     private AmazonRekognitionService amazonRekognitionService;
     private boolean detected;
     private List<UserDTO> detectedUsers;
 
-    DetectThread(UserDTO user, String collectionID,
+    DetectThread(List<UserDTO> users, String collectionID,
         AmazonRekognitionService amazonRekognitionService, List<UserDTO> detectedUsers) {
-      this.user = user;
+      this.users = users;
       this.collectionID = collectionID;
       this.amazonRekognitionService = amazonRekognitionService;
       this.detected = false;
@@ -365,13 +367,15 @@ public class FileService {
 
     @Override
     public void run() {
-      if (user.getImageFileName() != null) {
-        detected = amazonRekognitionService
-            .searchFaceMatchingImageCollection(Bucket.USER,
-                user.getImageFileName(),
-                collectionID);
-        if (detected) {
-          detectedUsers.add(user);
+      for (UserDTO user : users) {
+        if (user.getImageFileName() != null) {
+          detected = amazonRekognitionService
+              .searchFaceMatchingImageCollection(Bucket.USER,
+                  user.getImageFileName(),
+                  collectionID);
+          if (detected) {
+            detectedUsers.add(user);
+          }
         }
       }
     }

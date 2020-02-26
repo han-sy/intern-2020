@@ -133,4 +133,9 @@
            JOIN users ON comments.user_id = users.user_id
     WHERE comments.comment_id = #{commentId};
   </select>
+  <select id="selectCommentByCommentIdForCheckExisted" parameterType="int" resultType="com.board.project.blockboard.dto.CommentDTO">
+    SELECT comment_id AS commentId
+    FROM comments
+    WHERE comment_id = #{commentId};
+  </select>
 </mapper>

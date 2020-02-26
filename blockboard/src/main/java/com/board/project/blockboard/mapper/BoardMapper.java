@@ -20,5 +20,7 @@ public interface BoardMapper {
   void updateBoardName(BoardDTO boardData);
 
   int deleteBoard(int boardId);
+
+  BoardDTO selectBoardByBoardIDForCheckExisted(int boardId);
 }
 

@@ -44,7 +44,7 @@ function insertComment(boardId, postId, commentContent) {//댓글 임시저장 �
     data: commentData,
     dataType: "json",
     contentType: 'application/json',
-    error: function () {  //통신 실패시
+    error: function (error) {  //통신 실패시
       errorFunction(error);
     },
     complete : function (data) {
@@ -66,7 +66,7 @@ function deleteCommentByCommentId(postId, boardId, commentId,
     type: 'DELETE',
     url: `/boards/${boardId}/posts/${postId}/comments/${commentId}`,
     data: {commentId:commentId},
-    error: function () {  //통신 실패시
+    error: function (error) {  //통신 실패시
       errorFunction(error);
     },
     success: function () {
