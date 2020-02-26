@@ -21,7 +21,6 @@ $('.modal-read-user-container').on("scroll", function () {
   let postId = getPostIdInPost();
   let boardId = getBoardIdInPost();
   if (scrollTop + innerHeight >= scrollHeight - 0.25 && hasRemainData) {
-    console.log(scrollTop + innerHeight - scrollHeight);
     getViewRecords(postId, boardId, resultCount, loadViewRecordUI);
   }
 });

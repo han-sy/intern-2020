@@ -91,7 +91,6 @@ function updateButtonOfSavePostToUpdatePost() {
 $(document).on('click', '.btn_modify', function () {
   let postId = getPostIdInPost();
   let boardId = getBoardIdInPost();
-  console.log("postId : " + postId);
   postClear();
   createEditorArea("modify", postId);
   updateButtonOfSavePostToUpdatePost();

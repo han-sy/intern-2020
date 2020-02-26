@@ -77,6 +77,5 @@ function editCommentByCommentId(postId, boardId, commentId) {
 }
 
 function updateCommentsCountUI(data) {
-  console.log("commentsCount : " + data);
   $(".commentCount").html(data);
 }
