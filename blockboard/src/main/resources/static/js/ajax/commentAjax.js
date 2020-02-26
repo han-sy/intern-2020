@@ -1,6 +1,6 @@
 //댓글 추가
 function insertComment(boardId, postId, commentContent) {//댓글 임시저장 기능이 추가될수도있어 commentId 파라미터 추가해놓음
-  let commentDTO = new Comment(boardId,postId,0,0,commentContent);
+  let commentDTO = new CommentData(boardId,postId,0,0,commentContent);
   let commentData = JSON.stringify(commentDTO);
 
   $.ajax({
@@ -62,7 +62,7 @@ function getCommentListByPageNum(pageNum, boardId, postId, successFunction) {
 
 //댓글 추가
 function insertComment(boardId, postId, commentContent) {//댓글 임시저장 기능이 추가될수도있어 commentId 파라미터 추가해놓음
-  let commentDTO = new Comment(boardId,postId,0,0,commentContent);
+  let commentDTO = new CommentData(boardId,postId,0,0,commentContent);
   let commentData = JSON.stringify(commentDTO);
 
   $.ajax({
@@ -111,8 +111,8 @@ function deleteCommentByCommentId(postId, boardId, commentId,
 }
 
 //댓글 수정
-function editComment(postId, boardId, commentId, newComment) {
-  let commentDTO = new Comment(boardId,postId,commentId,0,newComment);
+function editComment(postId, boardId, commentId, commentContent) {
+  let commentDTO = new CommentData(boardId,postId,commentId,0,commentContent);
   let commentData = JSON.stringify(commentDTO);
   $.ajax({
     type: 'PUT',

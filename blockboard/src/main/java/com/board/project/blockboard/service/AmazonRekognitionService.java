@@ -142,7 +142,7 @@ public class AmazonRekognitionService {
     return new SearchFacesByImageRequest()
         .withCollectionId(collectionID)
         .withImage(image)
-        .withFaceMatchThreshold(80F)
+        .withFaceMatchThreshold(70F)
         .withMaxFaces(1);
   }
 

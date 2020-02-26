@@ -66,10 +66,11 @@ function getCountPrintedReplies() {
   return $(".replyItem").length;
 }
 
-class Comment {
+class CommentData {
   constructor(boardId, postId, commentId, commentReferencedId, commentContent) {
     this.boardId = boardId;
     this.postId = postId;
+    this.commentId = commentId;
     this.commentReferencedId = commentReferencedId;
     this.commentContent = commentContent;
   }

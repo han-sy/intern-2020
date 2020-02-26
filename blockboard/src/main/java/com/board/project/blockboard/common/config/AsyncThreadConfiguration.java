@@ -17,9 +17,9 @@ public class AsyncThreadConfiguration {
   @Bean
   public Executor asyncThreadTaskExecutor() {
     ThreadPoolTaskExecutor threadPoolTaskExecutor = new ThreadPoolTaskExecutor();
-    threadPoolTaskExecutor.setCorePoolSize(8);
-    threadPoolTaskExecutor.setMaxPoolSize(8);
-    threadPoolTaskExecutor.setThreadNamePrefix("jeong-pro-pool");
+    threadPoolTaskExecutor.setCorePoolSize(10);
+    threadPoolTaskExecutor.setMaxPoolSize(20);
+    threadPoolTaskExecutor.setThreadNamePrefix("block-board");
     return threadPoolTaskExecutor;
   }
 }
