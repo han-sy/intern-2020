@@ -21,7 +21,7 @@ public class PostValidation {
 
   public static void validateTempPost(PostDTO post) {
     isExistPost(post);
-    if (StringUtils.equals(post.getPostStatus(), PostStatus.TEMP)) {
+    if (!StringUtils.equals(post.getPostStatus(), PostStatus.TEMP)) {
       throw new NullPointerException("임시 저장 게시글이 아닙니다.");
     }
   }
