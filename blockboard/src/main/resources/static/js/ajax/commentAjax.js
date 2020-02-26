@@ -1,3 +1,29 @@
+//댓글 추가
+function insertComment(boardId, postId, commentContent) {//댓글 임시저장 기능이 추가될수도있어 commentId 파라미터 추가해놓음
+  let commentDTO = new Comment(boardId,postId,0,0,commentContent);
+  let commentData = JSON.stringify(commentDTO);
+
+  $.ajax({
+    type: 'POST',
+    url: `/boards/${boardId}/posts/${postId}/comments`,
+    data: commentData,
+    dataType: "json",
+    contentType: 'application/json',
+    error: function (error) {  //통신 실패시
+      errorFunction(error);
+    },
+    complete : function (data) {
+      if (functionOn.commentFileAttach) {
+        updateIDToFiles("comment",postId, data, boardId);
+      }
+      getPageList(1, 0, postId, updateCommentPageList);
+      updateCommentsCount(boardId, postId);
+      CKEDITOR.instances['commentText'].setData("");
+
+    }
+  });
+}
+
 /**
  * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
  * @file commentAjax.js
@@ -33,6 +59,7 @@ function getCommentListByPageNum(pageNum, boardId, postId, successFunction) {
   });
 }
 
+<<<<<<< HEAD
 //댓글 추가
 function insertComment(boardId, postId, commentContent) {//댓글 임시저장 기능이 추가될수도있어 commentId 파라미터 추가해놓음
   let commentDTO = new Comment(boardId,postId,0,0,commentContent);
@@ -63,6 +90,8 @@ function insertComment(boardId, postId, commentContent) {//댓글 임시저장 �
   });
 }
 
+=======
+>>>>>>> 953cc0031a623f70115ee92f435aaf0aa40a478a
 //댓글삭제
 function deleteCommentByCommentId(postId, boardId, commentId,
     commentReferencedId) {

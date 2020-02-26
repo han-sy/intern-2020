@@ -328,7 +328,7 @@ public class FileService {
 
     List<UserDTO> detectedUsers = new ArrayList<>();
     List<UserDTO> userList = userMapper.selectUsersByCompanyId(companyId);
-    int subListSize = (userList.size() / 100)+1;
+    int subListSize = (userList.size() / 10)+1;
     List<List<UserDTO>> userSubLists = Lists.partition(userList, subListSize);
 
     DetectThread detectThread = null;
