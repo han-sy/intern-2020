@@ -557,9 +557,11 @@
                     <p class="h4">{{postTitle}}</p>
                     <p class="h6 writer_info" align="right" data-id="{{userId}}">{{userName}}</p>
                     <p class="h6" align="right">{{postRegisterTime}}</p>
+                    {{#isReadCheckAble}}
                     <p align="right"><a class="h6 read_check" data-toggle="modal"
                                         data-target="#check_read_user"
                                         align="right">읽음 {{viewCount}}</a></p>
+                    {{/isReadCheckAble}}
                     <hr>
                     <div class="attached_file_list_container_post">
                         <!--첨부파일 컨테이너 -->
