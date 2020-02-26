@@ -1,6 +1,7 @@
 package com.board.project.blockboard.service;
 
 import com.board.project.blockboard.common.constant.ConstantData.PageSize;
+import com.board.project.blockboard.common.util.LengthCheckUtils;
 import com.board.project.blockboard.dto.CommentDTO;
 import com.board.project.blockboard.mapper.ReplyMapper;
 import com.board.project.blockboard.mapper.UserMapper;
@@ -39,6 +40,7 @@ public class ReplyService {
    * 답글 insert
    */
   public int writeReplyWithUserInfo(String userId, int companyId, CommentDTO replyData) {
+    LengthCheckUtils.validCommentData(replyData);
     updateReplyData(userId, companyId, replyData);
     replyMapper.insertNewReplyByCommentInfo(replyData);
     commentService.updateRepliesCountPlus1(replyData.getCommentReferencedId());
@@ -47,6 +49,7 @@ public class ReplyService {
   }
 
   private void updateReplyData(String userId, int companyId, CommentDTO replyData) {
+    LengthCheckUtils.validCommentData(replyData);
     replyData.setUserId(userId);
     replyData.setCommentContentExceptHTMLTag(Jsoup.parse(replyData.getCommentContent()).text());
     replyData.setCompanyId(companyId);

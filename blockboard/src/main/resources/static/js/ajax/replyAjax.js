@@ -7,8 +7,8 @@ function updateRepliesCount(boardId, postId, commentReferencedId) {
   $.ajax({
     type: 'GET',
     url: `/boards/${boardId}/posts/${postId}/comments/${commentReferencedId}/replies/counts`,
-    error: function () {
-      alert('통신실패!');
+    error: function (error) {
+      errorFunction(error);
     },
     success: function (data) {
       updateRepliesCountUI(data, commentReferencedId);
@@ -45,8 +45,8 @@ function insertReply(boardId, postId, commentContent, commentReferencedId,
     data: replyData,
     dataType: "json",
     contentType: 'application/json',
-    error: function () {  //통신 실패시
-      alert('통신실패!');
+    error: function (error) {  //통신 실패시
+      errorFunction(error);
     },
     complete: function (data) {
       if (data != null) {

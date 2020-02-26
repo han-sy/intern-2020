@@ -55,7 +55,6 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(FileValidException.class)
   @ResponseBody
   protected ResponseEntity<?> FileValidException(Exception e) {
-
     return new ResponseEntity<>(e, HttpStatus.CONFLICT);
   }
 
@@ -65,8 +64,23 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(AuthorityValidException.class)
   @ResponseBody
   protected ResponseEntity<?> AuthorityValidException(Exception e) {
-
     return new ResponseEntity<>(e, HttpStatus.FORBIDDEN);
+  }
+  /**
+   * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+   */
+  @ExceptionHandler(BoardValidException.class)
+  @ResponseBody
+  protected ResponseEntity<?> BoardValidException(Exception e) {
+    return new ResponseEntity<>(e, HttpStatus.CONFLICT);
+  }
+  /**
+   * @author Dongwook Kim <dongwook.kim1211@worksmobile.com>
+   */
+  @ExceptionHandler(CommentValidException.class)
+  @ResponseBody
+  protected ResponseEntity<?> CommentValidException(Exception e) {
+    return new ResponseEntity<>(e, HttpStatus.CONFLICT);
   }
 
 }

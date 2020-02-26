@@ -58,8 +58,8 @@ function getBoardList(successFunction) {
   $.ajax({
     type: 'GET',
     url: '/boards',
-    error: function () {  //통신 실패시
-      alert('통신실패!');
+    error: function (error) {  //통신 실패시
+      errorFunction(error);
     },
     success: function (data) {
       successFunction(data);
@@ -75,7 +75,7 @@ function getPostDataAfterPostClick(postId, boardId) {
     type: 'GET',
     url: `/boards/${boardId}/posts/${postId}`,
     error: function (error) {  //통신 실패시
-      alert('통신실패!' + error);
+      errorFunction(error);
     },
     success: function (data) {
       $('#writecontent').hide();
@@ -130,8 +130,8 @@ function getPostListByPageNum(pageNum, boardId) {
         data: {
           pageNumber: pageNum
         },
-        error: function () {  //통신 실패시
-          alert('통신실패!');
+        error: function (error) {  //통신 실패시
+          errorFunction(error);
         },
         success: function (data) {
           loadPostList(data);

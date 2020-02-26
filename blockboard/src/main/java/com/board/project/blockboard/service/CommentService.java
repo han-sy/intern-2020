@@ -6,6 +6,8 @@ package com.board.project.blockboard.service;
 
 import com.board.project.blockboard.common.constant.ConstantData.PageSize;
 import com.board.project.blockboard.common.constant.ConstantData.RangeSize;
+import com.board.project.blockboard.common.util.LengthCheckUtils;
+import com.board.project.blockboard.common.validation.CommentValidation;
 import com.board.project.blockboard.dto.CommentDTO;
 import com.board.project.blockboard.dto.PaginationDTO;
 import com.board.project.blockboard.mapper.CommentMapper;
@@ -27,7 +29,9 @@ public class CommentService {
   @Autowired
   private UserMapper userMapper;
   @Autowired
-  PostService postService;
+  private PostService postService;
+  @Autowired
+  private CommentValidation commentValidation;
 
 
   public List<CommentDTO> getCommentListByPostId(int postId, int pageNumber) {
@@ -39,8 +43,8 @@ public class CommentService {
 
   //TODO 카운트는 비동기로 트랜잭션 처리보다야
   public int writeCommentWithUserInfo(CommentDTO commentData, String userId, int companyId) {
+    LengthCheckUtils.validCommentData(commentData);
     updateCommentData(commentData, userId, companyId);
-
     commentMapper.insertNewCommentByCommentInfo(commentData);
     postService.updateCommentCountPlus1(commentData.getPostId());
     alarmService.insertAlarm(commentData);
@@ -51,6 +55,7 @@ public class CommentService {
   //TODO 카운트는 비동기로 트랜잭션 처리보다야
   //
   public void deleteComment(int commentId) {
+    commentValidation.checkExistedBoard(commentId);
     int postId = postService.getPostIdByCommentId(commentId);
     Integer commentReferencedId = commentMapper.selectCommentReferencedIdByCommentId(commentId);
     commentMapper.deleteCommentByCommentReferencedId(commentId);
@@ -68,6 +73,7 @@ public class CommentService {
   }
 
   public void updateComment(CommentDTO commentData) {
+    commentValidation.checkExistedBoard(commentData.getCommentId());
     commentData.setCommentContentExceptHTMLTag(Jsoup.parse(commentData.getCommentContent()).text());
     commentMapper.updateComment(commentData);
   }
@@ -94,9 +100,22 @@ public class CommentService {
   }
 
   private void updateCommentData(CommentDTO commentData, String userId, int companyId) {
+    LengthCheckUtils.validCommentData(commentData);
     commentData.setCommentContentExceptHTMLTag(Jsoup.parse(commentData.getCommentContent()).text());
     commentData.setUserName(userMapper.selectUserNameByUserId(userId));
     commentData.setUserId(userId);
     commentData.setCompanyId(companyId);
+  }
+
+  public boolean isExistComment(int commentId) {
+    log.info(commentId+"");
+    CommentDTO comment = commentMapper.selectCommentByCommentIdForCheckExisted(commentId);
+    log.info("isExistComment");
+    if(comment==null){
+      log.info("null");
+      return false;
+    }
+    log.info("mot null");
+    return true;
   }
 }
