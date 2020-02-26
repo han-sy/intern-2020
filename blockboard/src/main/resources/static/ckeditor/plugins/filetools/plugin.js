@@ -68,6 +68,7 @@
 				setCookie('CSRF_TOKEN', encodeURIComponent(csrfToken));
 				fileLoader.xhr.setRequestHeader("_csrf", csrfToken);
 				$formData.append('editorName', editor.name);
+				console.log("formData = ", $formData);
 				if ( configXhrHeaders ) {
 					for ( header in configXhrHeaders ) {
 						fileLoader.xhr.setRequestHeader( header, configXhrHeaders[ header ] );
