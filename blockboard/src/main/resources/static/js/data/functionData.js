@@ -56,6 +56,14 @@ class FunctionOn {
     this._postAutoTag = isFunctionTagValueOn(functionId);
   }
 
+  set commentAutoTag(functionId){
+    this._commentAutoTag = isFunctionTagValueOn(functionId);
+  }
+
+  set postReadCheck(functionId){
+    this._postReadCheck = isFunctionTagValueOn(functionId);
+  }
+
   get comments() {
     return this._comments;
   }
@@ -100,6 +108,10 @@ class FunctionOn {
     return this._commentAutoTag;
   }
 
+  get postReadCheck(){
+    return this._postReadCheck;
+  }
+
 }
 
 function resetFunctionAble() {
@@ -113,6 +125,8 @@ function resetFunctionAble() {
   functionOn.postSticker = 9;
   functionOn.commentSticker = 10;
   functionOn.postAutoTag = 11;
+  functionOn.commentAutoTag =12;
+  functionOn.postReadCheck = 13;
 }
 
 var functionOn = new FunctionOn();

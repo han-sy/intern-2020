@@ -13,8 +13,8 @@ function getPageList(pageNumber, boardId, postId, successFunction) {
       postId: postId,
       pageNumber: pageNumber
     },
-    error: function () {  //통신 실패시
-      alert('통신실패!');
+    error: function (error) {  //통신 실패시
+      errorFunction(error);
     },
     success: function (data) {
       successFunction(data, data.pageList);
@@ -33,8 +33,8 @@ function getSearchPageList(pageNumber, keyword, option, successFunction) {
       option: option,
       pageNumber: pageNumber
     },
-    error: function () {  //통신 실패시
-      alert('통신실패!');
+    error: function (error) {  //통신 실패시
+      errorFunction(error);
     },
     success: function (data) {
       successFunction(data, data.pageList, true);

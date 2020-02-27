@@ -33,7 +33,7 @@
     SELECT alarm.alarm_id                         AS alarmId,
            alarm.post_id                          AS postId,
            alarm.comment_id                       AS commentId,
-           comment.comment_content_except_htmltag AS alarmContent,
+           comment.comment_content                AS alarmContent,
            users.user_name                        AS userName,
            comment.comment_register_time          AS registerTime,
            alarm.is_read                          AS isRead

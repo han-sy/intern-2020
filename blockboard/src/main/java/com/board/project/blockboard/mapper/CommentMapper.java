@@ -36,5 +36,5 @@ public interface CommentMapper {
 
   void updateRepliesCountMinus1(int commentReferencedId);
 
-
+  CommentDTO selectCommentByCommentIdForCheckExisted(int commentId);
 }

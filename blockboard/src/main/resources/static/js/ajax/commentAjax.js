@@ -7,8 +7,8 @@ function updateCommentsCount(boardId, postId) {
   $.ajax({
     type: 'GET',
     url: `/boards/${boardId}/posts/${postId}/comments/counts`,
-    error: function () {  //통신 실패시
-      alert('통신실패!');
+    error: function (error) {  //통신 실패시
+      errorFunction(error);
     },
     success: function (data) {    //들어오는 data는 boardDTOlist
       updateCommentsCountUI(data);
@@ -25,7 +25,7 @@ function getCommentListByPageNum(pageNum, boardId, postId, successFunction) {
       pageNumber: pageNum
     },
     error: function (error) {  //통신 실패시
-      alert('통신실패!' + error);
+      errorFunction(error);
     },
     success: function (data) {
       successFunction(data);
@@ -44,13 +44,16 @@ function insertComment(boardId, postId, commentContent) {//댓글 임시저장 �
     data: commentData,
     dataType: "json",
     contentType: 'application/json',
-    error: function () {  //통신 실패시
-      alert('통신실패!');
+    error: function (error) {  //통신 실패시
+      errorFunction(error);
     },
-    complete : function (data) {
+    success :function(data){
       if (functionOn.commentFileAttach) {
         updateIDToFiles("comment",postId, data, boardId);
       }
+
+    },
+    complete : function (data) {
       getPageList(1, 0, postId, updateCommentPageList);
       updateCommentsCount(boardId, postId);
       CKEDITOR.instances['commentText'].setData("");
@@ -66,8 +69,8 @@ function deleteCommentByCommentId(postId, boardId, commentId,
     type: 'DELETE',
     url: `/boards/${boardId}/posts/${postId}/comments/${commentId}`,
     data: {commentId:commentId},
-    error: function () {  //통신 실패시
-      alert('통신실패!');
+    error: function (error) {  //통신 실패시
+      errorFunction(error);
     },
     success: function () {
       getPageList(1, 0, postId, updateCommentPageList);

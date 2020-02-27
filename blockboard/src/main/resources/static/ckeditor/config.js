@@ -33,6 +33,7 @@ CKEDITOR.editorConfig = function (config) {
 
   // 에디터에서 '파일찾기' 할 때의 경로
   config.filebrowserImageUploadUrl = "/image-upload";
+  config.uploadUrl = "/image-upload";
 
   // 에디터의 추가 플러그인 설정
   config.extraPlugins = 'dialog, '

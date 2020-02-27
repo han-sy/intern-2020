@@ -25,7 +25,7 @@ public class Thumbnail {
     FileOutputStream fos = new FileOutputStream(convertFile);
     fos.write(originalFile.getBytes());
     BufferedImage srcImg = ImageIO.read(convertFile);
-    log.info("srcImg =" + srcImg);
+
     fos.close();
     int dest_width = 100, dest_height = 100;
     int origin_width = srcImg.getWidth();
@@ -46,13 +46,13 @@ public class Thumbnail {
         .crop(srcImg, (origin_width - n_width) / 2, (origin_height - n_height) / 2, n_width,
             n_height);
 
-    log.info("srcImg =" + cropImg);
+
     BufferedImage destImg = Scalr.resize(cropImg, dest_width, dest_height);
 
     File thumbFile = new File(fileName);
     ImageIO.write(destImg, fileExt.toUpperCase(), thumbFile);
     InputStream inputStream = new FileInputStream(thumbFile);
-    log.info("inputStream =" + inputStream);
+
     return inputStream;
   }
 
@@ -60,7 +60,6 @@ public class Thumbnail {
     File file = new File(fileName);
     if (file.exists()) {
       if (file.delete()) {
-        log.info("file delete");
       }
     }
   }

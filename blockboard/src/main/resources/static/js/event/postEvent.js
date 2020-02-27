@@ -91,7 +91,6 @@ function updateButtonOfSavePostToUpdatePost() {
 $(document).on('click', '.btn_modify', function () {
   let postId = getPostIdInPost();
   let boardId = getBoardIdInPost();
-  console.log("postId : " + postId);
   postClear();
   createEditorArea("modify", postId);
   updateButtonOfSavePostToUpdatePost();
@@ -103,6 +102,7 @@ $(document).on('click', '.btn_modify', function () {
 // 게시글 조회 후 삭제 버튼 이벤트
 $(document).on('click', '.btn_delete', function () {
   let postId = getPostIdInPost();
+  postId = typeof postId === "undefined" ? getPostIdInEditor() : postId;
   let boardId = parseInt(getCurrentActiveBoardId());
   if (boardId === BOARD_ID.RECYCLE || boardId === BOARD_ID.TEMP_BOX) {
     if (confirm("영구 삭제됩니다. 삭제하시겠습니까?")) {

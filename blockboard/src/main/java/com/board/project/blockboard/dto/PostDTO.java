@@ -17,7 +17,7 @@ public class PostDTO {
   private int companyId;
   private String postTitle;
   private String postContent;
-  private String postContentExceptHTMLTag;
+  private String postContentUnescapeHtml;
   private String postRegisterTime;
   private String postLastUpdateTime;
   private String postStatus;

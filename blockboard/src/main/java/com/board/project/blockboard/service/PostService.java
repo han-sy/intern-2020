@@ -7,6 +7,7 @@ package com.board.project.blockboard.service;
 import com.board.project.blockboard.common.constant.ConstantData.PageSize;
 import com.board.project.blockboard.common.constant.ConstantData.PostStatus;
 import com.board.project.blockboard.common.constant.ConstantData.RangeSize;
+import com.board.project.blockboard.common.util.JsoupUtils;
 import com.board.project.blockboard.common.util.LengthCheckUtils;
 import com.board.project.blockboard.common.validation.PostValidation;
 import com.board.project.blockboard.dto.PaginationDTO;
@@ -19,7 +20,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.StringUtils;
-import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -55,7 +55,8 @@ public class PostService {
     receivePost.setUserId(request.getAttribute("userId").toString());
     receivePost.setUserName(request.getAttribute("userName").toString());
     receivePost.setCompanyId(Integer.parseInt(request.getAttribute("companyId").toString()));
-    receivePost.setPostContentExceptHTMLTag(Jsoup.parse(receivePost.getPostContent()).text());
+    receivePost.setPostContent(JsoupUtils.filterStringForXSS(receivePost.getPostContent()));
+    receivePost.setPostContentUnescapeHtml(JsoupUtils.unescapeHtmlFromStringOfFilteringXSS(receivePost.getPostContent()));
   }
 
   public void deletePost(int postId, HttpServletRequest request) {
@@ -63,8 +64,9 @@ public class PostService {
     UserDTO user = new UserDTO(request);
     PostValidation.validateDelete(post, user);
 
-    // 휴지통에 있는 게시글이면 바로삭제하고, 아니면 휴지통으로 보낸다.
-    if (StringUtils.equals(post.getPostStatus(), PostStatus.RECYCLE)) {
+    // 휴지통 or 임시보관함에 있는 게시글이면 바로삭제하고, 아니면 휴지통으로 보낸다.
+    if (StringUtils.equals(post.getPostStatus(), PostStatus.RECYCLE) || StringUtils
+        .equals(post.getPostStatus(), PostStatus.TEMP)) {
       postMapper.deletePostByPostId(postId);
     } else {
       postMapper.temporaryDeletePost(post);
@@ -85,7 +87,8 @@ public class PostService {
     oldPost.setBoardId(newPost.getBoardId());
     oldPost.setPostTitle(newPost.getPostTitle());
     oldPost.setPostContent(newPost.getPostContent());
-    oldPost.setPostContentExceptHTMLTag(Jsoup.parse(newPost.getPostContent()).text());
+    oldPost.setPostContent(JsoupUtils.filterStringForXSS(newPost.getPostContent()));
+    oldPost.setPostContentUnescapeHtml(JsoupUtils.unescapeHtmlFromStringOfFilteringXSS(oldPost.getPostContent()));
   }
 
   public List<PostDTO> searchPost(String option, String keyword, int pageNumber) {

@@ -10,7 +10,6 @@ import com.board.project.blockboard.common.constant.ConstantData.Bucket;
 import com.board.project.blockboard.common.constant.ConstantData.EditorName;
 import com.board.project.blockboard.common.constant.ConstantData.FunctionId;
 import com.board.project.blockboard.common.exception.FileValidException;
-import com.board.project.blockboard.common.exception.FunctionValidException;
 import com.board.project.blockboard.common.util.Common;
 import com.board.project.blockboard.common.validation.AuthorityValidation;
 import com.board.project.blockboard.common.validation.FileValidation;
@@ -21,6 +20,7 @@ import com.board.project.blockboard.mapper.CommentMapper;
 import com.board.project.blockboard.mapper.FileMapper;
 import com.board.project.blockboard.mapper.PostMapper;
 import com.board.project.blockboard.mapper.UserMapper;
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import java.io.IOException;
@@ -239,11 +239,7 @@ public class FileService {
   private void deleteFileInAmazonS3(String storedFileName)
       throws FileValidException {
     if (amazonS3Service.deleteFile(storedFileName, Bucket.FILE)) {
-      log.info("파일삭제 성공");
       fileMapper.deleteFileByStoredFileName(storedFileName);
-    } else {
-      log.info("파일삭제 실패");
-      //TODO 파일삭제 실패에 대한 에러처리
     }
   }
 
@@ -253,15 +249,11 @@ public class FileService {
   @SneakyThrows
   public String uploadImage(HttpServletResponse response, MultipartHttpServletRequest multiFile,
       int companyId, String editorName) {
-
-    if (StringUtils.equals(editorName, "editor")) {
-      if (!(functionValidation.isFunctionOn(companyId, FunctionId.POST_INLINE_IMAGE))) {
-        return null;
-      }
-    } else {
-      if (!(functionValidation.isFunctionOn(companyId, FunctionId.COMMENT_INLINE_IMAGE))) {
-        return null;
-      }
+    int functionIdToCheck =
+        StringUtils.equals(editorName, EditorName.POST_EDITOR) ? FunctionId.POST_INLINE_IMAGE
+            : FunctionId.COMMENT_INLINE_IMAGE;
+    if (!(functionValidation.isFunctionOn(companyId, functionIdToCheck))) {
+      return null;
     }
     response.setCharacterEncoding("UTF-8");
     response.setContentType("text/html;charset=UTF-8");
@@ -271,8 +263,12 @@ public class FileService {
     return null;
   }
 
+  /**
+   * @author Woohyeok Jun <woohyeok.jun@worksmobile.com>
+   */
   private void executeUploadImage(HttpServletResponse response, String editorName, int companyId,
       MultipartFile file) throws IOException {
+
     ObjectMetadata metadata = new ObjectMetadata();
     String fileName = Common.getNewUUID();
     String fileUrl = amazonS3Service
@@ -283,6 +279,9 @@ public class FileService {
     printWriter.close();
   }
 
+  /**
+   * @author Woohyeok Jun <woohyeok.jun@worksmobile.com>
+   */
   private JsonObject makeJsonObjectToReturnEditor(String editorName, int companyId, String fileName,
       String fileUrl) {
     JsonObject json = new JsonObject();
@@ -293,12 +292,15 @@ public class FileService {
     return json;
   }
 
+  /**
+   * @author Woohyeok Jun <woohyeok.jun@worksmobile.com>
+   */
   private void checkEditorAndAutoTagIsOn(String editorName, int companyId, String fileName,
       JsonObject json) {
+
     int functionIdToCheck = editorName.equals(EditorName.POST_EDITOR) ? FunctionId.POST_AUTO_TAG
         : FunctionId.COMMENT_AUTO_TAG;
-    if (StringUtils.equals(editorName, EditorName.POST_EDITOR) && functionService
-        .isUseFunction(companyId, functionIdToCheck)) {
+    if (functionService.isUseFunction(companyId, functionIdToCheck)) {
       List<UserDTO> detectedUsers = detectedUserList(fileName, companyId);
       json.add("detectedUser", new Gson().toJsonTree(detectedUsers));
     }
@@ -308,6 +310,7 @@ public class FileService {
    * 이미지에 존재하는 유저리스트 반환
    */
   public List<UserDTO> detectedUserList(String fileName, int companyId) {
+
     String collectionID = Common.getNewUUID();
     //collection 등록
     amazonRekognitionService.registerCollection(collectionID);
@@ -322,11 +325,16 @@ public class FileService {
    * 유저별로 얼굴이 이미지에 있는지검사 쓰레드를 통해
    */
   private List<UserDTO> getDetectedUsers(int companyId, String collectionID) {
+
     List<UserDTO> detectedUsers = new ArrayList<>();
     List<UserDTO> userList = userMapper.selectUsersByCompanyId(companyId);
+    int subListSize = (userList.size() / 10) + 1;
+    List<List<UserDTO>> userSubLists = Lists.partition(userList, subListSize);
+
     DetectThread detectThread = null;
-    for (UserDTO user : userList) {
-      detectThread = new DetectThread(user, collectionID, amazonRekognitionService, detectedUsers);
+    for (List<UserDTO> users : userSubLists) {
+
+      detectThread = new DetectThread(users, collectionID, amazonRekognitionService, detectedUsers);
       detectThread.start();
     }
     try {
@@ -348,15 +356,15 @@ public class FileService {
 
   class DetectThread extends Thread {
 
-    private UserDTO user;
+    private List<UserDTO> users;
     private String collectionID;
     private AmazonRekognitionService amazonRekognitionService;
     private boolean detected;
     private List<UserDTO> detectedUsers;
 
-    DetectThread(UserDTO user, String collectionID,
+    DetectThread(List<UserDTO> users, String collectionID,
         AmazonRekognitionService amazonRekognitionService, List<UserDTO> detectedUsers) {
-      this.user = user;
+      this.users = users;
       this.collectionID = collectionID;
       this.amazonRekognitionService = amazonRekognitionService;
       this.detected = false;
@@ -365,13 +373,15 @@ public class FileService {
 
     @Override
     public void run() {
-      if (user.getImageFileName() != null) {
-        detected = amazonRekognitionService
-            .searchFaceMatchingImageCollection(Bucket.USER,
-                user.getImageFileName(),
-                collectionID);
-        if (detected) {
-          detectedUsers.add(user);
+      for (UserDTO user : users) {
+        if (user.getImageFileName() != null) {
+          detected = amazonRekognitionService
+              .searchFaceMatchingImageCollection(Bucket.USER,
+                  user.getImageFileName(),
+                  collectionID);
+          if (detected) {
+            detectedUsers.add(user);
+          }
         }
       }
     }

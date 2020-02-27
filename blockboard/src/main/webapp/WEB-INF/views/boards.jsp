@@ -189,9 +189,9 @@
                             </h5></div>
                             <div>
                                 <div>
-                                    <div class="comment_area comment_content" id=translate_area
-                                         style="width: 100%;">{{{commentContent}}}
-                                    </div>
+                                        <div class="comment_area comment_content" id=translate_area
+                                             style="width: 100%;">{{commentContentUnescapeHtml}}
+                                        </div>
                                     <br>
                                     <div class="date text-muted">{{commentRegisterTime}}</div>
                                 </div>
@@ -557,9 +557,11 @@
                     <p class="h4">{{postTitle}}</p>
                     <p class="h6 writer_info" align="right" data-id="{{userId}}">{{userName}}</p>
                     <p class="h6" align="right">{{postRegisterTime}}</p>
-                    <p align="right"><a class="h6 read_check" data-toggle="modal"
-                                        data-target="#check_read_user"
-                                        align="right">읽음 {{viewCount}}</a></p>
+                    {{#isReadCheckAble}}
+                        <p align="right"><a class="h6 read_check" data-toggle="modal"
+                                            data-target="#check_read_user"
+                                            align="right">읽음 {{viewCount}}</a></p>
+                    {{/isReadCheckAble}}
                     <hr>
                     <div class="attached_file_list_container_post">
                         <!--첨부파일 컨테이너 -->
@@ -685,9 +687,12 @@
                                 </h5></div>
                                 <div>
                                     <div>
-                                        <div class="comment_area comment_content" id=translate_area
-                                             style="width: 100%;">{{{commentContent}}}
-                                        </div>
+                                        {{#unescapeCommentContent}}
+                                            <div class="comment_area comment_content"
+                                                 id=translate_area
+                                                 style="width: 100%;">{{{commentContent}}}
+                                            </div>
+                                        {{/unescapeCommentContent}}
                                         <br>
                                         <div class="date text-muted">{{commentRegisterTime}}</div>
                                     </div>
@@ -755,8 +760,10 @@
                                     <strong class="nametag text-primary "
                                             data-id={{commentReferencedUserId}}
                                             style="cursor:pointer;padding: 0px 0px 0px 15px">{{commentReferencedUserName}}</strong>
+                                    {{#unescapeCommentContent}}
                                     <div class="comment_content col-10" style="float:left;">
                                         {{{commentContent}}}
+                                    {{/unescapeCommentContent}}
                                     </div>
                                 </div>
                                 <br>

@@ -65,7 +65,6 @@ function makeFileAttachForm(obj, container) {
  * 구분하고 fileList가져오기
  */
 function distinguishEditorForGetFileList(postId, container, commentId) {
-  console.log("distinguishEditorForGetFileList : " + postId + "," + commentId);
   if (!isNullData(postId)) {
     getFileList(postId, 0, container, createStatusbarUI);
   }

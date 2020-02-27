@@ -64,7 +64,6 @@
               self.blockElement = block.element;
               emojiList = self.editor._.emoji.list;
               self.addEmojiToGroups();
-              console.log("self = ", self);
               block.element.getAscendant('html').addClass('cke_emoji');
               block.element.getDocument().appendStyleSheet(
                   CKEDITOR.getUrl(CKEDITOR.basePath + 'contents.css'));

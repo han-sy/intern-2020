@@ -25,6 +25,12 @@
     WHERE board_name = #{boardName};
   </select>
 
+  <select id="selectBoardByBoardIDForCheckExisted" parameterType="int" resultType="com.board.project.blockboard.dto.BoardDTO">
+    SELECT *
+    FROM boards
+    WHERE board_id = #{boardId};
+  </select>
+
   <insert id="insertBoard" parameterType="com.board.project.blockboard.dto.BoardDTO">
     INSERT INTO boards
     (company_id,

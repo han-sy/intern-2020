@@ -74,6 +74,7 @@ public class ConstantData {
     public static final int COMMENT_STICKER = 10;
     public static final int POST_AUTO_TAG = 11;
     public static final int COMMENT_AUTO_TAG = 12;
+    public static final int POST_READ_CHECK = 13;
   }
 
 }

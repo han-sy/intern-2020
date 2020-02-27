@@ -29,6 +29,9 @@ public class FileValidation {
     return true;
   }
 
+  /**
+   * @author Woohyeok Jun <woohyeok.jun@worksmobile.com>
+   */
   @SneakyThrows
   public void validateUploadImageFile(MultipartFile file) {
     if (file == null) {

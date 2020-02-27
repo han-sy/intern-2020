@@ -18,7 +18,7 @@
       post_title,
       post_content,
       post_register_time,
-      post_content_except_htmltag,
+      post_content_unescape_html,
       post_status
     )
     VALUES (
@@ -31,14 +31,14 @@
       #{postTitle},
       #{postContent},
       NOW(),
-      #{postContentExceptHTMLTag},
+      #{postContentUnescapeHtml},
       #{postStatus}
     )
     ON DUPLICATE KEY UPDATE
       board_id=#{boardId},
       post_title=#{postTitle},
       post_content=#{postContent},
-      post_content_except_htmltag=#{postContentExceptHTMLTag},
+      post_content_unescape_html=#{postContentUnescapeHtml},
       post_register_time=NOW(),
       post_status=#{postStatus}
 
@@ -61,7 +61,7 @@
     UPDATE posts
     SET post_title=#{postTitle},
         post_content=#{postContent},
-        post_content_except_htmltag=#{postContentExceptHTMLTag},
+        post_content_unescape_html=#{postContentUnescapeHtml},
         post_last_update_time=NOW(),
         board_id=#{boardId},
         post_status=#{postStatus}
@@ -214,7 +214,7 @@
   <select id="getPostsCountIncludeMyReplies"
     parameterType="com.board.project.blockboard.dto.UserDTO"
     resultType="int">
-    SELECT DISTINCT Count(post.post_id)
+    SELECT DISTINCT Count(*)
     FROM   posts post
         JOIN comments comment ON post.post_id = comment.post_id
     WHERE  comment.user_id = #{userId} AND
@@ -242,11 +242,11 @@
       </when>
       <!-- 검색옵션이 내용 일 경우 -->
       <when test="option == 'content'">
-        (post.post_content_except_htmltag LIKE CONCAT('%',#{keyword},'%'))
+        (post.post_content_unescape_html LIKE CONCAT('%',#{keyword},'%'))
       </when>
       <!-- 검색옵션이 제목+내용 일 경우 -->
       <when test="option == 'titleAndContent'">
-        (post.post_title LIKE CONCAT('%',#{keyword},'%') OR post.post_content_except_htmltag LIKE
+        (post.post_title LIKE CONCAT('%',#{keyword},'%') OR post.post_content_unescape_html LIKE
         CONCAT('%',#{keyword},'%'))
       </when>
     </choose>

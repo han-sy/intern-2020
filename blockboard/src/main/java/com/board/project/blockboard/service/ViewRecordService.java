@@ -23,12 +23,18 @@ public class ViewRecordService {
   private ViewRecordMapper viewRecordMapper;
 
   public void readPostByUser(String userId, int postId) {
-    ViewRecordDTO record = new ViewRecordDTO(postId, userId);
+    ViewRecordDTO record = ViewRecordDTO.builder()
+        .postId(postId)
+        .userId(userId)
+        .build();
     viewRecordMapper.insertViewRecord(record);
   }
 
   public boolean isReadPostByUser(String userId, int postId) {
-    ViewRecordDTO record = new ViewRecordDTO(postId, userId);
+    ViewRecordDTO record = ViewRecordDTO.builder()
+        .postId(postId)
+        .userId(userId)
+        .build();
     return viewRecordMapper.selectRecordExist(record);
   }
 

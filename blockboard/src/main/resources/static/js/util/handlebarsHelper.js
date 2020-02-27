@@ -38,7 +38,13 @@ Handlebars.registerHelper('isPostFileAttachAble', function (options) {
   }
   return options.inverse(this);
 });
-
+//기독기능 on인지
+Handlebars.registerHelper('isReadCheckAble', function (options) {
+  if (functionOn.postReadCheck) {
+    return options.fn(this);
+  }
+  return options.inverse(this);
+});
 //댓글 답글
 Handlebars.registerHelper('isCommentFileAttachAble', function (options) {
   if (functionOn.commentFileAttach) {
@@ -114,7 +120,7 @@ Handlebars.registerHelper('isPopular', function (option) {
 });
 
 Handlebars.registerHelper('isCommentFunction', function () {
-  let isCommentFunction = (this.functionID % 2);
+  let isCommentFunction = (this.functionId % 2);
   if (isCommentFunction == 0) {
     return "comment_function";
   } else {
@@ -230,4 +236,15 @@ Handlebars.registerHelper('isTemp', function (option) {
   } else {
     return option.inverse(this);
   }
+});
+
+/**
+ * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
+ */
+Handlebars.registerHelper('unescapeCommentContent', function (option) {
+  console.log("원래 = ", this.commentContent);
+  console.log("unescape = ", this.commentContent.unescapeHtml());
+  console.log("unescape2 = ", unescape(this.commentContent));
+  this.commentContent = this.commentContent.unescapeHtml();
+  return option.fn(this);
 });

@@ -42,7 +42,7 @@ BEGIN
 		comment_register_time,
 		comment_referenced_id)
 	VALUES (
-		1,
+		10001,
         2,
         1,
         CONCAT('<p>DummyContent', i , '</p>'),
@@ -69,7 +69,7 @@ BEGIN
 		comment_register_time,
 		comment_referenced_id)
 	VALUES (
-		2,
+		10000,
         2,
         1,
         CONCAT('<p>DummyContent', i , '</p>'),
@@ -96,13 +96,13 @@ BEGIN
 		comment_register_time,
 		comment_referenced_id)
 	VALUES (
-		1,
+		10001,
         2,
         1,
         CONCAT('<p>DummyContent', i , '</p>'),
         CONCAT('DummyContent', i),
         now(),
-        1);
+        20001);
 	SET i = i + 1;
     END WHILE;
 END$$
@@ -113,7 +113,7 @@ DROP PROCEDURE IF EXISTS dummyUserInsert$$
 CREATE PROCEDURE dummyUserInsert()
 BEGIN
     DECLARE i INT DEFAULT 1;
-    WHILE i <= 500 DO
+    WHILE i <= 200 DO
 	INSERT INTO users (
 		user_id,
 		company_id,
@@ -159,10 +159,3 @@ BEGIN
     END WHILE;
 END$$
 DELIMITER $$
-
-CALL dummyPostInsert;
-CALL dummyCommentInsert;
-CALL dummyCommentInsert2;
-CALL dummyReplyInsert;
-CALL dummyUserInsert;
-CALL dummyAlarmInsert;

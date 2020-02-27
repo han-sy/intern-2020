@@ -89,6 +89,7 @@ public class FileController {
   public String uploadImage(HttpServletResponse response, MultipartHttpServletRequest multiFile,
       HttpServletRequest request, @RequestParam("editorName") String editorName) {
     UserDTO userData = new UserDTO(request);
+
     return fileService.uploadImage(response, multiFile, userData.getCompanyId(), editorName);
   }
 

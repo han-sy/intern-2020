@@ -42,9 +42,8 @@ function sendFileToServer(formData, status) {
       status.setProgress(100);
       status.filename.attr("data-filename", data);
     },
-    error: function (request, status, error) {
-      alert("code = " + request.status + " message = " + request.responseText
-          + " error = " + error); // 실패 시 처리
+    error: function (error) {
+      errorFunction(error)
     }
   });
 
@@ -81,7 +80,7 @@ function updateIDToFiles(editor, postId, commentId, boardId,
     data: JSON.stringify(fileList),
     dataType: "json",
     contentType: 'application/json',
-    error: function (error, msg) {  //통신 실패시
+    error: function (error) {  //통신 실패시
       errorFunction(error);
     }, complete() {
       const __ret = resetBoardIdAndPostId(postId, boardId);
@@ -90,7 +89,6 @@ function updateIDToFiles(editor, postId, commentId, boardId,
       checkCommentFileForGetCommentPageList(editor, commentReferencedId,
           postId);
       updateCommentsCount(boardId, postId);
-      fileFormClear();
     }
   });
 }
@@ -120,7 +118,7 @@ function deleteFile(storedFileName, obj, successFunction) {
     type: 'DELETE',
     url: `/files`,
     data: {storedFileName: storedFileName},
-    error: function (error, msg) {  //통신 실패시
+    error: function (error) {  //통신 실패시
       if (error.status == 409) {
         obj.remove();
       }
