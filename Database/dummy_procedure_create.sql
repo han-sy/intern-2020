@@ -159,7 +159,3 @@ BEGIN
     END WHILE;
 END$$
 DELIMITER $$
-
-CALL dummyPostInsert;
-CALL dummyUserInsert;
-CALL dummyAlarmInsert;

@@ -6,6 +6,7 @@ package com.board.project.blockboard.service;
 
 import com.board.project.blockboard.common.constant.ConstantData.PageSize;
 import com.board.project.blockboard.common.constant.ConstantData.RangeSize;
+import com.board.project.blockboard.common.util.JsoupUtils;
 import com.board.project.blockboard.common.util.LengthCheckUtils;
 import com.board.project.blockboard.common.validation.CommentValidation;
 import com.board.project.blockboard.dto.CommentDTO;
@@ -14,6 +15,7 @@ import com.board.project.blockboard.mapper.CommentMapper;
 import com.board.project.blockboard.mapper.UserMapper;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.jsoup.Jsoup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -55,7 +57,7 @@ public class CommentService {
   //TODO 카운트는 비동기로 트랜잭션 처리보다야
   //
   public void deleteComment(int commentId) {
-    commentValidation.checkExistedBoard(commentId);
+    commentValidation.checkExistedComment(commentId);
     int postId = postService.getPostIdByCommentId(commentId);
     Integer commentReferencedId = commentMapper.selectCommentReferencedIdByCommentId(commentId);
     commentMapper.deleteCommentByCommentReferencedId(commentId);
@@ -73,8 +75,8 @@ public class CommentService {
   }
 
   public void updateComment(CommentDTO commentData) {
-    commentValidation.checkExistedBoard(commentData.getCommentId());
-    commentData.setCommentContentExceptHTMLTag(Jsoup.parse(commentData.getCommentContent()).text());
+    commentValidation.checkExistedComment(commentData.getCommentId());
+    commentData.setCommentContent(StringEscapeUtils.escapeHtml4(commentData.getCommentContent()));
     commentMapper.updateComment(commentData);
   }
 
@@ -100,8 +102,10 @@ public class CommentService {
   }
 
   private void updateCommentData(CommentDTO commentData, String userId, int companyId) {
+    String commentContent = commentData.getCommentContent();
     LengthCheckUtils.validCommentData(commentData);
-    commentData.setCommentContentExceptHTMLTag(Jsoup.parse(commentData.getCommentContent()).text());
+    commentData.setCommentContent(StringEscapeUtils.escapeHtml4(commentContent));
+    commentData.setCommentContentUnescapeHtml(JsoupUtils.unescapeHtmlFromStringOfFilteringXSS(JsoupUtils.filterStringForXSS(commentContent)));
     commentData.setUserName(userMapper.selectUserNameByUserId(userId));
     commentData.setUserId(userId);
     commentData.setCompanyId(companyId);
@@ -109,7 +113,7 @@ public class CommentService {
 
   public boolean isExistComment(int commentId) {
     CommentDTO comment = commentMapper.selectCommentByCommentIdForCheckExisted(commentId);
-    if(comment==null){
+    if (comment == null) {
       return false;
     }
     return true;

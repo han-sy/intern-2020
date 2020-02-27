@@ -9,16 +9,17 @@
 <mapper namespace="com.board.project.blockboard.mapper.CommentMapper">
   <select id="selectCommentsByPostId" parameterType="int"
     resultType="com.board.project.blockboard.dto.CommentDTO">
-    SELECT comments.comment_id            AS commentId,
-           comments.post_id               AS postId,
-           comments.user_id               AS userId,
-           users.user_name                AS userName,
-           users.thumbnail_url            AS thumbnailUrl,
-           comments.company_id            AS companyId,
-           comments.comment_content       AS commentContent,
-           comments.comment_register_time AS commentRegisterTime,
-           comments.comment_referenced_id AS commentReferencedId,
-           comments.replies_count         AS repliesCount
+    SELECT comments.comment_id                      AS commentId,
+           comments.post_id                         AS postId,
+           comments.user_id                         AS userId,
+           users.user_name                          AS userName,
+           users.thumbnail_url                      AS thumbnailUrl,
+           comments.company_id                      AS companyId,
+           comments.comment_content                 AS commentContent,
+           comments.comment_content_unescape_html   AS commentContentUnescapeHtml,
+           comments.comment_register_time           AS commentRegisterTime,
+           comments.comment_referenced_id           AS commentReferencedId,
+           comments.replies_count                   AS repliesCount
     FROM comments comments
            LEFT OUTER JOIN users users
                            ON comments.user_id = users.user_id
@@ -53,13 +54,13 @@
      user_id,
      company_id,
      comment_content,
-     comment_content_except_htmltag,
+     comment_content_unescape_html,
      comment_referenced_id)
     VALUES (#{postId},
             #{userId},
             #{companyId},
             #{commentContent},
-            #{commentContentExceptHTMLTag},
+            #{commentContentUnescapeHtml},
             NULL);
     <selectKey keyProperty="commentId" resultType="int" order="AFTER">
       <if test='commentId != 0'>
@@ -92,7 +93,7 @@
   <update id="updateComment" parameterType="com.board.project.blockboard.dto.CommentDTO">
     UPDATE comments
     SET comment_content = #{commentContent},
-        comment_content_except_htmltag = #{commentContentExceptHTMLTag}
+        comment_content_unescape_html = #{commentContentUnescapeHtml}
     WHERE comment_id = #{commentId};
   </update>
 
@@ -121,15 +122,16 @@
 
   <select id="selectCommentByCommentId" parameterType="int"
     resultType="com.board.project.blockboard.dto.CommentDTO">
-    SELECT comments.comment_id            AS commentId,
-           comments.post_id               AS postId,
-           comments.user_id               AS userId,
-           users.user_name                AS userName,
-           users.user_id                  AS userId,
-           comments.company_id            AS companyId,
-           comments.comment_content       AS commentContent,
-           comments.comment_register_time AS commentRegisterTime,
-           comments.comment_referenced_id AS commentReferencedId
+    SELECT comments.comment_id                      AS commentId,
+           comments.post_id                         AS postId,
+           comments.user_id                         AS userId,
+           users.user_name                          AS userName,
+           users.user_id                            AS userId,
+           comments.company_id                      AS companyId,
+           comments.comment_content                 AS commentContent,
+           comments.comment_content_unescape_html   AS commentContentUnescapeHtml,
+           comments.comment_register_time           AS commentRegisterTime,
+           comments.comment_referenced_id           AS commentReferencedId
     FROM comments
            JOIN users ON comments.user_id = users.user_id
     WHERE comments.comment_id = #{commentId};

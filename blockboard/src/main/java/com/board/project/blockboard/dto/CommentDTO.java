@@ -22,7 +22,7 @@ public class CommentDTO {
   private String userName;
   private String thumbnailUrl;
   private String commentContent;
-  private String commentContentExceptHTMLTag;
+  private String commentContentUnescapeHtml;
   private String commentRegisterTime;
   private int commentReferencedId;
   private int repliesCount;

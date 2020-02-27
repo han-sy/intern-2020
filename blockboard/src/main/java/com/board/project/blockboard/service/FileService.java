@@ -249,14 +249,11 @@ public class FileService {
   @SneakyThrows
   public String uploadImage(HttpServletResponse response, MultipartHttpServletRequest multiFile,
       int companyId, String editorName) {
-    if (StringUtils.equals(editorName, "editor")) {
-      if (!(functionValidation.isFunctionOn(companyId, FunctionId.POST_INLINE_IMAGE))) {
-        return null;
-      }
-    } else {
-      if (!(functionValidation.isFunctionOn(companyId, FunctionId.COMMENT_INLINE_IMAGE))) {
-        return null;
-      }
+    int functionIdToCheck =
+        StringUtils.equals(editorName, EditorName.POST_EDITOR) ? FunctionId.POST_INLINE_IMAGE
+            : FunctionId.COMMENT_INLINE_IMAGE;
+    if (!(functionValidation.isFunctionOn(companyId, functionIdToCheck))) {
+      return null;
     }
     response.setCharacterEncoding("UTF-8");
     response.setContentType("text/html;charset=UTF-8");
@@ -266,6 +263,9 @@ public class FileService {
     return null;
   }
 
+  /**
+   * @author Woohyeok Jun <woohyeok.jun@worksmobile.com>
+   */
   private void executeUploadImage(HttpServletResponse response, String editorName, int companyId,
       MultipartFile file) throws IOException {
 
@@ -279,6 +279,9 @@ public class FileService {
     printWriter.close();
   }
 
+  /**
+   * @author Woohyeok Jun <woohyeok.jun@worksmobile.com>
+   */
   private JsonObject makeJsonObjectToReturnEditor(String editorName, int companyId, String fileName,
       String fileUrl) {
     JsonObject json = new JsonObject();
@@ -289,6 +292,9 @@ public class FileService {
     return json;
   }
 
+  /**
+   * @author Woohyeok Jun <woohyeok.jun@worksmobile.com>
+   */
   private void checkEditorAndAutoTagIsOn(String editorName, int companyId, String fileName,
       JsonObject json) {
 
@@ -322,7 +328,7 @@ public class FileService {
 
     List<UserDTO> detectedUsers = new ArrayList<>();
     List<UserDTO> userList = userMapper.selectUsersByCompanyId(companyId);
-    int subListSize = (userList.size() / 10)+1;
+    int subListSize = (userList.size() / 10) + 1;
     List<List<UserDTO>> userSubLists = Lists.partition(userList, subListSize);
 
     DetectThread detectThread = null;

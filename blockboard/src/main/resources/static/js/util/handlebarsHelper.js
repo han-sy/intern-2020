@@ -237,3 +237,14 @@ Handlebars.registerHelper('isTemp', function (option) {
     return option.inverse(this);
   }
 });
+
+/**
+ * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
+ */
+Handlebars.registerHelper('unescapeCommentContent', function (option) {
+  console.log("원래 = ", this.commentContent);
+  console.log("unescape = ", this.commentContent.unescapeHtml());
+  console.log("unescape2 = ", unescape(this.commentContent));
+  this.commentContent = this.commentContent.unescapeHtml();
+  return option.fn(this);
+});
