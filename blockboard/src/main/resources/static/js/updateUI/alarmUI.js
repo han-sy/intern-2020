@@ -12,6 +12,10 @@ function updateAlarmUI(data) {
   $('#alarm-content').append(item);
 }
 
+function clearAlarmUI() {
+  $('#alarm-content').html('');
+}
+
 function updateAlarmCount(alarmCount) {
   $("#alarmCount").remove();
   if (alarmCount === 0) {
@@ -42,4 +46,30 @@ function showCommentInputModalOfAlarm(data) {
       + ` data-id="${data.userId}"><strong>@${data.userName}</strong></a>&nbsp;`,
       "#comment-alarm-container", "btn_openReply", 'is_reply_input',
       "commentTextInAlarm");
+}
+
+/**
+ * 주기적으로 알람을 업데이트한다.
+ * 간격: 10초
+ */
+function alarmUpdateInterval() {
+  if ($('.alarm-items').hasClass('show')) {
+    getNewAlarms();
+  } else {
+    clearAlarmUI();
+    getAlarms(1);
+    getUnreadAlarmCount();
+  }
+}
+
+/**
+ * 새로운 알람 아이템을 알람창 상단에 추가한다.
+ * @param newAlarmItems
+ */
+function appendNewAlarmItems(newAlarmItems) {
+  let source = $('#alarmList-template').html();
+  let template = Handlebars.compile(source);
+  let post = {alarms: newAlarmItems};
+  let item = template(post);
+  $('#alarm-content').prepend(item);
 }

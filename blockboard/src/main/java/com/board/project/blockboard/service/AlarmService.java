@@ -41,8 +41,8 @@ public class AlarmService {
     }
   }
 
-  public void insertAlarm(CommentDTO comment) {
-    Set<String> taggedUsers = tagCheckUtils.getTaggedUsers(comment);
+  public void insertAlarm(CommentDTO comment, String originalCommentContent) {
+    Set<String> taggedUsers = tagCheckUtils.getTaggedUsers(originalCommentContent);
     if (taggedUsers != null) {
       for (String taggedUserId : taggedUsers) {
         AlarmDTO alarm = new AlarmDTO();

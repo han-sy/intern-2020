@@ -31,9 +31,9 @@ public class TagCheckUtils {
     return taggedUsers;
   }
 
-  public Set<String> getTaggedUsers(CommentDTO comment) {
+  public Set<String> getTaggedUsers(String originalCommentContent) {
     Set<String> taggedUsers = new HashSet<>();
-    Document doc = Jsoup.parse(comment.getCommentContent());
+    Document doc = Jsoup.parse(originalCommentContent);
     Elements body = doc.select("a.mentions_tag");
 
     for (int i = 0; i < body.size(); i++) {

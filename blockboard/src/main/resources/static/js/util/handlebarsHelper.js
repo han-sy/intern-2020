@@ -191,7 +191,7 @@ Handlebars.registerHelper('isTempSaveAble', function (options) {
 Handlebars.registerHelper('isPostAlarm', function (options) {
   this.registerTime = this.registerTime.substring(0,
       this.registerTime.length - 3);
-  if (this.commentId == 0) {
+  if (parseInt(this.commentId) === 0) {
     return options.fn(this); // 게시물 태그 알람
   }
   return options.inverse(this);// 댓글 태그 알람
@@ -242,9 +242,6 @@ Handlebars.registerHelper('isTemp', function (option) {
  * @author  Woohyeok Jun <woohyeok.jun@worksmobile.com>
  */
 Handlebars.registerHelper('unescapeCommentContent', function (option) {
-  console.log("원래 = ", this.commentContent);
-  console.log("unescape = ", this.commentContent.unescapeHtml());
-  console.log("unescape2 = ", unescape(this.commentContent));
   this.commentContent = this.commentContent.unescapeHtml();
   return option.fn(this);
 });

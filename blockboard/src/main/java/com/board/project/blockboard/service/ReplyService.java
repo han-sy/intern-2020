@@ -42,11 +42,12 @@ public class ReplyService {
    * 답글 insert
    */
   public int writeReplyWithUserInfo(String userId, int companyId, CommentDTO replyData) {
+    String originalReplyContent = replyData.getCommentContent();
     LengthCheckUtils.validCommentData(replyData);
     updateReplyData(userId, companyId, replyData);
     replyMapper.insertNewReplyByCommentInfo(replyData);
     commentService.updateRepliesCountPlus1(replyData.getCommentReferencedId());
-    alarmService.insertAlarm(replyData);
+    alarmService.insertAlarm(replyData, originalReplyContent);
     return replyData.getCommentId();
   }
 

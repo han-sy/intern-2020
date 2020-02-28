@@ -45,11 +45,12 @@ public class CommentService {
 
   //TODO 카운트는 비동기로 트랜잭션 처리보다야
   public int writeCommentWithUserInfo(CommentDTO commentData, String userId, int companyId) {
+    String originalCommentContent = commentData.getCommentContent();
     LengthCheckUtils.validCommentData(commentData);
     updateCommentData(commentData, userId, companyId);
     commentMapper.insertNewCommentByCommentInfo(commentData);
     postService.updateCommentCountPlus1(commentData.getPostId());
-    alarmService.insertAlarm(commentData);
+    alarmService.insertAlarm(commentData, originalCommentContent);
     return commentData.getCommentId();
   }
 
