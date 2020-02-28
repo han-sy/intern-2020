@@ -4,14 +4,12 @@
  */
 
 //"기능변경" 버튼 클릭시
-function changeFunction() {
-  $(function () {
-    getFunctionList(getFunctionCheckList);
-  });
-}
+$(document).on('click', '#changeFuncBtn', function () {
+  getFunctionList(getFunctionCheckList);
+});
 
 //기능변경사항 저장하기 버튼
-function clickSaveFunctionChange() {
+$(document).on('click', '#changeFunctionSaveButton', function () {
   let functionDataList = new Array();
   $("input[name=function]").each(function () {
     var functionData = new Object();
@@ -31,8 +29,8 @@ function clickSaveFunctionChange() {
       updateNewFunctionInfo(jsonData);//새로운 기능목록 불러와 기능목록 변경
     });
   }
+});
 
-}
 
 //기능변경 on/off버튼 텍스트 바꾸기
 $(document).on('click', '._function-switch', function () {

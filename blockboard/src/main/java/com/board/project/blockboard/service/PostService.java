@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.binary.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -258,6 +259,11 @@ public class PostService {
   public void updateViewCnt(int postId, HttpServletRequest request) {
     UserDTO userData = new UserDTO(request);
     viewRecordService.readPostByUser(userData.getUserId(), postId);
+    updateViewCount(postId);
+  }
+
+  @Async
+  public void updateViewCount(int postId) {
     postMapper.updateViewCnt(postId);
   }
 

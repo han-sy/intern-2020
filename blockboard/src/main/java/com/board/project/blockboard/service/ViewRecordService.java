@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -22,6 +23,7 @@ public class ViewRecordService {
   @Autowired
   private ViewRecordMapper viewRecordMapper;
 
+  @Async
   public void readPostByUser(String userId, int postId) {
     ViewRecordDTO record = ViewRecordDTO.builder()
         .postId(postId)

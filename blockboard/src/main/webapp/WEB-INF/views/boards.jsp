@@ -50,14 +50,12 @@
                 </li>
                 <li class="nav-item active">
                     <a class="nav-link" id='changeBoardsNameBtn' data-toggle="modal"
-                       data-target="#changeBoardNameModal"
-                       onclick="javascript:clickChangeBoardBtn(this)" style="cursor:pointer">게시판
+                       data-target="#changeBoardNameModal" style="cursor:pointer">게시판
                         이름변경</a>
                 </li>
                 <li class="nav-item active">
                     <a class="nav-link" id='deleteBoardsBtn' data-toggle="modal"
                        data-target='#deleteBoardModal'
-                       onclick="javascript:clickDeleteBoardBtn(this)"
                        style="cursor:pointer">게시판 삭제</a>
                 </li>
                 <li class="nav-item active">
@@ -104,17 +102,16 @@
         <script id="functionList-template" type="text/x-handlebars-template">
             <a class="dropdown-item text-success" id='changeFuncBtn' data-toggle="modal"
                data-target="#changeFunctionModal"
-               onclick="javascript:changeFunction(this)"
                style="cursor:pointer"><strong>기능 변경</strong></a>
             <hr>
             {{#functions}}
-                {{#isAbleFunction}}
-                    <a class="dropdown-item d-none" id='functionAble{{functionId}}'
-                       value='off'>{{functionName}}</a>
-                {{else}}
-                    <a class="dropdown-item" id='functionAble{{functionId}}'
-                       value='on'>{{functionName}}</a>
-                {{/isAbleFunction}}
+            {{#isAbleFunction}}
+            <a class="dropdown-item d-none" id='functionAble{{functionId}}'
+               value='off'>{{functionName}}</a>
+            {{else}}
+            <a class="dropdown-item" id='functionAble{{functionId}}'
+               value='on'>{{functionName}}</a>
+            {{/isAbleFunction}}
             {{/functions}}
         </script>
 
@@ -139,24 +136,24 @@
         </script>
         <script id="alarmList-template" type="text/x-handlebars-template">
             {{#alarms}}
-                {{#isReadAlarm}}
-                    <li class="dropdown-item alarm-item alarm-read" data-id="{{alarmId}}">
+            {{#isReadAlarm}}
+            <li class="dropdown-item alarm-item alarm-read" data-id="{{alarmId}}">
                 {{else}}
-                    <li class="dropdown-item alarm-item" data-id="{{alarmId}}">
+            <li class="dropdown-item alarm-item" data-id="{{alarmId}}">
                 {{/isReadAlarm}}
 
-                    <button type="button" class="btn-alarm-delete">X</button>
-                    <p class="alarm-item">
-                        {{userName}}님이
-                        {{#isPostAlarm}}
-                            게시글에서 회원님을 언급했습니다.
-                        {{else}}
-                            댓글에서 회원님을 언급했습니다:<br>
-                            {{alarmContent}}
-                        {{/isPostAlarm}}
-                        <span style="float: right">{{registerTime}}</span>
-                    </p>
-                </li>
+                <button type="button" class="btn-alarm-delete">X</button>
+                <p class="alarm-item">
+                    {{userName}}님이
+                    {{#isPostAlarm}}
+                    게시글에서 회원님을 언급했습니다.
+                    {{else}}
+                    댓글에서 회원님을 언급했습니다:<br>
+                    {{alarmContent}}
+                    {{/isPostAlarm}}
+                    <span style="float: right">{{registerTime}}</span>
+                </p>
+            </li>
             {{/alarms}}
         </script>
         <!-- 댓글 알람 클릭시 댓글 창 Modal -->
@@ -173,13 +170,13 @@
         </div>
         <script id="click-comment-alarmItem-template" type="text/x-handlebars-template">
             {{#comment}}
-                {{#hasReferenceCommentId}}
-                    <div class='referenceCommentContainer' id='comment-alarm-container'
-                         data-id='{{commentReferencedId}}'>
+            {{#hasReferenceCommentId}}
+            <div class='referenceCommentContainer' id='comment-alarm-container'
+                 data-id='{{commentReferencedId}}'>
                 {{else}}
-                    <div class='referenceCommentContainer' id='comment-alarm-container'
-                         data-id='{{commentId}}'>
-                {{/hasReferenceCommentId}}
+                <div class='referenceCommentContainer' id='comment-alarm-container'
+                     data-id='{{commentId}}'>
+                    {{/hasReferenceCommentId}}
                     <div class="row border-left-comment localCommentContainer">
                         <div></div>
                         <div class='commentContainer col-8' id='comment{{commentId}}'
@@ -189,16 +186,16 @@
                             </h5></div>
                             <div>
                                 <div>
-                                        <div class="comment_area comment_content" id=translate_area
-                                             style="width: 100%;">{{commentContentUnescapeHtml}}
-                                        </div>
+                                    <div class="comment_area comment_content" id=translate_area
+                                         style="width: 100%;">{{commentContentUnescapeHtml}}
+                                    </div>
                                     <br>
                                     <div class="date text-muted">{{commentRegisterTime}}</div>
                                 </div>
                                 <div class="btn">
                                     {{#isCommentFileAttachAble}}
-                                        <a class="text-success text-button font-weight-bold open_attached_file_list"
-                                        >첨부파일 보기</a>
+                                    <a class="text-success text-button font-weight-bold open_attached_file_list"
+                                    >첨부파일 보기</a>
                                     {{else}}
                                     {{/isCommentFileAttachAble}}
                                 </div>
@@ -207,7 +204,7 @@
                         <div class="col-4 attached_file_list_container_comment">
                         </div>
                     </div>
-            {{/comment}}
+                    {{/comment}}
         </script>
         <a class="nav-link text-white" id="current_user_info" style="nav-right: auto"
            data-id="${userId}" data-type="${userType}">${userName}</a>
@@ -233,13 +230,13 @@
                 <li data-tab="-2" class="tabmenu" id=default style="cursor:pointer"> 내가 쓴 댓글</li>
                 <hr>
                 {{#boards}}
-                    <li data-tab={{boardId}} class=tabmenu id=default style="cursor:pointer">
-                        {{boardName}}
-                    </li>
+                <li data-tab={{boardId}} class=tabmenu id=default style="cursor:pointer">
+                    {{boardName}}
+                </li>
                 {{/boards}}
                 <hr>
                 {{#isTempSaveAble}}
-                    <li data-tab="-3" class=tabmenu id=default style="cursor:pointer"> 임시보관함</li>
+                <li data-tab="-3" class=tabmenu id=default style="cursor:pointer"> 임시보관함</li>
                 {{/isTempSaveAble}}
                 <li data-tab="-4" class=tabmenu id=default style="cursor:pointer"> 휴지통</li>
             </script>
@@ -326,8 +323,7 @@
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">
                                 Close
                             </button>
-                            <button type="button" id='deleteBoardBtn' class="btn btn-success"
-                                    onclick=javascript:clickSaveDeleteBoard(this)
+                            <button type="button" id='deleteBoardSaveBtn' class="btn btn-success"
                                     data-dismiss="modal">Save changes
                             </button>
                         </div>
@@ -338,13 +334,13 @@
             <script id="deleteboards-template" type="text/x-handlebars-template">
                 {{#boards}}
 
-                    <div class="custom-control custom-checkbox checkbox-success"
-                         style="padding: 15px 1px 10px 30px;">
-                        <input class="custom-control-input" type='checkbox' name='boardDelete'
-                               id="checkDelBoard{{boardId}}" value='{{boardId}}'/>
-                        <label class="custom-control-label"
-                               for="checkDelBoard{{boardId}}">{{boardName}}</label>
-                    </div>
+                <div class="custom-control custom-checkbox checkbox-success"
+                     style="padding: 15px 1px 10px 30px;">
+                    <input class="custom-control-input" type='checkbox' name='boardDelete'
+                           id="checkDelBoard{{boardId}}" value='{{boardId}}'/>
+                    <label class="custom-control-label"
+                           for="checkDelBoard{{boardId}}">{{boardName}}</label>
+                </div>
                 {{/boards}}
             </script>
             <!-- 게시판 이름변경 Modal -->
@@ -365,8 +361,7 @@
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">
                                 Close
                             </button>
-                            <button type="button" id='changeNameBtn' class="btn btn-success"
-                                    onclick=javascript:clickSaveChangeBoard(this)
+                            <button type="button" id='changeNameSaveBtn' class="btn btn-success"
                                     data-dismiss="modal">Save changes
                             </button>
                         </div>
@@ -376,15 +371,15 @@
             <!--게시판 이름변경 템플릿-->
             <script id="changeBoardName-template" type="text/x-handlebars-template">
                 {{#boards}}
-                    <div class='boardInfo' id='board{{boardId}}'
-                         style="padding: 15px 1px 5px 10px;">
+                <div class='boardInfo' id='board{{boardId}}'
+                     style="padding: 15px 1px 5px 10px;">
                         <span class='deleteBoard'
                               data-board='board{{boardId}}'> {{boardName}} </span>
-                        <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
-                        <input class="form-control" type='text' name='boardname'
-                               data-boardId={{boardId}} data-oldname="{{boardName}}"
-                               value="{{boardName}}">
-                    </div>
+                    <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+                    <input class="form-control" type='text' name='boardname'
+                           data-boardId={{boardId}} data-oldname="{{boardName}}"
+                           value="{{boardName}}">
+                </div>
                 {{/boards}}
             </script>
             <!-- 기능변경 Modal -->
@@ -405,8 +400,8 @@
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">
                                 Close
                             </button>
-                            <button type="button" id='changeFunction' class="btn btn-success"
-                                    onclick=javascript:clickSaveFunctionChange(this)
+                            <button type="button" id='changeFunctionSaveButton'
+                                    class="btn btn-success"
                                     data-dismiss="modal">Save changes
                             </button>
                         </div>
@@ -416,27 +411,27 @@
             <!--기능변경 템플릿-->
             <script id="changeFunctionInfo-template" type="text/x-handlebars-template">
                 {{#functions}}
-                    {{#isAbleFunction}}
-                        <li class="btn-group-toggle {{isCommentFunction}}" data-toggle="buttons"
-                            style="padding: 3px 1px 1px 10px;">
-                            <label class="btn btn-default _function-switch">
-                                <span>{{functionName}}</span>
-                                <input class='function_checkbox' type='checkbox' name='function'
-                                       value={{functionId}}>
-                                <span class='_switch'>OFF</span>
-                            </label>
-                        </li>
-                    {{else}}
-                        <li class="btn-group-toggle {{isCommentFunction}}" data-toggle="buttons"
-                            style="padding: 3px 1px 1px 10px;">
-                            <label class="btn btn-success _function-switch">
-                                <span>{{functionName}}</span>
-                                <input class='function_checkbox' type='checkbox' name='function'
-                                       value={{functionId}} checked>
-                                <span class='_switch'>ON</span>
-                            </label>
-                        </li>
-                    {{/isAbleFunction}}
+                {{#isAbleFunction}}
+                <li class="btn-group-toggle {{isCommentFunction}}" data-toggle="buttons"
+                    style="padding: 3px 1px 1px 10px;">
+                    <label class="btn btn-default _function-switch">
+                        <span>{{functionName}}</span>
+                        <input class='function_checkbox' type='checkbox' name='function'
+                               value={{functionId}}>
+                        <span class='_switch'>OFF</span>
+                    </label>
+                </li>
+                {{else}}
+                <li class="btn-group-toggle {{isCommentFunction}}" data-toggle="buttons"
+                    style="padding: 3px 1px 1px 10px;">
+                    <label class="btn btn-success _function-switch">
+                        <span>{{functionName}}</span>
+                        <input class='function_checkbox' type='checkbox' name='function'
+                               value={{functionId}} checked>
+                        <span class='_switch'>ON</span>
+                    </label>
+                </li>
+                {{/isAbleFunction}}
                 {{/functions}}
             </script>
             <!-- 회원 추가 Modal -->
@@ -491,9 +486,9 @@
                     <!--게시글 작성 시 게시판 목록 템플릿-->
                     <script id="selectable-boardId-template" type="text/x-handlebars-template">
                         {{#boards}}
-                            <option data-tab={{boardId}} class=tabmenu
-                                    id=default>{{boardName}}
-                            </option>
+                        <option data-tab={{boardId}} class=tabmenu
+                                id=default>{{boardName}}
+                        </option>
                         {{/boards}}
                     </script>
                 </div>
@@ -540,7 +535,7 @@
                     <button class="btn btn-success btn_post">저장</button>
                     <button class="btn btn-success btn_cancel">작성취소</button>
                     {{#isTempSaveAble}}
-                        <button class="btn btn-success btn_tempSave">임시저장</button>
+                    <button class="btn btn-success btn_tempSave">임시저장</button>
                     {{/isTempSaveAble}}
                     <div id="editor-content-hidden"></div>
                 </script>
@@ -554,45 +549,45 @@
             <!--게시물 내용 템플릿-->
             <script id="post-content-template" type="text/x-handlebars-template">
                 {{#post}}
-                    <p class="h4">{{postTitle}}</p>
-                    <p class="h6 writer_info" align="right" data-id="{{userId}}">{{userName}}</p>
-                    <p class="h6" align="right">{{postRegisterTime}}</p>
-                    {{#isReadCheckAble}}
-                        <p align="right"><a class="h6 read_check" data-toggle="modal"
-                                            data-target="#check_read_user"
-                                            align="right">읽음 {{viewCount}}</a></p>
-                    {{/isReadCheckAble}}
-                    <hr>
-                    <div class="attached_file_list_container_post">
-                        <!--첨부파일 컨테이너 -->
-                    </div>
+                <p class="h4">{{postTitle}}</p>
+                <p class="h6 writer_info" align="right" data-id="{{userId}}">{{userName}}</p>
+                <p class="h6" align="right">{{postRegisterTime}}</p>
+                {{#isReadCheckAble}}
+                <p align="right"><a class="h6 read_check" data-toggle="modal"
+                                    data-target="#check_read_user"
+                                    align="right">읽음 {{viewCount}}</a></p>
+                {{/isReadCheckAble}}
+                <hr>
+                <div class="attached_file_list_container_post">
+                    <!--첨부파일 컨테이너 -->
+                </div>
 
-                    <div class="d-block">
-                        <p>{{{postContent}}}</p>
-                    </div>
-                    <a id="postId" style="display: none;">{{postId}}</a>
-                    <a id="boardIdInPost" style="display: none">{{boardId}}</a>
-                    <br>
-                    <button class="btn btn-success btn_modify" style="display: none">수정</button>
-                    <button class="btn btn-success btn_delete" style="display: none">삭제</button>
+                <div class="d-block">
+                    <p>{{{postContent}}}</p>
+                </div>
+                <a id="postId" style="display: none;">{{postId}}</a>
+                <a id="boardIdInPost" style="display: none">{{boardId}}</a>
+                <br>
+                <button class="btn btn-success btn_modify" style="display: none">수정</button>
+                <button class="btn btn-success btn_delete" style="display: none">삭제</button>
                 {{/post}}
 
                 {{#isCommentAble}}
-                    <div class=comment_section>
-                        <br><br>
-                        <div class="row">
+                <div class=comment_section>
+                    <br><br>
+                    <div class="row">
                         <span class="col-2">
                             <strong class="c">댓글 </strong>
                         (<span class='commentCount'></span>)
                         </span>
-                            <a class=' comment_btn text-success font-weight-bold text-button'
-                            >댓글 달기</a>
-                        </div>
-                        <div class=comment_list_container></div>
-                        <ul class="pagination comments_pagination_content"></ul>
-                        <div class=comment_input_container></div>
-                {{else}}
+                        <a class=' comment_btn text-success font-weight-bold text-button'
+                        >댓글 달기</a>
                     </div>
+                    <div class=comment_list_container></div>
+                    <ul class="pagination comments_pagination_content"></ul>
+                    <div class=comment_input_container></div>
+                    {{else}}
+                </div>
                 {{/isCommentAble}}
             </script>
 
@@ -625,30 +620,30 @@
             <!--기독 리스트 템플릿-->
             <script id="view_record-list-template" type="text/x-handlebars-template">
                 {{#records}}
-                    <li class="view_record_data">
-                        <div class="row">
-                            <div class="col-1">
-                                <img class="profile" name="profile" width="50px" height="50px"
-                                     src='{{thumbnailUrl}}'>
-                            </div>
-                            <div class="col">
-                                <a style="padding-left: 30px; padding-top: 15px"><strong class=name
-                                                                                         data-id='{{userId}}'>{{userName}}</strong>({{userId}}
-                                    )</a>
-                            </div>
+                <li class="view_record_data">
+                    <div class="row">
+                        <div class="col-1">
+                            <img class="profile" name="profile" width="50px" height="50px"
+                                 src='{{thumbnailUrl}}'>
                         </div>
-                    </li>
+                        <div class="col">
+                            <a style="padding-left: 30px; padding-top: 15px"><strong class=name
+                                                                                     data-id='{{userId}}'>{{userName}}</strong>({{userId}}
+                                )</a>
+                        </div>
+                    </div>
+                </li>
                 {{/records}}
             </script>
             <!--첨부파일 리스트 템플릿-->
             <script id="attached-file-list-template" type="text/x-handlebars-template">
                 <a class='text-success font-weight-bold'>첨부파일</a>
                 {{#files}}
-                    <div class="form-group">
-                        <p><a class="attached-file-download" data-fileid='{{fileId}}'
-                              href="/files/{{fileId}}">{{originFileName}} ( {{printFileSize}} )</a>
-                        </p>
-                    </div>
+                <div class="form-group">
+                    <p><a class="attached-file-download" data-fileid='{{fileId}}'
+                          href="/files/{{fileId}}">{{originFileName}} ( {{printFileSize}} )</a>
+                    </p>
+                </div>
 
                 {{/files}}
                 <hr>
@@ -656,144 +651,144 @@
             <!--statusbar 템플릿-->
             <script id="attached-file-statusbar-template" type="text/x-handlebars-template">
                 {{#files}}
-                    <div class="statusbar">
-                        <div class="filename"
-                             data-filename='{{storedFileName}}'>{{originFileName}}
-                        </div>
-                        <div class="filesize">{{fileSize}}</div>
-                        <div class="progressBar">
-                            <div style="width: 199px;">100%</div>
-                        </div>
-                        <div class="abort" style="display: none;">중지</div>
-                        <a class="delete-statusbar file_upload_btn text-success font-weight-bold text-button">삭제</a>
+                <div class="statusbar">
+                    <div class="filename"
+                         data-filename='{{storedFileName}}'>{{originFileName}}
                     </div>
+                    <div class="filesize">{{fileSize}}</div>
+                    <div class="progressBar">
+                        <div style="width: 199px;">100%</div>
+                    </div>
+                    <div class="abort" style="display: none;">중지</div>
+                    <a class="delete-statusbar file_upload_btn text-success font-weight-bold text-button">삭제</a>
+                </div>
                 {{/files}}
             </script>
             <!--댓글리스트 템플릿-->
             <script id="commentList-template" type="text/x-handlebars-template">
                 {{#comments}}
-                    <hr>
-                    <div class='referenceCommentContainer ' data-id='{{commentId}}'>
+                <hr>
+                <div class='referenceCommentContainer ' data-id='{{commentId}}'>
 
-                        <div class="row border-left-comment localCommentContainer">
-                            <div class="col-1">
-                                <img class="profile" name="profile" width="75px" height="75px"
-                                     src='{{thumbnailUrl}}'>
-                            </div>
-                            <div class='commentContainer col-8' id='comment{{commentId}}'
-                                 style="padding-left: 50px">
-                                <div class="user"><h5><strong class=name
-                                                              data-id={{userId}}>{{userName}}</strong>
-                                </h5></div>
+                    <div class="row border-left-comment localCommentContainer">
+                        <div class="col-1">
+                            <img class="profile" name="profile" width="75px" height="75px"
+                                 src='{{thumbnailUrl}}'>
+                        </div>
+                        <div class='commentContainer col-8' id='comment{{commentId}}'
+                             style="padding-left: 50px">
+                            <div class="user"><h5><strong class=name
+                                                          data-id={{userId}}>{{userName}}</strong>
+                            </h5></div>
+                            <div>
                                 <div>
-                                    <div>
-                                        {{#unescapeCommentContent}}
-                                            <div class="comment_area comment_content"
-                                                 id=translate_area
-                                                 style="width: 100%;">{{{commentContent}}}
-                                            </div>
-                                        {{/unescapeCommentContent}}
-                                        <br>
-                                        <div class="date text-muted">{{commentRegisterTime}}</div>
+                                    {{#unescapeCommentContent}}
+                                    <div class="comment_area comment_content"
+                                         id=translate_area
+                                         style="width: 100%;">{{{commentContent}}}
                                     </div>
-                                    <div class="btn">
-                                        {{#isReplyAble}}
-                                            <a class='text-success text-button font-weight-bold reply_btn'>답글(<span
-                                                    id="replies_count{{commentId}}">{{repliesCount}}</span>)
-                                                달기</a>
-                                            <a class='text-success text-button font-weight-bold open_reply_list_btn'>답글
-                                                보기</a>
-                                        {{else}}
-                                        {{/isReplyAble}}
+                                    {{/unescapeCommentContent}}
+                                    <br>
+                                    <div class="date text-muted">{{commentRegisterTime}}</div>
+                                </div>
+                                <div class="btn">
+                                    {{#isReplyAble}}
+                                    <a class='text-success text-button font-weight-bold reply_btn'>답글(<span
+                                            id="replies_count{{commentId}}">{{repliesCount}}</span>)
+                                        달기</a>
+                                    <a class='text-success text-button font-weight-bold open_reply_list_btn'>답글
+                                        보기</a>
+                                    {{else}}
+                                    {{/isReplyAble}}
 
-                                        {{#isSameUser}}
-                                            <a class="text-success text-button font-weight-bold"
-                                               id='edit_comment'>수정</a>
-                                            <a class="text-success text-button font-weight-bold"
-                                               id='delete_comment'>삭제</a>
-                                        {{else}}
-                                        {{/isSameUser}}
-                                        {{#isCommentFileAttachAble}}
-                                            <a class="text-success text-button font-weight-bold open_attached_file_list"
-                                            >첨부파일 보기</a>
-                                        {{else}}
-                                        {{/isCommentFileAttachAble}}
-                                    </div>
+                                    {{#isSameUser}}
+                                    <a class="text-success text-button font-weight-bold"
+                                       id='edit_comment'>수정</a>
+                                    <a class="text-success text-button font-weight-bold"
+                                       id='delete_comment'>삭제</a>
+                                    {{else}}
+                                    {{/isSameUser}}
+                                    {{#isCommentFileAttachAble}}
+                                    <a class="text-success text-button font-weight-bold open_attached_file_list"
+                                    >첨부파일 보기</a>
+                                    {{else}}
+                                    {{/isCommentFileAttachAble}}
                                 </div>
                             </div>
-                            <div class="col-3 attached_file_list_container_comment">
-                            </div>
                         </div>
-                        {{#isReplyAble}}
-                            <ul class='replyContainer' id='reply_container{{commentId}}'
-                                style='padding: 5px 1px 3px 30px;list-style: none'>
-                            </ul>
-                            <div id='reply_input_container{{commentId}}'
-                                 style='padding: 5px 1px 3px 30px;'></div>
-                        {{else}}
-                        {{/isReplyAble}}
-                        <div>
-
+                        <div class="col-3 attached_file_list_container_comment">
                         </div>
                     </div>
+                    {{#isReplyAble}}
+                    <ul class='replyContainer' id='reply_container{{commentId}}'
+                        style='padding: 5px 1px 3px 30px;list-style: none'>
+                    </ul>
+                    <div id='reply_input_container{{commentId}}'
+                         style='padding: 5px 1px 3px 30px;'></div>
+                    {{else}}
+                    {{/isReplyAble}}
+                    <div>
+
+                    </div>
+                </div>
                 {{/comments}}
             </script>
             <!--답글 List 템플릿-->
             <script id="replyList-template" type="text/x-handlebars-template">
                 {{#replies}}
-                    <hr>
-                    <li class='row localCommentContainer replyItem'>
-                        <div class="col-1">
+                <hr>
+                <li class='row localCommentContainer replyItem'>
+                    <div class="col-1">
+                    </div>
+                    <div class="col-1" style="padding-right: 10px">
+                        <img class="profile" name="profile" width="75px" height="75px"
+                             src='{{thumbnailUrl}}'>
+                    </div>
+                    <div class='commentContainer col-7' id='comment{{commentId}}'
+                         style="padding-left: 30px">
+                        <div class="user"><h5><strong class=name
+                                                      data-id={{userId}}>{{userName}}</strong>
+                        </h5>
                         </div>
-                        <div class="col-1" style="padding-right: 10px">
-                            <img class="profile" name="profile" width="75px" height="75px"
-                                 src='{{thumbnailUrl}}'>
-                        </div>
-                        <div class='commentContainer col-7' id='comment{{commentId}}'
-                             style="padding-left: 30px">
-                            <div class="user"><h5><strong class=name
-                                                          data-id={{userId}}>{{userName}}</strong>
-                            </h5>
-                            </div>
-                            <div>
-                                <div class="comment_area row" id=translate_area">
-                                    <strong class="nametag text-primary "
-                                            data-id={{commentReferencedUserId}}
-                                            style="cursor:pointer;padding: 0px 0px 0px 15px">{{commentReferencedUserName}}</strong>
-                                    {{#unescapeCommentContent}}
-                                    <div class="comment_content col-10" style="float:left;">
-                                        {{{commentContent}}}
+                        <div>
+                            <div class="comment_area row" id=translate_area">
+                                <strong class="nametag text-primary "
+                                        data-id={{commentReferencedUserId}}
+                                        style="cursor:pointer;padding: 0px 0px 0px 15px">{{commentReferencedUserName}}</strong>
+                                {{#unescapeCommentContent}}
+                                <div class="comment_content col-10" style="float:left;">
+                                    {{{commentContent}}}
                                     {{/unescapeCommentContent}}
-                                    </div>
                                 </div>
-                                <br>
-                                <div class="date text-muted">{{commentRegisterTime}}</div>
                             </div>
-                            <div class=btn>
-                                {{#isReplyAble}}
-                                    <a class='text-success text-button font-weight-bold reply_btn'
-                                    >답글</a>
-                                {{else}}
-                                {{/isReplyAble}}
-                                {{#isSameUser}}
-                                    <a class="text-success text-button font-weight-bold"
-                                       id='edit_comment'
-                                    >수정</a>
-                                    <a class="text-success text-button font-weight-bold"
-                                       id='delete_comment'
-                                    >삭제</a>
-                                {{else}}
-                                {{/isSameUser}}
-                                {{#isCommentFileAttachAble}}
-                                    <a class="text-success text-button font-weight-bold open_attached_file_list"
-                                    >첨부파일 보기</a>
-                                {{else}}
-                                {{/isCommentFileAttachAble}}
-                            </div>
+                            <br>
+                            <div class="date text-muted">{{commentRegisterTime}}</div>
                         </div>
-                        <div class="col-3 attached_file_list_container_comment">
+                        <div class=btn>
+                            {{#isReplyAble}}
+                            <a class='text-success text-button font-weight-bold reply_btn'
+                            >답글</a>
+                            {{else}}
+                            {{/isReplyAble}}
+                            {{#isSameUser}}
+                            <a class="text-success text-button font-weight-bold"
+                               id='edit_comment'
+                            >수정</a>
+                            <a class="text-success text-button font-weight-bold"
+                               id='delete_comment'
+                            >삭제</a>
+                            {{else}}
+                            {{/isSameUser}}
+                            {{#isCommentFileAttachAble}}
+                            <a class="text-success text-button font-weight-bold open_attached_file_list"
+                            >첨부파일 보기</a>
+                            {{else}}
+                            {{/isCommentFileAttachAble}}
                         </div>
-                    </li>
+                    </div>
+                    <div class="col-3 attached_file_list_container_comment">
+                    </div>
+                </li>
                 {{/replies}}
                 <div class="more-replies">
                     <button class="btn btn-success more-replies-btn">답글 더보기</button>
@@ -809,55 +804,55 @@
             <!--댓글 답글 input form 템플릿-->
             <script id="commentInputForm-template" type="text/x-handlebars-template">
                 {{#attribute}}
-                    <br>
-                    <div style='width: 100%' class='commentHtml {{isReplyInput}}'>
+                <br>
+                <div style='width: 100%' class='commentHtml {{isReplyInput}}'>
                         <textarea class="form-control" id="{{editorName}}"
                                   placeholder='{{type}}을 입력하세요'
                                   name=commentText></textarea>
-                        <div class="form-group row file_attach_form">
-                        </div>
-                        <div align="right">
-                            {{#isCommentFileAttachAble}}
-                                <a class="text-success text-button font-weight-bold open_file_form_btn"
-                                >파일첨부</a>
-                            {{else}}
-                            {{/isCommentFileAttachAble}}
-                            {{#isReply}}
-                                <a class="text-success text-button font-weight-bold {{{buttonSelector}}}"
-                                >{{buttonName}}</a>
-                                <a class="btn_close_cmt_input text-success text-button font-weight-bold"
-                                >취소</a>
-                            {{else}}
-                                <a class="text-success text-button font-weight-bold {{{buttonSelector}}}"
-                                >{{buttonName}}</a>
-                            {{/isReply}}
-                        </div>
+                    <div class="form-group row file_attach_form">
                     </div>
+                    <div align="right">
+                        {{#isCommentFileAttachAble}}
+                        <a class="text-success text-button font-weight-bold open_file_form_btn"
+                        >파일첨부</a>
+                        {{else}}
+                        {{/isCommentFileAttachAble}}
+                        {{#isReply}}
+                        <a class="text-success text-button font-weight-bold {{{buttonSelector}}}"
+                        >{{buttonName}}</a>
+                        <a class="btn_close_cmt_input text-success text-button font-weight-bold"
+                        >취소</a>
+                        {{else}}
+                        <a class="text-success text-button font-weight-bold {{{buttonSelector}}}"
+                        >{{buttonName}}</a>
+                        {{/isReply}}
+                    </div>
+                </div>
 
                 {{/attribute}}
             </script>
             <!--댓글 수정 템플릿-->
             <script id="editCommentForm-template" type="text/x-handlebars-template">
                 {{#attribute}}
-                    <br>
-                    <div style='width: 100%' class=commentHtml>
+                <br>
+                <div style='width: 100%' class=commentHtml>
                 <textarea class="form-control" style='width: 100%' id='commentEditText'
                           name=commentText></textarea>
-                        <div>
-                            <div class="form-group row file_attach_form">
-                            </div>
-                            <div align="right">
-                                {{#isCommentFileAttachAble}}
-                                    <a class="text-success text-button font-weight-bold open_edit_file_form_btn"
-                                    >파일첨부 수정</a>
-                                {{else}}
-                                {{/isCommentFileAttachAble}}
-                                <a class="text-success text-button font-weight-bold btn_edit_comment_complete"
-                                >수정하기</a>
-                            </div>
-
+                    <div>
+                        <div class="form-group row file_attach_form">
                         </div>
+                        <div align="right">
+                            {{#isCommentFileAttachAble}}
+                            <a class="text-success text-button font-weight-bold open_edit_file_form_btn"
+                            >파일첨부 수정</a>
+                            {{else}}
+                            {{/isCommentFileAttachAble}}
+                            <a class="text-success text-button font-weight-bold btn_edit_comment_complete"
+                            >수정하기</a>
+                        </div>
+
                     </div>
+                </div>
                 {{/attribute}}
             </script>
             <div id="search-banner"></div>
@@ -875,7 +870,7 @@
                     <thead>
                     <tr>
                         {{#isPopular}}
-                            <th scope="col">게시판</th>
+                        <th scope="col">게시판</th>
                         {{else}}
                         {{/isPopular}}
                         <th scope="col">제목</th>
@@ -883,50 +878,50 @@
                         <th scope="col">작성일</th>
                         {{#isTempBox}}
                         {{else}}
-                            {{#isRecycleBin}}
-                            {{else}}
-                                <th scope="col">조회수</th>
-                            {{/isRecycleBin}}
+                        {{#isRecycleBin}}
+                        {{else}}
+                        <th scope="col">조회수</th>
+                        {{/isRecycleBin}}
                         {{/isTempBox}}
                     </tr>
                     </thead>
                     <tbody id="post-list">
                     {{#posts}}
-                        {{#isTemp}}
-                            <tr class="postclick temp_post_click" data-post={{postId}}
-                                data-board={{boardId}}>
-                                <td>{{boardName}}</td>
-                                <td>{{postTitle}}</td>
+                    {{#isTemp}}
+                    <tr class="postclick temp_post_click" data-post={{postId}}
+                        data-board={{boardId}}>
+                        <td>{{boardName}}</td>
+                        <td>{{postTitle}}</td>
                         {{else}}
-                            {{#isRecycle}}
-                                <tr class="postclick recycle_post_click" data-post={{postId}}
-                                    data-board={{boardId}}>
-                                    <td>{{boardName}}</td>
-                                    <td>{{postTitle}}</td>
-                            {{else}}
-                                <tr class="postclick normal_post_click" data-post={{postId}}
-                                    data-board={{boardId}}>
-                                {{#isPopular}}
-                                        <td>{{boardName}}</td>
-                                {{else}}
-                                {{/isPopular}}
-                                    <td>{{postTitle}}
-                                        {{#isCommentAble}}
-                                            <span style="color:#28A745;">({{commentsCount}})</span>
-                                        {{/isCommentAble}}
-                                    </td>
-                            {{/isRecycle}}
+                        {{#isRecycle}}
+                    <tr class="postclick recycle_post_click" data-post={{postId}}
+                        data-board={{boardId}}>
+                        <td>{{boardName}}</td>
+                        <td>{{postTitle}}</td>
+                        {{else}}
+                    <tr class="postclick normal_post_click" data-post={{postId}}
+                        data-board={{boardId}}>
+                        {{#isPopular}}
+                        <td>{{boardName}}</td>
+                        {{else}}
+                        {{/isPopular}}
+                        <td>{{postTitle}}
+                            {{#isCommentAble}}
+                            <span style="color:#28A745;">({{commentsCount}})</span>
+                            {{/isCommentAble}}
+                        </td>
+                        {{/isRecycle}}
                         {{/isTemp}}
-                            <td>{{userName}}</td>
-                            <td>{{postRegisterTime}}</td>
+                        <td>{{userName}}</td>
+                        <td>{{postRegisterTime}}</td>
                         {{#isTemp}}
                         {{else}}
-                            {{#isRecycle}}
-                            {{else}}
-                                    <td>{{viewCount}}</td>
-                            {{/isRecycle}}
+                        {{#isRecycle}}
+                        {{else}}
+                        <td>{{viewCount}}</td>
+                        {{/isRecycle}}
                         {{/isTemp}}
-                        </tr>
+                    </tr>
                     {{/posts}}
                 </script>
 
@@ -972,62 +967,62 @@
                 <!--게시판 페이징 템픞릿-->
                 <script id="pageList-template" type="text/x-handlebars-template">
                     {{#pagesInfo}}
-                        {{#isFirstPage}}
-                        {{else}}
-                            <li class='{{pageType}}-page-item'><a class='page-link'
-                                                                  style='cursor: pointer;'
-                                                                  data-page='1'>처음</a>
-                            </li>
-                        {{/isFirstPage}}
-                        {{#isFirstRange}}
-                        {{else}}
-                            <li class='{{pageType}}-page-item'><a class='page-link'
-                                                                  style='cursor: pointer;'
-                                                                  data-page='{{prevPage}}'>이전</a>
-                            </li>
-                        {{/isFirstRange}}
-                        {{#isPostPage}}
-                            {{#each pageList}}
-                                <li class='posts-page-item' id='post_page{{this}}'><a
-                                        class='page-link page-index'
-                                        style='cursor: pointer;'
-                                        data-page='{{this}}'>{{this}}</a>
-                                </li>
-                            {{/each}}
-                        {{else}}
-                            {{#isSearchPage}}
-                                {{#each pageList}}
-                                    <li class='search-page-item' id='search_page{{this}}'><a
-                                            class='page-link page-index'
-                                            style='cursor: pointer;'
-                                            data-page='{{this}}'>{{this}}</a>
-                                    </li>
-                                {{/each}}
-                            {{else}}
-                                {{#each pageList}}
-                                    <li class='comments-page-item' id='comments_page{{this}}'><a
-                                            class='page-link page-index'
-                                            style='cursor: pointer;'
-                                            data-page='{{this}}'>{{this}}</a>
-                                    </li>
-                                {{/each}}
-                            {{/isSearchPage}}
-                        {{/isPostPage}}
+                    {{#isFirstPage}}
+                    {{else}}
+                    <li class='{{pageType}}-page-item'><a class='page-link'
+                                                          style='cursor: pointer;'
+                                                          data-page='1'>처음</a>
+                    </li>
+                    {{/isFirstPage}}
+                    {{#isFirstRange}}
+                    {{else}}
+                    <li class='{{pageType}}-page-item'><a class='page-link'
+                                                          style='cursor: pointer;'
+                                                          data-page='{{prevPage}}'>이전</a>
+                    </li>
+                    {{/isFirstRange}}
+                    {{#isPostPage}}
+                    {{#each pageList}}
+                    <li class='posts-page-item' id='post_page{{this}}'><a
+                            class='page-link page-index'
+                            style='cursor: pointer;'
+                            data-page='{{this}}'>{{this}}</a>
+                    </li>
+                    {{/each}}
+                    {{else}}
+                    {{#isSearchPage}}
+                    {{#each pageList}}
+                    <li class='search-page-item' id='search_page{{this}}'><a
+                            class='page-link page-index'
+                            style='cursor: pointer;'
+                            data-page='{{this}}'>{{this}}</a>
+                    </li>
+                    {{/each}}
+                    {{else}}
+                    {{#each pageList}}
+                    <li class='comments-page-item' id='comments_page{{this}}'><a
+                            class='page-link page-index'
+                            style='cursor: pointer;'
+                            data-page='{{this}}'>{{this}}</a>
+                    </li>
+                    {{/each}}
+                    {{/isSearchPage}}
+                    {{/isPostPage}}
 
-                        {{#isLastRange}}
-                        {{else}}
-                            <li class='{{pageType}}-page-item'><a class='page-link'
-                                                                  style='cursor: pointer;'
-                                                                  data-page='{{nextPage}}'>다음</a>
-                            </li>
-                        {{/isLastRange}}
-                        {{#isLastPage}}
-                        {{else}}
-                            <li class='{{pageType}}-page-item'><a class='page-link'
-                                                                  style='cursor: pointer;'
-                                                                  data-page='{{pageCount}}'>마지막</a>
-                            </li>
-                        {{/isLastPage}}
+                    {{#isLastRange}}
+                    {{else}}
+                    <li class='{{pageType}}-page-item'><a class='page-link'
+                                                          style='cursor: pointer;'
+                                                          data-page='{{nextPage}}'>다음</a>
+                    </li>
+                    {{/isLastRange}}
+                    {{#isLastPage}}
+                    {{else}}
+                    <li class='{{pageType}}-page-item'><a class='page-link'
+                                                          style='cursor: pointer;'
+                                                          data-page='{{pageCount}}'>마지막</a>
+                    </li>
+                    {{/isLastPage}}
                     {{/pagesInfo}}
                 </script>
             </div>

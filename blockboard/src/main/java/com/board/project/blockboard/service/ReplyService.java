@@ -53,6 +53,7 @@ public class ReplyService {
   private void updateReplyData(String userId, int companyId, CommentDTO replyData) {
     String commentContent = replyData.getCommentContent();
     LengthCheckUtils.validCommentData(replyData);
+    replyData.setUserId(userId);
     replyData.setCommentContent(StringEscapeUtils.escapeHtml4(commentContent));
     replyData.setCommentContentUnescapeHtml(JsoupUtils.unescapeHtmlFromStringOfFilteringXSS(JsoupUtils.filterStringForXSS(commentContent)));
     replyData.setCompanyId(companyId);

@@ -16,9 +16,7 @@ $(document).on('keydown', '#input_board_name', function (event) {
   }
 });
 
-$(document).on('click', '#add_board_save_btn', function () {
-  clickSaveAddedBoard();
-});
+
 
 //게시판 추가버튼 클릭
 $(document).on('click', '#add_board_btn', function () {
@@ -26,6 +24,9 @@ $(document).on('click', '#add_board_btn', function () {
 });
 
 //게시판 추가저장하기 버튼
+$(document).on('click', '#add_board_save_btn', function () {
+  clickSaveAddedBoard();
+});
 function clickSaveAddedBoard() {
   let boardName = $('#input_board_name').val();
   boardName = boardName.trim();
@@ -50,14 +51,12 @@ function clickSaveAddedBoard() {
 }
 
 //게시판 삭제버튼 누를시
-function clickDeleteBoardBtn() {
-  $(function () {
-    getBoardList(getBoardListToDelete);
-  });
-}
+$(document).on('click', '#deleteBoardsBtn', function () {
+  getBoardList(getBoardListToDelete);
+});
 
 //게시판 삭제- 삭제하기버튼 누를시
-function clickSaveDeleteBoard() {
+$(document).on('click', '#deleteBoardSaveBtn', function () {
   let boardDataList = new Array();
 
   $("input[name=boardDelete]").each(function () {
@@ -74,14 +73,13 @@ function clickSaveDeleteBoard() {
       updateTabByNewBoardListAfterDeleteBoard(boardDataList); //삭제이후 tab에 게시판목록 업데이트
     });
   }
-}
+});
+
 
 //게시판 이름변경 버튼 클릭시
-function clickChangeBoardBtn() {
-  $(function () {
-    getBoardList(getBoardListToChangeName);
-  });
-}
+$(document).on('click', '#changeBoardsNameBtn', function () {
+  getBoardList(getBoardListToChangeName);
+});
 
 function insertChangeBoard(oldBoardName, newBoardName, boardId, boardDataList) {
   if (oldBoardName != newBoardName) {
@@ -91,7 +89,12 @@ function insertChangeBoard(oldBoardName, newBoardName, boardId, boardDataList) {
 }
 
 //게시판 이름변경 저장하기
-function clickSaveChangeBoard() {
+$(document).on('click', '#changeBoardsNameBtn', function () {
+  getBoardList(getBoardListToChangeName);
+});
+
+
+$(document).on('click', '#changeNameSaveBtn', function () {
   let boardDataList = new Array();
 
   $("input[name=boardname]").each(function () {
@@ -114,7 +117,7 @@ function clickSaveChangeBoard() {
     });
   }
   $('#config_container').html("");
-}
+});
 
 //닫기 버튼 클릭
 $(document).on('click', '.functionClose', clickConfigClose());
